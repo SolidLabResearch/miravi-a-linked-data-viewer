@@ -154,8 +154,7 @@ async function handleQueryExecution(execution, query) {
     let variables;
     const resultType = execution.resultType;
 
-    console.log(execution);
-    if (execution.resultType === "bindings") {
+    if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
       const totalItems = metadata.totalItems;
       if(!query.totalItems) {
@@ -170,7 +169,7 @@ async function handleQueryExecution(execution, query) {
         return val.value;
       });
     }
-    return queryTypeHandlers[execution.resultType](
+    return queryTypeHandlers[resultType](
       await execution.execute(),
       variables
     );
@@ -182,6 +181,7 @@ async function handleQueryExecution(execution, query) {
 async function countQueryResults(query) {
   const parser = new Parser();
   const parsedQuery = parser.parse(query.rawText);
+  parsedQuery.queryType = "SELECT";
   parsedQuery.variables = [
     {
       expression: {
