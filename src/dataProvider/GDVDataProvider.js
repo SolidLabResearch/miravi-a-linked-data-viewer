@@ -6,6 +6,7 @@ import {
   fetch as authFetch,
 } from "@inrupt/solid-client-authn-browser";
 import { HttpError } from "react-admin";
+import { Generator, Parser } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
@@ -24,7 +25,10 @@ if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
 
 export default {
   getList: async function getList(queryName, { pagination, sort, filter }) {
-    let results = await executeQuery(findQueryWithId(queryName));
+    const query = findQueryWithId(queryName);
+    query.limit = pagination.perPage;
+    query.offset = (pagination.page - 1) * pagination.perPage;
+    let results = await executeQuery(query);
     let originalSize = results.length;
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
@@ -105,7 +109,13 @@ function findQueryByName(name) {
 async function fetchQuery(query) {
   try {
     const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
-    return result.text();
+    const parser = new Parser();
+    const rawText = await result.text();
+    const parsedQuery = parser.parse(rawText);
+    parsedQuery.limit = query.limit; 
+    parsedQuery.offset = query.offset; 
+    const generator = new Generator();
+    return generator.stringify(parsedQuery);
   } catch (error) {
     throw new HttpError(error.message, 500);
   }
