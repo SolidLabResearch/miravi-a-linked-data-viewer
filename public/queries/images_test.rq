@@ -1,0 +1,5 @@
+PREFIX schema: <http://schema.org/>
+SELECT ?subject ?image_img
+WHERE {
+  ?subject schema:image ?image_img
+}
