@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import { Admin, ListGuesser, Resource, ShowGuesser } from "react-admin";
+import { Admin, ListGuesser, Resource } from "react-admin";
 import dataProvider from "./dataProvider/GDVDataProvider.js";
 import config from "./config";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
@@ -9,6 +9,7 @@ import {
   getDefaultSession,
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
+import GDVResource from "./components/GDVResource/GDVResource";
 
 function App() {
   const session = getDefaultSession();
@@ -38,7 +39,7 @@ function App() {
             key={query.id}
             name={query.id}
             options={{ label: query.name }}
-            list={ListGuesser}
+            list={GDVResource}
           />
         );
       })}
