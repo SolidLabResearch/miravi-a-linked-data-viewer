@@ -216,10 +216,10 @@ async function configureQuadStream(quadStream) {
     const results = (await quadStream.toArray()).flat();
     return results.map((result, index) => {
       let newResults = {
-        subject: result.subject.id,
-        predicate: result.predicate.id,
-        object: result.object.id,
-        graph: result.graph.id,
+        subject: result.subject,
+        predicate: result.predicate,
+        object: result.object,
+        graph: result.graph,
         id: index,
       };
       return newResults;
@@ -241,10 +241,7 @@ async function configureBindingStream(bindingStream, variables) {
       let newResults = {};
       for (let variable of variables) {
         let value = result.get(variable);
-        if (value) {
-          value = value.id ? value.id : value.value;
-        }
-        newResults[variable.split("_")[0]] = value;
+        newResults[variable] = value;
       }
       newResults.id = index;
       return newResults;
