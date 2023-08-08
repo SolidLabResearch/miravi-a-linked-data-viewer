@@ -1,0 +1,22 @@
+.authentication-box{
+    width: 100vh;
+    height: 100vh;
+}
+
+
+.login-form{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+button, input[type="submit"]{
+    margin: 10px;
+}
+
+label{
+    margin: 10px;
+}
