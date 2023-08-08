@@ -29,7 +29,6 @@ export default {
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
     let results = await executeQuery(query);
-    let originalSize = results.length;
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
         return Object.keys(filter).every((key) => {
@@ -37,31 +36,20 @@ export default {
         });
       });
     }
-    const { page, perPage } = pagination;
-    const start = (page - 1) * perPage;
-    if (start > results.length) {
-      results = [];
-    } else if (start + perPage > results.length - 1) {
-      results = results.slice(start, results.length);
-    } else {
-      results = results.slice(start, start + perPage);
-    }
+
+    let totalItems = await query.totalItems;
     return {
       data: results,
-      total: await query.totalItems,
+      total: parseInt(totalItems),
     };
   },
   getOne: async function getOne(_, { id }) {
     console.log("getOne");
-    return executeQuery(findQueryWithId(id));
+    return {};
   },
   getMany: async function getMany(_, { ids }) {
     console.log("getMany");
-    return {
-      data: await Promise.all(
-        executeQuery(ids.map((id) => findQueryWithId(id)))
-      ),
-    };
+    return [{}];
   },
   getManyReference: async function getManyReference(
     _,
