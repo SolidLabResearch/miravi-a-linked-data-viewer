@@ -45,10 +45,10 @@
             }
         },
         {
-            "queryLocation": "construct_picasso.qr",
+            "queryLocation": "construct_picasso.rq",
             "name": "A Test For Quad Queries",
             "description": "A test for quad queries",
-            "id": "987",
+            "id": "9876",
             "sources": ["https://fragments.dbpedia.org/2015/en"]
         },
         {
