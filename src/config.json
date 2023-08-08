@@ -7,7 +7,7 @@
     "titleColor": "black",
     "textColor": "black",
     "queryFolder": "queries",
-    "httpProxy": "https://proxy.linkeddatafragments.org/",
+    "httpProxy": "http://localhost:8000/",
     "showMilliseconds": false, 
     "defaultIDP": "https://pod.playground.solidlab.be/",
     "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
@@ -17,7 +17,8 @@
             "name": "Test query",
             "description": "A simple Test query",
             "id": "123",
-            "sources": ["https://fragments.dbpedia.org/2016-04/en"]
+            "sources": ["https://fragments.dbpedia.org/2016-04/en"],
+            "useProxy": true
         },
         {
             "queryLocation": "test2.rq",
@@ -39,6 +40,7 @@
             "description": "Whether or not there is an artist who is influenced by Picasso",
             "id": "987",
             "sources": ["https://fragments.dbpedia.org/2016-04/en"],
+            "useProxy": true,
             "askQuery": {
                 "trueText": "There is an artist who is inspired by Picasso!",
                 "falseText": "There is no artist who is inspired by Picasso."
@@ -48,6 +50,7 @@
             "queryLocation": "construct_picasso.rq",
             "name": "A Test For Quad Queries",
             "description": "A test for quad queries",
+            "useProxy": true,
             "id": "9876",
             "sources": ["https://fragments.dbpedia.org/2015/en"]
         },

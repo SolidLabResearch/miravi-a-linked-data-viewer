@@ -115,11 +115,16 @@ async function executeQuery(query) {
     const fetchFunction = getDefaultSession().info.isLoggedIn
       ? authFetch
       : fetch;
+
+    let queryProxyHandler;
+    if (query.useProxy) {
+      queryProxyHandler = proxyHandler;
+    }
     return handleQueryExecution(
       await myEngine.query(query.queryText, {
         sources: query.sources,
         fetch: fetchFunction,
-        httpProxyHandler: proxyHandler,
+        httpProxyHandler: queryProxyHandler,
       }),
       query
     );
@@ -145,11 +150,10 @@ async function handleQueryExecution(execution, query) {
     if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
       const totalItems = metadata.totalItems;
-      if(!query.totalItems) {
-        if(!totalItems){
+      if (!query.totalItems) {
+        if (!totalItems) {
           query.totalItems = countQueryResults(query);
-        }
-        else{
+        } else {
           query.totalItems = totalItems;
         }
       }
@@ -157,10 +161,7 @@ async function handleQueryExecution(execution, query) {
         return val.value;
       });
     }
-    return queryTypeHandlers[resultType](
-      await execution.execute(),
-      variables
-    );
+    return queryTypeHandlers[resultType](await execution.execute(), variables);
   } catch (error) {
     throw new HttpError(error.message, 500);
   }
