@@ -46,14 +46,9 @@ export default {
     } else {
       results = results.slice(start, start + perPage);
     }
-
-    console.log({
-      data: results,
-      total: results.length,
-    });
     return {
       data: results,
-      total: originalSize,
+      total: await query.totalItems,
     };
   },
   getOne: async function getOne(_, { id }) {
@@ -111,9 +106,10 @@ async function fetchQuery(query) {
     const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
     const parser = new Parser();
     const rawText = await result.text();
+    query.rawText = rawText;
     const parsedQuery = parser.parse(rawText);
-    parsedQuery.limit = query.limit; 
-    parsedQuery.offset = query.offset; 
+    parsedQuery.limit = query.limit;
+    parsedQuery.offset = query.offset;
     const generator = new Generator();
     return generator.stringify(parsedQuery);
   } catch (error) {
@@ -140,7 +136,7 @@ async function executeQuery(query) {
       query
     );
   } catch (error) {
-    for(let source of query.sources){
+    for (let source of query.sources) {
       myEngine.invalidateHttpCache(source);
     }
     throw new HttpError(error.message, 500);
@@ -158,13 +154,22 @@ async function handleQueryExecution(execution, query) {
     let variables;
     const resultType = execution.resultType;
 
+    console.log(execution);
     if (execution.resultType === "bindings") {
       const metadata = await execution.metadata();
+      const totalItems = metadata.totalItems;
+      if(!query.totalItems) {
+        if(!totalItems){
+          query.totalItems = countQueryResults(query);
+        }
+        else{
+          query.totalItems = totalItems;
+        }
+      }
       variables = metadata.variables.map((val) => {
         return val.value;
       });
     }
-    console.log(resultType);
     return queryTypeHandlers[execution.resultType](
       await execution.execute(),
       variables
@@ -172,6 +177,30 @@ async function handleQueryExecution(execution, query) {
   } catch (error) {
     throw new HttpError(error.message, 500);
   }
+}
+
+async function countQueryResults(query) {
+  const parser = new Parser();
+  const parsedQuery = parser.parse(query.rawText);
+  parsedQuery.variables = [
+    {
+      expression: {
+        type: "aggregate",
+        aggregation: "count",
+        expression: { termType: "Wildcard", value: "*" },
+        distinct: false,
+      },
+      variable: { termType: "Variable", value: "totalItems" },
+    },
+  ];
+  const generator = new Generator();
+  const countQuery = generator.stringify(parsedQuery);
+  const bindings = await myEngine.queryBindings(countQuery, {
+    sources: query.sources,
+    fetch: fetch,
+    httpProxyHandler: proxyHandler,
+  });
+  return (await bindings.toArray())[0].get("totalItems").value;
 }
 
 const queryTypeHandlers = {
