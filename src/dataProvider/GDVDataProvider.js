@@ -1,7 +1,10 @@
 import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
-import config from "../config.json" assert { type: "json" };
+import config from "../config.json";
 import { QueryEngine } from "@comunica/query-sparql";
-import { getDefaultSession, fetch as authFetch } from "@inrupt/solid-client-authn-browser";
+import {
+  getDefaultSession,
+  fetch as authFetch,
+} from "@inrupt/solid-client-authn-browser";
 import { HttpError } from "react-admin";
 
 const myEngine = new QueryEngine();
@@ -11,10 +14,19 @@ if (config.httpProxy) {
   proxyHandler = new ProxyHandlerStatic(config.httpProxy);
 }
 
+if (!config.queryFolder) {
+  config.queryFolder = "./";
+}
+
+if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
+  config.queryFolder = `${config.queryFolder}/`;
+}
+
 export default {
   getList: async function getList(queryName, { pagination, sort, filter }) {
     let results = await executeQuery(findQueryWithId(queryName));
-    if(Object.keys(filter).length > 0){
+    let originalSize = results.length;
+    if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
         return Object.keys(filter).every((key) => {
           return result[key] === filter[key];
@@ -23,23 +35,21 @@ export default {
     }
     const { page, perPage } = pagination;
     const start = (page - 1) * perPage;
-    if(start > results.length){
-      results = []
-    } 
-    else if(start + perPage > results.length - 1){
-      results = results.slice(start, results.length)
-    }
-    else{
-      results = results.slice(start, start + perPage)
+    if (start > results.length) {
+      results = [];
+    } else if (start + perPage > results.length - 1) {
+      results = results.slice(start, results.length);
+    } else {
+      results = results.slice(start, start + perPage);
     }
 
     console.log({
       data: results,
       total: results.length,
-    })
+    });
     return {
       data: results,
-      total: results.length,
+      total: originalSize,
     };
   },
   getOne: async function getOne(_, { id }) {
@@ -54,7 +64,12 @@ export default {
       ),
     };
   },
-  getManyReference: async function getManyReference(_, { target, id }, __, ___) {
+  getManyReference: async function getManyReference(
+    _,
+    { target, id },
+    __,
+    ___
+  ) {
     console.error("getManyReference not implemented");
   },
   create: async function create(_, { data }) {
@@ -71,9 +86,8 @@ export default {
   },
   deleteMany: async function deleteMany(_, { ids }) {
     console.error("deleteMany not implemented");
-  }
+  },
 };
-
 
 function findQueryWithId(id) {
   return config.queries.find((query) => query.id === id);
@@ -90,14 +104,8 @@ function findQueryByName(name) {
  */
 async function fetchQuery(query) {
   try {
-    // const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
-    return `SELECT ?name ?deathDate_int WHERE {
-      ?person a dbpedia-owl:Artist;
-              rdfs:label ?name;
-              dbpedia-owl:birthPlace [ rdfs:label "York"@en ].
-      FILTER LANGMATCHES(LANG(?name),  "EN")
-      OPTIONAL { ?person dbpprop:dateOfDeath ?deathDate_int. }
-    }`;
+    const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
+    return result.text();
   } catch (error) {
     throw new HttpError(error.message, 500);
   }
@@ -110,7 +118,6 @@ async function fetchQuery(query) {
 async function executeQuery(query) {
   try {
     query.queryText = await fetchQuery(query);
-    console.log(query.queryText)
     const fetchFunction = getDefaultSession().info.isLoggedIn
       ? authFetch
       : fetch;
@@ -123,6 +130,9 @@ async function executeQuery(query) {
       query
     );
   } catch (error) {
+    for(let source of query.sources){
+      myEngine.invalidateHttpCache(source);
+    }
     throw new HttpError(error.message, 500);
   }
 }
@@ -144,7 +154,7 @@ async function handleQueryExecution(execution, query) {
         return val.value;
       });
     }
-
+    console.log(resultType);
     return queryTypeHandlers[execution.resultType](
       await execution.execute(),
       variables
@@ -165,27 +175,7 @@ const queryTypeHandlers = {
  * @param {Boolean} result the result of a boolean query
  */
 function configureBool(result) {
-  adder(result);
-}
-
-/**
- *
- * @param {List<String>} variables all the variables of the query behind the binding stream.
- */
-async function configureIterator(iterator, variables) {
-  try {
-    const results = await iterator.toArray();
-    return results.map((result, index) => {
-      let newResults = {};
-      for (let variable of variables) {
-        newResults[variable.split('_')[0]] = result.get(variable);
-      }
-      newResults.id = index;
-      return newResults;
-    });
-  } catch (error) {
-    console.error(error);
-  }
+  //
 }
 
 /**
@@ -193,13 +183,22 @@ async function configureIterator(iterator, variables) {
  * @param {AsyncIterator<Quad> & ResultStream<Quad>>} quadStream a stream of Quads
  * @param {List<String>} variables all the variables of the query behind the binding stream.
  */
-function configureQuadStream(quadStream) {
-  return configureIterator(quadStream, [
-    "subject",
-    "predicate",
-    "object",
-    "graph",
-  ]);
+async function configureQuadStream(quadStream) {
+  try {
+    const results = (await quadStream.toArray()).flat();
+    return results.map((result, index) => {
+      let newResults = {
+        subject: result.subject.id,
+        predicate: result.predicate.id,
+        object: result.object.id,
+        graph: result.graph.id,
+        id: index,
+      };
+      return newResults;
+    });
+  } catch (error) {
+    throw new HttpError(error.message, 500);
+  }
 }
 
 /**
@@ -207,6 +206,22 @@ function configureQuadStream(quadStream) {
  * @param {BindingStream} bindingStream a stream of Bindings
  * @param {List<String>} variables all the variables of the query behind the binding stream.
  */
-function configureBindingStream(bindingStream, variables) {
-  return configureIterator(bindingStream, variables);
+async function configureBindingStream(bindingStream, variables) {
+  try {
+    const results = await bindingStream.toArray();
+    return results.map((result, index) => {
+      let newResults = {};
+      for (let variable of variables) {
+        let value = result.get(variable);
+        if (value) {
+          value = value.id ? value.id : value.value;
+        }
+        newResults[variable.split("_")[0]] = value;
+      }
+      newResults.id = index;
+      return newResults;
+    });
+  } catch (error) {
+    throw new HttpError(error.message, 500);
+  }
 }
