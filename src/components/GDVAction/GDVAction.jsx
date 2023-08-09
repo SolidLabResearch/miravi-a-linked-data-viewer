@@ -1,7 +1,7 @@
-import { CreateButton, ExportButton, FilterButton, TopToolbar, useListContext } from "react-admin";
+import { ExportButton, TopToolbar, useListContext } from "react-admin";
 
 
-function GDVAction(props){
+function GDVAction(){
     const {total, isLoading} = useListContext();
     return(
         <TopToolbar >

@@ -24,7 +24,6 @@ function GDVResource(props) {
     perPage,
     resource,
     sort,
-    title,
     ...rest
   } = props;
   const { isLoading } = useListController();
