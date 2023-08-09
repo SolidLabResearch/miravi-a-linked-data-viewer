@@ -24,10 +24,11 @@ if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
 }
 
 export default {
-  getList: async function getList(queryName, { pagination, filter }) {
+  getList: async function getList(queryName, { pagination, sort, filter }) {
     const query = findQueryWithId(queryName);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
+    query.sort = sort;
     let results = await executeQuery(query);
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
@@ -36,7 +37,6 @@ export default {
         });
       });
     }
-
     let totalItems = await query.totalItems;
     return {
       data: results,
@@ -89,8 +89,16 @@ async function fetchQuery(query) {
     const rawText = await result.text();
     query.rawText = rawText;
     const parsedQuery = parser.parse(rawText);
-    parsedQuery.limit = query.limit;
-    parsedQuery.offset = query.offset;
+    if(!parsedQuery.limit){
+      parsedQuery.limit = query.limit;
+    }
+    if(!parsedQuery.offset){
+      parsedQuery.offset = query.offset;
+    }
+    if(!parsedQuery.order && query.sort){
+      const {field, order} = query.sort;
+      parsedQuery.order = [{expression: {termType: "Variable", value: field}, descending: order === "DESC"}];
+    }
     const generator = new Generator();
     return generator.stringify(parsedQuery);
   } catch (error) {
