@@ -8,6 +8,7 @@ import {
   ListView,
   useRecordContext,
 } from "react-admin";
+import {typeMapper} from "../../representationProvider/representationProvider";
 
 function GDVResource(props) {
   const {
@@ -71,31 +72,18 @@ function CustomField(props){
   let Field = typeMapper[source.split("_")[1]];
   Field = Field ? Field : CustomTextField;
   return(
-    <Field value={record[source]} />
+    <Field record={record} source={source} />
   )
 }
 
-function CustomTextField({value}){
+function CustomTextField({record, source}){
+  const value = record[source];
   let text = value ? value : "";
   if(value){
     text = value.value ? value.value : value.id;
   }
   return(
     <span>{text}</span>
-  )
-}
-
-
-const typeMapper = {
-  "img": CustomImageField,
-}
-
-function CustomImageField({value}){
-  const src = value.id ? value.id : value.value;
-  return(
-    <div>
-      <img src={src} alt="Query result"/>
-    </div>
   )
 }
 
