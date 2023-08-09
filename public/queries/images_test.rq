@@ -1,5 +1,5 @@
 PREFIX schema: <http://schema.org/>
-SELECT ?subject ?image_img
+SELECT ?subject_url ?image_img
 WHERE {
-  ?subject schema:image ?image_img
+  ?subject_url schema:image ?image_img
 }
