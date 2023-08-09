@@ -7,9 +7,11 @@ import {
   useListController,
   ListView,
   useRecordContext,
+  Loading,
 } from "react-admin";
-import {typeMapper} from "../../representationProvider/representationProvider";
+import { typeMapper } from "../../representationProvider/representationProvider";
 import PropTypes from "prop-types";
+import GDVAction from "../GDVAction/GDVAction";
 
 function GDVResource(props) {
   const {
@@ -22,8 +24,11 @@ function GDVResource(props) {
     perPage,
     resource,
     sort,
+    title,
     ...rest
   } = props;
+  const { isLoading } = useListController();
+  console.log(rest.actions);
   return (
     <ListBase
       debounce={debounce}
@@ -37,7 +42,8 @@ function GDVResource(props) {
       resource={resource}
       sort={sort}
     >
-      <GDVListViewer {...rest} />
+      {isLoading && <Loading />}
+      {!isLoading && <GDVListViewer {...rest} />}
     </ListBase>
   );
 }
@@ -67,11 +73,13 @@ function GDVListViewer(props) {
   }, [data]);
 
   return (
-    <ListView {...props}>
+    <ListView actions={<GDVAction/>} {...props}>
       {values && (
         <Datagrid>
           {Object.keys(values).map((key) => {
-            return <CustomField key={key} source={key} label={key.split('_')[0]} />;
+            return (
+              <CustomField key={key} source={key} label={key.split("_")[0]} />
+            );
           })}
         </Datagrid>
       )}
@@ -79,35 +87,31 @@ function GDVListViewer(props) {
   );
 }
 
-function CustomField(props){
+function CustomField(props) {
   const source = props.source;
   const record = useRecordContext(props);
   let Field = typeMapper[source.split("_")[1]];
   Field = Field ? Field : CustomTextField;
-  return(
-    <Field record={record} source={source} />
-  )
+  return <Field record={record} source={source} />;
 }
 
 CustomField.propTypes = {
-  source: PropTypes.string
+  source: PropTypes.string,
 };
 
-function CustomTextField({record, source}){
+function CustomTextField({ record, source }) {
   const value = record[source];
   let text = value ? value : "";
-  if(value){
+  if (value) {
     text = value.value ? value.value : value.id;
   }
-  return(
-    <span>{text}</span>
-  )
+  return <span>{text}</span>;
 }
 
 CustomTextField.propTypes = {
   record: PropTypes.object,
-  source: PropTypes.string
-}
+  source: PropTypes.string,
+};
 
 function reduceDataToObject(data) {
   const dataObject = {};
@@ -143,7 +147,7 @@ ListBase.propTypes = {
   disableAuthentication: PropTypes.bool,
   disableSyncWithLocation: PropTypes.bool,
   filterDefaultValues: PropTypes.object,
-  queryOptions: PropTypes.object
-}
+  queryOptions: PropTypes.object,
+};
 
 export default GDVResource;
