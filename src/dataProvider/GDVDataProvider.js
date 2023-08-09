@@ -24,7 +24,7 @@ if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
 }
 
 export default {
-  getList: async function getList(queryName, { pagination, sort, filter }) {
+  getList: async function getList(queryName, { pagination, filter }) {
     const query = findQueryWithId(queryName);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
@@ -43,45 +43,38 @@ export default {
       total: parseInt(totalItems),
     };
   },
-  getOne: async function getOne(_, { id }) {
+  getOne: async function getOne() {
     console.log("getOne");
     return {};
   },
-  getMany: async function getMany(_, { ids }) {
+  getMany: async function getMany() {
     console.log("getMany");
     return [{}];
   },
   getManyReference: async function getManyReference(
-    _,
-    { target, id },
-    __,
-    ___
+   
   ) {
     console.error("getManyReference not implemented");
   },
-  create: async function create(_, { data }) {
+  create: async function create() {
     console.error("create not implemented");
   },
-  update: async function update(_, { id, data }) {
+  update: async function update() {
     console.error("update not implemented");
   },
-  updateMany: async function updateMany(_, { ids, data }) {
+  updateMany: async function updateMany() {
     console.error("updateMany not implemented");
   },
-  delete: async function deleteOne(_, { id }) {
+  delete: async function deleteOne() {
     console.error("deleteOne not implemented");
   },
-  deleteMany: async function deleteMany(_, { ids }) {
+  deleteMany: async function deleteMany() {
     console.error("deleteMany not implemented");
   },
 };
 
 function findQueryWithId(id) {
   return config.queries.find((query) => query.id === id);
-}
-
-function findQueryByName(name) {
-  return config.queries.find((query) => query.name === name);
 }
 
 /**
@@ -202,7 +195,7 @@ const queryTypeHandlers = {
  * Configures how a boolean query gets processed.
  * @param {Boolean} result the result of a boolean query
  */
-function configureBool(result) {
+function configureBool() {
   //
 }
 

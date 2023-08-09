@@ -1,6 +1,5 @@
 import "./App.css";
-import React from "react";
-import { Admin, ListGuesser, Resource } from "react-admin";
+import { Admin, Resource } from "react-admin";
 import dataProvider from "./dataProvider/GDVDataProvider.js";
 import config from "./config";
 import SolidLoginForm from "./components/LoginPage/LoginPage";

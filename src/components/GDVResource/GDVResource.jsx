@@ -9,6 +9,7 @@ import {
   useRecordContext,
 } from "react-admin";
 import {typeMapper} from "../../representationProvider/representationProvider";
+import PropTypes from "prop-types";
 
 function GDVResource(props) {
   const {
@@ -19,7 +20,6 @@ function GDVResource(props) {
     filter,
     filterDefaultValues,
     perPage,
-    queryOptions,
     resource,
     sort,
     ...rest
@@ -42,6 +42,19 @@ function GDVResource(props) {
   );
 }
 
+GDVResource.propTypes = {
+  debounce: PropTypes.number,
+  disableAuthentication: PropTypes.bool,
+  disableSyncWithLocation: PropTypes.bool,
+  exporter: PropTypes.func,
+  filter: PropTypes.object,
+  filterDefaultValues: PropTypes.object,
+  perPage: PropTypes.number,
+  queryOptions: PropTypes.object,
+  resource: PropTypes.string,
+  sort: PropTypes.object,
+};
+
 function GDVListViewer(props) {
   const { data } = useListContext(props);
   const [values, setValues] = useState(undefined);
@@ -57,7 +70,7 @@ function GDVListViewer(props) {
     <ListView {...props}>
       {values && (
         <Datagrid>
-          {Object.entries(values).map(([key, value]) => {
+          {Object.keys(values).map((key) => {
             return <CustomField key={key} source={key} label={key.split('_')[0]} />;
           })}
         </Datagrid>
@@ -76,6 +89,10 @@ function CustomField(props){
   )
 }
 
+CustomField.propTypes = {
+  source: PropTypes.string
+};
+
 function CustomTextField({record, source}){
   const value = record[source];
   let text = value ? value : "";
@@ -87,6 +104,10 @@ function CustomTextField({record, source}){
   )
 }
 
+CustomTextField.propTypes = {
+  record: PropTypes.object,
+  source: PropTypes.string
+}
 
 function reduceDataToObject(data) {
   const dataObject = {};
@@ -109,6 +130,20 @@ function ListBase({ children, ...props }) {
       </ListContextProvider>
     </ResourceContextProvider>
   );
+}
+
+ListBase.propTypes = {
+  children: PropTypes.node,
+  resource: PropTypes.string,
+  filter: PropTypes.object,
+  sort: PropTypes.object,
+  perPage: PropTypes.number,
+  debounce: PropTypes.number,
+  exporter: PropTypes.func,
+  disableAuthentication: PropTypes.bool,
+  disableSyncWithLocation: PropTypes.bool,
+  filterDefaultValues: PropTypes.object,
+  queryOptions: PropTypes.object
 }
 
 export default GDVResource;

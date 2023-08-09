@@ -4,6 +4,7 @@ import { FOAF } from "@inrupt/vocab-common-rdf";
 import { useEffect, useState } from "react";
 import { QueryEngine } from "@comunica/query-sparql";
 import "./LoginPage.css";
+import PropTypes from "prop-types";
 
 function SolidLoginForm(props) {
   const session = getDefaultSession();
@@ -101,6 +102,10 @@ function SolidLoginForm(props) {
     );
   }
 }
+
+SolidLoginForm.propTypes = {
+  defaultIDP: PropTypes.string
+};
 
 /**
  * Looks up the IDP of a WebID by querying the WebID .
