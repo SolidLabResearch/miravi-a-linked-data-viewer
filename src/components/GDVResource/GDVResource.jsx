@@ -27,7 +27,6 @@ function GDVResource(props) {
     ...rest
   } = props;
   const { isLoading } = useListController();
-  console.log(rest.actions);
   return (
     <ListBase
       debounce={debounce}
