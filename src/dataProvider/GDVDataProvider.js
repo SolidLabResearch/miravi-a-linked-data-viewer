@@ -95,7 +95,7 @@ async function fetchQuery(query) {
     if(!parsedQuery.offset){
       parsedQuery.offset = query.offset;
     }
-    if(!parsedQuery.order && query.sort){
+    if(!parsedQuery.order && query.sort && query.sort.field !== "id"){
       const {field, order} = query.sort;
       parsedQuery.order = [{expression: {termType: "Variable", value: field}, descending: order === "DESC"}];
     }
