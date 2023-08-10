@@ -74,6 +74,11 @@ export default {
   },
 };
 
+/**
+ * 
+ * @param {Number} id identifier of a query 
+ * @returns {Object} the query with the given id from the config file and additional information about it, if it exists. 
+ */
 function findQueryWithId(id) {
   return config.queries.find((query) => query.id === id);
 }
