@@ -38,7 +38,7 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={dataProvider} layout={GDVLayout} authProvider={authenticationProvider} loginPage={SolidLoginForm}>
+    <Admin dataProvider={dataProvider} layout={GDVLayout} authProvider={authenticationProvider} loginPage={SolidLoginForm} requireAuth={false}>
       {config.queries.map((query) => {
         return (
           <Resource
