@@ -8,6 +8,8 @@ import {
 import { typeMapper } from "../../../representationProvider/representationProvider";
 import GDVAction from "../../GDVAction/GDVAction";
 import PropTypes from "prop-types";
+import CustomTextField from "../../../representationProvider/components/CustomTextField";
+import GenericField from "../../../representationProvider/GenericField";
 
 /**
  *
@@ -30,7 +32,7 @@ function GDVListViewer(props) {
         <Datagrid>
           {Object.keys(values).map((key) => {
             return (
-              <CustomField key={key} source={key} label={key.split("_")[0]} />
+              <GenericField key={key} source={key} label={key.split("_")[0]} />
             );
           })}
         </Datagrid>
@@ -57,40 +59,5 @@ function reduceDataToObject(data) {
   return dataObject;
 }
 
-/**
- *
- * @returns {React.Component} a field that returns a field based on the type of the source or a custom text field if there is no typeMapper defined for the type of the source
- */
-function CustomField(props) {
-  const source = props.source;
-  const record = useRecordContext(props);
-  let Field = typeMapper[source.split("_")[1]];
-  Field = Field ? Field : CustomTextField;
-  return <Field record={record} source={source} />;
-}
-
-CustomField.propTypes = {
-  source: PropTypes.string,
-};
-
-/**
- *
- * @param {Object} record the object containing the data
- * @param {String} source the key of the data to be displayed in this field
- * @returns {React.Component} a custom text field that displays the value of the data in case there is no typeMapper defined for the type of the source
- */
-function CustomTextField({ record, source }) {
-  const value = record[source];
-  let text = value ? value : "";
-  if (value) {
-    text = value.value ? value.value : value.id;
-  }
-  return <span>{text}</span>;
-}
-
-CustomTextField.propTypes = {
-  record: PropTypes.object,
-  source: PropTypes.string,
-};
 
 export default GDVListViewer;
