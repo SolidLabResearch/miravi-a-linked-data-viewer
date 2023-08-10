@@ -77,6 +77,11 @@ async function queryIDPfromWebId(webId) {
   return firstIdp[0].get("idp").value;
 }
 
+/**
+ * 
+ * @param {DataSet} webIdThing the webId document to get the name from 
+ * @returns either the name or undefined if no foaf:name is found
+ */
 async function getName(webIdThing) {
   try {
     const literalName = getLiteral(webIdThing, FOAF.name);
@@ -90,6 +95,11 @@ async function getName(webIdThing) {
   }
 }
 
+/**
+ * 
+ * @param {DataSet} webIdThing the webId document to get the profile picture from 
+ * @returns either the profile picture or undefined if no foaf:img is found
+ */
 async function getProfilePicture(webIdThing) {
   try {
     const profilePicture = getUrl(webIdThing, FOAF.img);
