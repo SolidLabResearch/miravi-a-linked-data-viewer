@@ -4,6 +4,10 @@ import Time from "./Time";
 import config from "../../config";
 import "./GDVAction.css";
 
+/**
+ * 
+ * @returns custom action bar as defined by react-admin
+ */
 function GDVAction() {
   const { total, isLoading, perPage } = useListContext();
   const [time, setTime] = useState(0);

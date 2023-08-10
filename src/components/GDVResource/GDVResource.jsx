@@ -13,6 +13,10 @@ import { typeMapper } from "../../representationProvider/representationProvider"
 import PropTypes from "prop-types";
 import GDVAction from "../GDVAction/GDVAction";
 
+
+/** 
+ * @returns custom List as defined by react-admin 
+ */
 function GDVResource(props) {
   const {
     debounce,
@@ -59,6 +63,11 @@ GDVResource.propTypes = {
   sort: PropTypes.object,
 };
 
+
+/**
+ *  
+ * @returns custom ListViewer as defined by react-admin 
+ */
 function GDVListViewer(props) {
   const { data } = useListContext(props);
   const [values, setValues] = useState(undefined);
@@ -85,6 +94,11 @@ function GDVListViewer(props) {
   );
 }
 
+
+/**
+ *  
+ * @returns a field that returns a field based on the type of the source or a custom text field if there is no typeMapper defined for the type of the source 
+ */
 function CustomField(props) {
   const source = props.source;
   const record = useRecordContext(props);
@@ -97,6 +111,12 @@ CustomField.propTypes = {
   source: PropTypes.string,
 };
 
+/**
+ * 
+ * @param {Object} record the object containing the data
+ * @param {String} source the key of the data to be displayed in this field  
+ * @returns a custom text field that displays the value of the data in case there is no typeMapper defined for the type of the source
+ */
 function CustomTextField({ record, source }) {
   const value = record[source];
   let text = value ? value : "";
@@ -111,6 +131,11 @@ CustomTextField.propTypes = {
   source: PropTypes.string,
 };
 
+/**
+ * 
+ * @param {List<Object>} data 
+ * @returns {Object} an object with the keys of the data and the values as an array of the values of the data
+ */
 function reduceDataToObject(data) {
   const dataObject = {};
   data.forEach((record) => {
@@ -124,6 +149,10 @@ function reduceDataToObject(data) {
   return dataObject;
 }
 
+/**
+ *  
+ * @returns the base of the List Viewer providing a resource and list context to the descendants 
+ */
 function ListBase({ children, ...props }) {
   return (
     <ResourceContextProvider value={props.resource}>
