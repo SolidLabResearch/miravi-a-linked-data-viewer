@@ -1,6 +1,7 @@
 import { useRecordContext } from "react-admin";
 import CustomTextField from "./components/CustomTextField";
 import { typeMapper } from "./representationProvider";
+import PropTypes from "prop-types";
 
 /**
  *
