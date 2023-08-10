@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { ExportButton, TopToolbar, useListContext } from "react-admin";
 import Time from "./Time";
 import config from "../../config";
-import { Box } from "@material-ui/core";
 import "./GDVAction.css";
 
 function GDVAction() {
