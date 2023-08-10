@@ -1,7 +1,6 @@
 import { AppBar, TitlePortal } from "react-admin";
 import config from "../../../config";
 import "./GDVAppBar.css";
-import GDVToolbar from "./GDVToolbar/GDVToolbar";
 
 function GDVAppBar(props) {
   return (
