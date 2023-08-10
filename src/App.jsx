@@ -36,7 +36,7 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={dataProvider} loginPage={SolidLoginForm}>
+    <Admin dataProvider={dataProvider}>
       {config.queries.map((query) => {
         return (
           <Resource
