@@ -19,4 +19,6 @@ const LogoutButton = forwardRef((props, ref) => {
   );
 });
 
+LogoutButton.displayName = "LogoutButton";
+
 export default LogoutButton;
