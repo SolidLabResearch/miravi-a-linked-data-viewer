@@ -16,7 +16,6 @@ import GDVAction from "../GDVAction/GDVAction";
 function GDVResource(props) {
   const {
     debounce,
-    disableAuthentication,
     disableSyncWithLocation,
     exporter,
     filter,
@@ -30,7 +29,7 @@ function GDVResource(props) {
   return (
     <ListBase
       debounce={debounce}
-      disableAuthentication={disableAuthentication}
+      disableAuthentication={true}
       disableSyncWithLocation={disableSyncWithLocation}
       exporter={exporter}
       filter={filter}
