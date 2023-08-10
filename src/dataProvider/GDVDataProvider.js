@@ -44,6 +44,7 @@ export default {
     };
   },
   getOne: async function getOne() {
+    // Our implementation doesn't use this function
     console.log("getOne");
     return {};
   },
@@ -248,7 +249,7 @@ async function configureBindingStream(bindingStream, variables) {
     return results.map((result, index) => {
       let newResults = {};
       for (let variable of variables) {
-        let value = result.get(variable);
+        const value = result.get(variable);
         newResults[variable] = value;
       }
       newResults.id = index;
