@@ -1,4 +1,4 @@
-import { RefreshButton, RefreshIconButton, Toolbar } from "react-admin";
+import { RefreshIconButton } from "react-admin";
 import "./GDVToolbar.css";
 
 function GDVToolbar(props){
