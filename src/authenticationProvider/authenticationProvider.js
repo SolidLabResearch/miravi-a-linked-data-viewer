@@ -53,7 +53,7 @@ export default {
       identity.fullName = await getName(webIdThing);
       identity.avatar = await getProfilePicture(webIdThing);
     } catch (error) {
-      throw new Error("Could not get identity");
+      return identity;
     }
     return identity;
   }
