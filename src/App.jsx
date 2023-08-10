@@ -2,7 +2,6 @@ import "./App.css";
 import { Admin, Resource } from "react-admin";
 import dataProvider from "./dataProvider/GDVDataProvider.js";
 import config from "./config";
-import SolidLoginForm from "./components/LoginPage/LoginPage";
 import { useEffect, useState } from "react";
 import {
   getDefaultSession,
