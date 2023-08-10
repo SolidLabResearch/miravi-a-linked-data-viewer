@@ -29,7 +29,7 @@ function GDVAction() {
         <div className="information-box">
           {isLoading && <strong>Loading: </strong>}
           {!isLoading && <strong>Loaded: </strong>}
-          <span>{perPage}</span>
+          <span>{perPage} results</span>
         </div>
         <div className="information-box">
           {isLoading && <strong>Runtime: </strong>}

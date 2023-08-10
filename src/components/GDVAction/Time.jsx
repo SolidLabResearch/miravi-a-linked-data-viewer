@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 function Time(props) {
   const time = props.time;
   const minutes =
@@ -14,5 +16,10 @@ function Time(props) {
 
   return <>{display}</>;
 }
+
+Time.propTypes = {
+  time: PropTypes.number,
+  showMilliseconds: PropTypes.bool,
+};
 
 export default Time;
