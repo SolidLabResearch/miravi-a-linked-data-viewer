@@ -3,6 +3,7 @@ import {
   ListContextProvider,
   useListController,
   Loading,
+  ListBase,
 } from "react-admin";
 import PropTypes from "prop-types";
 import GDVListViewer from "./GDVListViewer/GDVListViewer";
@@ -57,34 +58,5 @@ GDVResource.propTypes = {
   sort: PropTypes.object,
 };
 
-
-
-/**
- *  
- * @returns {React.Component} the base of the List Viewer providing a resource and list context to the descendants 
- */
-function ListBase({ children, ...props }) {
-  return (
-    <ResourceContextProvider value={props.resource}>
-      <ListContextProvider value={useListController(props)}>
-        {children}
-      </ListContextProvider>
-    </ResourceContextProvider>
-  );
-}
-
-ListBase.propTypes = {
-  children: PropTypes.node,
-  resource: PropTypes.string,
-  filter: PropTypes.object,
-  sort: PropTypes.object,
-  perPage: PropTypes.number,
-  debounce: PropTypes.number,
-  exporter: PropTypes.func,
-  disableAuthentication: PropTypes.bool,
-  disableSyncWithLocation: PropTypes.bool,
-  filterDefaultValues: PropTypes.object,
-  queryOptions: PropTypes.object,
-};
 
 export default GDVResource;
