@@ -6,6 +6,8 @@ import {
   useRecordContext,
 } from "react-admin";
 import { typeMapper } from "../../../representationProvider/representationProvider";
+import GDVAction from "../../GDVAction/GDVAction";
+import PropTypes from "prop-types";
 
 /**
  *
