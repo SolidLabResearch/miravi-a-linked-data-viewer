@@ -109,6 +109,7 @@ async function fetchQuery(query) {
 /**
  * A function that executes a given query and processes every result.
  * @param {query} query the query which is to be executed
+ * @returns {List<Object>} the results of the query
  */
 async function executeQuery(query) {
   try {
@@ -142,6 +143,7 @@ async function executeQuery(query) {
  *
  * @param {QueryType} execution a query execution
  * @param {query} query the query which is being executed
+ * @returns {List<Object>} the results of the query
  */
 async function handleQueryExecution(execution, query) {
   try {
@@ -168,6 +170,12 @@ async function handleQueryExecution(execution, query) {
   }
 }
 
+
+/**
+ * 
+ * @param {query} query the query which is being executed
+ * @returns {List<Object>} the results of the query
+ */
 async function countQueryResults(query) {
   const parser = new Parser();
   const parsedQuery = parser.parse(query.rawText);
@@ -210,7 +218,6 @@ function configureBool() {
 /**
  * Configures how a query resulting in a stream of quads should be processed.
  * @param {AsyncIterator<Quad> & ResultStream<Quad>>} quadStream a stream of Quads
- * @param {List<String>} variables all the variables of the query behind the binding stream.
  */
 async function configureQuadStream(quadStream) {
   try {
