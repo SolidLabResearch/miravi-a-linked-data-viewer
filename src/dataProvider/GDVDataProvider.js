@@ -210,16 +210,8 @@ async function countQueryResults(query) {
 const queryTypeHandlers = {
   bindings: configureBindingStream,
   quads: configureQuadStream,
-  boolean: configureBool,
 };
 
-/**
- * Configures how a boolean query gets processed.
- * @param {Boolean} result the result of a boolean query
- */
-function configureBool() {
-  //
-}
 
 /**
  * Configures how a query resulting in a stream of quads should be processed.
