@@ -15,7 +15,7 @@ import GDVAction from "../GDVAction/GDVAction";
 
 
 /** 
- * @returns custom List as defined by react-admin 
+ * @returns {React.Component} custom List as defined by react-admin 
  */
 function GDVResource(props) {
   const {
@@ -97,7 +97,7 @@ function GDVListViewer(props) {
 
 /**
  *  
- * @returns a field that returns a field based on the type of the source or a custom text field if there is no typeMapper defined for the type of the source 
+ * @returns {React.Component} a field that returns a field based on the type of the source or a custom text field if there is no typeMapper defined for the type of the source 
  */
 function CustomField(props) {
   const source = props.source;
@@ -115,7 +115,7 @@ CustomField.propTypes = {
  * 
  * @param {Object} record the object containing the data
  * @param {String} source the key of the data to be displayed in this field  
- * @returns a custom text field that displays the value of the data in case there is no typeMapper defined for the type of the source
+ * @returns {React.Component} a custom text field that displays the value of the data in case there is no typeMapper defined for the type of the source
  */
 function CustomTextField({ record, source }) {
   const value = record[source];
@@ -151,7 +151,7 @@ function reduceDataToObject(data) {
 
 /**
  *  
- * @returns the base of the List Viewer providing a resource and list context to the descendants 
+ * @returns {React.Component} the base of the List Viewer providing a resource and list context to the descendants 
  */
 function ListBase({ children, ...props }) {
   return (
