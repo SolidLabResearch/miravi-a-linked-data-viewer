@@ -8,10 +8,12 @@ import {
   ListView,
   useRecordContext,
   Loading,
+  Title,
 } from "react-admin";
 import { typeMapper } from "../../representationProvider/representationProvider";
 import PropTypes from "prop-types";
 import GDVAction from "../GDVAction/GDVAction";
+import config from "../../config";
 
 function GDVResource(props) {
   const {
@@ -70,17 +72,20 @@ function GDVListViewer(props) {
   }, [data]);
 
   return (
-    <ListView actions={<GDVAction/>} {...props}>
-      {values && (
-        <Datagrid>
-          {Object.keys(values).map((key) => {
-            return (
-              <CustomField key={key} source={key} label={key.split("_")[0]} />
-            );
-          })}
-        </Datagrid>
-      )}
-    </ListView>
+    <>
+      <Title defaultTitle={config.title} />
+      <ListView title={" "} actions={<GDVAction />} {...props}>
+        {values && (
+          <Datagrid>
+            {Object.keys(values).map((key) => {
+              return (
+                <CustomField key={key} source={key} label={key.split("_")[0]} />
+              );
+            })}
+          </Datagrid>
+        )}
+      </ListView>
+    </>
   );
 }
 
