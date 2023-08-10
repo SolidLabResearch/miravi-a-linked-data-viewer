@@ -1,9 +1,11 @@
 import { QueryEngine } from "@comunica/query-sparql";
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+import { getLiteral, getProfileAll, getThing, getUrl } from "@inrupt/solid-client";
+import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
+import { FOAF } from "@inrupt/vocab-common-rdf";
 
 export default {
   login: async function login({ idpOrWebId }) {
-    const { session } = getDefaultSession();
+    const session = getDefaultSession();
     try {
       idpOrWebId = await queryIDPfromWebId(idpOrWebId);
     } catch (error) {
@@ -17,9 +19,44 @@ export default {
         clientName: "Generic Data Viewer",
       });
     } catch (error) {
-        throw new Error("Login failed");
+      throw new Error("Login failed");
     }
   },
+  logout: async function logout() {
+    const session = getDefaultSession();
+    await session.logout();
+  },
+  checkAuth: async function checkAuth() {
+    const session = getDefaultSession();
+    return session.info
+  },
+  getPermissions: async function getPermissions() {
+    const session = getDefaultSession();
+    return { loggedIn: session.info.isLoggedIn };
+  },
+  checkError: async function checkError() {
+    const session = getDefaultSession();
+    if (session.info.isLoggedIn) {
+      return true;
+    } else {
+      throw new Error("User is no longer logged in.");
+    }
+  },
+  getIdentity: async function getIdentity() {
+    const session = getDefaultSession();
+    const webId = session.info.webId;
+    const identity = {};
+    try {
+      const dataSet = await getProfileAll(webId, { fetch: fetch });
+      const profile = dataSet.webIdProfile;
+      const webIdThing = getThing(profile, webId);
+      identity.fullName = await getName(webIdThing);
+      identity.avatar = await getProfilePicture(webIdThing);
+    } catch (error) {
+      throw new Error("Could not get identity");
+    }
+    return identity;
+  }
 };
 
 /**
@@ -38,4 +75,30 @@ async function queryIDPfromWebId(webId) {
     throw new Error("No Identity Provider found");
   }
   return firstIdp[0].get("idp").value;
+}
+
+async function getName(webIdThing) {
+  try {
+    const literalName = getLiteral(webIdThing, FOAF.name);
+    if (literalName) {
+      return literalName.value;
+    } else {
+      return undefined;
+    }
+  } catch {
+    return undefined;
+  }
+}
+
+async function getProfilePicture(webIdThing) {
+  try {
+    const profilePicture = getUrl(webIdThing, FOAF.img);
+    if (profilePicture) {
+      return profilePicture.value;
+    } else {
+      return undefined;
+    }
+  } catch {
+    return undefined;
+  }
 }
