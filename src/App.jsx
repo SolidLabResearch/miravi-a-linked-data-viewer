@@ -15,6 +15,11 @@ function App() {
   const [loggedIn, setLoggedIn] = useState();
 
   useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--text-color", config.textColor);
+  }, []);
+
+  useEffect(() => {
     session.onLogin(() => setLoggedIn(true));
     session.onLogout(() => setLoggedIn(false));
 
