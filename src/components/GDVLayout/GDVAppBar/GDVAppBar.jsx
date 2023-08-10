@@ -2,10 +2,11 @@ import { AppBar, TitlePortal } from "react-admin";
 import config from "../../../config";
 import "./GDVAppBar.css";
 import GDVToolbar from "./GDVToolbar/GDVToolbar";
+import GDVUserMenu from "../GDVUserMenu/GDVUserMenu";
 
 function GDVAppBar(props) {
   return (
-    <AppBar {...props} toolbar={<GDVToolbar />}>
+    <AppBar {...props} toolbar={<GDVToolbar />} userMenu={<GDVUserMenu />}>
       <img
         id="app-logo"
         src={config.logoLocation}
