@@ -37,7 +37,7 @@ export default {
         });
       });
     }
-    let totalItems = await query.totalItems;
+    const totalItems = await query.totalItems;
     return {
       data: results,
       total: parseInt(totalItems),
