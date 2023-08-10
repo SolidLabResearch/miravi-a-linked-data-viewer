@@ -22,6 +22,8 @@ function GDVAction() {
     return () => clearInterval(intervalId);
   }, [time, isLoading]);
 
+  const resultCount = total <= perPage ? total : perPage;
+
   return (
     <TopToolbar style={{ width: "100%" }}>
       <div style={{ flex: "1" }}></div>
@@ -29,7 +31,7 @@ function GDVAction() {
         <div className="information-box">
           {isLoading && <strong>Loading: </strong>}
           {!isLoading && <strong>Loaded: </strong>}
-          <span>{perPage} results</span>
+          <span>{resultCount} results</span>
         </div>
         <div className="information-box">
           {isLoading && <strong>Runtime: </strong>}
