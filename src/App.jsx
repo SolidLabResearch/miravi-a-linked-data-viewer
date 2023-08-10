@@ -9,6 +9,7 @@ import {
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
 import GDVResource from "./components/GDVResource/GDVResource";
+import GDVLayout from "./components/GDVLayout/GDVLayout";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={dataProvider} loginPage={SolidLoginForm} authProvider={authenticationProvider}>
+    <Admin dataProvider={dataProvider} layout={GDVLayout} authProvider={authenticationProvider} loginPage={SolidLoginForm}>
       {config.queries.map((query) => {
         return (
           <Resource
