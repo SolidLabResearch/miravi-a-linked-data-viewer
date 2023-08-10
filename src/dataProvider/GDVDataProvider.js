@@ -79,7 +79,7 @@ function findQueryWithId(id) {
 
 /**
  * Fetches the the query file from the given query and returns its text.
- * @param {query} query the query which is to be executed
+ * @param {Object} query the query which is to be executed and additional information about the query.
  * @returns the text from the file location provided by the query relative to query location defined in the config file.
  */
 async function fetchQuery(query) {
@@ -108,7 +108,7 @@ async function fetchQuery(query) {
 
 /**
  * A function that executes a given query and processes every result.
- * @param {query} query the query which is to be executed
+ * @param {Object} query the query which is to be executed and additional information about the query.
  * @returns {List<Object>} the results of the query
  */
 async function executeQuery(query) {
@@ -142,7 +142,7 @@ async function executeQuery(query) {
  * A function that given a QueryType processes every result.
  *
  * @param {QueryType} execution a query execution
- * @param {query} query the query which is being executed
+ * @param {Object} query the query which is to be executed and additional information about the query.
  * @returns {List<Object>} the results of the query
  */
 async function handleQueryExecution(execution, query) {
@@ -173,7 +173,7 @@ async function handleQueryExecution(execution, query) {
 
 /**
  * 
- * @param {query} query the query which is being executed
+ * @param {Object} query the query which is to be executed and additional information about the query.
  * @returns {List<Object>} the results of the query
  */
 async function countQueryResults(query) {
