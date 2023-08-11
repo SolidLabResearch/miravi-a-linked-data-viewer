@@ -8,6 +8,7 @@ import {
 import { HttpError } from "react-admin";
 import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
+import { Term } from "@rdfjs/types";
 
 const myEngine = new QueryEngine();
 
@@ -118,7 +119,7 @@ async function fetchQuery(query) {
 /**
  * A function that executes a given query and processes every result.
  * @param {object} query the query which is to be executed and additional information about the query.
- * @returns {Array<object>} the results of the query
+ * @returns {Array<Term>} the results of the query
  */
 async function executeQuery(query) {
   try {
@@ -151,7 +152,7 @@ async function executeQuery(query) {
  * A function that given a QueryType processes every result.
  * @param {object} execution a query execution
  * @param {object} query the query which is to be executed and additional information about the query.
- * @returns {Array<object>} the results of the query
+ * @returns {Array<Term>} the results of the query
  */
 async function handleQueryExecution(execution, query) {
   try {
@@ -179,7 +180,7 @@ async function handleQueryExecution(execution, query) {
 /**
  *
  * @param {object} query the query which is to be executed and additional information about the query.
- * @returns {Array<object>} the results of the query
+ * @returns {Array<Term>} the results of the query
  */
 async function countQueryResults(query) {
   const parser = new Parser();
@@ -214,7 +215,7 @@ const queryTypeHandlers = {
 /**
  * Configures how a query resulting in a stream of quads should be processed.
  * @param {object} quadStream a stream of Quads
- * @returns {Array<object>} the results of the query
+ * @returns {Array<Term>} the results of the query
  */
 async function configureQuadStream(quadStream) {
   try {
@@ -238,7 +239,7 @@ async function configureQuadStream(quadStream) {
  * Configures how a query resulting in a stream of bindings should be processed.
  * @param {object} bindingStream a stream of Bindings
  * @param {Array<string>} variables all the variables of the query behind the binding stream.
- * @returns {Array<object>} the results of the query
+ * @returns {Array<Term>} the results of the query
  */
 async function configureBindingStream(bindingStream, variables) {
   try {

@@ -1,8 +1,9 @@
 import { termToString } from "rdf-string";
+import {Term} from "@rdfjs/types"
 
 /**
  *
- * @param {object} record an object of RDF/JS objects
+ * @param {Term|string} record an object of RDF/JS terms
  * @param {string} source the key of record which is to be processed
  * @returns {string} the id or value of the record at the given source key
  */
