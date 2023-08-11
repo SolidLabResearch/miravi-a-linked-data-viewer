@@ -7,6 +7,7 @@ import {
 } from "@inrupt/solid-client-authn-browser";
 import { HttpError } from "react-admin";
 import { Generator, Parser } from "sparqljs";
+import NotImplementedError from "../NotImplementedError";
 
 const myEngine = new QueryEngine();
 
@@ -45,30 +46,29 @@ export default {
   },
   getOne: async function getOne() {
     // Our implementation doesn't use this function
-    console.log("getOne");
-    return {};
+    throw new NotImplementedError();
   },
   getMany: async function getMany() {
-    console.log("getMany");
-    return [{}];
+    // Our implementation doesn't use this function
+    throw new NotImplementedError();
   },
   getManyReference: async function getManyReference() {
-    console.error("getManyReference not implemented");
+    throw new NotImplementedError();
   },
   create: async function create() {
-    console.error("create not implemented");
+    throw new NotImplementedError();
   },
   update: async function update() {
-    console.error("update not implemented");
+    throw new NotImplementedError();
   },
   updateMany: async function updateMany() {
-    console.error("updateMany not implemented");
+    throw new NotImplementedError();
   },
   delete: async function deleteOne() {
-    console.error("deleteOne not implemented");
+    throw new NotImplementedError();
   },
   deleteMany: async function deleteMany() {
-    console.error("deleteMany not implemented");
+    throw new NotImplementedError();
   },
 };
 
