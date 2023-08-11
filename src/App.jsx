@@ -2,8 +2,7 @@ import "./App.css";
 import { Admin, Resource } from "react-admin";
 import dataProvider from "./dataProvider/GDVDataProvider.js";
 import config from "./config";
-import SolidLoginForm from "./components/LoginPage/LoginPage";
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState } from "react";
 import {
   getDefaultSession,
   handleIncomingRedirect,
@@ -11,6 +10,9 @@ import {
 import GDVResource from "./components/GDVResource/GDVResource";
 import GDVLayout from "./components/GDVLayout/GDVLayout";
 
+/**
+ * @returns {Component} the main component of the application
+ */
 function App() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
@@ -29,7 +31,7 @@ function App() {
     // https://www.thisdot.co/blog/async-code-in-useeffect-is-dangerous-how-do-we-deal-with-it/
     handleIncomingRedirect({ restorePreviousSession: true }).then((info) => {
       if (info) {
-        let status = info.isLoggedIn;
+        const status = info.isLoggedIn;
         if (status !== loggedIn) {
           setLoggedIn(status);
         }
@@ -37,7 +39,7 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={dataProvider} loginPage={SolidLoginForm} layout={GDVLayout}>
+    <Admin dataProvider={dataProvider} layout={GDVLayout}>
       {config.queries.map((query) => {
         return (
           <Resource

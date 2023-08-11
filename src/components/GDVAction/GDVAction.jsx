@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState } from "react";
 import { ExportButton, TopToolbar, useListContext } from "react-admin";
 import Time from "./Time";
 import config from "../../config";
 import "./GDVAction.css";
 
+/**
+ * 
+ * @returns {Component} custom action bar as defined by react-admin
+ */
 function GDVAction() {
   const { total, isLoading, perPage } = useListContext();
   const [time, setTime] = useState(0);
