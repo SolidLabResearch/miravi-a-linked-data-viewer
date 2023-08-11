@@ -46,6 +46,9 @@ export default {
     const session = getDefaultSession();
     const webId = session.info.webId;
     const identity = {};
+    if(!session.info.isLoggedIn) {
+      return identity;
+    }
     try {
       const dataSet = await getProfileAll(webId, { fetch: fetch });
       const profile = dataSet.webIdProfile;
