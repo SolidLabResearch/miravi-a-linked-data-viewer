@@ -6,7 +6,7 @@ import {
 } from "react-admin";
 import GDVAction from "../../GDVAction/GDVAction";
 import GenericField from "../../../representationProvider/GenericField";
-import {Term} from "@rdfjs/types"
+import { Term } from "sparqljs";
 
 /**
  * @param {object} props the props passed down to the component

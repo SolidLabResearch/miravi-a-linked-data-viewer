@@ -2,7 +2,7 @@ import { getRawData } from "./processFunction";
 import { ImageField } from "react-admin";
 import PropTypes from "prop-types";
 import { Component } from "react";
-import {Term} from "@rdfjs/types"
+import { Term } from "sparqljs";
 
 /**
  * @param {object} props the props passed down to the component

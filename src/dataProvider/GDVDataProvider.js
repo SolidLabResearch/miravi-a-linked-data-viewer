@@ -8,7 +8,7 @@ import {
 import { HttpError } from "react-admin";
 import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
-import { Term } from "@rdfjs/types";
+import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
