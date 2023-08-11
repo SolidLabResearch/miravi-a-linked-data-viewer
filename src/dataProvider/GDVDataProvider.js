@@ -161,12 +161,10 @@ async function handleQueryExecution(execution, query) {
     if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
       const totalItems = metadata.totalItems;
-      if (!query.totalItems) {
-        if (!totalItems) {
-          query.totalItems = countQueryResults(query);
-        } else {
-          query.totalItems = totalItems;
-        }
+      if (!totalItems) {
+        query.totalItems = countQueryResults(query);
+      } else {
+        query.totalItems = totalItems;
       }
       variables = metadata.variables.map((val) => {
         return val.value;
