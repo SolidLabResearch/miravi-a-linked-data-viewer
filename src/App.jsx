@@ -2,13 +2,16 @@ import "./App.css";
 import { Admin, Resource } from "react-admin";
 import dataProvider from "./dataProvider/GDVDataProvider.js";
 import config from "./config";
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState } from "react";
 import {
   getDefaultSession,
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
 import GDVResource from "./components/GDVResource/GDVResource";
 
+/**
+ * @returns {Component} the main component of the application
+ */
 function App() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
@@ -27,7 +30,7 @@ function App() {
     // https://www.thisdot.co/blog/async-code-in-useeffect-is-dangerous-how-do-we-deal-with-it/
     handleIncomingRedirect({ restorePreviousSession: true }).then((info) => {
       if (info) {
-        let status = info.isLoggedIn;
+        const status = info.isLoggedIn;
         if (status !== loggedIn) {
           setLoggedIn(status);
         }

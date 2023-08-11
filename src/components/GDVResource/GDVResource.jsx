@@ -5,10 +5,11 @@ import {
 } from "react-admin";
 import PropTypes from "prop-types";
 import GDVListViewer from "./GDVListViewer/GDVListViewer";
-
+import { Component } from "react";
 
 /** 
- * @returns {React.Component} custom List as defined by react-admin 
+ * @param {object} props the props passed down to the component
+ * @returns {Component} custom List as defined by react-admin 
  */
 function GDVResource(props) {
   const {
@@ -55,6 +56,5 @@ GDVResource.propTypes = {
   resource: PropTypes.string,
   sort: PropTypes.object,
 };
-
 
 export default GDVResource;

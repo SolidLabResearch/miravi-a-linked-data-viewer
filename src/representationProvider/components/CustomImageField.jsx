@@ -1,7 +1,14 @@
 import { getRawData } from "./processFunction";
 import { ImageField } from "react-admin";
 import PropTypes from "prop-types";
+import { Component } from "react";
 
+/**
+ * @param {object} props the props passed down to the component
+ * @param {object} props.record the object containing the data
+ * @param {string} props.source the key of the data to be displayed in this field
+ * @returns {Component} a component that displays the image behind the url of the given RDF/JS object
+ */
 function CustomImageField({ source, record }) {
   record[source] = getRawData(record, source);
 

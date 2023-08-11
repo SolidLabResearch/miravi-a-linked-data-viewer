@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState } from "react";
 import {
   Datagrid,
   ListView,
@@ -8,8 +8,8 @@ import GDVAction from "../../GDVAction/GDVAction";
 import GenericField from "../../../representationProvider/GenericField";
 
 /**
- *
- * @returns custom ListViewer as defined by react-admin
+ * @param {object} props the props passed down to the component
+ * @returns {Component} custom ListViewer as defined by react-admin
  */
 function GDVListViewer(props) {
   const { data } = useListContext(props);
@@ -39,8 +39,8 @@ function GDVListViewer(props) {
 
 /**
  *
- * @param {List<Object>} data
- * @returns {Object} an object with the keys of the data and the values as an array of the values of the data
+ * @param {Array<object>} data a list of data objects
+ * @returns {object} an object with the keys of the data and the values as an array of the values of the data
  */
 function reduceDataToObject(data) {
   const dataObject = {};
@@ -54,6 +54,5 @@ function reduceDataToObject(data) {
   });
   return dataObject;
 }
-
 
 export default GDVListViewer;

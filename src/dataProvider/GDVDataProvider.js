@@ -52,9 +52,7 @@ export default {
     console.log("getMany");
     return [{}];
   },
-  getManyReference: async function getManyReference(
-   
-  ) {
+  getManyReference: async function getManyReference() {
     console.error("getManyReference not implemented");
   },
   create: async function create() {
@@ -75,9 +73,9 @@ export default {
 };
 
 /**
- * 
- * @param {Number} id identifier of a query 
- * @returns {Object} the query with the given id from the config file and additional information about it, if it exists. 
+ *
+ * @param {number} id identifier of a query
+ * @returns {object} the query with the given id from the config file and additional information about it, if it exists.
  */
 function findQueryWithId(id) {
   return config.queries.find((query) => query.id === id);
@@ -85,8 +83,8 @@ function findQueryWithId(id) {
 
 /**
  * Fetches the the query file from the given query and returns its text.
- * @param {Object} query the query which is to be executed and additional information about the query.
- * @returns the text from the file location provided by the query relative to query location defined in the config file.
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {string} the text from the file location provided by the query relative to query location defined in the config file.
  */
 async function fetchQuery(query) {
   try {
@@ -95,15 +93,20 @@ async function fetchQuery(query) {
     const rawText = await result.text();
     query.rawText = rawText;
     const parsedQuery = parser.parse(rawText);
-    if(!parsedQuery.limit){
+    if (!parsedQuery.limit) {
       parsedQuery.limit = query.limit;
     }
-    if(!parsedQuery.offset){
+    if (!parsedQuery.offset) {
       parsedQuery.offset = query.offset;
     }
-    if(!parsedQuery.order && query.sort && query.sort.field !== "id"){
-      const {field, order} = query.sort;
-      parsedQuery.order = [{expression: {termType: "Variable", value: field}, descending: order === "DESC"}];
+    if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
+      const { field, order } = query.sort;
+      parsedQuery.order = [
+        {
+          expression: { termType: "Variable", value: field },
+          descending: order === "DESC",
+        },
+      ];
     }
     const generator = new Generator();
     return generator.stringify(parsedQuery);
@@ -114,8 +117,8 @@ async function fetchQuery(query) {
 
 /**
  * A function that executes a given query and processes every result.
- * @param {Object} query the query which is to be executed and additional information about the query.
- * @returns {List<Object>} the results of the query
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {Array<object>} the results of the query
  */
 async function executeQuery(query) {
   try {
@@ -137,7 +140,7 @@ async function executeQuery(query) {
       query
     );
   } catch (error) {
-    for (let source of query.sources) {
+    for (const source of query.sources) {
       myEngine.invalidateHttpCache(source);
     }
     throw new HttpError(error.message, 500);
@@ -146,10 +149,9 @@ async function executeQuery(query) {
 
 /**
  * A function that given a QueryType processes every result.
- *
- * @param {QueryType} execution a query execution
- * @param {Object} query the query which is to be executed and additional information about the query.
- * @returns {List<Object>} the results of the query
+ * @param {object} execution a query execution
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {Array<object>} the results of the query
  */
 async function handleQueryExecution(execution, query) {
   try {
@@ -176,11 +178,10 @@ async function handleQueryExecution(execution, query) {
   }
 }
 
-
 /**
- * 
- * @param {Object} query the query which is to be executed and additional information about the query.
- * @returns {List<Object>} the results of the query
+ *
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {Array<object>} the results of the query
  */
 async function countQueryResults(query) {
   const parser = new Parser();
@@ -212,16 +213,16 @@ const queryTypeHandlers = {
   quads: configureQuadStream,
 };
 
-
 /**
  * Configures how a query resulting in a stream of quads should be processed.
- * @param {AsyncIterator<Quad> & ResultStream<Quad>>} quadStream a stream of Quads
+ * @param {object} quadStream a stream of Quads
+ * @returns {Array<object>} the results of the query
  */
 async function configureQuadStream(quadStream) {
   try {
     const results = (await quadStream.toArray()).flat();
     return results.map((result, index) => {
-      let newResults = {
+      const newResults = {
         subject: result.subject,
         predicate: result.predicate,
         object: result.object,
@@ -237,15 +238,16 @@ async function configureQuadStream(quadStream) {
 
 /**
  * Configures how a query resulting in a stream of bindings should be processed.
- * @param {BindingStream} bindingStream a stream of Bindings
- * @param {List<String>} variables all the variables of the query behind the binding stream.
+ * @param {object} bindingStream a stream of Bindings
+ * @param {Array<string>} variables all the variables of the query behind the binding stream.
+ * @returns {Array<object>} the results of the query
  */
 async function configureBindingStream(bindingStream, variables) {
   try {
     const results = await bindingStream.toArray();
     return results.map((result, index) => {
-      let newResults = {};
-      for (let variable of variables) {
+      const newResults = {};
+      for (const variable of variables) {
         const value = result.get(variable);
         newResults[variable] = value;
       }
