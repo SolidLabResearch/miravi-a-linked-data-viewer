@@ -8,6 +8,7 @@ import {
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
 import GDVResource from "./components/GDVResource/GDVResource";
+import IconProvider from "./IconProvider/IconProvider";
 
 /**
  * @returns {Component} the main component of the application
@@ -46,6 +47,7 @@ function App() {
             name={query.id}
             options={{ label: query.name }}
             list={GDVResource}
+            icon={IconProvider[query.icon]}
           />
         );
       })}
