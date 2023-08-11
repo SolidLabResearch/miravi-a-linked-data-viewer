@@ -1,5 +1,5 @@
 import { termToString } from "rdf-string";
-import {Term} from "@rdfjs/types"
+import { Term } from "sparqljs";
 
 /**
  *
