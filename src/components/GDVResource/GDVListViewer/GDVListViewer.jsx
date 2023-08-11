@@ -6,6 +6,7 @@ import {
 } from "react-admin";
 import GDVAction from "../../GDVAction/GDVAction";
 import GenericField from "../../../representationProvider/GenericField";
+import {Term} from "@rdfjs/types"
 
 /**
  * @param {object} props the props passed down to the component
@@ -39,8 +40,8 @@ function GDVListViewer(props) {
 
 /**
  *
- * @param {Array<object>} data a list of data objects
- * @returns {object} an object with the keys of the data and the values as an array of the values of the data
+ * @param {Array<Term>} data a list of data objects
+ * @returns {Term} an object with the keys of the data and the values as an array of the values of the data
  */
 function reduceDataToObject(data) {
   const dataObject = {};
