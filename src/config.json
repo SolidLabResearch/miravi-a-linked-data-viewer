@@ -70,7 +70,7 @@
             "queryLocation": "books.rq",
             "name": "My wish list",
             "description": "A list of books I'd love to own",
-            "icon": "images",
+            "icon": "books",
             "id": "654",
             "sources": ["http://localhost:8080/example/wish-list"]
         }
