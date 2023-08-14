@@ -1,12 +1,9 @@
 import { Component, useEffect, useState } from "react";
-import {
-  Datagrid,
-  ListView,
-  useListContext,
-} from "react-admin";
+import { Datagrid, ListView, Title, useListContext } from "react-admin";
 import GDVAction from "../../GDVAction/GDVAction";
 import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
+import config from "../../../config";
 
 /**
  * @param {object} props the props passed down to the component
@@ -24,17 +21,24 @@ function GDVListViewer(props) {
   }, [data]);
 
   return (
-    <ListView actions={<GDVAction />} {...props}>
-      {values && (
-        <Datagrid>
-          {Object.keys(values).map((key) => {
-            return (
-              <GenericField key={key} source={key} label={key.split("_")[0]} />
-            );
-          })}
-        </Datagrid>
-      )}
-    </ListView>
+    <>
+      <Title title={config.title} />
+      <ListView title=" " actions={<GDVAction />} {...props}>
+        {values && (
+          <Datagrid>
+            {Object.keys(values).map((key) => {
+              return (
+                <GenericField
+                  key={key}
+                  source={key}
+                  label={key.split("_")[0]}
+                />
+              );
+            })}
+          </Datagrid>
+        )}
+      </ListView>
+    </>
   );
 }
 

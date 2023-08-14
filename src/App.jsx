@@ -8,6 +8,7 @@ import {
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
 import GDVResource from "./components/GDVResource/GDVResource";
+import GDVLayout from "./components/GDVLayout/GDVLayout";
 
 /**
  * @returns {Component} the main component of the application
@@ -38,7 +39,7 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={dataProvider}>
+    <Admin dataProvider={dataProvider} layout={GDVLayout}>
       {config.queries.map((query) => {
         return (
           <Resource
