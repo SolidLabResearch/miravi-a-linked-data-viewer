@@ -1,8 +1,12 @@
 import { QueryEngine } from "@comunica/query-sparql";
-import { getLiteral, getProfileAll, getThing, getUrl } from "@inrupt/solid-client";
+import {
+  getLiteral,
+  getProfileAll,
+  getThing,
+  getUrl
+} from "@inrupt/solid-client";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
 import { FOAF } from "@inrupt/vocab-common-rdf";
-import { SolidDataset } from "@inrupt/solid-client";
 
 export default {
   login: async function login({ idpOrWebId }) {
@@ -29,7 +33,7 @@ export default {
   },
   checkAuth: async function checkAuth() {
     const session = getDefaultSession();
-    return session.info
+    return session.info;
   },
   getPermissions: async function getPermissions() {
     const session = getDefaultSession();
@@ -47,7 +51,7 @@ export default {
     const session = getDefaultSession();
     const webId = session.info.webId;
     const identity = {};
-    if(!session.info.isLoggedIn) {
+    if (!session.info.isLoggedIn) {
       return identity;
     }
     try {
@@ -60,7 +64,7 @@ export default {
       return identity;
     }
     return identity;
-  }
+  },
 };
 
 /**
@@ -82,37 +86,24 @@ async function queryIDPfromWebId(webId) {
 }
 
 /**
- * 
- * @param {SolidDataset} webIdThing the webId document to get the name from 
+ *
+ * @param {object} webIdThing the webId document to get the name from
  * @returns {?string} either the name or undefined if no foaf:name is found
  */
 async function getName(webIdThing) {
-  try {
-    const literalName = getLiteral(webIdThing, FOAF.name);
-    if (literalName) {
-      return literalName.value;
-    } else {
-      return undefined;
-    }
-  } catch {
+  const literalName = getLiteral(webIdThing, FOAF.name);
+  if (literalName) {
+    return literalName.value;
+  } else {
     return undefined;
   }
 }
 
 /**
- * 
- * @param {SolidDataset} webIdThing the webId document to get the profile picture from 
+ *
+ * @param {object} webIdThing the webId document to get the profile picture from
  * @returns {?string} either a url to the profile picture or undefined if no foaf:img is found
  */
 async function getProfilePicture(webIdThing) {
-  try {
-    const profilePicture = getUrl(webIdThing, FOAF.img);
-    if (profilePicture) {
-      return profilePicture.value;
-    } else {
-      return undefined;
-    }
-  } catch {
-    return undefined;
-  }
+  return getUrl(webIdThing, FOAF.img);
 }
