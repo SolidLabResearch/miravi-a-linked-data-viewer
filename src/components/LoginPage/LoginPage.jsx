@@ -4,7 +4,7 @@ import { useLogin, useNotify } from "react-admin";
 import { Component } from "react";
 
 /**
- * @returns {Component} a login form for logging into your solid pod. 
+ * @returns {Component} a login form for logging into your Identity Provider. 
  */
 function SolidLoginForm() {
   const login = useLogin();
