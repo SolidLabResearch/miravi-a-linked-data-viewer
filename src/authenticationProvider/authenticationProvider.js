@@ -2,7 +2,7 @@ import { QueryEngine } from "@comunica/query-sparql";
 import { getLiteral, getProfileAll, getThing, getUrl } from "@inrupt/solid-client";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
 import { FOAF } from "@inrupt/vocab-common-rdf";
-import DataSet from "@rdfjs/dataset"
+import { SolidDataset } from "@inrupt/solid-client";
 
 export default {
   login: async function login({ idpOrWebId }) {
@@ -83,7 +83,7 @@ async function queryIDPfromWebId(webId) {
 
 /**
  * 
- * @param {DataSet} webIdThing the webId document to get the name from 
+ * @param {SolidDataset} webIdThing the webId document to get the name from 
  * @returns {?string} either the name or undefined if no foaf:name is found
  */
 async function getName(webIdThing) {
@@ -101,7 +101,7 @@ async function getName(webIdThing) {
 
 /**
  * 
- * @param {DataSet} webIdThing the webId document to get the profile picture from 
+ * @param {SolidDataset} webIdThing the webId document to get the profile picture from 
  * @returns {?string} either a url to the profile picture or undefined if no foaf:img is found
  */
 async function getProfilePicture(webIdThing) {
