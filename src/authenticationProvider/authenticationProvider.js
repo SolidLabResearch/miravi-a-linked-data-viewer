@@ -58,8 +58,8 @@ export default {
       const dataSet = await getProfileAll(webId, { fetch: fetch });
       const profile = dataSet.webIdProfile;
       const webIdThing = getThing(profile, webId);
-      identity.fullName = await getName(webIdThing);
-      identity.avatar = await getProfilePicture(webIdThing);
+      identity.fullName = getName(webIdThing);
+      identity.avatar = getProfilePicture(webIdThing);
     } catch (error) {
       return identity;
     }
