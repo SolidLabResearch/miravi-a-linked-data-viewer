@@ -13,6 +13,9 @@ export default {
     const session = getDefaultSession();
     try {
       idpOrWebId = await queryIDPfromWebId(idpOrWebId);
+      if(!idpOrWebId){
+        throw new Error("No IDP found")
+      }
     } catch (error) {
       // Nothing to do here, the IDP is already set
     }
@@ -60,7 +63,6 @@ export default {
       const webIdThing = getThing(profile, webId);
       identity.fullName = getName(webIdThing);
       identity.avatar = getProfilePicture(webIdThing);
-      console.log(identity)
     } catch (error) {
       return identity;
     }
@@ -71,7 +73,7 @@ export default {
 /**
  * Looks up the IDP of a WebID by querying the WebID .
  * @param {URL} webId the WebID to query the IDP from
- * @returns {Promise<URL>} the first IDP of the WebID
+ * @returns {?Promise<URL>} the first IDP of the WebID
  */
 async function queryIDPfromWebId(webId) {
   const queryEngine = new QueryEngine();
@@ -82,6 +84,9 @@ async function queryIDPfromWebId(webId) {
   const firstIdp = await bindings.toArray();
   if (!firstIdp) {
     throw new Error("No Identity Provider found");
+  }
+  else if(firstIdp.length === 0){
+    return undefined
   }
   return firstIdp[0].get("idp").value;
 }
