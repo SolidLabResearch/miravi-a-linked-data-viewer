@@ -2,6 +2,7 @@ import { Component, useEffect, useState } from "react";
 import { Datagrid, ListView, Title, useListContext } from "react-admin";
 import GDVAction from "../../GDVAction/GDVAction";
 import GenericField from "../../../representationProvider/GenericField";
+import { Term } from "sparqljs";
 import config from "../../../config";
 
 /**
@@ -43,8 +44,8 @@ function GDVListViewer(props) {
 
 /**
  *
- * @param {Array<object>} data a list of data objects
- * @returns {object} an object with the keys of the data and the values as an array of the values of the data
+ * @param {Array<Term>} data a list of data objects
+ * @returns {Term} an object with the keys of the data and the values as an array of the values of the data
  */
 function reduceDataToObject(data) {
   const dataObject = {};
