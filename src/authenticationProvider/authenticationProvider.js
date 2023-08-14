@@ -87,7 +87,7 @@ async function queryIDPfromWebId(webId) {
 
 /**
  *
- * @param {object} webIdThing the webId document to get the name from
+ * @param {object} webIdThing the webId (actually of type ProfileAll, but importing this throws an error) document to get the name from
  * @returns {?string} either the name or undefined if no foaf:name is found
  */
 async function getName(webIdThing) {
@@ -101,7 +101,7 @@ async function getName(webIdThing) {
 
 /**
  *
- * @param {object} webIdThing the webId document to get the profile picture from
+ * @param {object} webIdThing the webId (actually of type ProfileAll, but importing this throws an error) document to get the profile picture from
  * @returns {?string} either a url to the profile picture or undefined if no foaf:img is found
  */
 async function getProfilePicture(webIdThing) {
