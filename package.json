@@ -7,20 +7,40 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare:pods": "npm run prepare:pods:accounts && npm run prepare:pods:data",
+    "prepare:pods:accounts": "node scripts/add-pod-account.mjs",
+    "prepare:pods:data": "cpy initial-pod-data/* pods/example/ --flat",
+    "start:pods": "npx @solid/community-server -c @css:config/file-no-setup.json -f pods -p 8080",
+    "reset:pods": "rimraf pods && npm run prepare:pods",
+    "start:proxy": "node scripts/localProxy.mjs"
   },
   "dependencies": {
+    "@comunica/actor-http-proxy": "^2.8.1",
+    "@comunica/query-sparql": "^2.8.1",
+    "@inrupt/solid-client": "^1.30.0",
+    "@inrupt/solid-client-authn-browser": "^1.17.1",
+    "@inrupt/vocab-common-rdf": "^1.0.5",
+    "prop-types": "^15.8.1",
+    "rdf-string": "^1.6.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-admin": "^4.12.3",
+    "react-dom": "^18.2.0",
+    "sparqljs": "^3.7.1"
   },
   "devDependencies": {
+    "@solid/community-server": "^6.0.1",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
+    "cors-anywhere": "^0.4.4",
+    "cpy-cli": "^5.0.0",
     "eslint": "^8.45.0",
+    "eslint-plugin-jsdoc": "^46.4.6",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "rimraf": "^5.0.1",
     "vite": "^4.4.5"
   }
 }

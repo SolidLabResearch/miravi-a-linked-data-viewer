@@ -1,0 +1,18 @@
+.query-information{
+    flex-direction: row;
+    display: flex;
+}
+
+.action-box{
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.information-box{
+    margin: 0 10px;
+}
+
+.information-box strong{
+    color: var(--text-color); 
+}

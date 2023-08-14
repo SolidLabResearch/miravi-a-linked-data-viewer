@@ -1,0 +1,72 @@
+{
+    "title": "Generic Data Viewer",
+    "logoLocation": "images/IDLab-logo.jpg",
+    "logoRedirectURL": "https://idlab.technology/",
+    "mainAppColor": "lightgray", 
+    "backgroundColor": "#fff",
+    "titleColor": "black",
+    "textColor": "#1976D2",
+    "queryFolder": "queries",
+    "httpProxy": "http://localhost:8000/",
+    "showMilliseconds": false, 
+    "defaultIDP": "https://pod.playground.solidlab.be/",
+    "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
+    "queries": [
+        {
+            "queryLocation": "test.rq",
+            "name": "Test query",
+            "description": "A simple Test query",
+            "id": "123",
+            "sources": ["https://fragments.dbpedia.org/2016-04/en"],
+            "useProxy": true
+        },
+        {
+            "queryLocation": "test2.rq",
+            "name": "Second Test query",
+            "description": "A second simple test query",
+            "id": "456",
+            "sources": ["https://ruben.verborgh.org/profile/#me"]
+        },
+        {
+            "queryLocation": "images_test.rq",
+            "name": "A Test For Images",
+            "description": "A small test to test the functionality of the Web app concerning images",
+            "id": "789",
+            "sources": ["https://ruben.verborgh.org/"]
+        },
+        {
+            "queryLocation": "ask_picasso.rq",
+            "name": "Is there an artist influenced by Picasso?",
+            "description": "Whether or not there is an artist who is influenced by Picasso",
+            "id": "987",
+            "sources": ["https://fragments.dbpedia.org/2016-04/en"],
+            "useProxy": true,
+            "askQuery": {
+                "trueText": "There is an artist who is inspired by Picasso!",
+                "falseText": "There is no artist who is inspired by Picasso."
+            }
+        },
+        {
+            "queryLocation": "construct_picasso.rq",
+            "name": "A Test For Quad Queries",
+            "description": "A test for quad queries",
+            "useProxy": true,
+            "id": "9876",
+            "sources": ["https://fragments.dbpedia.org/2015/en"]
+        },
+        {
+            "queryLocation": "books.rq",
+            "name": "A list of my favorite books",
+            "description": "A short list of some of my favorite books, which I keep secret.",
+            "id": "321",
+            "sources": ["http://localhost:8080/example/favourite-books"]
+        },
+        {
+            "queryLocation": "books.rq",
+            "name": "My wish list",
+            "description": "A list of books I'd love to own",
+            "id": "654",
+            "sources": ["http://localhost:8080/example/wish-list"]
+        }
+    ]
+}
