@@ -27,7 +27,7 @@ function GDVResource(props) {
   return (
     <ListBase
       debounce={debounce}
-      disableAuthentication={true}
+      disableAuthentication={true} // A query can go over multiple sources, some of which he doesn't need authentication. Thus we don't know which need authentication and which do not. We still have authentication with this being true.
       disableSyncWithLocation={disableSyncWithLocation}
       exporter={exporter}
       filter={filter}
