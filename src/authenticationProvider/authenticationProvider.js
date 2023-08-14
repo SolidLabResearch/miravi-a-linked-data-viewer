@@ -82,10 +82,7 @@ async function queryIDPfromWebId(webId) {
     { sources: [webId] }
   );
   const firstIdp = await bindings.toArray();
-  if (!firstIdp) {
-    throw new Error("No Identity Provider found");
-  }
-  else if(firstIdp.length === 0){
+  if(firstIdp.length === 0){
     return undefined
   }
   return firstIdp[0].get("idp").value;
