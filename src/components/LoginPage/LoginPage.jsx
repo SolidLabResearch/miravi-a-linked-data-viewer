@@ -1,7 +1,11 @@
 import "./LoginPage.css";
 import config from "../../config";
 import { useLogin, useNotify } from "react-admin";
+import { Component } from "react";
 
+/**
+ * @returns {Component} a login form for logging into your solid pod. 
+ */
 function SolidLoginForm() {
   const login = useLogin();
   const notify = useNotify();

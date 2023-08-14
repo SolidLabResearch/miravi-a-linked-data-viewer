@@ -7,6 +7,8 @@ import {
 } from "@inrupt/solid-client-authn-browser";
 import { HttpError } from "react-admin";
 import { Generator, Parser } from "sparqljs";
+import NotImplementedError from "../NotImplementedError";
+import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
@@ -37,50 +39,53 @@ export default {
         });
       });
     }
-    let totalItems = await query.totalItems;
+    const totalItems = await query.totalItems;
     return {
       data: results,
       total: parseInt(totalItems),
     };
   },
   getOne: async function getOne() {
-    console.log("getOne");
-    return {};
+    // Our implementation doesn't use this function
+    throw new NotImplementedError();
   },
   getMany: async function getMany() {
-    console.log("getMany");
-    return [{}];
+    // Our implementation doesn't use this function
+    throw new NotImplementedError();
   },
-  getManyReference: async function getManyReference(
-   
-  ) {
-    console.error("getManyReference not implemented");
+  getManyReference: async function getManyReference() {
+    throw new NotImplementedError();
   },
   create: async function create() {
-    console.error("create not implemented");
+    throw new NotImplementedError();
   },
   update: async function update() {
-    console.error("update not implemented");
+    throw new NotImplementedError();
   },
   updateMany: async function updateMany() {
-    console.error("updateMany not implemented");
+    throw new NotImplementedError();
   },
   delete: async function deleteOne() {
-    console.error("deleteOne not implemented");
+    throw new NotImplementedError();
   },
   deleteMany: async function deleteMany() {
-    console.error("deleteMany not implemented");
+    throw new NotImplementedError();
   },
 };
 
+/**
+ *
+ * @param {number} id identifier of a query
+ * @returns {object} the query with the given id from the config file and additional information about it, if it exists.
+ */
 function findQueryWithId(id) {
   return config.queries.find((query) => query.id === id);
 }
 
 /**
  * Fetches the the query file from the given query and returns its text.
- * @param {query} query the query which is to be executed
- * @returns the text from the file location provided by the query relative to query location defined in the config file.
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {string} the text from the file location provided by the query relative to query location defined in the config file.
  */
 async function fetchQuery(query) {
   try {
@@ -89,15 +94,20 @@ async function fetchQuery(query) {
     const rawText = await result.text();
     query.rawText = rawText;
     const parsedQuery = parser.parse(rawText);
-    if(!parsedQuery.limit){
+    if (!parsedQuery.limit) {
       parsedQuery.limit = query.limit;
     }
-    if(!parsedQuery.offset){
+    if (!parsedQuery.offset) {
       parsedQuery.offset = query.offset;
     }
-    if(!parsedQuery.order && query.sort && query.sort.field !== "id"){
-      const {field, order} = query.sort;
-      parsedQuery.order = [{expression: {termType: "Variable", value: field}, descending: order === "DESC"}];
+    if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
+      const { field, order } = query.sort;
+      parsedQuery.order = [
+        {
+          expression: { termType: "Variable", value: field },
+          descending: order === "DESC",
+        },
+      ];
     }
     const generator = new Generator();
     return generator.stringify(parsedQuery);
@@ -108,7 +118,8 @@ async function fetchQuery(query) {
 
 /**
  * A function that executes a given query and processes every result.
- * @param {query} query the query which is to be executed
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {Array<Term>} the results of the query
  */
 async function executeQuery(query) {
   try {
@@ -130,7 +141,7 @@ async function executeQuery(query) {
       query
     );
   } catch (error) {
-    for (let source of query.sources) {
+    for (const source of query.sources) {
       myEngine.invalidateHttpCache(source);
     }
     throw new HttpError(error.message, 500);
@@ -139,9 +150,9 @@ async function executeQuery(query) {
 
 /**
  * A function that given a QueryType processes every result.
- *
- * @param {QueryType} execution a query execution
- * @param {query} query the query which is being executed
+ * @param {object} execution a query execution
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {Array<Term>} the results of the query
  */
 async function handleQueryExecution(execution, query) {
   try {
@@ -151,12 +162,10 @@ async function handleQueryExecution(execution, query) {
     if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
       const totalItems = metadata.totalItems;
-      if (!query.totalItems) {
-        if (!totalItems) {
-          query.totalItems = countQueryResults(query);
-        } else {
-          query.totalItems = totalItems;
-        }
+      if (!totalItems) {
+        query.totalItems = countQueryResults(query);
+      } else {
+        query.totalItems = totalItems;
       }
       variables = metadata.variables.map((val) => {
         return val.value;
@@ -168,6 +177,11 @@ async function handleQueryExecution(execution, query) {
   }
 }
 
+/**
+ *
+ * @param {object} query the query which is to be executed and additional information about the query.
+ * @returns {Array<Term>} the results of the query
+ */
 async function countQueryResults(query) {
   const parser = new Parser();
   const parsedQuery = parser.parse(query.rawText);
@@ -196,27 +210,18 @@ async function countQueryResults(query) {
 const queryTypeHandlers = {
   bindings: configureBindingStream,
   quads: configureQuadStream,
-  boolean: configureBool,
 };
 
 /**
- * Configures how a boolean query gets processed.
- * @param {Boolean} result the result of a boolean query
- */
-function configureBool() {
-  //
-}
-
-/**
  * Configures how a query resulting in a stream of quads should be processed.
- * @param {AsyncIterator<Quad> & ResultStream<Quad>>} quadStream a stream of Quads
- * @param {List<String>} variables all the variables of the query behind the binding stream.
+ * @param {object} quadStream a stream of Quads
+ * @returns {Array<Term>} the results of the query
  */
 async function configureQuadStream(quadStream) {
   try {
     const results = (await quadStream.toArray()).flat();
     return results.map((result, index) => {
-      let newResults = {
+      const newResults = {
         subject: result.subject,
         predicate: result.predicate,
         object: result.object,
@@ -232,16 +237,17 @@ async function configureQuadStream(quadStream) {
 
 /**
  * Configures how a query resulting in a stream of bindings should be processed.
- * @param {BindingStream} bindingStream a stream of Bindings
- * @param {List<String>} variables all the variables of the query behind the binding stream.
+ * @param {object} bindingStream a stream of Bindings
+ * @param {Array<string>} variables all the variables of the query behind the binding stream.
+ * @returns {Array<Term>} the results of the query
  */
 async function configureBindingStream(bindingStream, variables) {
   try {
     const results = await bindingStream.toArray();
     return results.map((result, index) => {
-      let newResults = {};
-      for (let variable of variables) {
-        let value = result.get(variable);
+      const newResults = {};
+      for (const variable of variables) {
+        const value = result.get(variable);
         newResults[variable] = value;
       }
       newResults.id = index;

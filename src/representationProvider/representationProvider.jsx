@@ -5,4 +5,3 @@ export const typeMapper = {
   img: CustomImageField,
   url: CustomURLField,
 };
-

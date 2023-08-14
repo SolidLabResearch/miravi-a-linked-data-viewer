@@ -2,6 +2,7 @@ import { QueryEngine } from "@comunica/query-sparql";
 import { getLiteral, getProfileAll, getThing, getUrl } from "@inrupt/solid-client";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
 import { FOAF } from "@inrupt/vocab-common-rdf";
+import DataSet from "@rdfjs/dataset"
 
 export default {
   login: async function login({ idpOrWebId }) {
@@ -68,12 +69,12 @@ export default {
  * @returns {Promise<URL>} the first IDP of the WebID
  */
 async function queryIDPfromWebId(webId) {
-  let queryEngine = new QueryEngine();
-  let bindings = await queryEngine.queryBindings(
+  const queryEngine = new QueryEngine();
+  const bindings = await queryEngine.queryBindings(
     `SELECT ?idp WHERE { <${webId}> <http://www.w3.org/ns/solid/terms#oidcIssuer> ?idp }`,
     { sources: [webId] }
   );
-  let firstIdp = await bindings.toArray();
+  const firstIdp = await bindings.toArray();
   if (!firstIdp) {
     throw new Error("No Identity Provider found");
   }
@@ -83,7 +84,7 @@ async function queryIDPfromWebId(webId) {
 /**
  * 
  * @param {DataSet} webIdThing the webId document to get the name from 
- * @returns either the name or undefined if no foaf:name is found
+ * @returns {?string} either the name or undefined if no foaf:name is found
  */
 async function getName(webIdThing) {
   try {
@@ -101,7 +102,7 @@ async function getName(webIdThing) {
 /**
  * 
  * @param {DataSet} webIdThing the webId document to get the profile picture from 
- * @returns either the profile picture or undefined if no foaf:img is found
+ * @returns {?string} either a url to the profile picture or undefined if no foaf:img is found
  */
 async function getProfilePicture(webIdThing) {
   try {
