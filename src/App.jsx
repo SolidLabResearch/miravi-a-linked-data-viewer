@@ -31,7 +31,7 @@ function App() {
     // In this function we don't use await because inside a React Effect it causes linting warnings and according to several sources on the Web it is not recommended.
     // https://ultimatecourses.com/blog/using-async-await-inside-react-use-effect-hook
     // https://www.thisdot.co/blog/async-code-in-useeffect-is-dangerous-how-do-we-deal-with-it/
-    handleIncomingRedirect({ restorePreviousSession: false }).then((info) => {
+    handleIncomingRedirect({ restorePreviousSession: true }).then((info) => {
       if (info) {
         const status = info.isLoggedIn;
         if (status !== loggedIn) {
