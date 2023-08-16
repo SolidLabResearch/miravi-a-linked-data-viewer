@@ -53,13 +53,17 @@ export default {
     const session = getDefaultSession();
     return { loggedIn: session.info.isLoggedIn };
   },
-  checkError: async function checkError() {
+  checkError: async function checkError(error) {
     const session = getDefaultSession();
-    if (session.info.isLoggedIn) {
-      return true;
-    } else {
-      throw new Error("User is no longer logged in.");
+    if ((error.status === 401 || error.status === 403)) {
+      if(session.info.isLoggedIn){
+        throw new Error("You don't have access to this resource.");
+      }
+      else{
+        throw new Error("You don't have access to this resource. You might need to log in.");
+      }
     }
+    
   },
   getIdentity: async function getIdentity() {
     const session = getDefaultSession();
