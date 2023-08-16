@@ -3,23 +3,31 @@ import {
   getLiteral,
   getProfileAll,
   getThing,
-  getUrl
+  getUrl,
 } from "@inrupt/solid-client";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
-import { FOAF } from "@inrupt/vocab-common-rdf";
+import { FOAF, RDF } from "@inrupt/vocab-common-rdf";
+
+const queryEngine = new QueryEngine();
 
 export default {
-  login: async function login({ idpOrWebId }) {
+  login: async function login({ type, value }) {
     const session = getDefaultSession();
-    const idp = idpOrWebId
-    try {
-      idp = await queryIDPfromWebId(idp);
-    } catch (error) {
-      // Nothing to do here, the input `idpOrWebId` might be an IDP already
+    let idp;
+    if (type !== "idp") {
+      try {
+        idp = await queryIDPfromWebId(value);
+      } catch (error) {
+        // Nothing to do here, the input `idpOrWebId` might be an IDP already
+        throw new Error("Couldn't query the Identity Provider from the WebID");
+      }
+    }
+    else{
+      idp = value; 
     }
 
-    if(!idp){
-      throw new Error("No IDP found")
+    if (!idp) {
+      throw new Error("No IDP found");
     }
 
     try {
@@ -78,16 +86,22 @@ export default {
  * @returns {?Promise<URL>} the first IDP of the WebID or undefined if no IDP is found in the WebID document
  */
 async function queryIDPfromWebId(webId) {
-  const queryEngine = new QueryEngine();
-  const bindings = await queryEngine.queryBindings(
-    `SELECT ?idp WHERE { <${webId}> <http://www.w3.org/ns/solid/terms#oidcIssuer> ?idp }`,
-    { sources: [webId] }
-  );
-  const firstIdp = await bindings.toArray();
-  if(firstIdp.length === 0){
-    return undefined
+  let bindings;
+  try {
+    bindings = await queryEngine.queryBindings(
+      `SELECT ?idp WHERE { <${webId}> <http://www.w3.org/ns/solid/terms#oidcIssuer> ?idp }`,
+      { sources: [webId] }
+    );
+  } catch (error) {
+    queryEngine.invalidateHttpCache(webId);
+    throw new Error("Couldn't query the WebID");
   }
-  return firstIdp[0].get("idp").value;
+
+  let idps = await bindings.toArray();
+  if (idps.length === 0) {
+    return undefined;
+  }
+  return idps[0].get("idp").value;
 }
 
 /**
