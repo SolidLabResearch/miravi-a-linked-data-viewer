@@ -1,6 +1,6 @@
 import { Component, useEffect, useState } from "react";
 import { Datagrid, ListView, Title, useListContext } from "react-admin";
-import GDVAction from "../../GDVAction/GDVAction";
+import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
 import config from "../../../config";
@@ -9,7 +9,7 @@ import config from "../../../config";
  * @param {object} props the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin
  */
-function GDVListViewer(props) {
+function ResultList(props) {
   const { data } = useListContext(props);
   const [values, setValues] = useState(undefined);
   useEffect(() => {
@@ -23,7 +23,7 @@ function GDVListViewer(props) {
   return (
     <>
       <Title title={config.title} />
-      <ListView title=" " actions={<GDVAction />} {...props}>
+      <ListView title=" " actions={<ActionBar />} {...props}>
         {values && (
           <Datagrid>
             {Object.keys(values).map((key) => {
@@ -60,4 +60,4 @@ function reduceDataToObject(data) {
   return dataObject;
 }
 
-export default GDVListViewer;
+export default ResultList;

@@ -8,7 +8,7 @@ import { Component } from "react";
  * 
  * @returns {Component} a custom UserMenu as defined by react-admin
  */
-function GDVUserMenu() {
+function SolidMenu() {
   const {refetch} = useGetIdentity();
   const session = getDefaultSession()
 
@@ -24,4 +24,4 @@ function GDVUserMenu() {
   );
 }
 
-export default GDVUserMenu;
+export default SolidMenu;

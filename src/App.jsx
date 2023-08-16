@@ -1,16 +1,16 @@
 import "./App.css";
 import { Admin, Resource } from "react-admin";
-import dataProvider from "./dataProvider/GDVDataProvider.js";
+import SparqlDataProvider from "./dataProvider/SparqlDataProvider";
 import config from "./config";
 import { Component, useEffect, useState } from "react";
 import {
   getDefaultSession,
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
-import GDVResource from "./components/GDVResource/GDVResource";
-import GDVLayout from "./components/GDVLayout/GDVLayout";
+import ListResultTable from "./components/ListResultTable/ListResultTable";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
+import AppLayout from "./components/AppLayout/AppLayout";
 
 /**
  * @returns {Component} the main component of the application
@@ -41,14 +41,14 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={dataProvider} layout={GDVLayout} authProvider={authenticationProvider} loginPage={SolidLoginForm} requireAuth={false}>
+    <Admin dataProvider={SparqlDataProvider} layout={AppLayout} authProvider={authenticationProvider} loginPage={SolidLoginForm} requireAuth={false}>
       {config.queries.map((query) => {
         return (
           <Resource
             key={query.id}
             name={query.id}
             options={{ label: query.name }}
-            list={GDVResource}
+            list={ListResultTable}
           />
         );
       })}

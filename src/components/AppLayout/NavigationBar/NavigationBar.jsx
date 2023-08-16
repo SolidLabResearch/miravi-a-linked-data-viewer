@@ -1,7 +1,7 @@
 import { AppBar, TitlePortal } from "react-admin";
 import config from "../../../config";
-import "./GDVAppBar.css";
-import GDVUserMenu from "../GDVUserMenu/GDVUserMenu";
+import "./NavigationBar.css";
+import UserMenu from "../SolidMenu/SolidMenu";
 import { Component } from "react";
 
 /**
@@ -9,9 +9,9 @@ import { Component } from "react";
  * @param {object} props the props passed down to the component 
  * @returns {Component} custom AppBar as defined by react-admin
  */
-function GDVAppBar(props) {
+function NavigationBar(props) {
   return (
-    <AppBar {...props} userMenu={<GDVUserMenu />}>
+    <AppBar {...props} userMenu={<UserMenu />}>
       <img
         id="app-logo"
         src={config.logoLocation}
@@ -22,4 +22,4 @@ function GDVAppBar(props) {
   );
 }
 
-export default GDVAppBar;
+export default NavigationBar;
