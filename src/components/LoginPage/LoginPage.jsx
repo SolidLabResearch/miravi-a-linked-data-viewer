@@ -18,7 +18,7 @@ function SolidLoginForm() {
   async function handleLogin(event) {
     event.preventDefault();
     try {
-      login({ type: isIdp ? "idp" : "webId", value: event.target[2].value });
+      await login({ type: isIdp ? "idp" : "webId", value: event.target[2].value });
     } catch (error) {
       notify(error.message);
     }
