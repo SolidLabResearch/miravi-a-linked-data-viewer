@@ -13,11 +13,12 @@ export default {
     const session = getDefaultSession();
     try {
       idpOrWebId = await queryIDPfromWebId(idpOrWebId);
-      if(!idpOrWebId){
-        throw new Error("No IDP found")
-      }
     } catch (error) {
       // Nothing to do here, the IDP is already set
+    }
+    
+    if(!idpOrWebId){
+      throw new Error("No IDP found")
     }
 
     try {
