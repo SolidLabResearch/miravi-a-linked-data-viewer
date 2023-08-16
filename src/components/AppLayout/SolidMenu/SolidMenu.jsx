@@ -6,7 +6,7 @@ import { Component } from "react";
 
 /**
  * 
- * @returns {Component} a custom UserMenu as defined by react-admin
+ * @returns {Component} a custom UserMenu as defined by react-admin, containing the custom LogoutButton
  */
 function SolidMenu() {
   const {refetch} = useGetIdentity();
