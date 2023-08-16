@@ -10,7 +10,16 @@ import {
 import ListResultTable from "./components/ListResultTable/ListResultTable";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
+import {QueryClient} from "react-query";
 import AppLayout from "./components/AppLayout/AppLayout";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 /**
  * @returns {Component} the main component of the application
@@ -41,7 +50,14 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={SparqlDataProvider} layout={AppLayout} authProvider={authenticationProvider} loginPage={SolidLoginForm} requireAuth={false}>
+    <Admin
+      queryClient={queryClient}
+      dataProvider={SparqlDataProvider}
+      layout={AppLayout}
+      authProvider={authenticationProvider}
+      loginPage={SolidLoginForm}
+      requireAuth={false}
+    >
       {config.queries.map((query) => {
         return (
           <Resource
