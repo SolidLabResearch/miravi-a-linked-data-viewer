@@ -6,7 +6,7 @@ import {
   getUrl,
 } from "@inrupt/solid-client";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
-import { FOAF, RDF } from "@inrupt/vocab-common-rdf";
+import { FOAF } from "@inrupt/vocab-common-rdf";
 
 const queryEngine = new QueryEngine();
 
@@ -97,7 +97,7 @@ async function queryIDPfromWebId(webId) {
     throw new Error("Couldn't query the WebID");
   }
 
-  let idps = await bindings.toArray();
+  const idps = await bindings.toArray();
   if (idps.length === 0) {
     return undefined;
   }
