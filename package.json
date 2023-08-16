@@ -21,12 +21,15 @@
     "@inrupt/solid-client": "^1.30.0",
     "@inrupt/solid-client-authn-browser": "^1.17.1",
     "@inrupt/vocab-common-rdf": "^1.0.5",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.4",
     "@rdfjs/types": "^1.1.0",
     "prop-types": "^15.8.1",
     "rdf-string": "^1.6.3",
     "react": "^18.2.0",
     "react-admin": "^4.12.3",
     "react-dom": "^18.2.0",
+    "react-query": "^3.39.3",
     "sparqljs": "^3.7.1"
   },
   "devDependencies": {

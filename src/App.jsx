@@ -9,6 +9,18 @@ import {
 } from "@inrupt/solid-client-authn-browser";
 import GDVResource from "./components/GDVResource/GDVResource";
 import IconProvider from "./IconProvider/IconProvider";
+import GDVLayout from "./components/GDVLayout/GDVLayout";
+import authenticationProvider from "./authenticationProvider/authenticationProvider";
+import SolidLoginForm from "./components/LoginPage/LoginPage";
+import {QueryClient} from "react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 /**
  * @returns {Component} the main component of the application
@@ -39,7 +51,14 @@ function App() {
     });
   });
   return (
-    <Admin dataProvider={dataProvider}>
+    <Admin
+      queryClient={queryClient}
+      dataProvider={dataProvider}
+      layout={GDVLayout}
+      authProvider={authenticationProvider}
+      loginPage={SolidLoginForm}
+      requireAuth={false}
+    >
       {config.queries.map((query) => {
         return (
           <Resource
