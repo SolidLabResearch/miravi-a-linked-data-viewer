@@ -14,9 +14,9 @@ export default {
     try {
       idpOrWebId = await queryIDPfromWebId(idpOrWebId);
     } catch (error) {
-      // Nothing to do here, the IDP is already set
+      // Nothing to do here, the input `idpOrWebId` might be an IDP already
     }
-    
+
     if(!idpOrWebId){
       throw new Error("No IDP found")
     }
