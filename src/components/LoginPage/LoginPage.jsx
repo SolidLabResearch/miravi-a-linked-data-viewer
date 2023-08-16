@@ -1,7 +1,7 @@
 import "./LoginPage.css";
 import config from "../../config";
 import { useLogin, useNotify } from "react-admin";
-import { Component } from "react";
+import { Component, useState } from "react";
 
 /**
  * @returns {Component} a login form for logging into your Identity Provider. 
@@ -9,6 +9,7 @@ import { Component } from "react";
 function SolidLoginForm() {
   const login = useLogin();
   const notify = useNotify();
+  const [isIdp, setIsIdp] = useState(true);
 
   /**
    * Handling what should happen when the user is trying to log in by pressing the log in button.
@@ -17,7 +18,7 @@ function SolidLoginForm() {
   async function handleLogin(event) {
     event.preventDefault();
     try {
-      login({ idpOrWebId: event.target[0].value });
+      login({ type: isIdp ? "idp" : "webId", value: event.target[2].value });
     } catch (error) {
       notify(error.message);
     }
@@ -25,9 +26,16 @@ function SolidLoginForm() {
 
   return (
     <form onSubmit={handleLogin} className="login-form">
-      <label id="idp-label" htmlFor="idp">
-        Identity Provider/WebID:
-      </label>
+      <div className="type-selection-box">
+        <label>
+          Identity Provider
+        </label>
+        <input type="radio" onChange={() => {setIsIdp(!isIdp)}} name="idpOrWebId" value="idp" defaultChecked="checked"/>
+        <label>
+          WebID
+        </label>
+        <input type="radio" onChange={() => {setIsIdp(!isIdp)}} name="idpOrWebId" value="webId" />
+      </div>
       <input
         required
         name="idp"

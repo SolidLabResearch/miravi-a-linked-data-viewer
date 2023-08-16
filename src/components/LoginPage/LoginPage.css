@@ -14,3 +14,7 @@ button, input[type="submit"]{
 label{
     margin: 10px;
 }
+
+.type-selection-box{
+    margin-bottom: 10px;
+}
