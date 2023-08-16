@@ -75,7 +75,7 @@ export default {
 /**
  * Looks up the IDP of a WebID by querying the WebID .
  * @param {URL} webId the WebID to query the IDP from
- * @returns {?Promise<URL>} the first IDP of the WebID
+ * @returns {?Promise<URL>} the first IDP of the WebID or undefined if no IDP is found in the WebID document
  */
 async function queryIDPfromWebId(webId) {
   const queryEngine = new QueryEngine();
