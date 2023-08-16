@@ -43,6 +43,7 @@ export default {
   logout: async function logout() {
     const session = getDefaultSession();
     await session.logout();
+    return false;
   },
   checkAuth: async function checkAuth() {
     const session = getDefaultSession();
