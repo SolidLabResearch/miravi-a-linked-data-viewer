@@ -7,7 +7,7 @@ import config from "../../../config";
 
 /**
  * @param {object} props the props passed down to the component
- * @returns {Component} custom ListViewer as defined by react-admin
+ * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function ResultList(props) {
   const { data } = useListContext(props);
