@@ -11,19 +11,20 @@ import { FOAF } from "@inrupt/vocab-common-rdf";
 export default {
   login: async function login({ idpOrWebId }) {
     const session = getDefaultSession();
+    const idp = idpOrWebId
     try {
-      idpOrWebId = await queryIDPfromWebId(idpOrWebId);
+      idp = await queryIDPfromWebId(idp);
     } catch (error) {
       // Nothing to do here, the input `idpOrWebId` might be an IDP already
     }
 
-    if(!idpOrWebId){
+    if(!idp){
       throw new Error("No IDP found")
     }
 
     try {
       await session.login({
-        oidcIssuer: idpOrWebId,
+        oidcIssuer: idp,
         redirectUrl: new URL("/", window.location.href).toString(),
         clientName: "Generic Data Viewer",
       });
