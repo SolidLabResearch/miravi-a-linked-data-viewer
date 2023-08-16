@@ -84,7 +84,7 @@ we can fully interpret how we can display and represent the result.
 You can specify the type of a variable by extending its name with the type in the query as such: `variableName_variableType`.
 The underscore `_` here is crucial to make a clear distinction between name and type.
 
-### Type Mapper
+### Icon Mapper
 
 In the selection menu the name of the query is proceeded by an icon.
 You can configure this icon per query in the [configuration file](#configuration-file).  
