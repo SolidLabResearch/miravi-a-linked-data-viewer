@@ -1,7 +1,7 @@
 import { AppBar, TitlePortal } from "react-admin";
 import config from "../../../config";
 import "./NavigationBar.css";
-import UserMenu from "../SolidMenu/SolidMenu";
+import AuthenticationMenu from "../AuthenticationMenu/AuthenticationMenu";
 import { Component } from "react";
 
 /**
@@ -11,7 +11,7 @@ import { Component } from "react";
  */
 function NavigationBar(props) {
   return (
-    <AppBar {...props} userMenu={<UserMenu />}>
+    <AppBar {...props} userMenu={<AuthenticationMenu />}>
       <img
         id="app-logo"
         src={config.logoLocation}
