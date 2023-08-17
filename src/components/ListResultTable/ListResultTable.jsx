@@ -4,8 +4,8 @@ import {
   ListBase,
 } from "react-admin";
 import PropTypes from "prop-types";
-import ResultList from "./ResultList/ResultList";
 import { Component } from "react";
+import QueryResultList from "./QueryResultList/QueryResultList";
 
 /** 
  * @param {object} props the props passed down to the component
@@ -38,7 +38,7 @@ function ListResultTable(props) {
       sort={sort}
     >
       {isLoading && <Loading />}
-      {!isLoading && <ResultList {...rest} />}
+      {!isLoading && <QueryResultList {...rest} />}
     </ListBase>
   );
 }

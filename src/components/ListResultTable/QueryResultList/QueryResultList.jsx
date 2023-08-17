@@ -9,7 +9,7 @@ import config from "../../../config";
  * @param {object} props the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
-function ResultList(props) {
+function QueryResultList(props) {
   const { data } = useListContext(props);
   const [values, setValues] = useState(undefined);
   useEffect(() => {
@@ -60,4 +60,4 @@ function reduceDataToObject(data) {
   return dataObject;
 }
 
-export default ResultList;
+export default QueryResultList;
