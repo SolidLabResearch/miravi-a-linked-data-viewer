@@ -89,7 +89,7 @@ The underscore `_` here is crucial to make a clear distinction between name and 
 In the selection menu the name of the query is proceeded by an icon.
 You configure this icon per query in the [configuration file](#configuration-file).  
 For this to work you need to add the icon to the [IconMapper.js](./src/IconProvider/IconProvider.js) file.
-We advised to use the [Material UI icons](https://material-ui.com/components/material-icons/) as this is what's used internally in `react-admin` and it is also included in the dependencies.
+We advice to use the [Material UI icons](https://material-ui.com/components/material-icons/) as this is what's used internally in `react-admin` and it is also included in the dependencies.
 Nevertheless, you can use any React component you want, just make sure it's a functional component.
 
 The mapper follows the following structure:
