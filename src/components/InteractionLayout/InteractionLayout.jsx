@@ -7,8 +7,8 @@ import { Component } from "react";
  * @param {object} props the props passed down to the component 
  * @returns {Component} custom Layout as defined by react-admin
  */
-function AppLayout(props) {
+function InteractionLayout(props) {
   return <Layout {...props} appBar={NavigationBar} />;
 }
 
-export default AppLayout;
+export default InteractionLayout;

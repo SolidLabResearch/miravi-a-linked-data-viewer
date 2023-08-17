@@ -11,7 +11,7 @@ import ListResultTable from "./components/ListResultTable/ListResultTable";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
 import {QueryClient} from "react-query";
-import AppLayout from "./components/AppLayout/AppLayout";
+import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,7 +53,7 @@ function App() {
     <Admin
       queryClient={queryClient}
       dataProvider={SparqlDataProvider}
-      layout={AppLayout}
+      layout={InteractionLayout}
       authProvider={authenticationProvider}
       loginPage={SolidLoginForm}
       requireAuth={false}
