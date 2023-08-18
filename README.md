@@ -154,7 +154,7 @@ For testing we use [Cypress](https://www.cypress.io/).
 
 2. Start the Web application
    ```bash
-   npm start
+   npm run dev
    ```
    Also keep this process running.
 3. Start the http proxy
@@ -164,5 +164,5 @@ For testing we use [Cypress](https://www.cypress.io/).
    This process must also be active throughout the tests.
 4. Finally, you can execute the tests by running
    ```bash
-   npm test
+   npm run test
    ```
