@@ -142,9 +142,7 @@ which will start a proxy on port `8000`.
 
 ## Testing
 
-For testing we use [Cypress](https://www.cypress.io/) and [React-Jest](https://jestjs.io/docs/tutorial-react).
-we use [Cypress](https://www.cypress.io/) for user stories and [React-Jest](https://jestjs.io/docs/tutorial-react) for UI requirements.
-To run all the tests you can execute the following:
+For testing we use [Cypress](https://www.cypress.io/).
 
 1. Prepare and start the Community Solid Server with the available pods as explained in the [Testing with local pods section](#testing-with-local-pods).
 
@@ -168,9 +166,3 @@ To run all the tests you can execute the following:
    ```bash
    npm test
    ```
-
-Alternatively, you can run only the [React-Jest](https://jestjs.io/docs/tutorial-react) without running the Web application or the community server by executing
-
-```bash
-npx react-scripts test --watchAll=false
-```
