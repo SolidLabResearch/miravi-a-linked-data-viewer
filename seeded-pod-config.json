@@ -1,7 +1,13 @@
 [
-    {
-      "podName": "example",
-      "email": "hello@example.com",
-      "password": "abc123"
-    }
-  ]
+  {
+    "podName": "example",
+    "email": "hello@example.com",
+    "password": "abc123"
+  },
+  {
+    "podName": "example2",
+    "email": "help@example.com",
+    "password": "secret123",
+    "webId": "http://localhost:3000/profile/card#me"
+  }
+]
