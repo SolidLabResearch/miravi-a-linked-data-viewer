@@ -46,7 +46,7 @@ describe("Web app", () => {
 
     cy.url().should("eq", "http://localhost:5173/");
 
-    cy.contains("Test query").click();
+    cy.contains("My idols").click();
     cy.get(".MuiSnackbarContent-message").should("not.exist");
   });
 
