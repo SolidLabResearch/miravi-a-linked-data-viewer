@@ -6,9 +6,9 @@ import { Component } from "react";
 
 /**
  * 
- * @returns {Component} a custom UserMenu as defined by react-admin
+ * @returns {Component} a custom UserMenu as defined by react-admin, containing the custom LogoutButton
  */
-function GDVUserMenu() {
+function AuthenticationMenu() {
   const {refetch} = useGetIdentity();
   const session = getDefaultSession()
 
@@ -24,4 +24,4 @@ function GDVUserMenu() {
   );
 }
 
-export default GDVUserMenu;
+export default AuthenticationMenu;

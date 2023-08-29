@@ -4,14 +4,14 @@ import {
   ListBase,
 } from "react-admin";
 import PropTypes from "prop-types";
-import GDVListViewer from "./GDVListViewer/GDVListViewer";
 import { Component } from "react";
+import QueryResultList from "./QueryResultList/QueryResultList";
 
 /** 
  * @param {object} props the props passed down to the component
- * @returns {Component} custom List as defined by react-admin 
+ * @returns {Component} custom List as defined by react-admin which either shows a loading indicator or the query results
  */
-function GDVResource(props) {
+function ListResultTable(props) {
   const {
     debounce,
     disableSyncWithLocation,
@@ -38,12 +38,12 @@ function GDVResource(props) {
       sort={sort}
     >
       {isLoading && <Loading />}
-      {!isLoading && <GDVListViewer {...rest} />}
+      {!isLoading && <QueryResultList {...rest} />}
     </ListBase>
   );
 }
 
-GDVResource.propTypes = {
+ListResultTable.propTypes = {
   debounce: PropTypes.number,
   disableAuthentication: PropTypes.bool,
   disableSyncWithLocation: PropTypes.bool,
@@ -56,4 +56,4 @@ GDVResource.propTypes = {
   sort: PropTypes.object,
 };
 
-export default GDVResource;
+export default ListResultTable;
