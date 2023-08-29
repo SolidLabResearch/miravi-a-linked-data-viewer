@@ -3,6 +3,20 @@ describe("Web app", () => {
     cy.visit("/");
   });
 
+  it("Log in with WebID with no OIDC issuer", () => {
+    cy.visit("/");
+
+    cy.get('[aria-label="Profile"]').click();
+    cy.contains('[role="menuitem"]', "Login").click();
+
+    cy.get('input[value="webId"]').click();
+
+    cy.get('input[name="idp"]').clear().type("http://localhost:8080/example2/profile/card#me");
+    cy.contains("Login").click();
+
+    cy.contains("No IDP found");
+  });
+
   it("Log in and execute query on private data", () => {
     cy.visit("/");
 
