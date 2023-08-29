@@ -11,7 +11,7 @@
     "test": "cypress run",
     "prepare:pods": "npm run prepare:pods:accounts && npm run prepare:pods:data",
     "prepare:pods:accounts": "node scripts/add-pod-account.mjs",
-    "prepare:pods:data": "cpy initial-pod-data/* pods/example/ --flat",
+    "prepare:pods:data": "cpy initial-pod-data/* pods/example/ --flat && cpy initial-pod-data/images pods/example/images --flat",
     "start:pods": "npx @solid/community-server -c @css:config/file-no-setup.json -f pods -p 8080",
     "reset:pods": "rimraf pods && npm run prepare:pods",
     "start:proxy": "node scripts/localProxy.mjs"
