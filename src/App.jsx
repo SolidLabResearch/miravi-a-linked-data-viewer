@@ -11,6 +11,7 @@ import ListResultTable from "./components/ListResultTable/ListResultTable";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
 import {QueryClient} from "react-query";
+import Dashboard from "./components/Dashboard/Dashboard";
 import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
 
 const queryClient = new QueryClient({
@@ -57,6 +58,9 @@ function App() {
       authProvider={authenticationProvider}
       loginPage={SolidLoginForm}
       requireAuth={false}
+      dashboard={() => {
+        return Dashboard({text: config.introductionText})
+      }}
     >
       {config.queries.map((query) => {
         return (

@@ -53,6 +53,7 @@ The configuration file follows a simple structure.
     "defaultIDP": "The default value used for IDP when logging in, this IDP can be manually changed in the Web app as well. ",
     "queryFolder": "The base location of the queries, all query locations will start from this folder (relative to public folder.)",
     "httpProxy": "The http proxy through which the requests will be rerouted. When left empty, the Comunica query engine will handle it. This is useful when CORS headers are not set (correctly) on the queried source.",
+    "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
     "queries": [
         {
             "queryLocation": "path to the query location, relative to "queryFolder"",
