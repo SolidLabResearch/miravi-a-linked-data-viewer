@@ -33,7 +33,7 @@
             "name": "A Test For Images",
             "description": "A small test to test the functionality of the Web app concerning images",
             "id": "789",
-            "sources": ["https://ruben.verborgh.org/"]
+            "sources": ["http://localhost:8080/example/cute-cats"]
         },
         {
             "queryLocation": "ask_picasso.rq",
