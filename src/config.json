@@ -14,12 +14,11 @@
     "introductionText": "Please select a query from the menu on the left.",
     "queries": [
         {
-            "queryLocation": "test.rq",
-            "name": "Test query",
+            "queryLocation": "idols.rq",
+            "name": "My idols",
             "description": "A simple Test query",
             "id": "123",
-            "sources": ["https://fragments.dbpedia.org/2016-04/en"],
-            "useProxy": true
+            "sources": ["http://localhost:8001/example/idols"]
         },
         {
             "queryLocation": "images_test.rq",
