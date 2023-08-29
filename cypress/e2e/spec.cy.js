@@ -17,7 +17,21 @@ describe("Web app", () => {
     cy.contains("No IDP found");
   });
 
-  it("Log in and execute query on private data", () => {
+  it("Log in with invalid WebID document", () => {
+    cy.visit("/");
+
+    cy.get('[aria-label="Profile"]').click();
+    cy.contains('[role="menuitem"]', "Login").click();
+
+    cy.get('input[value="webId"]').click();
+
+    cy.get('input[name="idp"]').clear().type("http://localhost:8080/invalidWebId/profile/card#me");
+    cy.contains("Login").click();
+
+    cy.contains("Couldn't query the Identity Provider from the WebID");
+  });
+
+  it("Log in and execute query on private data", () => { 
     cy.visit("/");
 
     cy.get('[aria-label="Profile"]').click();
