@@ -7,7 +7,7 @@ import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 import { Ref } from "react";
 
 /**
- * A component that renders a logout button in the UserMenu.
+ * A component that renders a logout button in the UserMenu in case the user is logged in or a login button in case the user isn't logged in.
  * @param {object} props The props passed into the component.
  * @param {Ref} ref The ref passed into the component.
  */
