@@ -41,11 +41,11 @@
         },
         {
             "queryLocation": "construct_picasso.rq",
-            "name": "A Test For Quad Queries",
+            "name": "A graph of artists influenced by Picasso",
             "description": "A test for quad queries",
             "useProxy": true,
             "id": "9876",
-            "sources": ["https://fragments.dbpedia.org/2015/en"]
+            "sources": ["http://localhost:8080/example/artists"]
         },
         {
             "queryLocation": "books.rq",
