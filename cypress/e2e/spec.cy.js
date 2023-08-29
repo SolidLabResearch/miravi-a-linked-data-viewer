@@ -11,7 +11,9 @@ describe("Web app", () => {
 
     cy.get('input[value="webId"]').click();
 
-    cy.get('input[name="idp"]').clear().type("http://localhost:8080/example2/profile/card#me");
+    cy.get('input[name="idp"]')
+      .clear()
+      .type("http://localhost:8080/example2/profile/card#me");
     cy.contains("Login").click();
 
     cy.contains("No IDP found");
@@ -25,13 +27,27 @@ describe("Web app", () => {
 
     cy.get('input[value="webId"]').click();
 
-    cy.get('input[name="idp"]').clear().type("http://localhost:8080/invalidWebId/profile/card#me");
+    cy.get('input[name="idp"]')
+      .clear()
+      .type("http://localhost:8080/invalidWebId/profile/card#me");
     cy.contains("Login").click();
 
     cy.contains("Couldn't query the Identity Provider from the WebID");
   });
 
-  it("Log in and execute query on private data", () => { 
+  it("Log in with an invalid IDP issuer", () => {
+    cy.visit("/");
+
+    cy.get('[aria-label="Profile"]').click();
+    cy.contains('[role="menuitem"]', "Login").click();
+
+    cy.get('input[name="idp"]').clear().type("https://facebook.com");
+    cy.contains("Login").click();
+
+    cy.contains("Login failed");
+  });
+
+  it("Log in and execute query on private data", () => {
     cy.visit("/");
 
     cy.get('[aria-label="Profile"]').click();
@@ -48,14 +64,14 @@ describe("Web app", () => {
     cy.url().should("eq", "http://localhost:5173/");
 
     cy.contains("A list of my favorite books").click();
-    cy.contains('It Ends With Us');
+    cy.contains("It Ends With Us");
   });
 
   it("Query on private data unauthenticated", () => {
     cy.visit("/");
 
     cy.contains("A list of my favorite books").click();
-    cy.get("div").should("have.class", "MuiSnackbarContent-message")
+    cy.get("div").should("have.class", "MuiSnackbarContent-message");
   });
 
   it('Querying resource with "bad" cors header, though a proxy should work', () => {
