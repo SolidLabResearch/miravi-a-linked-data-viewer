@@ -7,7 +7,11 @@
   {
     "podName": "example2",
     "email": "help@example.com",
-    "password": "secret123",
-    "webId": "http://localhost:3000/profile/card#me"
+    "password": "secret123"
+  },
+  {
+    "podName": "invalidWebId",
+    "email": "badRdf@example.com",
+    "password": "rdf123"
   }
 ]
