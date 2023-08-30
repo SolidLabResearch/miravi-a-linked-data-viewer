@@ -1,0 +1,18 @@
+{
+    "@context": {
+      "@vocab": "http://schema.org/"
+    },
+    "@id": "#cute-cats",
+    "@type": "ItemList",
+    "name": "Cute cats",
+    "itemListElement": [
+      {
+        "name": "Felix",
+        "image": {"@id": "http://localhost:8080/example/images/felix.jfif"}
+      },
+      {
+        "name": "Garfield",
+        "image": {"@id": "http://localhost:8080/example/images/cat.jfif"}
+      }
+    ]
+  }
