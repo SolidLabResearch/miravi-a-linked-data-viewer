@@ -162,8 +162,13 @@ For testing we use [Cypress](https://www.cypress.io/).
    ```bash
    npm run start:proxy
    ```
+4. Start a server which denies all cors header
+    ```bash
+    npm run start:badCors
+    ```
+
    This process must also be active throughout the tests.
-4. Finally, you can execute the tests by running
+5. Finally, you can execute the tests by running
    ```bash
    npm run test
    ```
