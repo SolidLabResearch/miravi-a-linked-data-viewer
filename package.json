@@ -14,7 +14,8 @@
     "prepare:pods:data": "cpy initial-pod-data/* pods/example/ --flat && cpy initial-pod-data/images pods/example/images --flat",
     "start:pods": "npx @solid/community-server -c @css:config/file-no-setup.json -f pods -p 8080",
     "reset:pods": "rimraf pods && npm run prepare:pods",
-    "start:proxy": "node scripts/localProxy.mjs"
+    "start:proxy": "node scripts/localProxy.mjs",
+    "start:badCors": "node scripts/startBadCorsServer.mjs"
   },
   "dependencies": {
     "@comunica/actor-http-proxy": "^2.8.1",
