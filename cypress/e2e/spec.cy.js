@@ -53,7 +53,8 @@ describe("Web app", () => {
     cy.get('[aria-label="Profile"]').click();
     cy.contains('[role="menuitem"]', "Login").click();
 
-    cy.get('input[name="idp"]').clear().type("http://localhost:8080");
+    cy.get('input[name="idp"]').clear();
+    cy.get('input[name="idp"]').type("http://localhost:8080");
     cy.contains("Login").click();
 
     cy.get("input#email").type("hello@example.com");
@@ -80,7 +81,8 @@ describe("Web app", () => {
     cy.get('[aria-label="Profile"]').click();
     cy.contains('[role="menuitem"]', "Login").click();
 
-    cy.get('input[name="idp"]').clear().type("http://localhost:8080");
+    cy.get('input[name="idp"]').clear();
+    cy.get('input[name="idp"]').type("http://localhost:8080");
     cy.contains("Login").click();
 
     cy.get("input#email").type("hello@example.com");
@@ -90,7 +92,7 @@ describe("Web app", () => {
 
     cy.url().should("eq", "http://localhost:5173/");
 
-    cy.contains("Test query").click();
+    cy.contains("My idols").click();
     cy.get(".MuiSnackbarContent-message").should("not.exist");
   });
 

@@ -1,0 +1,20 @@
+{
+    "@context": {
+      "@vocab": "http://schema.org/"
+    },
+    "@id": "#idols",
+    "@type": "ItemList",
+    "name": "My Idols",
+    "itemListElement": [
+      {
+        "@type": "Person",
+        "name": "Sr. Isaac Newton",
+        "birthDate": "1643-01-04"
+      },
+      {
+        "@type": "Person",
+        "name": "Albert Einstein",
+        "birthDate": "1879-03-14"
+      }
+    ]
+  }

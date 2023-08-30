@@ -14,26 +14,19 @@
     "introductionText": "Please select a query from the menu on the left.",
     "queries": [
         {
-            "queryLocation": "test.rq",
-            "name": "Test query",
+            "queryLocation": "idols.rq",
+            "name": "My idols",
             "description": "A simple Test query",
             "id": "123",
-            "sources": ["https://fragments.dbpedia.org/2016-04/en"],
+            "sources": ["http://localhost:8001/example/idols"],
             "useProxy": true
-        },
-        {
-            "queryLocation": "test2.rq",
-            "name": "Second Test query",
-            "description": "A second simple test query",
-            "id": "456",
-            "sources": ["https://ruben.verborgh.org/profile/#me"]
         },
         {
             "queryLocation": "images_test.rq",
             "name": "A Test For Images",
             "description": "A small test to test the functionality of the Web app concerning images",
             "id": "789",
-            "sources": ["https://ruben.verborgh.org/"]
+            "sources": ["http://localhost:8080/example/cute-cats"]
         },
         {
             "queryLocation": "ask_picasso.rq",
@@ -49,11 +42,11 @@
         },
         {
             "queryLocation": "construct_picasso.rq",
-            "name": "A Test For Quad Queries",
+            "name": "A graph of artists influenced by Picasso",
             "description": "A test for quad queries",
             "useProxy": true,
             "id": "9876",
-            "sources": ["https://fragments.dbpedia.org/2015/en"]
+            "sources": ["http://localhost:8080/example/artists"]
         },
         {
             "queryLocation": "books.rq",
