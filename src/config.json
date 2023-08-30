@@ -18,7 +18,8 @@
             "name": "My idols",
             "description": "A simple Test query",
             "id": "123",
-            "sources": ["http://localhost:8001/example/idols"]
+            "sources": ["http://localhost:8001/example/idols"],
+            "useProxy": true
         },
         {
             "queryLocation": "images_test.rq",
