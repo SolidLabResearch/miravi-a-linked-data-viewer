@@ -3,6 +3,14 @@ describe("Web app", () => {
     cy.visit("/");
   });
 
+  it("When one source throws an error, the results of other sources are still shown", () => {
+    cy.visit("/");
+
+    cy.contains("My wish list").click();
+    cy.contains("Finished in:");
+    cy.contains("Too Late");
+  })
+
   it("Log in and execute query on private data", () => {
     cy.visit("/");
 
