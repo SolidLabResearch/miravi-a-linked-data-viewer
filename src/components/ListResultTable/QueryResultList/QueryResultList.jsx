@@ -4,6 +4,7 @@ import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
 import config from "../../../config";
+import TableHeader from "./TableHeader/TableHeader";
 
 /**
  * @param {object} props the props passed down to the component
@@ -25,7 +26,7 @@ function QueryResultList(props) {
       <Title title={config.title} />
       <ListView title=" " actions={<ActionBar />} {...props}>
         {values && (
-          <Datagrid>
+          <Datagrid header={<TableHeader />}>
             {Object.keys(values).map((key) => {
               return (
                 <GenericField
