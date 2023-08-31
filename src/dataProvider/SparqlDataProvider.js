@@ -124,7 +124,6 @@ async function fetchQuery(query) {
 async function executeQuery(query) {
   try {
     query.queryText = await fetchQuery(query);
-    console.log(query.comunicaContext);
     return handleQueryExecution(
       await myEngine.query(
         query.queryText,
@@ -155,17 +154,36 @@ function generateContext(context) {
   if (!context.sources) {
     throw new HttpError("No sources provided", 500);
   }
-  const contextCopy = { ...context };
 
-  contextCopy.fetch = fetch;
+  context.fetchSuccess = {};
+
+  let fetchFunction = fetch;
   if (getDefaultSession().info.isLoggedIn) {
-    contextCopy.fetch = authFetch;
+    fetchFunction = authFetch;
   }
 
-  if (contextCopy.useProxy) {
-    contextCopy.httpProxyHandler = proxyHandler;
+  context.fetch = statusFetch(fetchFunction, context);
+
+  if (context.useProxy) {
+    context.httpProxyHandler = proxyHandler;
   }
-  return contextCopy;
+
+  return context;
+}
+
+function statusFetch(customFetch, context) {
+  const fetchFunction = async (arg) => {
+    try{
+      const response = await customFetch(arg);
+      context.fetchSuccess[arg] = true;
+      return response;
+    }
+    catch(error){
+      context.fetchSuccess[arg] = false;
+      throw error;
+    }
+  }
+  return fetchFunction;
 }
 
 /**
@@ -178,7 +196,6 @@ async function handleQueryExecution(execution, query) {
   try {
     let variables;
     const resultType = execution.resultType;
-
     if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
       const totalItems = metadata.totalItems;
