@@ -146,6 +146,7 @@ async function executeQuery(query) {
 /**
  * Generates the context for a query execution to be passed to Comunica engine when querying.
  * @param {object} context the context for the query given in the config file.
+ * @returns {object} the context for a query execution to be passed to Comunica engine when querying.
  */
 function generateContext(context) {
   if (!context) {
@@ -173,6 +174,12 @@ function generateContext(context) {
   return context;
 }
 
+/**
+ * Given a fetch function, returns a function that wraps the fetch function and sets the fetchSuccess flag in the context.
+ * @param {Function} customFetch a fetch function to be wrapped 
+ * @param {*} context the context for the query given in the config file.
+ * @returns {Function} a function that wraps the fetch function and sets the fetchSuccess flag in the context.
+ */
 function statusFetch(customFetch, context) {
   const fetchFunction = async (arg) => {
     try{
