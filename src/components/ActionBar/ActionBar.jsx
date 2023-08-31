@@ -51,7 +51,7 @@ function ActionBar() {
   return (
     <Grid container direction="row" width={"100%"} rowSpacing={1}>
       <Grid item height={"fit-content"} width={"100%"}>
-        <TopToolbar style={{ width: "100%" }}>
+        <TopToolbar style={{ width: "100%", height: "fit-content" }}>
           <div style={{ flex: "1" }}></div>
           <div className="query-information">
             <div className="information-box">
@@ -70,9 +70,10 @@ function ActionBar() {
               <Tooltip title="Sources info">
                 <IconButton
                   size="small"
+                  sx={{ padding: "0px", marginLeft: "5px" }}
                   onClick={() => setSourceInfoOpen(!sourceInfoOpen)}
                 >
-                  <InfoIcon />
+                  <InfoIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             </div>
