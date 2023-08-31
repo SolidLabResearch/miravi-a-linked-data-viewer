@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
+import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 
 /**
  *
@@ -27,8 +28,10 @@ function ActionBar() {
   const [time, setTime] = useState(0);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
-  const sources = config.queries.filter((query) => query.id === resource)[0]
-    .comunicaContext.sources;
+  const context = config.queries.filter((query) => query.id === resource)[0]
+    .comunicaContext;
+
+  const sources = context.sources;
   useEffect(() => {
     if (isLoading) {
       setTime(0);
@@ -81,19 +84,28 @@ function ActionBar() {
       </Grid>
       {sourceInfoOpen && (
         <Grid item width={"100%"}>
-          <TableContainer sx={{ width: "100%", marginBottom: "10px" }} component={Paper}>
-            <Table size="small">
+          <TableContainer
+            sx={{ width: "100%", marginBottom: "10px", maxHeight: "200px" }}
+            component={Paper}
+          >
+            <Table size="small" >
               <TableHead>
                 <TableRow>
                   <TableCell>Source</TableCell>
                   <TableCell>Authentication needed</TableCell>
+                  <TableCell>Fetch status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {sources.map((source, index) => (
                   <TableRow key={index}>
                     <TableCell>{source}</TableCell>
-                    <TableCell><SourceAuthenticationIcon source={source}/></TableCell>
+                    <TableCell>
+                      <SourceAuthenticationIcon source={source} />
+                    </TableCell>
+                    <TableCell>
+                      <SourceFetchStatusIcon proxyUrl={config.httpProxy} context={context} source={source} />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
