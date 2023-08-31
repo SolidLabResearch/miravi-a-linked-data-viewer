@@ -145,7 +145,7 @@ async function executeQuery(query) {
 }
 
 /**
- * generates the context for a query execution to be passed to Comunica engine when querying.
+ * Generates the context for a query execution to be passed to Comunica engine when querying.
  * @param {object} context the context for the query given in the config file.
  */
 function generateContext(context) {
