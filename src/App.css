@@ -1,0 +1,7 @@
+.RaSidebar-docked > .MuiPaper-root{
+    z-index: 9!important;
+}
+
+.RaSidebar-docked > .MuiPaper-root > .RaSidebar-fixed{
+    overflow-x: visible!important;
+}
