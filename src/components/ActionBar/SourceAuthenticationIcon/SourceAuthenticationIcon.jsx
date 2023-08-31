@@ -8,8 +8,8 @@ import { Component } from "react";
 
 /**
  * 
- * @param {object} props the props passed to the component
- * @param {string} props.source the source to check 
+ * @param {object} props - the props passed to the component
+ * @param {string} props.source - the source to check 
  * @returns {Component} an icon indicating whether the source requires authentication or not (or if it is uncertain due to an error fetching the source)
  */
 function SourceAuthenticationIcon({ source }) {
@@ -54,7 +54,7 @@ SourceAuthenticationIcon.propTypes = {
 
 /**
  * Given a source, check if it requires authentication or not
- * @param {string} source the source to check
+ * @param {string} source - the source to check
  * @returns {?boolean} whether the source requires authentication or not, or undefined if it is uncertain
  */
 async function authenticationRequired(source) {

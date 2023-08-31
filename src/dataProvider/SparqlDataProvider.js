@@ -75,7 +75,7 @@ export default {
 
 /**
  *
- * @param {number} id identifier of a query
+ * @param {number} id - identifier of a query
  * @returns {object} the query with the given id from the config file and additional information about it, if it exists.
  */
 function findQueryWithId(id) {
@@ -84,7 +84,7 @@ function findQueryWithId(id) {
 
 /**
  * Fetches the the query file from the given query and returns its text.
- * @param {object} query the query which is to be executed and additional information about the query.
+ * @param {object} query - the query which is to be executed and additional information about the query.
  * @returns {string} the text from the file location provided by the query relative to query location defined in the config file.
  */
 async function fetchQuery(query) {
@@ -118,7 +118,7 @@ async function fetchQuery(query) {
 
 /**
  * A function that executes a given query and processes every result.
- * @param {object} query the query which is to be executed and additional information about the query.
+ * @param {object} query - the query which is to be executed and additional information about the query.
  * @returns {Array<Term>} the results of the query
  */
 async function executeQuery(query) {
@@ -145,7 +145,7 @@ async function executeQuery(query) {
 
 /**
  * Generates the context for a query execution to be passed to Comunica engine when querying.
- * @param {object} context the context for the query given in the config file.
+ * @param {object} context - the context for the query given in the config file.
  * @returns {object} the context for a query execution to be passed to Comunica engine when querying.
  */
 function generateContext(context) {
@@ -176,8 +176,8 @@ function generateContext(context) {
 
 /**
  * Given a fetch function, returns a function that wraps the fetch function and sets the fetchSuccess flag in the context.
- * @param {Function} customFetch a fetch function to be wrapped 
- * @param {*} context the context for the query given in the config file.
+ * @param {Function} customFetch - a fetch function to be wrapped 
+ * @param {*} context - the context for the query given in the config file.
  * @returns {Function} a function that wraps the fetch function and sets the fetchSuccess flag in the context.
  */
 function statusFetch(customFetch, context) {
@@ -197,8 +197,8 @@ function statusFetch(customFetch, context) {
 
 /**
  * A function that given a QueryType processes every result.
- * @param {object} execution a query execution
- * @param {object} query the query which is to be executed and additional information about the query.
+ * @param {object} execution - a query execution
+ * @param {object} query - the query which is to be executed and additional information about the query.
  * @returns {Array<Term>} the results of the query
  */
 async function handleQueryExecution(execution, query) {
@@ -225,7 +225,7 @@ async function handleQueryExecution(execution, query) {
 
 /**
  *
- * @param {object} query the query which is to be executed and additional information about the query.
+ * @param {object} query - the query which is to be executed and additional information about the query.
  * @returns {Array<Term>} the results of the query
  */
 async function countQueryResults(query) {
@@ -260,7 +260,7 @@ const queryTypeHandlers = {
 
 /**
  * Configures how a query resulting in a stream of quads should be processed.
- * @param {object} quadStream a stream of Quads
+ * @param {object} quadStream - a stream of Quads
  * @returns {Array<Term>} the results of the query
  */
 async function configureQuadStream(quadStream) {
@@ -283,8 +283,8 @@ async function configureQuadStream(quadStream) {
 
 /**
  * Configures how a query resulting in a stream of bindings should be processed.
- * @param {object} bindingStream a stream of Bindings
- * @param {Array<string>} variables all the variables of the query behind the binding stream.
+ * @param {object} bindingStream - a stream of Bindings
+ * @param {Array<string>} variables - all the variables of the query behind the binding stream.
  * @returns {Array<Term>} the results of the query
  */
 async function configureBindingStream(bindingStream, variables) {

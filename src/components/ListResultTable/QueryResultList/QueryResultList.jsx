@@ -6,7 +6,7 @@ import { Term } from "sparqljs";
 import config from "../../../config";
 
 /**
- * @param {object} props the props passed down to the component
+ * @param {object} props - the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
@@ -44,7 +44,7 @@ function QueryResultList(props) {
 
 /**
  *
- * @param {Array<Term>} data a list of data objects
+ * @param {Array<Term>} data - a list of data objects
  * @returns {Term} an object with the keys of the data and the values as an array of the values of the data
  */
 function reduceDataToObject(data) {

@@ -8,7 +8,7 @@ import { Component } from "react";
 import QueryResultList from "./QueryResultList/QueryResultList";
 
 /** 
- * @param {object} props the props passed down to the component
+ * @param {object} props - the props passed down to the component
  * @returns {Component} custom List as defined by react-admin which either shows a loading indicator or the query results
  */
 function ListResultTable(props) {
