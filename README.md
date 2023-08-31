@@ -1,6 +1,6 @@
 # Generic Data Viewer React Admin
 
-This Web app allows users to easily execute queries over multiple data sources (including Solid pods) and 
+This Web app allows users to easily execute queries over multiple data sources (including Solid pods) and
 inspect the corresponding results.
 
 ## Getting Started
@@ -29,12 +29,11 @@ npm run build
 
 This will create a static build in the `dist` folder.
 
-
-### Logging in 
+### Logging in
 
 To log in you need to provide an Identity Provider or a WebID.
 The application will detect which one you use and redirect you to the login page of your Identity Provider.
-If you use your WebID, the first OIDC issuer on your WebID is used when there are multiple. 
+If you use your WebID, the first OIDC issuer on your WebID is used when there are multiple.
 
 ### Configuration file
 
@@ -60,8 +59,12 @@ The configuration file follows a simple structure.
             "name": "A name for the query",
             "description": "Description of the query",
             "id": "A unique ID for the query",
-            "sources": "Sources over which the query should be executed",
-            "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
+            "comunicaContext": {
+                "sources": "Sources over which the query should be executed",
+                "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
+                ...{"any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/"}
+          },
+            },
             "askQuery": {
                 "trueText": "The text that is to be shown when the query result is true, only useful for ASK queries.",
                 "falseText": "The text that is to be shown when the query result is true, only useful for ASK queries."
@@ -112,10 +115,10 @@ The components get the following props:
 - `record` (the query result), an object of `RDF/JS` objects.
 - `variable` the variable name and key of `record`, a string.
 
-`Hint` use the [Field components](https://marmelab.com/react-admin/doc/3.19/Fields.html#basic-fields) from `react-admin` to display the result. 
-They've already got styling matching that of `react-admin` and are easy to use. 
+`Hint` use the [Field components](https://marmelab.com/react-admin/doc/3.19/Fields.html#basic-fields) from `react-admin` to display the result.
+They've already got styling matching that of `react-admin` and are easy to use.
 
-`Warning` if you change the record object, the changed will still be present in the next render. 
+`Warning` if you change the record object, the changed will still be present in the next render.
 
 ## Testing with local pods
 
@@ -131,7 +134,7 @@ To create a local pod with which you can test for example authentication you can
 - Log in with the IDP `http://localhost:8080` and
   the credentials in the file `seeded-pod-config.json`.
 
-## Using a local http proxy 
+## Using a local http proxy
 
 To use a local http proxy through which the requests will be rerouted execute the following command:
 
@@ -163,11 +166,13 @@ For testing we use [Cypress](https://www.cypress.io/).
    npm run start:proxy
    ```
 4. Start a server which denies all cors header
-    ```bash
-    npm run start:badCors
-    ```
+
+   ```bash
+   npm run start:badCors
+   ```
 
    This process must also be active throughout the tests.
+
 5. Finally, you can execute the tests by running
    ```bash
    npm run test
