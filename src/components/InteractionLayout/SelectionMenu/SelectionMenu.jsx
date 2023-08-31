@@ -2,6 +2,7 @@ import { useResourceDefinitions } from "ra-core";
 import { DashboardMenuItem } from "ra-ui-materialui";
 import { Menu } from "react-admin";
 import { ThemeProvider, createTheme } from "@mui/material";
+import { Component } from "react";
 
 /**
  * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
