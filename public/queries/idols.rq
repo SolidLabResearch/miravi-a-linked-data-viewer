@@ -1,0 +1,9 @@
+PREFIX schema: <http://schema.org/> 
+
+SELECT ?name ?birthDate_int WHERE {
+    ?list schema:name ?listTitle;
+      schema:itemListElement [
+      schema:name ?name;
+      schema:birthDate ?birthDate_int;
+    ].
+}

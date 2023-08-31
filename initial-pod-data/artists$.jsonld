@@ -1,0 +1,129 @@
+{
+  "@context": {
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "dbo": "http://dbpedia.org/ontology/",
+    "dbp": "http://dbpedia.org/resource/"
+  },
+  "@graph": [
+    {
+      "@id": "http://example.com/person1",
+      "@type": "dbo:Artist",
+      "foaf:name": "John Smith",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person2",
+      "@type": "dbo:Artist",
+      "foaf:name": "Jane Doe",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person3",
+      "@type": "dbo:Artist",
+      "foaf:name": "Michael Johnson",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person4",
+      "@type": "dbo:Artist",
+      "foaf:name": "Emily Rodriguez",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person5",
+      "@type": "dbo:Artist",
+      "foaf:name": "Alex Turner",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person6",
+      "@type": "dbo:Artist",
+      "foaf:name": "Sophia Lee",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person7",
+      "@type": "dbo:Artist",
+      "foaf:name": "William Clark",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person8",
+      "@type": "dbo:Artist",
+      "foaf:name": "Olivia Anderson",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person9",
+      "@type": "dbo:Artist",
+      "foaf:name": "Ethan Martin",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person10",
+      "@type": "dbo:Artist",
+      "foaf:name": "Ava White",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person11",
+      "@type": "dbo:Artist",
+      "foaf:name": "Liam Turner",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person12",
+      "@type": "dbo:Artist",
+      "foaf:name": "Emma Martinez",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person13",
+      "@type": "dbo:Artist",
+      "foaf:name": "Noah Walker",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person14",
+      "@type": "dbo:Artist",
+      "foaf:name": "Isabella Perez",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person15",
+      "@type": "dbo:Artist",
+      "foaf:name": "James Lewis",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person16",
+      "@type": "dbo:Artist",
+      "foaf:name": "Sophie Turner",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person17",
+      "@type": "dbo:Artist",
+      "foaf:name": "Benjamin Scott",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person18",
+      "@type": "dbo:Artist",
+      "foaf:name": "Chloe Adams",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person19",
+      "@type": "dbo:Artist",
+      "foaf:name": "Daniel Baker",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    },
+    {
+      "@id": "http://example.com/person20",
+      "@type": "dbo:Artist",
+      "foaf:name": "Grace Hill",
+      "dbo:influencedBy": {"@id": "http://dbpedia.org/resource/Pablo_Picasso"}
+    }
+  ]
+}
