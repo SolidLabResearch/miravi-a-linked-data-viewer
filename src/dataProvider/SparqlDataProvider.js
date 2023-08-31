@@ -155,7 +155,9 @@ function generateContext(context) {
     throw new HttpError("No sources provided", 500);
   }
 
-  context.fetchSuccess = {};
+  if(!context.fetchSuccess){
+    context.fetchSuccess = {};
+  }
 
   let fetchFunction = fetch;
   if (getDefaultSession().info.isLoggedIn) {
