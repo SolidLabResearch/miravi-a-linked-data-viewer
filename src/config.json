@@ -71,7 +71,19 @@
       "description": "A list of books I'd love to own",
       "id": "654",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/wish-list", "httq://this-runs-on-httq.com/"],
+        "sources": ["http://localhost:8080/example/wish-list"]
+      }
+    },
+    {
+      "queryLocation": "musicians.rq",
+      "name": "My favorite musicians",
+      "description": "A list of my favorite musicians",
+      "id": "6543",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians",
+          "httq://this-runs-on-httq.com/"
+        ],
         "lenient": true
       }
     }
