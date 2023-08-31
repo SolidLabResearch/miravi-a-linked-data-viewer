@@ -6,9 +6,9 @@ describe("Web app", () => {
   it("When one source throws an error, the results of other sources are still shown", () => {
     cy.visit("/");
 
-    cy.contains("My wish list").click();
+    cy.contains("My favourite musicians").click();
     cy.contains("Finished in:");
-    cy.contains("Too Late");
+    cy.contains("Ludwig van Beethoven");
   })
 
   it("Log in and execute query on private data", () => {
