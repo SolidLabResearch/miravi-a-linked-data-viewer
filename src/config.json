@@ -76,8 +76,8 @@
     },
     {
       "queryLocation": "musicians.rq",
-      "name": "My favorite musicians",
-      "description": "A list of my favorite musicians",
+      "name": "My favourite musicians",
+      "description": "A list of my favourite musicians",
       "id": "6543",
       "comunicaContext": {
         "sources": [
