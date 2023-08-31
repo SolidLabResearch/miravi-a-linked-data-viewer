@@ -124,28 +124,48 @@ async function fetchQuery(query) {
 async function executeQuery(query) {
   try {
     query.queryText = await fetchQuery(query);
-    const fetchFunction = getDefaultSession().info.isLoggedIn
-      ? authFetch
-      : fetch;
-
-    let queryProxyHandler;
-    if (query.useProxy) {
-      queryProxyHandler = proxyHandler;
-    }
+    console.log(query.comunicaContext);
     return handleQueryExecution(
-      await myEngine.query(query.queryText, {
-        sources: query.sources,
-        fetch: fetchFunction,
-        httpProxyHandler: queryProxyHandler,
-      }),
+      await myEngine.query(
+        query.queryText,
+        {
+          ...generateContext(query.comunicaContext)
+        }
+      ),
       query
     );
   } catch (error) {
-    for (const source of query.sources) {
-      myEngine.invalidateHttpCache(source);
+    if (query.comunicaContext && query.comunicaContext.sources) {
+      for (const source of query.comunicaContext.sources) {
+        myEngine.invalidateHttpCache(source);
+      }
     }
     throw new HttpError(error.message, 500);
   }
+}
+
+/**
+ * generates the context for a query execution to be passed to Comunica engine when querying.
+ * @param {object} context the context for the query given in the config file.
+ */
+function generateContext(context) {
+  if (!context) {
+    throw new HttpError("No context provided", 500);
+  }
+  if (!context.sources) {
+    throw new HttpError("No sources provided", 500);
+  }
+  const contextCopy = { ...context };
+
+  contextCopy.fetch = fetch;
+  if (getDefaultSession().info.isLoggedIn) {
+    contextCopy.fetch = authFetch;
+  }
+
+  if (contextCopy.useProxy) {
+    contextCopy.httpProxyHandler = proxyHandler;
+  }
+  return contextCopy;
 }
 
 /**
@@ -200,7 +220,7 @@ async function countQueryResults(query) {
   const generator = new Generator();
   const countQuery = generator.stringify(parsedQuery);
   const bindings = await myEngine.queryBindings(countQuery, {
-    sources: query.sources,
+    sources: query.comunicaContext.sources,
     fetch: fetch,
     httpProxyHandler: proxyHandler,
   });
