@@ -3,6 +3,14 @@ describe("Web app", () => {
     cy.visit("/");
   });
 
+  it("When one source throws an error, the results of other sources are still shown", () => {
+    cy.visit("/");
+
+    cy.contains("My favourite musicians").click();
+    cy.contains("Finished in:");
+    cy.contains("Ludwig van Beethoven");
+  })
+
   it("Log in with WebID with no OIDC issuer", () => {
     cy.visit("/");
 
