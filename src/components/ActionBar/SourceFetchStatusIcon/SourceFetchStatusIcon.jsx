@@ -1,4 +1,4 @@
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Tooltip } from "@mui/material";
 import PropTypes from "prop-types";
@@ -20,7 +20,7 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
   if (status) {
     return (
       <Tooltip title="Query was succesful">
-        <CheckBoxIcon size="small" />
+        <CheckIcon size="small" />
       </Tooltip>
     );
   } else {
