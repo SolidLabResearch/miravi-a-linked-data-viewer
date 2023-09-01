@@ -8,7 +8,7 @@ import { Component } from "react";
  * @param {object} props - the props passed to the component
  * @param {object} props.context - the query context
  * @param {string} props.source - the source to check
- * @param {string} props.proxyUrl - the proxy url to use if querying is used for sources
+ * @param {string} props.proxyUrl - the proxy url to use if the resource is accessed through a proxy
  * @returns {Component} an icon indicating whether the query was executed succesfully or not
  */
 function SourceFetchStatusIcon({ context, source, proxyUrl }) {
