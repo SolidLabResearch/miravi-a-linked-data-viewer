@@ -85,6 +85,7 @@
       "name": "My favourite musicians",
       "description": "A list of my favourite musicians",
       "id": "6543",
+      "icon": "music",
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/favourite-musicians",
