@@ -69,6 +69,14 @@ describe("Web app", () => {
     );
   });
 
+  it("Variables in column header contain link to ontology", () => {
+    cy.visit("/");
+
+    cy.contains("My favourite musicians").click();
+    cy.contains("Finished in:");
+    cy.get('a[href="http://schema.org/name"]');
+  })
+
   it("When one source throws an error, the results of other sources are still shown", () => {
     cy.visit("/");
 

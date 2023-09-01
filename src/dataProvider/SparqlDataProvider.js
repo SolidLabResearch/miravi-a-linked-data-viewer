@@ -94,6 +94,9 @@ async function fetchQuery(query) {
     const rawText = await result.text();
     query.rawText = rawText;
     const parsedQuery = parser.parse(rawText);
+    if (!query.variableOntology) {
+      query.variableOntology = findPredicates(parsedQuery);
+    }
     if (!parsedQuery.limit) {
       parsedQuery.limit = query.limit;
     }
@@ -117,6 +120,26 @@ async function fetchQuery(query) {
 }
 
 /**
+ * Given a query and an object, this function returns the predicate of the object in the query.
+ * @param {object} query - the paresed query in which the predicate is to be looked for.
+ * @returns {object} an object with the variable as key and the predicate as value.
+ */
+function findPredicates(query) {
+  const ontologyMapper = {};
+  if (!query.variables) {
+    return query;
+  }
+  for (const part of query.where) {
+    for (const triple of part.triples) {
+      if(triple.predicate.termType !== "Variable"){
+        ontologyMapper[triple.object.value] = triple.predicate.value;
+      }
+    }
+  }
+  return ontologyMapper;
+}
+
+/**
  * A function that executes a given query and processes every result.
  * @param {object} query - the query which is to be executed and additional information about the query.
  * @returns {Array<Term>} the results of the query
@@ -125,12 +148,9 @@ async function executeQuery(query) {
   try {
     query.queryText = await fetchQuery(query);
     return handleQueryExecution(
-      await myEngine.query(
-        query.queryText,
-        {
-          ...generateContext(query.comunicaContext)
-        }
-      ),
+      await myEngine.query(query.queryText, {
+        ...generateContext(query.comunicaContext),
+      }),
       query
     );
   } catch (error) {
