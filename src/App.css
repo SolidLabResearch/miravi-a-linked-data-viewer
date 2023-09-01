@@ -1,0 +1,7 @@
+.RaSidebar-docked > .MuiPaper-root{
+    z-index: 9!important; /*The important tag is necessary as react-admin will try to override it*/
+}
+
+.RaSidebar-docked > .MuiPaper-root > .RaSidebar-fixed{
+    overflow-x: visible!important; /*The important tag is necessary as react-admin will try to override it*/
+}

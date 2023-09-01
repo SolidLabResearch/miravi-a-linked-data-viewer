@@ -1,0 +1,31 @@
+{
+  "@context": "http://schema.org",
+  "@type": "ItemList",
+  "name": "My Favourite Musicians",
+  "ItemListElement": [
+    {
+      "@type": "Person",
+      "name": "Ludwig van Beethoven",
+      "genre": "Classical",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Ludwig_van_Beethoven"}
+    },
+    {
+      "@type": "Person",
+      "name": "Wolfgang Amadeus Mozart",
+      "genre": "Classical",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart"}
+    },
+    {
+      "@type": "Person",
+      "name": "Johann Sebastian Bach",
+      "genre": "Baroque",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Johann_Sebastian_Bach"}
+    },
+    {
+      "@type": "Person",
+      "name": "Franz Schubert",
+      "genre": "Romantic",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Franz_Schubert"}
+    }
+  ]
+}

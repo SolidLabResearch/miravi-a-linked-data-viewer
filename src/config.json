@@ -1,72 +1,97 @@
 {
-    "title": "Generic Data Viewer",
-    "logoLocation": "images/IDLab-logo.png",
-    "logoRedirectURL": "https://idlab.technology/",
-    "mainAppColor": "lightgray",
-    "backgroundColor": "#fff",
-    "titleColor": "black",
-    "textColor": "#1976D2",
-    "queryFolder": "queries",
-    "httpProxy": "http://localhost:8000/",
-    "showMilliseconds": false,
-    "defaultIDP": "https://pod.playground.solidlab.be/",
-    "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
-    "introductionText": "Please select a query from the menu on the left.",
-    "queries": [
-        {
-            "queryLocation": "idols.rq",
-            "name": "My idols",
-            "description": "A simple Test query",
+  "title": "Generic Data Viewer",
+  "logoLocation": "images/IDLab-logo.png",
+  "logoRedirectURL": "https://idlab.technology/",
+  "mainAppColor": "lightgray",
+  "backgroundColor": "#fff",
+  "titleColor": "black",
+  "textColor": "#1976D2",
+  "queryFolder": "queries",
+  "httpProxy": "http://localhost:8000/",
+  "showMilliseconds": false,
+  "defaultIDP": "https://pod.playground.solidlab.be/",
+  "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
+  "introductionText": "Please select a query from the menu on the left.",
+  "queries": [
+    {
+      "queryLocation": "idols.rq",
+      "name": "My idols",
+      "description": "A simple Test query",
             "icon": "test", 
-            "id": "123",
-            "sources": ["http://localhost:8001/example/idols"],
-            "useProxy": true
-        },
-        {
-            "queryLocation": "images_test.rq",
-            "name": "A Test For Images",
-            "description": "A small test to test the functionality of the Web app concerning images",
+      "id": "123",
+      "comunicaContext": {
+        "sources": ["http://localhost:8001/example/idols"],
+        "useProxy": true
+      }
+    },
+    {
+      "queryLocation": "images_test.rq",
+      "name": "A Test For Images",
+      "description": "A small test to test the functionality of the Web app concerning images",
             "icon": "images",
-            "id": "789",
-            "sources": ["http://localhost:8080/example/cute-cats"]
-        },
-        {
-            "queryLocation": "ask_picasso.rq",
-            "name": "Is there an artist influenced by Picasso?",
-            "description": "Whether or not there is an artist who is influenced by Picasso",
+      "id": "789",
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/cute-cats"]
+      }
+    },
+    {
+      "queryLocation": "ask_picasso.rq",
+      "name": "Is there an artist influenced by Picasso?",
+      "description": "Whether or not there is an artist who is influenced by Picasso",
             "icon": "picasso",
-            "id": "987",
-            "sources": ["https://fragments.dbpedia.org/2016-04/en"],
-            "useProxy": true,
-            "askQuery": {
-                "trueText": "There is an artist who is inspired by Picasso!",
-                "falseText": "There is no artist who is inspired by Picasso."
-            }
-        },
-        {
-            "queryLocation": "construct_picasso.rq",
-            "name": "A graph of artists influenced by Picasso",
-            "description": "A test for quad queries",
+      "id": "987",
+      "comunicaContext": {
+        "sources": ["https://fragments.dbpedia.org/2016-04/en"],
+        "useProxy": true
+      },
+      "askQuery": {
+        "trueText": "There is an artist who is inspired by Picasso!",
+        "falseText": "There is no artist who is inspired by Picasso."
+      }
+    },
+    {
+      "queryLocation": "construct_picasso.rq",
+      "name": "A graph of artists influenced by Picasso",
+      "description": "A test for quad queries",
             "icon": "picasso",
-            "useProxy": true,
-            "id": "9876",
-            "sources": ["http://localhost:8080/example/artists"]
-        },
-        {
-            "queryLocation": "books.rq",
-            "name": "A list of my favorite books",
-            "description": "A short list of some of my favorite books, which I keep secret.",
+      "id": "9876",
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/artists"],
+        "useProxy": true
+      }
+    },
+    {
+      "queryLocation": "books.rq",
+      "name": "A list of my favorite books",
+      "description": "A short list of some of my favorite books, which I keep secret.",
             "icon": "books",
-            "id": "321",
-            "sources": ["http://localhost:8080/example/favourite-books"]
-        },
-        {
-            "queryLocation": "books.rq",
-            "name": "My wish list",
-            "description": "A list of books I'd love to own",
+      "id": "321",
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/favourite-books"]
+      }
+    },
+    {
+      "queryLocation": "books.rq",
+      "name": "My wish list",
+      "description": "A list of books I'd love to own",
             "icon": "books",
-            "id": "654",
-            "sources": ["http://localhost:8080/example/wish-list"]
-        }
-    ]
+      "id": "654",
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/wish-list"]
+      }
+    },
+    {
+      "queryLocation": "musicians.rq",
+      "name": "My favourite musicians",
+      "description": "A list of my favourite musicians",
+      "id": "6543",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians",
+          "httq://this-runs-on-httq.com/"
+        ],
+        "lenient": true
+      }
+    }
+  ]
 }

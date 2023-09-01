@@ -87,7 +87,7 @@ export default {
 
 /**
  * Looks up the IDP of a WebID by querying the WebID .
- * @param {URL} webId the WebID to query the IDP from
+ * @param {URL} webId - the WebID to query the IDP from
  * @returns {?Promise<URL>} the first IDP of the WebID or undefined if no IDP is found in the WebID document
  */
 async function queryIDPfromWebId(webId) {
@@ -111,7 +111,7 @@ async function queryIDPfromWebId(webId) {
 
 /**
  *
- * @param {object} webIdThing the webId (actually of type ProfileAll, but importing this throws an error https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/15) document to get the name from
+ * @param {object} webIdThing - the webId (actually of type ProfileAll, but importing this throws an error https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/15) document to get the name from
  * @returns {?string} either the name or undefined if no foaf:name is found
  */
 function getName(webIdThing) {
@@ -125,7 +125,7 @@ function getName(webIdThing) {
 
 /**
  *
- * @param {object} webIdThing the webId (actually of type ProfileAll, but importing this throws an error https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/15) document to get the profile picture from
+ * @param {object} webIdThing - the webId (actually of type ProfileAll, but importing this throws an error https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/15) document to get the profile picture from
  * @returns {?string} either a url to the profile picture or undefined if no foaf:img is found
  */
 function getProfilePicture(webIdThing) {
