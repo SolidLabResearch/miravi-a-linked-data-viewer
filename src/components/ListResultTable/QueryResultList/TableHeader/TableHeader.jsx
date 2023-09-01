@@ -5,12 +5,26 @@ import "./TableHeader.css";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import LinkIcon from "@mui/icons-material/Link";
+import PropTypes from "prop-types";
+import { Component } from "react";
 
+/**
+ * 
+ * @param {object} props the props passed down to the component
+ * @param {Array<Component>} props.children the children of the component 
+ * @param {object} props.config the config object of the application
+ * @returns {Component} the header of the table containing the column names, the sort icons and ontology links
+ */
 function TableHeader({ children, config }) {
   const { sort, setSort, resource } = useListContext();
   const { variableOntology } = config.queries.filter(
     (query) => query.id === resource
   )[0];
+  
+  /**
+   * Handles the click on a header and sets the sort state accordingly
+   * @param {string} target the source of the column that was clicked 
+   */
   function handleHeaderClick(target) {
     const newSort = { field: target, order: "DESC" };
     if (sort) {
@@ -34,7 +48,6 @@ function TableHeader({ children, config }) {
               sx={{ height: "100%", "& > *": { verticalAlign: "middle" } }}
             >
               <span
-                variant="span"
                 role="button"
                 className="header-button"
                 onClick={() => handleHeaderClick(child.props.source)}
@@ -77,4 +90,9 @@ function TableHeader({ children, config }) {
   );
 }
 
+TableHeader.propTypes = {
+  children: PropTypes.node,
+  config: PropTypes.object.isRequired,
+
+}
 export default TableHeader;

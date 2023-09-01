@@ -122,6 +122,7 @@ async function fetchQuery(query) {
 /**
  * Given a query and an object, this function returns the predicate of the object in the query.
  * @param {object} query the paresed query in which the predicate is to be looked for.
+ * @returns {object} an object with the variable as key and the predicate as value.
  */
 function findPredicates(query) {
   const ontologyMapper = {};
@@ -165,6 +166,7 @@ async function executeQuery(query) {
 /**
  * Generates the context for a query execution to be passed to Comunica engine when querying.
  * @param {object} context the context for the query given in the config file.
+ * @returns {object} the context for the query execution.
  */
 function generateContext(context) {
   if (!context) {
