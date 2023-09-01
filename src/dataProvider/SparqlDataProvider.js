@@ -121,7 +121,7 @@ async function fetchQuery(query) {
 
 /**
  * Given a query and an object, this function returns the predicate of the object in the query.
- * @param {object} query the paresed query in which the predicate is to be looked for.
+ * @param {object} query - the paresed query in which the predicate is to be looked for.
  * @returns {object} an object with the variable as key and the predicate as value.
  */
 function findPredicates(query) {

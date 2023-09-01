@@ -10,9 +10,9 @@ import { Component } from "react";
 
 /**
  * 
- * @param {object} props the props passed down to the component
- * @param {Array<Component>} props.children the children of the component 
- * @param {object} props.config the config object of the application
+ * @param {object} props - the props passed down to the component
+ * @param {Array<Component>} props.children - the children of the component 
+ * @param {object} props.config - the config object of the application
  * @returns {Component} the header of the table containing the column names, the sort icons and ontology links
  */
 function TableHeader({ children, config }) {
@@ -23,7 +23,7 @@ function TableHeader({ children, config }) {
   
   /**
    * Handles the click on a header and sets the sort state accordingly
-   * @param {string} target the source of the column that was clicked 
+   * @param {string} target - the source of the column that was clicked 
    */
   function handleHeaderClick(target) {
     const newSort = { field: target, order: "DESC" };
