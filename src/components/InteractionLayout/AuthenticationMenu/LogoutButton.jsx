@@ -8,8 +8,8 @@ import { Ref } from "react";
 
 /**
  * A component that renders a logout button in the UserMenu in case the user is logged in or a login button in case the user isn't logged in.
- * @param {object} props The props passed into the component.
- * @param {Ref} ref The ref passed into the component.
+ * @param {object} props - The props passed into the component.
+ * @param {Ref} ref - The ref passed into the component.
  */
 const LogoutButton = forwardRef((props, ref) => {
   const logout = useLogout();
@@ -18,7 +18,7 @@ const LogoutButton = forwardRef((props, ref) => {
 
   /**
    * An EventListener that handles what should happen when the user is trying to log out by pressing the log out button.
-   * @param {MouseEvent} event the event that triggered the EventListener
+   * @param {MouseEvent} event - the event that triggered the EventListener
    */
   function handleLogout(event) {
     event.preventDefault();

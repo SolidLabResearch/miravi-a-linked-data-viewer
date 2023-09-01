@@ -13,7 +13,7 @@ function SolidLoginForm() {
 
   /**
    * Handling what should happen when the user is trying to log in by pressing the log in button.
-   * @param {Event} event the event calling the EventListener
+   * @param {Event} event - the event calling the EventListener
    */
   async function handleLogin(event) {
     event.preventDefault();
