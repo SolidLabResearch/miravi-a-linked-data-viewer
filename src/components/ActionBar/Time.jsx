@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { Component } from "react";
 
 /**
- * @param {object} props the props passed down to the component  
+ * @param {object} props - the props passed down to the component  
  * @returns {Component} a component that displays the time in seconds and milliseconds (if configured to do so)
  */
 function Time(props) {

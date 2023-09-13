@@ -5,7 +5,7 @@ import SelectionMenu from "./SelectionMenu/SelectionMenu";
 
 /**
  *
- * @param {object} props the props passed down to the component
+ * @param {object} props - the props passed down to the component
  * @returns {Component} custom Layout as defined by react-admin
  */
 function InteractionLayout(props) {

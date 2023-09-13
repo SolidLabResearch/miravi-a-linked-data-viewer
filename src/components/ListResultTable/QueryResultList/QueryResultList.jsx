@@ -4,9 +4,10 @@ import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
 import config from "../../../config";
+import TableHeader from "./TableHeader/TableHeader";
 
 /**
- * @param {object} props the props passed down to the component
+ * @param {object} props - the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
@@ -25,7 +26,7 @@ function QueryResultList(props) {
       <Title title={config.title} />
       <ListView title=" " actions={<ActionBar />} {...props}>
         {values && (
-          <Datagrid>
+          <Datagrid header={<TableHeader config={config}/>}>
             {Object.keys(values).map((key) => {
               return (
                 <GenericField
@@ -44,7 +45,7 @@ function QueryResultList(props) {
 
 /**
  *
- * @param {Array<Term>} data a list of data objects
+ * @param {Array<Term>} data - a list of data objects
  * @returns {Term} an object with the keys of the data and the values as an array of the values of the data
  */
 function reduceDataToObject(data) {
