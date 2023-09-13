@@ -1,7 +1,17 @@
 [
-    {
-      "podName": "example",
-      "email": "hello@example.com",
-      "password": "abc123"
-    }
-  ]
+  {
+    "podName": "example",
+    "email": "hello@example.com",
+    "password": "abc123"
+  },
+  {
+    "podName": "example2",
+    "email": "help@example.com",
+    "password": "secret123"
+  },
+  {
+    "podName": "invalidWebId",
+    "email": "badRdf@example.com",
+    "password": "rdf123"
+  }
+]
