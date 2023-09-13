@@ -1,5 +1,5 @@
 describe("Web app", () => {
-  it("Successfully loads.", () => {
+  it("Successfully loads", () => {
     cy.visit("/");
   });
 
