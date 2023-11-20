@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- "Unknown User" when not logged in (#51).
+
 ### Fixed
 - Fix configured title before first query (#46)
+
+### Removed
+- Bulk action checkboxes to delete (#44).
 
 ## [1.0.0] - 2023-09-13
 

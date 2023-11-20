@@ -26,7 +26,7 @@ function QueryResultList(props) {
       <Title title={config.title} />
       <ListView title=" " actions={<ActionBar />} {...props}>
         {values && (
-          <Datagrid header={<TableHeader config={config}/>}>
+          <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
             {Object.keys(values).map((key) => {
               return (
                 <GenericField

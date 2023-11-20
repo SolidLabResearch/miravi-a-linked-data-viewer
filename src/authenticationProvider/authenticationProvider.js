@@ -119,7 +119,7 @@ function getName(webIdThing) {
   if (literalName) {
     return literalName.value;
   } else {
-    return undefined;
+    return "Unknown User";
   }
 }
 
