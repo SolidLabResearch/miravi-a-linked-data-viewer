@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change loading message to "The page is loading. Just a moment please." (#26)
 
+### Removed
+- Bulk action checkboxes to delete (#44).
+
 ## [1.0.0] - 2023-09-13
 
 ### Added
