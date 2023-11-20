@@ -86,6 +86,22 @@
         ],
         "lenient": true
       }
+    },
+    {
+      "queryLocation": "musicians_variables.rq",
+      "name": "My favourite musicians (template)",
+      "description": "A list of my favourite musicians (with variables)",
+      "id": "6544",
+      "variables": {
+        "genre": ["Romantic", "Baroque", "Classical"]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians",
+          "httq://this-runs-on-httq.com/"
+        ],
+        "lenient": true
+      }
     }
   ]
 }

@@ -26,11 +26,16 @@ if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
 }
 
 export default {
-  getList: async function getList(queryName, { pagination, sort, filter }) {
+  getList: async function getList(queryName, { pagination, sort, filter, meta }) {
     const query = findQueryWithId(queryName);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
+
+    if (meta && meta.variables) {
+      query.variableValues = meta.variables
+    }
+
     let results = await executeQuery(query);
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
@@ -91,7 +96,12 @@ async function fetchQuery(query) {
   try {
     const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
     const parser = new Parser();
-    const rawText = await result.text();
+    let rawText = await result.text();
+
+    if (query.variableValues) {
+      rawText = replaceVariables(rawText, query.variableValues);
+    }
+
     query.rawText = rawText;
     const parsedQuery = parser.parse(rawText);
     if (!query.variableOntology) {
@@ -117,6 +127,20 @@ async function fetchQuery(query) {
   } catch (error) {
     throw new HttpError(error.message, 500);
   }
+}
+
+/**
+ * Replace the variable placeholders in a query's raw text by the specified value.
+ * @param {string} rawText - the raw text of a query.
+ * @param {object} - an object containing the variable names and specified values.
+ * @returns {string} the resulting raw text of the query after replacing the variables.
+ */
+function replaceVariables(rawText, variables) {
+  for (const [variableName, variableValue] of Object.entries(variables)) {
+    rawText = rawText.replace("$" + variableName, '"' + variableValue + '"')
+  }
+
+  return rawText
 }
 
 /**
