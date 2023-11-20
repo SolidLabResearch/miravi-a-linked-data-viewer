@@ -40,7 +40,6 @@ function TableHeader({ children, config }) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell> </TableCell>
         {React.Children.map(children, (child) => (
           <>
             <TableCell
