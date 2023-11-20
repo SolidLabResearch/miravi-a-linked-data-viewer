@@ -19,24 +19,22 @@ const TemplatedQueryForm = (props) => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
 
-
-    const entries = {}
-    for (const key of Object.keys(query.variables)) {
-        if (queryParams.has(key)) {
-            entries[key] = queryParams.get(key)
+    const urlVariables = {}
+    for (const variableName of Object.keys(query.variables)) {
+        if (queryParams.has(variableName)) {
+            urlVariables[variableName] = queryParams.get(variableName)
         }
     }
-    const [variables, setVariables] = useState(entries);
+    const [variables, setVariables] = useState(urlVariables);
 
-    const [redirectToList, setRedirectToList] = useState(Object.keys(entries).length === Object.keys(query.variables).length)
+    const [redirectToList, setRedirectToList] = useState(Object.keys(urlVariables).length === Object.keys(query.variables).length)
+    if (redirectToList) {
+        return <ListResultTable {...props} variables={variables}/>;
+    }
 
     const onSubmit = (data) => {
         setVariables(data)
         setRedirectToList(true);
-    }
-
-    if (redirectToList) {
-        return <ListResultTable {...props} variables={variables}/>;
     }
 
     return (
