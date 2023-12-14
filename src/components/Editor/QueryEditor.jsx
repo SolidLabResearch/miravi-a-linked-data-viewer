@@ -2,6 +2,11 @@ import {required, SimpleForm, TextInput} from "react-admin";
 import config from "../../config";
 import {useEffect, useState} from "react";
 
+/**
+ * A query editor form that contains multiple input fields to create a new query or edit an existing query
+ * and sync those changes to a pod
+ * @returns {Component} the query editor component
+ */
 function QueryEditor(props) {
 
     let {newQuery} = props
@@ -24,7 +29,6 @@ function QueryEditor(props) {
                 setQueryText(text));
         }
     }, [])
-
 
     const onSubmit = (data) => {
         if (newQuery) {
