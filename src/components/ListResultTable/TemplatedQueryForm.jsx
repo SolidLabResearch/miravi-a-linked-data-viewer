@@ -5,6 +5,10 @@ import {useLocation} from 'react-router-dom';
 
 import config from "../../config";
 
+/**
+ * A custom form to set/choose values for variables for a templated query before that query is executed
+ * @returns {Component} the templated query form component
+ */
 const TemplatedQueryForm = (props) => {
     const resource = useResourceContext();
 
