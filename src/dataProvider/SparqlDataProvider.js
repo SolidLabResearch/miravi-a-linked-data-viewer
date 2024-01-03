@@ -132,12 +132,13 @@ async function fetchQuery(query) {
 /**
  * Replace the variable placeholders in a query's raw text by the specified value.
  * @param {string} rawText - the raw text of a query.
- * @param {object} - an object containing the variable names and specified values.
+ * @param {object} variables - an object containing the variable names and specified values (as strings).
  * @returns {string} the resulting raw text of the query after replacing the variables.
  */
 function replaceVariables(rawText, variables) {
   for (const [variableName, variableValue] of Object.entries(variables)) {
-    rawText = rawText.replace("$" + variableName, '"' + variableValue + '"')
+    // do not surround with double quotes here; add double quotes in the input if needed!
+    rawText = rawText.replace("$" + variableName, variableValue);
   }
 
   return rawText
@@ -220,7 +221,7 @@ function generateContext(context) {
 
 /**
  * Given a fetch function, returns a function that wraps the fetch function and sets the fetchSuccess flag in the context.
- * @param {Function} customFetch - a fetch function to be wrapped 
+ * @param {Function} customFetch - a fetch function to be wrapped
  * @param {*} context - the context for the query given in the config file.
  * @returns {Function} a function that wraps the fetch function and sets the fetchSuccess flag in the context.
  */
