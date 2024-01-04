@@ -34,7 +34,7 @@ npm run dev
 which will start the web application. Now you can browse the displayed URL.
 
 If you want to test the default configuration however, you first need to complete the steps
-described in [testing with local pods](#testing-with-local-pods) and [Using a local http proxy](#using-a-local-http-proxy).
+described in [testing with local pods](#testing-with-local-pods) and [using a local http proxy](#using-a-local-http-proxy).
 Do each of these in their own separate terminal window.
 
 ## Static build

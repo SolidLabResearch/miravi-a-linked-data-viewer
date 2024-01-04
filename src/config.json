@@ -9,7 +9,7 @@
   "queryFolder": "queries",
   "httpProxy": "http://localhost:8000/",
   "showMilliseconds": false,
-  "defaultIDP": "https://pod.playground.solidlab.be/",
+  "defaultIDP": "http://localhost:8080",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please select a query from the menu on the left.",
   "queries": [
