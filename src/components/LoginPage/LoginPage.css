@@ -7,14 +7,14 @@
     align-items: center;
 }
 
-button, input[type="submit"]{
+.login-form-button{
     margin: 10px;
 }
 
-label{
+.login-form-label{
     margin: 10px;
 }
 
-.type-selection-box{
+.login-form-type-selection-box{
     margin-bottom: 10px;
 }
