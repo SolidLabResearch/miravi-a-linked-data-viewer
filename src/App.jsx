@@ -59,7 +59,7 @@ function App() {
       loginPage={SolidLoginForm}
       requireAuth={false}
       dashboard={() => {
-        return Dashboard({text: config.introductionText})
+        return Dashboard({title: config.title, text: config.introductionText})
       }}
     >
       {config.queries.map((query) => {
