@@ -8,11 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- "Unknown User" when not logged in (#51).
+- "Unknown User" when logged in, but user's name not known (#51).
 
 ### Fixed
 - Fix configured title before first query (#46)
 
+### Changed
+- Enabled no bad blocks and indentation for eslint/jsdoc (#14)
+- 
 ### Removed
 - Bulk action checkboxes to delete (#44).
 
