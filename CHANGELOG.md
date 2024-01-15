@@ -8,10 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- "Unknown User" when not logged in (#51).
+- "Unknown User" when logged in, but user's name not known (#51).
 
 ### Changed
 - Change loading message to "The page is loading. Just a moment please." (#26)
+- Enabled no bad blocks and indentation for eslint/jsdoc (#14)
+
+### Fixed
+- Fix configured title before first query (#46)
 
 ### Removed
 - Bulk action checkboxes to delete (#44).
