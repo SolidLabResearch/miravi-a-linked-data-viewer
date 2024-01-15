@@ -124,7 +124,8 @@ The components get the following props:
 - `record` (the query result), an object of `RDF/JS` objects.
 - `variable` the variable name and key of `record`, a string.
 
-`Hint` use the [Field components](https://marmelab.com/react-admin/doc/3.19/Fields.html#basic-fields) from `react-admin` to display the result.
+`Hint` use the [Field components](https://marmelab.com/react-admin/doc/3.19/Fields.html#basic-fields)
+from `react-admin` to display the result.
 They've already got styling matching that of `react-admin` and are easy to use.
 
 `Warning` if you change the record object, the changed will still be present in the next render.
@@ -166,14 +167,18 @@ For testing we use [Cypress](https://www.cypress.io/).
    Keep the server running.
 
 2. Start the Web application
+
    ```bash
    npm run dev
    ```
+
    Also keep this process running.
 3. Start the http proxy
+
    ```bash
    npm run start:proxy
    ```
+
 4. Start a server which denies all cors header
 
    ```bash
@@ -183,6 +188,7 @@ For testing we use [Cypress](https://www.cypress.io/).
    This process must also be active throughout the tests.
 
 5. Finally, you can execute the tests by running
+
    ```bash
    npm run test
    ```
