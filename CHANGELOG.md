@@ -8,11 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Configurable query icons (#9).
+- "Username not given" when logged in, but user's name not known (#51, #65).
+- Templated query functionality (#52).
+
+### Changed
+- Changed loading message to "The page is loading. Just a moment please." (#26).
+- Enabled no bad blocks and indentation for eslint/jsdoc (#14).
+
+### Fixed
+- Configured title is now also visible before first query (#46).
 - "Unknown User" when not logged in (#51).
-- Add templated query functionality (#52)
 
 ### Removed
-- Bulk action checkboxes to delete (#44).
+- Bulk action checkboxes are removed (#44).
 
 ## [1.0.0] - 2023-09-13
 

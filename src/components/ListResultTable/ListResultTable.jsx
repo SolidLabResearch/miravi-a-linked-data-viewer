@@ -61,7 +61,7 @@ function ListResultTable(props) {
       resource={resource}
       sort={sort}
     >
-      {isLoading && <Loading/>}
+      {isLoading && <Loading loadingSecondary={"The page is loading. Just a moment please."} />}
       {!isLoading && <QueryResultList {...rest} />}
     </ListBase>
   );
@@ -78,6 +78,7 @@ ListResultTable.propTypes = {
   queryOptions: PropTypes.object,
   resource: PropTypes.string,
   sort: PropTypes.object,
+  variables: PropTypes.object,
 };
 
 export default ListResultTable;

@@ -11,6 +11,7 @@ Table of contents:
 * [Configuration file](#configuration-file)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
+  * [Query icons](#query-icons)
 * [Representation Mapper](#representation-mapper)
 * [Testing with local pods](#testing-with-local-pods)
 * [Using a local http proxy](#using-a-local-http-proxy)
@@ -78,6 +79,7 @@ The configuration file follows a simple structure.
       "name": "A name for the query",
       "description": "Description of the query",
       "id": "A unique ID for the query",
+      "icon": "The key to the icon for the query . This is optional and a default menu icon will be used when left empty.",
       "comunicaContext": {
         "sources": "Sources over which the query should be executed",
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
@@ -122,18 +124,25 @@ Note that variables' values are not restricted to strings: URIs for example are 
 As a consequence, for strings the surround double quotes `"` must be added to the values in the list.
 This is shown in the configuration structure above.
 
+### Query icons
+
+In the selection menu the name of the query is proceeded by an icon.
+You configure this icon per query in the configuration file.  
+For this to work you need to add the icon to the exports in [IconProvider.js](./src/IconProvider/IconProvider.js).
+We advise to use the [Material UI icons](https://material-ui.com/components/material-icons/) as this is what's used internally in `react-admin` and it is also included in the dependencies.
+Nevertheless, you can use any React component you want, just make sure it's a functional component.
+
 ## Representation Mapper
 
 If you want to add your own type representations
-you can do this by adding your representation to the
-[representationProvider.js](./src/representationProvider/representationProvider.js) file.
+you can do this by adding your representation to the [representationProvider.js](./src/representationProvider/representationProvider.js) file.
 This can be useful for example when querying images.
 The result of the query is a reference to the image.
 By mapping a representation we can show the actual image instead of the reference.
 
 The mapper follows a structure:
 
-```js
+```json
 {
     "typeName": mapperComponent,
     ...

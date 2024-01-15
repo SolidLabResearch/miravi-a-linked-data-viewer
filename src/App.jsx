@@ -7,6 +7,7 @@ import {
   getDefaultSession,
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
+import IconProvider from "./IconProvider/IconProvider";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
 import {QueryClient} from "react-query";
@@ -59,7 +60,7 @@ function App() {
       loginPage={SolidLoginForm}
       requireAuth={false}
       dashboard={() => {
-        return Dashboard({text: config.introductionText})
+        return Dashboard({title: config.title, text: config.introductionText})
       }}
     >
       {config.queries.map((query) => {
@@ -68,6 +69,7 @@ function App() {
             key={query.id}
             name={query.id}
             options={{ label: query.name }}
+            icon={IconProvider[query.icon]}
             list={TemplatedQueryForm}
           />
         );
