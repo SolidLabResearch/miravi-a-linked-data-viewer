@@ -23,7 +23,7 @@ export default {
       }
     }
     else{
-      idp = value; 
+      idp = value;
     }
 
     if (!idp) {
@@ -63,7 +63,7 @@ export default {
         throw new Error("You don't have access to this resource. You might need to log in.");
       }
     }
-    
+
   },
   getIdentity: async function getIdentity() {
     const session = getDefaultSession();
@@ -119,7 +119,7 @@ function getName(webIdThing) {
   if (literalName) {
     return literalName.value;
   } else {
-    return "Unknown User";
+    return "Username not given";
   }
 }
 
