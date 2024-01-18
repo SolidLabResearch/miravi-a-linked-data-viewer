@@ -1,9 +1,7 @@
 import {ListBase, Loading, useListController,} from "react-admin";
 import PropTypes from "prop-types";
-import {Component, useEffect} from "react";
+import {Component} from "react";
 import QueryResultList from "./QueryResultList/QueryResultList";
-
-import {useLocation, useNavigate} from 'react-router-dom'
 
 /**
  * @param {object} props - the props passed down to the component
@@ -22,23 +20,6 @@ function ListResultTable(props) {
     variables,
     ...rest
   } = props;
-
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (variables) {
-      const queryParams = new URLSearchParams(location.search);
-
-      for (const [variableName, variableValue] of Object.entries(variables)) {
-        queryParams.set(variableName, variableValue)
-      }
-
-      navigate(
-        `?${queryParams.toString()}`
-      );
-    }
-  }, [location.search, navigate]);
 
   const {isLoading} = useListController({
     queryOptions: {
