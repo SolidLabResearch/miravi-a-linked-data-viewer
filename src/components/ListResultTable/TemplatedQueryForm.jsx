@@ -1,6 +1,13 @@
-import {SelectInput, SimpleForm, required} from "react-admin";
+import {Toolbar, SaveButton, SelectInput, SimpleForm, required} from "react-admin";
+import DoneIcon from '@mui/icons-material/Done';
 import {Component} from "react";
 import PropTypes from "prop-types";
+
+const MyToolbar = () => (
+  <Toolbar>
+    <SaveButton icon={<DoneIcon />} label="Query"/>
+  </Toolbar>
+);
 
 /**
  * A custom form to set/choose values for variables for a templated query before that query is executed
@@ -13,7 +20,7 @@ const TemplatedQueryForm = (props) => {
     onSubmit
   } = props;
   return (
-    <SimpleForm onSubmit={onSubmit}>
+    <SimpleForm toolbar={<MyToolbar />} onSubmit={onSubmit}>
       {Object.entries(variableOptions).map(([name, options]) => (
         <SelectInput key={name} source={name} name={name} label={name} validate={required()} choices={
           options.map((option) => ({
