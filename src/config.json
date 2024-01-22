@@ -95,8 +95,8 @@
     },
     {
       "queryLocation": "musicians_variables.rq",
-      "name": "My favourite musicians (template)",
-      "description": "A list of my favourite musicians (with variables)",
+      "name": "Templated query about my favourite musicians",
+      "description": "In this query you can get a list of my favourite musicians for the genre of your choice",
       "id": "5100",
       "icon": "MusicNoteIcon",
       "variables": {
@@ -112,8 +112,8 @@
     },
     {
       "queryLocation": "musicians_variables2.rq",
-      "name": "My favourite musicians (template with two variables)",
-      "description": "A list of my favourite musicians (with two variables)",
+      "name": "Templated query #2 about my favourite musicians",
+      "description": "The purpose of this query is to show an example of a templated query with more than one variable",
       "id": "5200",
       "icon": "MusicNoteIcon",
       "variables": {
