@@ -25,7 +25,7 @@
     },
     {
       "queryLocation": "images_test.rq",
-      "name": "A Test For Images",
+      "name": "A test for images",
       "description": "A small test to test the functionality of the Web app concerning images",
       "icon": "PhotoIcon",
       "id": "2000",
