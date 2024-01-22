@@ -1,13 +1,9 @@
-import {
-  useListController,
-  Loading,
-  ListBase,
-} from "react-admin";
+import {ListBase, Loading, useListController,} from "react-admin";
 import PropTypes from "prop-types";
-import { Component } from "react";
+import {Component} from "react";
 import QueryResultList from "./QueryResultList/QueryResultList";
 
-/** 
+/**
  * @param {object} props - the props passed down to the component
  * @returns {Component} custom List as defined by react-admin which either shows a loading indicator or the query results
  */
@@ -21,9 +17,18 @@ function ListResultTable(props) {
     perPage,
     resource,
     sort,
+    variables,
     ...rest
   } = props;
-  const { isLoading } = useListController();
+
+  const {isLoading} = useListController({
+    queryOptions: {
+      meta: {
+        variables: variables
+      }
+    }
+  });
+
   return (
     <ListBase
       debounce={debounce}
@@ -33,7 +38,7 @@ function ListResultTable(props) {
       filter={filter}
       filterDefaultValues={filterDefaultValues}
       perPage={perPage}
-      queryOptions={{ keepPreviousData: false }}
+      queryOptions={{keepPreviousData: false}}
       resource={resource}
       sort={sort}
     >
@@ -54,6 +59,7 @@ ListResultTable.propTypes = {
   queryOptions: PropTypes.object,
   resource: PropTypes.string,
   sort: PropTypes.object,
+  variables: PropTypes.object,
 };
 
 export default ListResultTable;

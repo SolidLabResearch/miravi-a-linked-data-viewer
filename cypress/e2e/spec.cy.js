@@ -6,7 +6,7 @@ describe("Web app", () => {
   it("Custom icon per query is displayed", () => {
     cy.visit("/");
 
-    cy.get('[data-testid="BiotechIcon"]').should("exist");
+    cy.get('[data-testid="PhotoIcon"]').should("exist");
     cy.get('[data-testid="BrushIcon"]').should("exist");
   })
 
@@ -27,6 +27,26 @@ describe("Web app", () => {
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
+    cy.get('[aria-label="Query was succesful"]').should("exist");
+  });
+
+  it("Fetch status source info on templated query success", () => {
+    cy.visit("/");
+
+    cy.contains("Templated query #2 about my favourite musicians").click();
+
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Classical').click();
+    cy.get('form').within(() => {
+      cy.get('#sameAsUrl').click();
+    });
+    cy.get('li').contains('Mozart').click();
+
+    cy.get('button').contains('Query').click();
+    cy.contains("Finished in:");
+    cy.get('[aria-label="Sources info"]').click();
     cy.get('[aria-label="Query was succesful"]').should("exist");
   });
 
@@ -186,7 +206,7 @@ describe("Web app", () => {
   it("Querying variable ending on _img should return an image as result", () => {
     cy.visit("/");
 
-    cy.contains("A Test For Images").click();
+    cy.contains("A test for images").click();
     cy.contains("Finished in:");
     cy.get("td").find("img");
   });

@@ -4,7 +4,7 @@ import { useLogin, useNotify } from "react-admin";
 import { Component, useState } from "react";
 
 /**
- * @returns {Component} a login form for logging into your Identity Provider. 
+ * @returns {Component} a login form for logging into your Identity Provider.
  */
 function SolidLoginForm() {
   const login = useLogin();
@@ -26,12 +26,12 @@ function SolidLoginForm() {
 
   return (
     <form onSubmit={handleLogin} className="login-form">
-      <div className="type-selection-box">
-        <label>
+      <div className="login-form-type-selection-box">
+        <label className=".login-form-label">
           Identity Provider
         </label>
         <input type="radio" onChange={() => {setIsIdp(!isIdp)}} name="idpOrWebId" value="idp" defaultChecked="checked"/>
-        <label>
+        <label className=".login-form-label">
           WebID
         </label>
         <input type="radio" onChange={() => {setIsIdp(!isIdp)}} name="idpOrWebId" value="webId" />
@@ -44,7 +44,7 @@ function SolidLoginForm() {
         placeholder="Identity Provider or WebID"
         defaultValue={config.defaultIDP}
       />
-      <input type="submit" value="Login" className="form-button" />
+      <input type="submit" value="Login" className="login-form-button" />
     </form>
   );
 }

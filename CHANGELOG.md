@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Configurable query icons (#9).
 - "Username not given" when logged in, but user's name not known (#51, #65).
+- Templated query functionality (#52).
 
 ### Changed
 - Changed loading message to "The page is loading. Just a moment please." (#26).
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Configured title is now also visible before first query (#46).
+- "Unknown User" when not logged in (#51).
 
 ### Removed
 - Bulk action checkboxes are removed (#44).

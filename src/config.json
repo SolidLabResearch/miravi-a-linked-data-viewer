@@ -9,7 +9,7 @@
   "queryFolder": "queries",
   "httpProxy": "http://localhost:8000/",
   "showMilliseconds": false,
-  "defaultIDP": "https://pod.playground.solidlab.be/",
+  "defaultIDP": "http://localhost:8080",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please select a query from the menu on the left.",
   "queries": [
@@ -17,7 +17,7 @@
       "queryLocation": "idols.rq",
       "name": "My idols",
       "description": "A simple Test query",
-      "id": "123",
+      "id": "1000",
       "comunicaContext": {
         "sources": ["http://localhost:8001/example/idols"],
         "useProxy": true
@@ -25,10 +25,10 @@
     },
     {
       "queryLocation": "images_test.rq",
-      "name": "A Test For Images",
+      "name": "A test for images",
       "description": "A small test to test the functionality of the Web app concerning images",
-     "icon": "PhotoIcon",
-      "id": "789",
+      "icon": "PhotoIcon",
+      "id": "2000",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/cute-cats"]
       }
@@ -38,7 +38,7 @@
       "name": "Is there an artist influenced by Picasso?",
       "description": "Whether or not there is an artist who is influenced by Picasso",
       "icon": "BrushIcon",
-      "id": "987",
+      "id": "3000",
       "comunicaContext": {
         "sources": ["https://fragments.dbpedia.org/2016-04/en"],
         "useProxy": true
@@ -53,7 +53,7 @@
       "name": "A graph of artists influenced by Picasso",
       "description": "A test for quad queries",
       "icon": "BrushIcon",
-      "id": "9876",
+      "id": "3100",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/artists"],
         "useProxy": true
@@ -64,7 +64,7 @@
       "name": "A list of my favorite books",
       "description": "A short list of some of my favorite books, which I keep secret.",
       "icon": "MenuBookIcon",
-      "id": "321",
+      "id": "4000",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/favourite-books"]
       }
@@ -74,7 +74,7 @@
       "name": "My wish list",
       "description": "A list of books I'd love to own",
       "icon": "MenuBookIcon",
-      "id": "654",
+      "id": "4100",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/wish-list"]
       }
@@ -83,7 +83,7 @@
       "queryLocation": "musicians.rq",
       "name": "My favourite musicians",
       "description": "A list of my favourite musicians",
-      "id": "6543",
+      "id": "5000",
       "icon": "MusicNoteIcon",
       "comunicaContext": {
         "sources": [
@@ -91,6 +91,46 @@
           "httq://this-runs-on-httq.com/"
         ],
         "lenient": true
+      }
+    },
+    {
+      "queryLocation": "musicians_variables.rq",
+      "name": "Templated query about my favourite musicians",
+      "description": "In this query you can get a list of my favourite musicians for the genre of your choice",
+      "id": "5100",
+      "icon": "MusicNoteIcon",
+      "variables": {
+        "genre": [
+          "\"Romantic\"",
+          "\"Baroque\"",
+          "\"Classical\""
+        ]
+      },
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/favourite-musicians"]
+      }
+    },
+    {
+      "queryLocation": "musicians_variables2.rq",
+      "name": "Templated query #2 about my favourite musicians",
+      "description": "The purpose of this query is to show an example of a templated query with more than one variable",
+      "id": "5200",
+      "icon": "MusicNoteIcon",
+      "variables": {
+        "genre": [
+          "\"Romantic\"",
+          "\"Baroque\"",
+          "\"Classical\""
+        ],
+        "sameAsUrl": [
+          "<https://en.wikipedia.org/wiki/Ludwig_van_Beethoven>",
+          "<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>",
+          "<https://en.wikipedia.org/wiki/Johann_Sebastian_Bach>",
+          "<https://en.wikipedia.org/wiki/Franz_Schubert>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/favourite-musicians"]
       }
     }
   ]

@@ -7,13 +7,13 @@ import {
   getDefaultSession,
   handleIncomingRedirect,
 } from "@inrupt/solid-client-authn-browser";
-import ListResultTable from "./components/ListResultTable/ListResultTable";
 import IconProvider from "./IconProvider/IconProvider";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
 import {QueryClient} from "react-query";
 import Dashboard from "./components/Dashboard/Dashboard";
 import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
+import TemplatedListResultTable from "./components/ListResultTable/TemplatedListResultTable.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -70,7 +70,7 @@ function App() {
             name={query.id}
             options={{ label: query.name }}
             icon={IconProvider[query.icon]}
-            list={ListResultTable}
+            list={TemplatedListResultTable}
           />
         );
       })}
