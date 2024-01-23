@@ -59,13 +59,13 @@ Log in with the IDP `http://localhost:8080` and the credentials for the user own
 
 ## Static build
 
-If you want a static build of the application, execute:
+To make a standalone version of the result of this project, you can make a static build and serve it using any webserver. Execute:
 
 ```bash
 npm run build
 ```
 
-This will create a static build in the `dist` folder.
+The static build appears in the `dist` folder. 
 
 ## Logging in
 
@@ -109,8 +109,8 @@ The configuration file follows a simple structure.
         "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"]
       },
       "askQuery": {
-        "trueText": "The text that is to be shown when the query result is true, only useful for ASK queries.",
-        "falseText": "The text that is to be shown when the query result is true, only useful for ASK queries."
+        "trueText": "The text that is to be shown when the query result is true (in ASK queries).",
+        "falseText": "The text that is to be shown when the query result is false (in ASK queries)."
       }
     },
     ... etc
