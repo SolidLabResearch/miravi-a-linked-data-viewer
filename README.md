@@ -13,40 +13,59 @@ Table of contents:
   * [Templated queries](#templated-queries)
   * [Query icons](#query-icons)
 * [Representation Mapper](#representation-mapper)
-* [Testing with local pods](#testing-with-local-pods)
-* [Using a local http proxy](#using-a-local-http-proxy)
+* [Using the local pods](#using-the-local-pods)
 * [Testing](#testing)
 <!-- TOC -->
 
 ## Getting Started
 
-After installing, the following steps suffice to install the application:
+To install the application:
 
 ```bash
 npm install
 ```
 
-after this you can execute
+To run the Web application in development mode:
 
 ```bash
 npm run dev
 ```
 
-which will start the web application. Now you can browse the displayed URL.
+Now you can browse the displayed URL.
 
-If you want to test the default configuration however, you first need to complete the steps
-described in [testing with local pods](#testing-with-local-pods) and [using a local http proxy](#using-a-local-http-proxy).
-Do each of these in their own separate terminal window.
+To see the queries provided in the example configuration `src/config.json` at work,
+you also need to activate the supporting resources:
+
+1. In a new terminal window, prepare and start the local pods:
+
+   ```bash
+   npm run prepare:pods && npm run start:pods
+   ```
+
+2. In a new terminal window, start the http proxy:
+
+   ```bash
+   npm run start:proxy
+   ```
+
+3. In a new terminal window, start a server which denies all CORS headers:
+
+   ```bash
+   npm run start:badCors
+   ```
+
+Some queries require a log in.
+Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
 
 ## Static build
 
-If you want a static build of the application, execute:
+To make a standalone version of the result of this project, you can make a static build and serve it using any webserver. Execute:
 
 ```bash
 npm run build
 ```
 
-This will create a static build in the `dist` folder.
+The static build appears in the `dist` folder. 
 
 ## Logging in
 
@@ -75,7 +94,7 @@ The configuration file follows a simple structure.
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
   "queries": [
     {
-      "queryLocation": "path to the query location, relative to "queryFolder"",
+      "queryLocation": "path to the query location, relative to 'queryFolder'",
       "name": "A name for the query",
       "description": "Description of the query",
       "id": "A unique ID for the query",
@@ -83,18 +102,18 @@ The configuration file follows a simple structure.
       "comunicaContext": {
         "sources": "Sources over which the query should be executed",
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
-        ...{"any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/"}
+        ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
         "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"]
       },
       "askQuery": {
-        "trueText": "The text that is to be shown when the query result is true, only useful for ASK queries.",
-        "falseText": "The text that is to be shown when the query result is true, only useful for ASK queries."
+        "trueText": "The text that is to be shown when the query result is true (in ASK queries).",
+        "falseText": "The text that is to be shown when the query result is false (in ASK queries)."
       }
-    }
-    ...
+    },
+    ... etc
   ]
 }
 ```
@@ -166,63 +185,44 @@ They've already got styling matching that of `react-admin` and are easy to use.
 
 `Warning` if you change the record object, the changed will still be present in the next render.
 
-## Testing with local pods
+## Using the local pods
 
-To create a local pod with which you can test for example authentication you can follow the following steps:
+To support the provided example configuration `src/config.json` and the tests, this repo integrates some local pods.
+You can make use of these for your own tests. Follow these steps:
 
 - Add your data and `.acl` files in the `initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
-  We already added files to support the example queries in the configuration file.
 - Prepare the pods by executing `npm run prepare:pods`.
-- Start the pods by executing `npm run start:pods`.
-- Add your query as described in [the configuration file section](#configuration-file).
-  We already added some example queries in the default configuration file `src/config.json`.
-- Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
-
-## Using a local http proxy
-
-To use a local http proxy through which the requests will be rerouted execute the following command:
-
-```bash
-npm run start:proxy
-```
-
-which will start a proxy on port `8000`.
 
 ## Testing
 
-For testing we use [Cypress](https://www.cypress.io/).
+For testing we use [Cypress](https://www.cypress.io/). To test, follow the next steps:
 
-1. Prepare and start the Community Solid Server with the available pods as explained in the [Testing with local pods section](#testing-with-local-pods).
+1. Prepare and start the local pods:
 
    ```bash
    npm run prepare:pods && npm run start:pods
    ```
 
-   Keep the server running.
-
-2. Start the Web application
+2. In a new terminal window, start the Web application:
 
    ```bash
    npm run dev
    ```
 
-   Also keep this process running.
-3. Start the http proxy
+3. In a new terminal window, start the http proxy:
 
    ```bash
    npm run start:proxy
    ```
 
-4. Start a server which denies all cors header
+4. In a new terminal window, start a server which denies all CORS headers:
 
    ```bash
    npm run start:badCors
    ```
 
-   This process must also be active throughout the tests.
-
-5. Finally, you can execute the tests by running
+5. Finally, in a new terminal window, you can execute the tests by running:
 
    ```bash
    npm run test
