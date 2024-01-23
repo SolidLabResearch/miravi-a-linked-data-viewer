@@ -13,7 +13,7 @@ Table of contents:
   * [Templated queries](#templated-queries)
   * [Query icons](#query-icons)
 * [Representation Mapper](#representation-mapper)
-* [Testing with local pods](#testing-with-local-pods)
+* [Using the local pods](#using-the-local-pods)
 * [Using a local http proxy](#using-a-local-http-proxy)
 * [Testing](#testing)
 <!-- TOC -->
@@ -34,8 +34,8 @@ npm run dev
 
 which will start the web application. Now you can browse the displayed URL.
 
-If you want to test the default configuration however, you first need to complete the steps
-described in [testing with local pods](#testing-with-local-pods) and [using a local http proxy](#using-a-local-http-proxy).
+If you want to run with the provide example configuration `src/config.json` however, you first need to complete the steps
+described in [using the local pods](#using-the-local-pods) and [using a local http proxy](#using-a-local-http-proxy).
 Do each of these in their own separate terminal window.
 
 ## Static build
@@ -75,7 +75,7 @@ The configuration file follows a simple structure.
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
   "queries": [
     {
-      "queryLocation": "path to the query location, relative to "queryFolder"",
+      "queryLocation": "path to the query location, relative to 'queryFolder'",
       "name": "A name for the query",
       "description": "Description of the query",
       "id": "A unique ID for the query",
@@ -83,7 +83,7 @@ The configuration file follows a simple structure.
       "comunicaContext": {
         "sources": "Sources over which the query should be executed",
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
-        ...{"any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/"}
+        ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
@@ -93,8 +93,8 @@ The configuration file follows a simple structure.
         "trueText": "The text that is to be shown when the query result is true, only useful for ASK queries.",
         "falseText": "The text that is to be shown when the query result is true, only useful for ASK queries."
       }
-    }
-    ...
+    },
+    ... etc
   ]
 }
 ```
@@ -166,17 +166,16 @@ They've already got styling matching that of `react-admin` and are easy to use.
 
 `Warning` if you change the record object, the changed will still be present in the next render.
 
-## Testing with local pods
+## Using the local pods
 
-To create a local pod with which you can test for example authentication you can follow the following steps:
+To support the provided example configuration `src/config.json` and the tests, this repo integrates some local pods.
+You can make use of these for your own tests. Follow these steps:
 
 - Add your data and `.acl` files in the `initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
-  We already added files to support the example queries in the configuration file.
 - Prepare the pods by executing `npm run prepare:pods`.
 - Start the pods by executing `npm run start:pods`.
 - Add your query as described in [the configuration file section](#configuration-file).
-  We already added some example queries in the default configuration file `src/config.json`.
 - Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
 
 ## Using a local http proxy
@@ -193,13 +192,13 @@ which will start a proxy on port `8000`.
 
 For testing we use [Cypress](https://www.cypress.io/).
 
-1. Prepare and start the Community Solid Server with the available pods as explained in the [Testing with local pods section](#testing-with-local-pods).
+1. Prepare and start the Community Solid Server with the available pods as explained in [Using the local pods](#using-the-local-pods).
 
    ```bash
    npm run prepare:pods && npm run start:pods
    ```
 
-   Keep the server running.
+   Keep this process running and continue in a new terminal window.
 
 2. Start the Web application
 
@@ -207,12 +206,15 @@ For testing we use [Cypress](https://www.cypress.io/).
    npm run dev
    ```
 
-   Also keep this process running.
+   Keep this process running and continue in a new terminal window.
+
 3. Start the http proxy
 
    ```bash
    npm run start:proxy
    ```
+
+   Keep this process running and continue in a new terminal window.
 
 4. Start a server which denies all cors header
 
@@ -220,7 +222,7 @@ For testing we use [Cypress](https://www.cypress.io/).
    npm run start:badCors
    ```
 
-   This process must also be active throughout the tests.
+   Keep this process running and continue in a new terminal window.
 
 5. Finally, you can execute the tests by running
 
