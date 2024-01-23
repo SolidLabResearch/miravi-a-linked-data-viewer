@@ -14,29 +14,48 @@ Table of contents:
   * [Query icons](#query-icons)
 * [Representation Mapper](#representation-mapper)
 * [Using the local pods](#using-the-local-pods)
-* [Using a local http proxy](#using-a-local-http-proxy)
 * [Testing](#testing)
 <!-- TOC -->
 
 ## Getting Started
 
-After installing, the following steps suffice to install the application:
+To install the application:
 
 ```bash
 npm install
 ```
 
-after this you can execute
+To run the Web application in development mode:
 
 ```bash
 npm run dev
 ```
 
-which will start the web application. Now you can browse the displayed URL.
+Now you can browse the displayed URL.
 
-If you want to run with the provide example configuration `src/config.json` however, you first need to complete the steps
-described in [using the local pods](#using-the-local-pods) and [using a local http proxy](#using-a-local-http-proxy).
-Do each of these in their own separate terminal window.
+To see the queries provided in the example configuration `src/config.json` at work,
+you also need to activate the supporting resources:
+
+1. In a new terminal window, prepare and start the local pods:
+
+   ```bash
+   npm run prepare:pods && npm run start:pods
+   ```
+
+2. In a new terminal window, start the http proxy:
+
+   ```bash
+   npm run start:proxy
+   ```
+
+3. In a new terminal window, start a server which denies all CORS headers:
+
+   ```bash
+   npm run start:badCors
+   ```
+
+Some queries require a log in.
+Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
 
 ## Static build
 
@@ -174,57 +193,36 @@ You can make use of these for your own tests. Follow these steps:
 - Add your data and `.acl` files in the `initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
 - Prepare the pods by executing `npm run prepare:pods`.
-- Start the pods by executing `npm run start:pods`.
-- Add your query as described in [the configuration file section](#configuration-file).
-- Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
-
-## Using a local http proxy
-
-To use a local http proxy through which the requests will be rerouted execute the following command:
-
-```bash
-npm run start:proxy
-```
-
-which will start a proxy on port `8000`.
 
 ## Testing
 
-For testing we use [Cypress](https://www.cypress.io/).
+For testing we use [Cypress](https://www.cypress.io/). To test, follow the next steps:
 
-1. Prepare and start the Community Solid Server with the available pods as explained in [Using the local pods](#using-the-local-pods).
+1. Prepare and start the local pods:
 
    ```bash
    npm run prepare:pods && npm run start:pods
    ```
 
-   Keep this process running and continue in a new terminal window.
-
-2. Start the Web application
+2. In a new terminal window, start the Web application:
 
    ```bash
    npm run dev
    ```
 
-   Keep this process running and continue in a new terminal window.
-
-3. Start the http proxy
+3. In a new terminal window, start the http proxy:
 
    ```bash
    npm run start:proxy
    ```
 
-   Keep this process running and continue in a new terminal window.
-
-4. Start a server which denies all cors header
+4. In a new terminal window, start a server which denies all CORS headers:
 
    ```bash
    npm run start:badCors
    ```
 
-   Keep this process running and continue in a new terminal window.
-
-5. Finally, you can execute the tests by running
+5. Finally, in a new terminal window, you can execute the tests by running:
 
    ```bash
    npm run test
