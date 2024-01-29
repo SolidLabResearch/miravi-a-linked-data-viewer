@@ -154,10 +154,14 @@ function findPredicates(query) {
   if (!query.variables) {
     return query;
   }
-  for (const part of query.where) {
-    for (const triple of part.triples) {
-      if(triple.predicate.termType !== "Variable"){
-        ontologyMapper[triple.object.value] = triple.predicate.value;
+  if (query.where) {
+    for (const part of query.where) {
+      if (part.triples) {
+        for (const triple of part.triples) {
+          if (triple.predicate.termType !== "Variable") {
+            ontologyMapper[triple.object.value] = triple.predicate.value;
+          }
+        }
       }
     }
   }
