@@ -132,6 +132,18 @@
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/favourite-musicians"]
       }
+    },
+    {
+      "queryLocation": "average.rq",
+      "name": "Average value",
+      "description": "Calculate the average of some values",
+      "id": "6000",
+      "icon": "FunctionsIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/values"
+        ]
+      }
     }
   ]
 }
