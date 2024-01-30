@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Aggregating SPARQL queries work now (#70).
+- Sources' fetch status is consistent now (#59).
 
 ### Removed
 

@@ -1,5 +1,5 @@
 describe("Aggregating query", () => {
-  it("AVG() function", () => {
+  it("AVG() function - see https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/70", () => {
     cy.visit("/");
 
     cy.contains("Average value").click();
