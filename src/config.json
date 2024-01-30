@@ -88,7 +88,7 @@
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/favourite-musicians",
-          "httq://this-runs-on-httq.com/"
+          "http://www.example.com/fetch-failure-but-query-success"
         ],
         "lenient": true
       }
@@ -143,6 +143,30 @@
         "sources": [
           "http://localhost:8080/example/values"
         ]
+      }
+    },
+    {
+      "queryLocation": "components.rq",
+      "name": "Components",
+      "description": "Query components (no details about materials)",
+      "id": "7000",
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/components"],
+        "lenient": true
+      }
+    },
+    {
+      "queryLocation": "components-materials.rq",
+      "name": "Components and their materials",
+      "description": "Query components (including details about materials)",
+      "id": "7001",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
       }
     }
   ]

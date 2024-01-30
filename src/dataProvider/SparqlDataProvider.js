@@ -205,8 +205,12 @@ function generateContext(context) {
     throw new HttpError("No sources provided", 500);
   }
 
-  if(!context.fetchSuccess){
+  if (!context.fetchSuccess) {
     context.fetchSuccess = {};
+    // avoid faulty fetch status for sources cached in Comunica
+    for (const source of context.sources) {
+      context.fetchSuccess[source] = true;
+    }
   }
 
   let fetchFunction = fetch;
