@@ -12,12 +12,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+
+### Removed
+
+## [1.1.1] - 2024-01-30
+
+### Added
+
+### Changed
+
+### Fixed
 - Aggregating SPARQL queries work now (#70).
 - Sources' fetch status is consistent now (#59).
 
 ### Removed
 
-# [1.1.0] - 2024-01-22
+## [1.1.0] - 2024-01-22
 
 ### Added
 - Configurable query icons (#9).
@@ -41,3 +51,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [1.0.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.0.0
 [1.1.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.0
+[1.1.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.1
