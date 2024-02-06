@@ -41,6 +41,7 @@ export default {
     }
   },
   logout: async function logout() {
+    await queryEngine.invalidateHttpCache();
     const session = getDefaultSession();
     await session.logout();
     return false;
