@@ -176,10 +176,16 @@ function findPredicates(query) {
 async function executeQuery(query) {
   try {
     query.queryText = await fetchQuery(query);
-    return handleQueryExecution(
-      await myEngine.query(query.queryText, {
+    let queryResult;
+    try {
+      queryResult = await myEngine.query(query.queryText, {
         ...generateContext(query.comunicaContext),
-      }),
+      })
+    } catch(error) {
+      query.totalItems = "0";
+      return [];
+    }
+    return handleQueryExecution(queryResult,
       query
     );
   } catch (error) {
