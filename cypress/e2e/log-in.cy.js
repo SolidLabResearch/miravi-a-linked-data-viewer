@@ -48,7 +48,7 @@ describe("Log in", () => {
     cy.contains("Login failed");
   });
 
-  it("Log in and execute query on private data", () => {
+  it("Log in and execute query on private data, then log out", () => {
     cy.visit("/");
 
     cy.get('[aria-label="Profile"]').click();
@@ -67,6 +67,11 @@ describe("Log in", () => {
 
     cy.contains("A list of my favorite books").click();
     cy.contains("It Ends With Us");
+
+    cy.get('[aria-label="Profile"]').click();
+    cy.contains('[role="menuitem"]', "Logout").click();
+
+    cy.contains("It Ends With Us").should("not.exist");
   });
 
   it("Do not log in and query on private data unauthenticated", () => {
