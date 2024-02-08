@@ -218,7 +218,7 @@ function generateContext(context) {
     underlyingFetchFunction = authFetch;
   }
 
-  context.underlyingFetchFunction = underlyingFetchFunction
+  context.underlyingFetchFunction = underlyingFetchFunction;
   context.fetch = statusFetch(underlyingFetchFunction, context);
 
   if (context.useProxy) {
