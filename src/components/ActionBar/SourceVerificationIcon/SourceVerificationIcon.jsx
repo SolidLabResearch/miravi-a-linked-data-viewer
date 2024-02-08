@@ -34,7 +34,7 @@ function SourceVerificationIcon({context, source, proxyUrl}) {
 
     function verify() {
         setNeedsVerification(true);
-        verifyFunction(sourceUrl, context.fetch).then((result) => {
+        verifyFunction(sourceUrl, context.underlyingFetchFunction()).then((result) => {
             setIsVerified(result)
             setIsLoading(false)
         })
