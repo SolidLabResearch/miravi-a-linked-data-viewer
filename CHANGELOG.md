@@ -9,9 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Source verification (#73).
+
 ### Changed
 
 ### Fixed
+- Invalidate query engine cache on user logout (#63)
 
 ### Removed
 
