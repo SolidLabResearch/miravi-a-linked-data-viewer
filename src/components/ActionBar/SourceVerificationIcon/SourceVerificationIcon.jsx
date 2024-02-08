@@ -27,7 +27,7 @@ function SourceVerificationIcon({context, source, proxyUrl}) {
   const verifyFunction = async (source, fetchFunction) => {
     try {
       const response = await fetchFunction(source);
-      return response.status === 200;
+      return response.ok;
     } catch (error) {
       return false;
     }
