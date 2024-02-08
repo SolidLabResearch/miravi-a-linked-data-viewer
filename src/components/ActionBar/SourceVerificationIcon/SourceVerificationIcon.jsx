@@ -23,10 +23,10 @@ function SourceVerificationIcon({context, source, proxyUrl}) {
     const [needsVerification, setNeedsVerification] = useState(false);
 
     // This function should be replaced by the actual verification function
-    const verifyFunction = async (source, authFetch) => {
+    const verifyFunction = async (source, fetchFunction) => {
         try {
-            await authFetch(source);
-            return true;
+            const response = await fetchFunction(source);
+            return response.status === 200;
         } catch (error) {
             return false
         }
