@@ -213,12 +213,13 @@ function generateContext(context) {
     }
   }
 
-  let fetchFunction = fetch;
+  let underlyingFetchFunction = fetch;
   if (getDefaultSession().info.isLoggedIn) {
-    fetchFunction = authFetch;
+    underlyingFetchFunction = authFetch;
   }
 
-  context.fetch = statusFetch(fetchFunction, context);
+  context.underlyingFetchFunction = underlyingFetchFunction;
+  context.fetch = statusFetch(underlyingFetchFunction, context);
 
   if (context.useProxy) {
     context.httpProxyHandler = proxyHandler;
@@ -234,7 +235,7 @@ function generateContext(context) {
  * @returns {Function} a function that wraps the fetch function and sets the fetchSuccess flag in the context.
  */
 function statusFetch(customFetch, context) {
-  const fetchFunction = async (arg) => {
+  const wrappedFetchFunction = async (arg) => {
     try{
       const response = await customFetch(arg);
       context.fetchSuccess[arg] = true;
@@ -245,7 +246,7 @@ function statusFetch(customFetch, context) {
       throw error;
     }
   }
-  return fetchFunction;
+  return wrappedFetchFunction;
 }
 
 /**

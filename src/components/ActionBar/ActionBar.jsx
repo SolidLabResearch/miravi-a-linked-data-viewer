@@ -18,6 +18,7 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
+import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
 
 /**
  *
@@ -95,6 +96,7 @@ function ActionBar() {
                   <TableCell>Source</TableCell>
                   <TableCell>Authentication needed</TableCell>
                   <TableCell>Fetch status</TableCell>
+                  <TableCell>Verified</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -106,6 +108,9 @@ function ActionBar() {
                     </TableCell>
                     <TableCell>
                       <SourceFetchStatusIcon proxyUrl={config.httpProxy} context={context} source={source} />
+                    </TableCell>
+                    <TableCell>
+                      <SourceVerificationIcon proxyUrl={config.httpProxy} context={context} source={source} />
                     </TableCell>
                   </TableRow>
                 ))}
