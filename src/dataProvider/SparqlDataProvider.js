@@ -242,12 +242,11 @@ function generateContext(context) {
  */
 function statusFetch(customFetch, context) {
   const wrappedFetchFunction = async (arg) => {
-    try{
+    try {
       const response = await customFetch(arg);
-      context.fetchSuccess[arg] = true;
+      context.fetchSuccess[arg] = response.ok;
       return response;
-    }
-    catch(error){
+    } catch (error) {
       context.fetchSuccess[arg] = false;
       throw error;
     }
