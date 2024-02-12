@@ -1,14 +1,10 @@
-import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
+import {ProxyHandlerStatic} from "@comunica/actor-http-proxy";
 import config from "../config.json";
-import { QueryEngine } from "@comunica/query-sparql";
-import {
-  getDefaultSession,
-  fetch as authFetch,
-} from "@inrupt/solid-client-authn-browser";
-import { HttpError } from "react-admin";
-import { Generator, Parser } from "sparqljs";
+import {QueryEngine} from "@comunica/query-sparql";
+import {fetch as authFetch, getDefaultSession,} from "@inrupt/solid-client-authn-browser";
+import {HttpError} from "react-admin";
+import {Generator, Parser, Term} from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
-import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
@@ -26,7 +22,7 @@ if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
 }
 
 export default {
-  getList: async function getList(queryName, { pagination, sort, filter, meta }) {
+  getList: async function getList(queryName, {pagination, sort, filter, meta}) {
     const query = findQueryWithId(queryName);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
@@ -114,10 +110,10 @@ async function fetchQuery(query) {
       parsedQuery.offset = query.offset;
     }
     if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
-      const { field, order } = query.sort;
+      const {field, order} = query.sort;
       parsedQuery.order = [
         {
-          expression: { termType: "Variable", value: field },
+          expression: {termType: "Variable", value: field},
           descending: order === "DESC",
         },
       ];
@@ -176,16 +172,18 @@ function findPredicates(query) {
 async function executeQuery(query) {
   try {
     query.queryText = await fetchQuery(query);
-    let queryResult;
+    let queryExecution;
+    let context;
     try {
-      queryResult = await myEngine.query(query.queryText, {
-        ...generateContext(query.comunicaContext),
-      })
-    } catch(error) {
+      context = generateContext(query.comunicaContext);
+      queryExecution = await myEngine.query(query.queryText, {
+        ...context,
+      });
+    } catch (error) {
       query.totalItems = "0";
       return [];
     }
-    return handleQueryExecution(queryResult,
+    return handleQueryExecution(queryExecution,
       query
     );
   } catch (error) {
@@ -296,10 +294,10 @@ async function countQueryResults(query) {
       expression: {
         type: "aggregate",
         aggregation: "count",
-        expression: { termType: "Wildcard", value: "*" },
+        expression: {termType: "Wildcard", value: "*"},
         distinct: false,
       },
-      variable: { termType: "Variable", value: "totalItems" },
+      variable: {termType: "Variable", value: "totalItems"},
     },
   ];
   const generator = new Generator();
