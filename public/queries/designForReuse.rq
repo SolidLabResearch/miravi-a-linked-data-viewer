@@ -1,0 +1,14 @@
+PREFIX textile: <http://w3id.org/CEON/ontology/textile/>
+PREFIX voc: <http://example.com/voc/>
+
+SELECT DISTINCT ?Product ?Property ?Value WHERE {
+    VALUES ?Property {
+         textile:designedForReuseWMinimalMod
+         textile:CEmark
+         textile:designedForRefurbishment
+         textile:designedForRemanufacturing
+    }
+     ?ProductDataSheet a textile:TextileDataSheet;
+        <http://w3id.org/CEON/ontology/resourceODP/isAbout> ?Product;
+        ?Property ?Value.
+}
