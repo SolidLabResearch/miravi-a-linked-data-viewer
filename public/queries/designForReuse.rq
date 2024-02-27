@@ -1,8 +1,8 @@
 PREFIX textile: <http://w3id.org/CEON/ontology/textile/>
 PREFIX voc: <http://example.com/voc/>
 
-SELECT DISTINCT ?Product ?Property ?Value WHERE {
-    VALUES ?Property {
+SELECT DISTINCT ?Product ?Property_url ?Value WHERE {
+    VALUES ?Property_url {
          textile:designedForReuseWMinimalMod
          textile:CEmark
          textile:designedForRefurbishment
@@ -10,5 +10,5 @@ SELECT DISTINCT ?Product ?Property ?Value WHERE {
     }
      ?ProductDataSheet a textile:TextileDataSheet;
         <http://w3id.org/CEON/ontology/resourceODP/isAbout> ?Product;
-        ?Property ?Value.
+        ?Property_url ?Value.
 }
