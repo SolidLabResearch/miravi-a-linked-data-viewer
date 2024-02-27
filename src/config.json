@@ -9,7 +9,7 @@
   "queryFolder": "queries",
   "httpProxy": "http://localhost:8000/",
   "showMilliseconds": false,
-  "defaultIDP": "http://localhost:8080",
+  "defaultIDP": "https://css5.onto-deside.ilabt.imec.be/",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please select a query from the menu on the left.",
   "queries": [
@@ -165,6 +165,34 @@
           "http://localhost:8080/example/components",
           "http://localhost:8080/example/boms",
           "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "queryLocation": "spo.rq",
+      "name": "texon-spo",
+      "description": "texon spo",
+      "id": "7002",
+      "comunicaContext": {
+        "sources": [
+          "https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_1",
+          "https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_2",
+          "https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_3"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "queryLocation": "spo.rq",
+      "name": "texon-spo-vc",
+      "description": "texon spo vc",
+      "id": "7003",
+      "comunicaContext": {
+        "sources": [
+          "https://css5.onto-deside.ilabt.imec.be/texon/ceon-vc/manuf1_1",
+          "https://css5.onto-deside.ilabt.imec.be/texon/ceon-vc/manuf1_2",
+          "https://css5.onto-deside.ilabt.imec.be/texon/ceon-vc/manuf1_3"
         ],
         "lenient": true
       }
