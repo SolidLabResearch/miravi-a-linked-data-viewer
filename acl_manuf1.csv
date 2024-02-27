@@ -1,0 +1,14 @@
+﻿target_id;access_to;agent;mode;agent_webid
+manuf1_1;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_1;manufacturer;Control;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_1;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_1;manufacturer;Write;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_2;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_2;brand;Read;https://css7.onto-deside.ilabt.imec.be/brand/profile/card#me
+manuf1_3;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_3;brand;Read;https://css7.onto-deside.ilabt.imec.be/brand/profile/card#me
+manuf1_2;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_2;manufacturer;Control;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_2;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_2;manufacturer;Write;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_1;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_1;manufacturer;Read;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_2;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_2;manufacturer;Read;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_3;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_3;manufacturer;Control;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_3;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_3;manufacturer;Write;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_3;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_3;manufacturer;Read;https://css5.onto-deside.ilabt.imec.be/texon/profile/card#me
+manuf1_3;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_3;recycler;Read;https://css10.onto-deside.ilabt.imec.be/recycler/profile/card#me
+manuf1_3;https://css5.onto-deside.ilabt.imec.be/texon/ceon/manuf1_3;sorter;Read;https://css9.onto-deside.ilabt.imec.be/sorter/profile/card#me
