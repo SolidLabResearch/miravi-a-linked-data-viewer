@@ -237,8 +237,8 @@ function generateContext(context) {
 function statusFetch(customFetch, context) {
   const wrappedFetchFunction = async (arg) => {
     try{
-      const response = await customFetch(arg);   
-      context.fetchSuccess[arg] = true;  // <--- volgens issue probleem hier
+      const response = await customFetch(arg); 
+      context.fetchSuccess[arg] = response.ok;  // <--- oplossing issue probleem hier, response is een object en heeft de prop "ok" die een bool is.
       return response;
     }
     catch(error){
