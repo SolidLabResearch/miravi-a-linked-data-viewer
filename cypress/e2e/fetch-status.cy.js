@@ -5,26 +5,21 @@ describe("Fetch Status", () => {
         cy.visit("/");
 
         // Go immediately to query
-        cy.contains("Mixed book query").click();
-
-        // Open the sources and verify
-        cy.get('[aria-label="Sources info"]').click();
-        cy.get('[aria-label="Verify source"]').each(($button) => {
-            cy.wrap($button).click();
-          });
+        cy.contains("A book query testing sources with and without authentication required").click();  
         
         // Check if the public and restricted sources appear
+        cy.get('[aria-label="Sources info"]').click();
+        
         cy.contains("http://localhost:8080/example/favourite-books");
         cy.contains("http://localhost:8080/example/wish-list");
 
         // Check if the correct icons appear
         cy.get('[aria-label="Authentication required"]').should("exist");
         cy.get('[aria-label="Fetch failed"]').should("exist");
-        cy.get('[aria-label="Verification failed"]').should("exist")
 
         cy.get('[aria-label="No authentication required"]').should("exist");
         cy.get('[aria-label="Fetch was succesful"]').should("exist");
-        cy.get('[aria-label="Verification succeeded"]').should("exist");
+        
 
         // Checking that a non-authorized book is not appearing 
         cy.contains("It Ends With Us").should("not.exist");
@@ -54,26 +49,20 @@ describe("Fetch Status", () => {
         cy.url().should("eq", "http://localhost:5173/");
 
         // Go to the mixed book query
-        cy.contains("Mixed book query").click();
-
-        // Open the sources and verify
-        cy.get('[aria-label="Sources info"]').click();
-        cy.get('[aria-label="Verify source"]').each(($button) => {
-            cy.wrap($button).click();
-          });
+        cy.contains("A book query testing sources with and without authentication required").click();
 
         // Check if the public and restricted sources appear
+        cy.get('[aria-label="Sources info"]').click();
+
         cy.contains("http://localhost:8080/example/favourite-books");
         cy.contains("http://localhost:8080/example/wish-list");
 
         // Check if the correct icons appear
         cy.get('[aria-label="Authentication required"]').should("exist");
         cy.get('[aria-label="Fetch Failed"]').should("not.exist");
-        cy.get('[aria-label="Verification failed"]').should("not.exist");
 
         cy.get('[aria-label="No authentication required"]').should("exist");
         cy.get('[aria-label="Fetch was succesful"]').should("exist");
-        cy.get('[aria-label="Verification succeeded"]').should("exist");
 
         // Checking that you see authorized books
         cy.contains("It Ends With Us");

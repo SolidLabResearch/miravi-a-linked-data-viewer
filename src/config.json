@@ -81,8 +81,8 @@
     },
     {
       "queryLocation": "books.rq",
-      "name": "Mixed book query",
-      "description": "A list of books I'd love to own",
+      "name": "A book query testing sources with and without authentication required",
+      "description": "A short list of some of my favorite books and books I'd love to own",
       "icon": "MenuBookIcon",
       "id": "4200",
       "comunicaContext": {
