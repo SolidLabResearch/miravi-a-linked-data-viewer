@@ -13,7 +13,7 @@ import { Term } from "sparqljs";
 function CustomURLField({ source, record }) {
   record[source] = getRawData(record, source);
 
-  return <UrlField record={record} source={source} />;
+  return <UrlField record={record} source={source} target="_blank" rel="noopener noreferrer"/>;
 }
 
 CustomURLField.propTypes = {
