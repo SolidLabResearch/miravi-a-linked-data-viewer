@@ -80,6 +80,20 @@
       }
     },
     {
+      "queryLocation": "books.rq",
+      "name": "Mixed book query",
+      "description": "A list of books I'd love to own",
+      "icon": "MenuBookIcon",
+      "id": "4200",
+      "comunicaContext": {
+        "sources": [
+            "http://localhost:8080/example/favourite-books", 
+            "http://localhost:8080/example/wish-list"
+          ],
+        "lenient": true
+      }
+    },
+    {
       "queryLocation": "musicians.rq",
       "name": "My favourite musicians",
       "description": "A list of my favourite musicians",

@@ -237,8 +237,8 @@ function generateContext(context) {
 function statusFetch(customFetch, context) {
   const wrappedFetchFunction = async (arg) => {
     try{
-      const response = await customFetch(arg);
-      context.fetchSuccess[arg] = true;
+      const response = await customFetch(arg);   
+      context.fetchSuccess[arg] = true;  // <--- volgens issue probleem hier
       return response;
     }
     catch(error){
