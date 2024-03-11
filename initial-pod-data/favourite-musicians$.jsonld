@@ -26,6 +26,42 @@
       "name": "Franz Schubert",
       "genre": "Romantic",
       "sameAs": {"@id": "https://en.wikipedia.org/wiki/Franz_Schubert"}
+    },
+    {
+      "@type": "Person",
+      "name": "Antonio Vivaldi",
+      "genre": "Baroque",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Antonio_Vivaldi"}
+    },
+    {
+      "@type": "Person",
+      "name": "Henry Purcell",
+      "genre": "Baroque",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Henry_Purcell"}
+    },
+    {
+      "@type": "Person",
+      "name": "Marc-Antoine Charpentier",
+      "genre": "Baroque",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Marc-Antoine_Charpentier"}
+    },
+    {
+      "@type": "Person",
+      "name": "Johann Jakob Froberger",
+      "genre": "Baroque",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Johann_Jakob_Froberger"}
+    },
+    {
+      "@type": "Person",
+      "name": "Antonio Caldara",
+      "genre": "Baroque",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Antonio_Caldara"}
+    },
+    {
+      "@type": "Person",
+      "name": "Pietro Locatelli",
+      "genre": "Baroque",
+      "sameAs": {"@id": "https://en.wikipedia.org/wiki/Pietro_Locatelli"}
     }
   ]
 }
