@@ -9,7 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Source verification (#73).
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.1.2] - 2024-03-13
+
+### Added
+
+- Source verification stub code (#73).
 
 ### Changed
 
@@ -64,3 +74,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.0.0
 [1.1.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.0
 [1.1.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.1
+[1.1.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.2
