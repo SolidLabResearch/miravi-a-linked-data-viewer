@@ -17,15 +17,17 @@ const TemplatedListResultTable = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [variables, setVariables] = useState({});
-
+  const [submitted, setSubmitted] = useState(false);
+  const [searchPar, setSearchPar] = useState({});
+  
   const query = config.queries.filter(
     (query) => query.id === resource
   )[0];
+
   const isTemplatedQuery = query.variables !== undefined;
   let tableEnabled = !isTemplatedQuery;
   
-  const [submitted, setSubmitted] = useState(false);
-  const [searchPar, setSearchPar] = useState({});
+  
 
   if (isTemplatedQuery) {
     // Update variables from query parameters
@@ -41,18 +43,10 @@ const TemplatedListResultTable = (props) => {
     } else {
       tableEnabled = (Object.keys(variables).length === Object.keys(query.variables).length);
     }
-
-    // if (submitted) {
-    //   console.log("submitted");
-    //  // const queryParams = new URLSearchParams(location.search);
-    //   console.log(searchPar);
-    // }
   }
 
-  const onSubmit = (formVariables) => {
-    console.log('hieronder de formVariables');
-    console.log(formVariables);
-    
+  const onSubmit = (formVariables) => {  
+
     if (!submitted){
       setSearchPar(formVariables);
     }
@@ -65,21 +59,23 @@ const TemplatedListResultTable = (props) => {
     }
 
     const queryString= queryParams.toString();
-
-    if (submitted){
-      //console.log("second time");
-      //console.log(searchPar);
-      navigate(`?${queryString}`);
-    }
     if (queryString.length > 0) {
+      if(!submitted) setSubmitted(true);
+
       navigate(`?${queryString}`);
-      setSubmitted(true);
     }
   }
 
   return (
     <>
-      {isTemplatedQuery && !tableEnabled && <TemplatedQueryForm variableOptions={query.variables} onSubmit={onSubmit} submitted={submitted} searchPar={searchPar} />}
+      {isTemplatedQuery && !tableEnabled && 
+        <TemplatedQueryForm 
+          variableOptions={query.variables} 
+          onSubmit={onSubmit} 
+          submitted={submitted} 
+          searchPar={searchPar} 
+        />
+      }
       {tableEnabled && <ListResultTable {...props} variables={variables}/>}
     </>
   )
