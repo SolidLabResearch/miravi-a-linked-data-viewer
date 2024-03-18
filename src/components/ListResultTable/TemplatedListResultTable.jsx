@@ -23,6 +23,9 @@ const TemplatedListResultTable = (props) => {
   )[0];
   const isTemplatedQuery = query.variables !== undefined;
   let tableEnabled = !isTemplatedQuery;
+  
+  const [submitted, setSubmitted] = useState(false);
+  const [searchPar, setSearchPar] = useState({});
 
   if (isTemplatedQuery) {
     // Update variables from query parameters
@@ -38,9 +41,21 @@ const TemplatedListResultTable = (props) => {
     } else {
       tableEnabled = (Object.keys(variables).length === Object.keys(query.variables).length);
     }
+
+    // if (submitted) {
+    //   console.log("submitted");
+    //  // const queryParams = new URLSearchParams(location.search);
+    //   console.log(searchPar);
+    // }
   }
 
   const onSubmit = (formVariables) => {
+    console.log('hieronder de formVariables');
+    console.log(formVariables);
+    
+    if (!submitted){
+      setSearchPar(formVariables);
+    }
     // Update query parameters from the TemplatedQueryForm fields
     const queryParams = new URLSearchParams(location.search);
     for (const [variableName, variableValue] of Object.entries(formVariables)) {
@@ -48,15 +63,23 @@ const TemplatedListResultTable = (props) => {
         queryParams.set(variableName, variableValue);
       }
     }
+
     const queryString= queryParams.toString();
+
+    if (submitted){
+      //console.log("second time");
+      //console.log(searchPar);
+      navigate(`?${queryString}`);
+    }
     if (queryString.length > 0) {
       navigate(`?${queryString}`);
+      setSubmitted(true);
     }
   }
 
   return (
     <>
-      {isTemplatedQuery && !tableEnabled && <TemplatedQueryForm variableOptions={query.variables} onSubmit={onSubmit} />}
+      {isTemplatedQuery && !tableEnabled && <TemplatedQueryForm variableOptions={query.variables} onSubmit={onSubmit} submitted={submitted} searchPar={searchPar} />}
       {tableEnabled && <ListResultTable {...props} variables={variables}/>}
     </>
   )
