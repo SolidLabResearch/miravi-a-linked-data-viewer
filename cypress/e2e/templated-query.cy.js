@@ -78,8 +78,10 @@ describe("Templated query", () => {
     cy.get('button').contains("Change Variables").should("exist");
     cy.get('button').contains("Change Variables").click();
 
-    // Making sure we get the form te enter new variables
-    cy.get('form').should("exist");
+    // Making sure we get the form to enter new variables
+    cy.get('form').within(() => {
+      cy.get('#genre').should("exist");
+    });
   });
 
   it("Correct message displayed when no resulting data", () => {
@@ -130,8 +132,10 @@ describe("Templated query", () => {
     cy.get('button').contains("Change Variables").should("exist");
     cy.get('button').contains("Change Variables").click();
 
-    // Making sure we get the form te enter new variables
-    cy.get('form').should("exist");
+    // Making sure we get the form to enter new variables
+    cy.get('form').within(() => {
+      cy.get('#genre').should("exist");
+    });
 
   });
 
