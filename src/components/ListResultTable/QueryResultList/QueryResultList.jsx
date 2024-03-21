@@ -6,6 +6,8 @@ import { Term } from "sparqljs";
 import config from "../../../config";
 import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
+import SearchOffIcon from '@mui/icons-material/SearchOff';
+import { SvgIcon, Box } from "@mui/material";
 
 /**
  * @param {object} props - the props passed down to the component
@@ -27,21 +29,24 @@ function QueryResultList(props) {
     <>
       <Title title={config.title} />
       {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
-      <ListView title=" " actions={<ActionBar />} {...props} >
-        {values && (
-          <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
-            {Object.keys(values).map((key) => {
-              return (
-                <GenericField
-                  key={key}
-                  source={key}
-                  label={key.split("_")[0]}
-                />
-              );
-            })}
-          </Datagrid>
-        )}
-      </ListView>
+      
+      {values ?(
+          <ListView title=" " actions={<ActionBar />} {...props} >
+            <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
+              {Object.keys(values).map((key) => {
+                return (
+                  <GenericField
+                    key={key}
+                    source={key}
+                    label={key.split("_")[0]}
+                  />
+                );
+              })}
+            </Datagrid>
+          </ListView>
+        ): 
+          <NoValuesDiplay/>
+      }
     </>
   );
 }
@@ -71,5 +76,17 @@ const Aside = (props) => {
       <Button variant="contained" onClick={changeVariables}>Change Variables</Button>
     </div>
 )}
+
+const NoValuesDiplay = () => {
+  return(
+    <div>
+      <Box display="flex" alignItems="center" sx={{m:3}}>
+        <SvgIcon component={SearchOffIcon} />
+        <span>The result list is empty.</span>
+      </Box>
+    </div>
+    
+  )
+}
   
 export default QueryResultList;
