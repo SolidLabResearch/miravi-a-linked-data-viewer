@@ -34,7 +34,8 @@ describe("Templated query", () => {
     cy.get('.column-name').find('span').contains("Antonio Caldara");
 
     // To be sure that the form is not appearing we test that the form submit button doesn't exist
-    cy.get('button').contains('Query').should("not.exist");
+    cy.get('form').should("not.exist");
+          // cy.get('button').contains('Query').should("not.exist");  -> useless if we add a 'new query' button
   });
 
   it("With 2 variables", () => {
