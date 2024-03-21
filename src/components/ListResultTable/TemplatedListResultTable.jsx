@@ -17,12 +17,17 @@ const TemplatedListResultTable = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [variables, setVariables] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [searchPar, setSearchPar] = useState({});
 
   const query = config.queries.filter(
     (query) => query.id === resource
   )[0];
+
   const isTemplatedQuery = query.variables !== undefined;
   let tableEnabled = !isTemplatedQuery;
+  
+  
 
   if (isTemplatedQuery) {
     // Update variables from query parameters
@@ -40,7 +45,11 @@ const TemplatedListResultTable = (props) => {
     }
   }
 
-  const onSubmit = (formVariables) => {
+  const onSubmit = (formVariables) => {  
+
+    if (!submitted){
+      setSearchPar(formVariables);
+    }
     // Update query parameters from the TemplatedQueryForm fields
     const queryParams = new URLSearchParams(location.search);
     for (const [variableName, variableValue] of Object.entries(formVariables)) {
@@ -48,16 +57,31 @@ const TemplatedListResultTable = (props) => {
         queryParams.set(variableName, variableValue);
       }
     }
+
     const queryString= queryParams.toString();
     if (queryString.length > 0) {
+      if(!submitted) setSubmitted(true);
+
       navigate(`?${queryString}`);
     }
   }
 
+  const changeVariables = () => {
+    setSubmitted(false);
+    navigate();
+  }
+
   return (
     <>
-      {isTemplatedQuery && !tableEnabled && <TemplatedQueryForm variableOptions={query.variables} onSubmit={onSubmit} />}
-      {tableEnabled && <ListResultTable {...props} variables={variables}/>}
+      {isTemplatedQuery && !tableEnabled && 
+        <TemplatedQueryForm 
+          variableOptions={query.variables} 
+          onSubmit={onSubmit} 
+          submitted={submitted} 
+          searchPar={searchPar} 
+        />
+      }
+      {tableEnabled && <ListResultTable {...props} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
     </>
   )
 }
@@ -79,4 +103,5 @@ function equalSimpleObjects(obj1, obj2) {
   }
   return true;
 }
+
 export default TemplatedListResultTable;

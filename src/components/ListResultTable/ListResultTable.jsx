@@ -18,6 +18,8 @@ function ListResultTable(props) {
     resource,
     sort,
     variables,
+    changeVariables,
+    submitted,
     ...rest
   } = props;
 
@@ -43,7 +45,7 @@ function ListResultTable(props) {
       sort={sort}
     >
       {isLoading && <Loading loadingSecondary={"The page is loading. Just a moment please."} />}
-      {!isLoading && <QueryResultList {...rest} />}
+      {!isLoading && <QueryResultList {...rest} changeVariables={changeVariables} submitted={submitted} />}
     </ListBase>
   );
 }
