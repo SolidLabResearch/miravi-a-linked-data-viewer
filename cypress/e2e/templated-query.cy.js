@@ -56,4 +56,83 @@ describe("Templated query", () => {
     cy.contains("Finished in:");
     cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart");
   });
+
+  it("Able to change variables after making a templated query", () => {
+    cy.visit("/");
+    cy.contains("Templated query about my favourite musicians").click();
+
+    // Fill in the query
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Baroque').click();
+
+    // Comfirm query
+    cy.get('button').contains('Query').click();
+
+    // Check that the page loaded and that we can see the correct data
+    cy.contains("Finished in:");
+    cy.get('.column-name').find('span').contains("Johann Sebastian Bach");
+
+    // Check if the button to make a new query exists and use it
+    cy.get('button').contains("Change Variables").should("exist");
+    cy.get('button').contains("Change Variables").click();
+
+    // Making sure we get the form te enter new variables
+    cy.get('form').should("exist");
+  });
+
+  it("Correct message displayed when no resulting data", () => {
+    cy.visit("/");
+    cy.contains("Templated query #2 about my favourite musicians").click();
+
+    // Chose a genre
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Classical').click();
+
+     // Pick the wrong url so we force an empty result
+    cy.get('form').within(() => {
+      cy.get('#sameAsUrl').click();
+    });
+    cy.get('li').contains('Bach').click();
+
+    // Confirm this query
+    cy.get('button').contains('Query').click();
+
+    // Check that we see the correct message
+    cy.get('span').contains("The result list is empty.").should("exist");
+  });
+
+  it("Able to change variables after having no results", () => {
+    cy.visit("/");
+    cy.contains("Templated query #2 about my favourite musicians").click();
+
+    // Chose a genre
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Classical').click();
+
+     // Pick the wrong url so we force an empty result
+    cy.get('form').within(() => {
+      cy.get('#sameAsUrl').click();
+    });
+    cy.get('li').contains('Bach').click();
+
+    // Confirm this query
+    cy.get('button').contains('Query').click();
+
+    // Check that we see the correct message
+    cy.get('span').contains("The result list is empty.").should("exist");
+
+    cy.get('button').contains("Change Variables").should("exist");
+    cy.get('button').contains("Change Variables").click();
+
+    // Making sure we get the form te enter new variables
+    cy.get('form').should("exist");
+
+  });
+
 });
