@@ -66,7 +66,7 @@ const TemplatedListResultTable = (props) => {
     }
   }
 
-  const newQuery = () => {
+  const changeVariables = () => {
     setSubmitted(false);
     navigate();
   }
@@ -81,7 +81,7 @@ const TemplatedListResultTable = (props) => {
           searchPar={searchPar} 
         />
       }
-      {tableEnabled && <ListResultTable {...props} variables={variables} newQuery={newQuery} submitted={submitted}/>}
+      {tableEnabled && <ListResultTable {...props} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
     </>
   )
 }

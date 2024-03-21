@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
  */
 function QueryResultList(props) {
   const { data } = useListContext(props);
-  const {newQuery, submitted} = props;
+  const {changeVariables, submitted} = props;
   const [values, setValues] = useState(undefined);
   useEffect(() => {
     if (data && data.length > 0) {
@@ -26,7 +26,7 @@ function QueryResultList(props) {
   return (
     <>
       <Title title={config.title} />
-      {submitted && <Aside newQuery={newQuery}/> /*  Adding button to make a new query - top left corner */ } 
+      {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
       <ListView title=" " actions={<ActionBar />} {...props} >
         {values && (
           <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
@@ -65,10 +65,10 @@ function reduceDataToObject(data) {
 }
 
 const Aside = (props) => {
-  const {newQuery} = props;
+  const {changeVariables} = props;
   return(
     <div>
-      <Button variant="contained" onClick={newQuery}>Change Variables</Button>
+      <Button variant="contained" onClick={changeVariables}>Change Variables</Button>
     </div>
 )}
   
