@@ -8,10 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added button to make a new query
 
 ### Changed
 
 ### Fixed
+- Fixed pagination bug in templated queries (#80)
 
 ### Removed
 
