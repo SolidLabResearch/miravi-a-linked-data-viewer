@@ -1,6 +1,6 @@
 import {Toolbar, SaveButton, SelectInput, SimpleForm, required} from "react-admin";
 import DoneIcon from '@mui/icons-material/Done';
-import {Component} from "react";
+import {Component, useEffect} from "react";
 import PropTypes from "prop-types";
 
 const MyToolbar = () => (
@@ -22,9 +22,12 @@ const TemplatedQueryForm = (props) => {
     searchPar,
   } = props;
 
-  if (submitted){
-    onSubmit(searchPar);
-  }
+  useEffect(() => {
+    if (submitted){
+      onSubmit(searchPar);
+    }
+  }, [submitted])
+  
   
   return (
     <SimpleForm toolbar={<MyToolbar />} onSubmit={onSubmit}>
