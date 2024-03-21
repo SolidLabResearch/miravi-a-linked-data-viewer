@@ -5,6 +5,7 @@ import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
 import config from "../../../config";
 import TableHeader from "./TableHeader/TableHeader";
+import Button from '@mui/material/Button';
 
 /**
  * @param {object} props - the props passed down to the component
@@ -12,6 +13,7 @@ import TableHeader from "./TableHeader/TableHeader";
  */
 function QueryResultList(props) {
   const { data } = useListContext(props);
+  const {newQuery, submitted} = props;
   const [values, setValues] = useState(undefined);
   useEffect(() => {
     if (data && data.length > 0) {
@@ -24,7 +26,8 @@ function QueryResultList(props) {
   return (
     <>
       <Title title={config.title} />
-      <ListView title=" " actions={<ActionBar />} {...props}>
+      {submitted && <Aside newQuery={newQuery}/> /*  Adding button to make a new query - top left corner */ } 
+      <ListView title=" " actions={<ActionBar />} {...props} >
         {values && (
           <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
             {Object.keys(values).map((key) => {
@@ -61,4 +64,12 @@ function reduceDataToObject(data) {
   return dataObject;
 }
 
+const Aside = (props) => {
+  const {newQuery} = props;
+  return(
+    <div>
+      <Button variant="contained" onClick={newQuery}>Change Variables</Button>
+    </div>
+)}
+  
 export default QueryResultList;

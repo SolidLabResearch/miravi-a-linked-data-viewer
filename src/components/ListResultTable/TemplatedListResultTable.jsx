@@ -19,7 +19,7 @@ const TemplatedListResultTable = (props) => {
   const [variables, setVariables] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [searchPar, setSearchPar] = useState({});
-  
+
   const query = config.queries.filter(
     (query) => query.id === resource
   )[0];
@@ -66,6 +66,11 @@ const TemplatedListResultTable = (props) => {
     }
   }
 
+  const newQuery = () => {
+    setSubmitted(false);
+    navigate();
+  }
+
   return (
     <>
       {isTemplatedQuery && !tableEnabled && 
@@ -76,7 +81,7 @@ const TemplatedListResultTable = (props) => {
           searchPar={searchPar} 
         />
       }
-      {tableEnabled && <ListResultTable {...props} variables={variables}/>}
+      {tableEnabled && <ListResultTable {...props} variables={variables} newQuery={newQuery} submitted={submitted}/>}
     </>
   )
 }
@@ -98,4 +103,5 @@ function equalSimpleObjects(obj1, obj2) {
   }
   return true;
 }
+
 export default TemplatedListResultTable;

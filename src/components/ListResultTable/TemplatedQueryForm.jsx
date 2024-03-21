@@ -22,9 +22,10 @@ const TemplatedQueryForm = (props) => {
     searchPar,
   } = props;
 
-  if  (submitted){
+  if (submitted){
     onSubmit(searchPar);
   }
+  
   return (
     <SimpleForm toolbar={<MyToolbar />} onSubmit={onSubmit}>
       {Object.entries(variableOptions).map(([name, options]) => (
