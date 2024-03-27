@@ -18,7 +18,7 @@ describe("Fetch Status", () => {
         cy.get('[aria-label="Unauthorized"]').should("exist");
 
         cy.get('[aria-label="No authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch was succesful"]').should("exist");
+        cy.get('[aria-label="Fetch was successful"]').should("exist");
         
 
         // Checking that a non-authorized book is not appearing 
@@ -63,7 +63,7 @@ describe("Fetch Status", () => {
         cy.get('[aria-label="Unauthorized"]').should("not.exist");
 
         cy.get('[aria-label="No authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch was succesful"]').should("exist");
+        cy.get('[aria-label="Fetch was successful"]').should("exist");
 
         // Checking that you see authorized books
         cy.contains("It Ends With Us");
@@ -80,11 +80,11 @@ describe("Fetch Status", () => {
         // Check if the good and bad sources appear
         cy.get('[aria-label="Sources info"]').click();
         
-        // First fetch should be a succes
+        // First fetch should be a success
         cy.contains("http://localhost:8080/example/favourite-musicians");
         cy.get('[aria-label="No authentication required"]').should("exist");
         cy.get('[aria-label="Unauthorized"]').should("not.exist");
-        cy.get('[aria-label="Fetch was succesful"]').should("exist");
+        cy.get('[aria-label="Fetch was successful"]').should("exist");
 
         // the bad source should fail to fetch
         cy.contains("http://www.example.com/fetch-failure-but-query-success");
