@@ -31,7 +31,7 @@ function QueryResultList(props) {
       <Title title={config.title} />
       
       {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
-      <Typography variant="h3" alignSelf={"center"} mt={2} > {QueryTitle} </Typography>
+      <Typography fontSize={"2rem"} mt={2} > {QueryTitle} </Typography>
       {values ?(
           <ListView title=" " actions={<ActionBar />} {...props} >
             <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
