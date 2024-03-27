@@ -238,7 +238,7 @@ function statusFetch(customFetch, context) {
   const wrappedFetchFunction = async (arg) => {
     try{
       const response = await customFetch(arg); 
-      context.fetchSuccess[arg] = response.ok;
+      context.fetchSuccess[arg] = response.status;
       return response;
     }
     catch(error){
