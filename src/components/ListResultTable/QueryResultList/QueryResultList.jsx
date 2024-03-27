@@ -1,5 +1,5 @@
 import { Component, useEffect, useState } from "react";
-import { Datagrid, ListView, Title, useListContext } from "react-admin";
+import { Datagrid, ListView, Title, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
@@ -7,13 +7,14 @@ import config from "../../../config";
 import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
-import { SvgIcon, Box } from "@mui/material";
+import { SvgIcon, Box, Typography } from "@mui/material";
 
 /**
  * @param {object} props - the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
+  const QueryTitle = useResourceDefinition().options.label;
   const { data } = useListContext(props);
   const {changeVariables, submitted} = props;
   const [values, setValues] = useState(undefined);
@@ -28,8 +29,9 @@ function QueryResultList(props) {
   return (
     <>
       <Title title={config.title} />
-      {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
       
+      {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
+      <Typography variant="h3" alignSelf={"center"} mt={2} > {QueryTitle} </Typography>
       {values ?(
           <ListView title=" " actions={<ActionBar />} {...props} >
             <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
