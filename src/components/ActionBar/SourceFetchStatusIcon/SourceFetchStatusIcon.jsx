@@ -1,5 +1,6 @@
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from "@mui/icons-material/Cancel";
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Tooltip } from "@mui/material";
 import PropTypes from "prop-types";
 import { Component } from "react";
@@ -16,14 +17,23 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
   if (context.useProxy) {
     actualSource = `${proxyUrl}${source}`;
   }
-  const status = context.fetchSuccess[actualSource];
-  if (status) {
+  const status = context.fetchStatusNumber[actualSource];
+
+  if (context.fetchSuccess[actualSource]) {
     return (
-      <Tooltip title="Fetch was succesful">
+      <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />
       </Tooltip>
     );
-  } else {
+  }
+  else if (status == 401 || status == 403){
+    return (
+      <Tooltip title="Unauthorized">
+        <RemoveCircleOutlineIcon size="small" />
+      </Tooltip>
+    );
+  }
+  else {
     return (
       <Tooltip title="Fetch failed">
         <CancelIcon size="small" />

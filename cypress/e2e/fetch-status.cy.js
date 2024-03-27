@@ -15,10 +15,10 @@ describe("Fetch Status", () => {
 
         // Check if the correct icons appear
         cy.get('[aria-label="Authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch failed"]').should("exist");
+        cy.get('[aria-label="Unauthorized"]').should("exist");
 
         cy.get('[aria-label="No authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch was succesful"]').should("exist");
+        cy.get('[aria-label="Fetch was successful"]').should("exist");
         
 
         // Checking that a non-authorized book is not appearing 
@@ -60,13 +60,36 @@ describe("Fetch Status", () => {
         // Check if the correct icons appear
         cy.get('[aria-label="Authentication required"]').should("exist");
         cy.get('[aria-label="Fetch Failed"]').should("not.exist");
+        cy.get('[aria-label="Unauthorized"]').should("not.exist");
 
         cy.get('[aria-label="No authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch was succesful"]').should("exist");
+        cy.get('[aria-label="Fetch was successful"]').should("exist");
 
         // Checking that you see authorized books
         cy.contains("It Ends With Us");
         cy.contains("Too Late");
+    });
+
+    it("Failed to fetch data", () => {
+
+        cy.visit("/");
+
+        // Go immediately to query
+        cy.contains("My favourite musicians").click();  
+        
+        // Check if the good and bad sources appear
+        cy.get('[aria-label="Sources info"]').click();
+        
+        // First fetch should be a success
+        cy.contains("http://localhost:8080/example/favourite-musicians");
+        cy.get('[aria-label="No authentication required"]').should("exist");
+        cy.get('[aria-label="Unauthorized"]').should("not.exist");
+        cy.get('[aria-label="Fetch was successful"]').should("exist");
+
+        // the bad source should fail to fetch
+        cy.contains("http://www.example.com/fetch-failure-but-query-success");
+        cy.get('[aria-label="Fetch failed"]').should("exist");
+
     });
 
 })

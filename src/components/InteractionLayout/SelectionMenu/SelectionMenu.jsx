@@ -37,8 +37,10 @@ const menuItemTheme = createTheme({
             verticalAlign: "middle",
           },
           "&:hover": {
+            display: "inline-flex",
             overflow: "visible",
-            minWidth: "fit-content"
+            whiteSpace: "normal" ,
+            minWidth: "fit-content",
           }
         },
       },
