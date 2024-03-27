@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added 'Unauthorized' to the fetch status (#90)
 
 ### Changed
 - On empty query result, show clear message (#86)
