@@ -17,9 +17,9 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
   if (context.useProxy) {
     actualSource = `${proxyUrl}${source}`;
   }
-  const success = context.fetchSuccess[actualSource];
   const status = context.fetchStatusNumber[actualSource];
-  if (success) {
+
+  if (context.fetchSuccess[actualSource]) {
     return (
       <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />

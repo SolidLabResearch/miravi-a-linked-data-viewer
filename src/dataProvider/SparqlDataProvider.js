@@ -210,7 +210,6 @@ function generateContext(context) {
     context.fetchStatusNumber = {};
     // avoid faulty fetch status for sources cached in Comunica
     for (const source of context.sources) {
-      
       context.fetchSuccess[source] = true;
     }
   }
@@ -238,7 +237,6 @@ function generateContext(context) {
  */
 function statusFetch(customFetch, context) {
   const wrappedFetchFunction = async (arg) => {
-    console.log(context);
     try{
       const response = await customFetch(arg); 
       context.fetchSuccess[arg] = response.ok;
