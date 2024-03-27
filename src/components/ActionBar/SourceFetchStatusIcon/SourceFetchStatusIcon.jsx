@@ -20,7 +20,7 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
   const status = context.fetchSuccess[actualSource];
   if (status == 200 || status == true ) {
     return (
-      <Tooltip title="Fetch was succesful">
+      <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />
       </Tooltip>
     );
