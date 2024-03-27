@@ -16,7 +16,7 @@ describe("Sources info", () => {
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
-    cy.get('[aria-label="Fetch was succesful"]').should("exist");
+    cy.get('[aria-label="Fetch was successful"]').should("exist");
   });
 
   it("Fetch status on cached source - see https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/59", () => {
@@ -26,13 +26,13 @@ describe("Sources info", () => {
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
-    cy.get('[aria-label="Fetch was succesful"]').should("exist");
+    cy.get('[aria-label="Fetch was successful"]').should("exist");
 
     cy.contains("Components and their materials").click();
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
-    cy.get('[aria-label="Fetch was succesful"]').should("exist");
+    cy.get('[aria-label="Fetch was successful"]').should("exist");
     cy.get('[aria-label="Fetch failed"]').should("not.exist");
   });
 

@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Added<<<<<<< fix/41
+- Added 'Unauthorized' to the fetch status (#90)
 - Query title above the result table (#41)
 
 ### Changed
