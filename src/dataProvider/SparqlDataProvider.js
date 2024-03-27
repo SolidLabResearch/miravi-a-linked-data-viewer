@@ -205,12 +205,13 @@ function generateContext(context) {
     throw new HttpError("No sources provided", 500);
   }
 
-  if (!context.fetchStatus) {
-    context.fetchStatus = {};
+  if (!context.fetchSuccess) {
+    context.fetchSuccess = {};
+    context.fetchStatusNumber = {};
     // avoid faulty fetch status for sources cached in Comunica
     for (const source of context.sources) {
       
-      context.fetchStatus[source] = {success : true};
+      context.fetchSuccess[source] = true;
     }
   }
 
@@ -236,19 +237,20 @@ function generateContext(context) {
  * @returns {Function} a function that wraps the fetch function and sets the fetchSuccess flag in the context.
  */
 function statusFetch(customFetch, context) {
-  console.log(context);
   const wrappedFetchFunction = async (arg) => {
+    console.log(context);
     try{
       const response = await customFetch(arg); 
-      context.fetchStatus[arg].success = response.ok;
-      context.fetchStatus[arg].status = response.status;
+      context.fetchSuccess[arg] = response.ok;
+      context.fetchStatusNumber[arg] = response.status;
       return response;
     }
     catch(error){
-      context.fetchStatus[arg].success = false;
+      context.fetchSuccess[arg] = false;
       throw error;
     }
   }
+
   return wrappedFetchFunction;
 }
 

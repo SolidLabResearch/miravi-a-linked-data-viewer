@@ -17,15 +17,16 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
   if (context.useProxy) {
     actualSource = `${proxyUrl}${source}`;
   }
-  const status = context.fetchStatus[actualSource];
-  if (status.success) {
+  const success = context.fetchSuccess[actualSource];
+  const status = context.fetchStatusNumber[actualSource];
+  if (success) {
     return (
       <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />
       </Tooltip>
     );
   }
-  else if (status.status == 401 || status.status == 403){
+  else if (status == 401 || status == 403){
     return (
       <Tooltip title="Unauthorized">
         <RemoveCircleOutlineIcon size="small" />
