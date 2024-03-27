@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed pagination bug in templated queries (#80)
-- Fixed title display inside the selection menu when hovering, does not flow over table anymore
+- Fixed title display inside the selection menu when hovering, does not flow over table anymore (#41)
 
 ### Removed
 
