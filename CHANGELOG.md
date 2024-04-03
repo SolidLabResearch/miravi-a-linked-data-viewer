@@ -7,12 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added<<<<<<< fix/41
+### Added
 - Added 'Unauthorized' to the fetch status (#90)
 - Query title above the result table (#41)
 
 ### Changed
 - On empty query result, show clear message (#86)
+- Force accept headers to favor NQuads to remove JSON-LD Context CORS issue problems (#100)
 
 ### Fixed
 - Fixed pagination bug in templated queries (#80)
