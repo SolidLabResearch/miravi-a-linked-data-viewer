@@ -1,10 +1,11 @@
 import CheckIcon from "@mui/icons-material/Check";
-import {CircularProgress, Tooltip} from "@mui/material";
-import {Component, useState} from "react";
+import { CircularProgress, Tooltip } from "@mui/material";
+import { Component, useState } from "react";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-import {Button} from "react-admin";
+import { Button } from "react-admin";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PropTypes from "prop-types";
+import myVerify from '../../../../src/vendor/verify';
 
 /**
  * @param {object} props - the props passed to the component
@@ -13,7 +14,7 @@ import PropTypes from "prop-types";
  * @param {string} props.proxyUrl - the proxy url to use if the resource is accessed through a proxy
  * @returns {Component} an icon indicating whether the source was verified or not
  */
-function SourceVerificationIcon({context, source, proxyUrl}) {
+function SourceVerificationIcon({ context, source, proxyUrl }) {
   let sourceUrl = source;
   if (context.useProxy) {
     sourceUrl = `${proxyUrl}${source}`;
@@ -27,7 +28,10 @@ function SourceVerificationIcon({context, source, proxyUrl}) {
   const verifyFunction = async (source, fetchFunction) => {
     try {
       const response = await fetchFunction(source);
-      return response.ok;
+      const verifiableCredential = await response.json();
+      const { validationResult, verificationResult } = await myVerify(verifiableCredential);
+
+      return verificationResult.verified;
     } catch (error) {
       return false;
     }
@@ -46,18 +50,18 @@ function SourceVerificationIcon({context, source, proxyUrl}) {
 
   if (needsVerification) {
     if (isLoading) {
-      return <CircularProgress size={20}/>;
+      return <CircularProgress size={20} />;
     } else {
       if (isVerified) {
         return (
           <Tooltip title="Verification succeeded">
-            <CheckIcon size="small"/>
+            <CheckIcon size="small" />
           </Tooltip>
         );
       } else {
         return (
           <Tooltip title="Verification failed">
-            <CancelIcon size="small"/>
+            <CancelIcon size="small" />
           </Tooltip>
         );
       }
@@ -66,7 +70,7 @@ function SourceVerificationIcon({context, source, proxyUrl}) {
     return (
       <Tooltip title="Verify source">
         <Button onClick={verify}>
-          <QuestionMarkIcon size="small"/>
+          <QuestionMarkIcon size="small" />
         </Button>
       </Tooltip>
     );
