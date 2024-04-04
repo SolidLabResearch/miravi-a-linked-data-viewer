@@ -8,19 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.1.3] - 2024-04-04
+
+### Added
+
 - Added 'Unauthorized' to the fetch status (#90)
 - Query title above the result table (#41)
 
 ### Changed
+
 - On empty query result, show clear message (#86)
 - Force accept headers to favor NQuads to remove JSON-LD Context CORS issue problems (#100)
 
 ### Fixed
+
 - Fixed pagination bug in templated queries (#80)
 - Fixed title display inside the selection menu when hovering, does not flow over table anymore (#41)
 
 ### Removed
-
 
 ## [1.1.2] - 2024-03-13
 
@@ -82,4 +94,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.0
 [1.1.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.1
 [1.1.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.2
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.1.2...HEAD
+[1.1.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.3
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.1.3...HEAD
