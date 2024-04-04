@@ -76,6 +76,7 @@ export default {
   deleteMany: async function deleteMany() {
     throw new NotImplementedError();
   },
+  queryEngine: myEngine
 };
 
 /**

@@ -3,6 +3,20 @@ import config from "../../../config";
 import "./NavigationBar.css";
 import AuthenticationMenu from "../AuthenticationMenu/AuthenticationMenu";
 import { Component } from "react";
+import SparqlDataProvider from "./../../../dataProvider/SparqlDataProvider";
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
+import { IconButton } from '@mui/material';
+import { Tooltip } from '@mui/material';
+
+const InvalidateButton = () => (
+  <Tooltip title="Clean Query Cache">
+    <IconButton color="inherit" onClick={() => {
+      SparqlDataProvider.queryEngine.invalidateHttpCache();
+    }}>
+      <CleaningServicesIcon />
+    </IconButton>
+  </Tooltip>
+);
 
 /**
  * 
@@ -18,6 +32,7 @@ function NavigationBar(props) {
         alt="Web application logo"
       ></img>
       <TitlePortal/>
+      <InvalidateButton/>
     </AppBar>
   );
 }
