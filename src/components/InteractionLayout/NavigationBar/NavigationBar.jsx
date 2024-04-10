@@ -1,4 +1,4 @@
-import { AppBar, TitlePortal } from "react-admin";
+import { AppBar, TitlePortal, useRefresh } from "react-admin";
 import config from "../../../config";
 import "./NavigationBar.css";
 import AuthenticationMenu from "../AuthenticationMenu/AuthenticationMenu";
@@ -8,15 +8,21 @@ import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
 
-const InvalidateButton = () => (
-  <Tooltip title="Clean Query Cache">
-    <IconButton color="inherit" onClick={() => {
-      SparqlDataProvider.queryEngine.invalidateHttpCache();
-    }}>
-      <CleaningServicesIcon />
-    </IconButton>
-  </Tooltip>
-);
+
+function InvalidateButton() {
+  const refresh = useRefresh();
+  const handleClick = () => {
+    SparqlDataProvider.queryEngine.invalidateHttpCache();
+    setTimeout(refresh, 2000);
+  }
+  return (
+    <Tooltip title="Clean Query Cache">
+      <IconButton color="inherit" onClick={handleClick}>
+        <CleaningServicesIcon />
+      </IconButton>
+    </Tooltip>
+  )  
+}
 
 /**
  * 
