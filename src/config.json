@@ -182,6 +182,20 @@
         ],
         "lenient": true
       }
+    },
+    {
+      "queryLocation": "components.rq",
+      "name": "Components with sources from index index file",
+      "description": "Query components with sources obtained from index files",
+      "id": "7200",
+      "comunicaContext": {
+        "lenient": true
+      },
+      "sourcesIndex": {
+        "source": "http://localhost:3000/admin/data/index-example",
+        "subject": "http://localhost:3000/admin/data/index-example#index-example",
+        "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+      }
     }
   ]
 }

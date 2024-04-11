@@ -104,6 +104,12 @@ The configuration file follows a simple structure.
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
         ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
+      "sourcesIndex": {
+        "source": "The datasource or custom URL",
+        "subject": "The subject required for the SPARQL query",
+        "predicate": "The predicate required for the SPARQL query"
+        // sources can be added directly in the `comunicaContext.sources` or be obtained from the index file in `sourcesIndex`
+      },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
         "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"]
