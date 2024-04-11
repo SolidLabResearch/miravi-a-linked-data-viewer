@@ -7,6 +7,7 @@ import {
 } from "@inrupt/solid-client";
 import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
 import { FOAF } from "@inrupt/vocab-common-rdf";
+import SparqlDataProvider from "./../dataProvider/SparqlDataProvider";
 
 const queryEngine = new QueryEngine();
 
@@ -41,6 +42,7 @@ export default {
     }
   },
   logout: async function logout() {
+    await SparqlDataProvider.queryEngine.invalidateHttpCache();
     await queryEngine.invalidateHttpCache();
     const session = getDefaultSession();
     await session.logout();
