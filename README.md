@@ -108,7 +108,6 @@ The configuration file follows a simple structure.
         "source": "The datasource or custom URL",
         "subject": "The subject required for the SPARQL query",
         "predicate": "The predicate required for the SPARQL query"
-        // sources can be added directly in the `comunicaContext.sources` or be obtained from the index file in `sourcesIndex`
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
@@ -122,6 +121,16 @@ The configuration file follows a simple structure.
     ... etc
   ]
 }
+```
+### Specifying sources
+
+When a `sourceIndex` is present, the sources in the `comunicaContext` are allowed to be empty. The sources will then be retrieved from the index file declared in the `sourceIndex`.
+```json
+"sourcesIndex": {
+        "source": "The datasource or custom URL",
+        "subject": "The subject required for the SPARQL query",
+        "predicate": "The predicate required for the SPARQL query"
+      }
 ```
 
 ### Adding variable type
