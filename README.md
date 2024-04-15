@@ -100,14 +100,14 @@ The configuration file follows a simple structure.
       "id": "A unique ID for the query",
       "icon": "The key to the icon for the query . This is optional and a default menu icon will be used when left empty.",
       "comunicaContext": {
-        "sources": "Sources over which the query should be executed",
+        "sources": "Initial list of sources over which the query should be executed",
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
         ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
       "sourcesIndex": {
-        "source": "The datasource or custom URL",
-        "subject": "The subject required for the SPARQL query",
-        "predicate": "The predicate required for the SPARQL query"
+        "url": "URL of the RDF resource acting as an index file for more sources over which the query should be executed",
+        "subject": "Optional subject to restrict the index to",
+        "predicate": "Optional predicate to restrict the index to"
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
@@ -124,14 +124,19 @@ The configuration file follows a simple structure.
 ```
 ### Specifying sources
 
-When a `sourceIndex` is present, the sources in the `comunicaContext` are allowed to be empty. The sources will then be retrieved from the index file declared in the `sourceIndex`.
-```json
-"sourcesIndex": {
-        "source": "The datasource or custom URL",
-        "subject": "The subject required for the SPARQL query",
-        "predicate": "The predicate required for the SPARQL query"
-      }
-```
+The set of sources over which a query will be executed is derived from two *optional* inputs in a query entry:
+
+* `comunicaContext.sources`: an array of sources, known at the time of writing the config file;
+* `sourceIndex`: describes an external RDF resource, from which sources are derived at execution time.
+
+If both inputs are present, the query will be executed over the superset of sources.
+
+The external RDF resource should be publicly available at `sourceIndex.url` and should represent triples `<subject> <predicate> <source_url>`.
+The `source_url` of any matching triple will be added to the list of sources. Matching triples are selected as follows:
+
+* if `sourceIndex.subject` exists, only triples where `<subject> == sourceIndex.subject` match; otherwise triples with any `<subject>` match;
+* if `sourceIndex.predicate` exists, only triples where `<predicate> == sourceIndex.predicate` match; otherwise triples with any `<predicate>` match.
+
 
 ### Adding variable type
 
