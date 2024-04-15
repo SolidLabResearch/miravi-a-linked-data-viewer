@@ -184,7 +184,7 @@
       }
     },
     {
-      "queryLocation": "components.rq",
+      "queryLocation": "texon-index-test.rq",
       "name": "Components with sources from index index file",
       "description": "Query components with sources obtained from index files",
       "id": "7200",
