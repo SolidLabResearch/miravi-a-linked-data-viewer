@@ -12,6 +12,54 @@ import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+console.log(config.queries)
+
+// const sourcesIndex = { // uit de config
+//   source: "http://localhost:3000/admin/data/index-example",
+//   subject: "http://localhost:3000/admin/data/index-example#index-example",
+//   predicate: "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+// };
+
+
+const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
+  const sourcesList = [];
+  const queryStringIndexSource = `
+    SELECT ?object
+    WHERE {
+      <${sourcesIndex.subject}> <${sourcesIndex.predicate}> ?object .
+    }
+  `;
+
+  const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
+    sources: [sourcesIndex.source],
+  });
+
+  bindingsStream.on('data', (binding) => {
+    sourcesList.push(binding.get('object').value);
+  });
+
+  console.log(sourcesList);
+  return sourcesList;
+}
+
+const checkIndexSources = async () => {
+
+  config.queries.forEach(async query => {  // meer testcases nog
+    if (query.sourcesIndex) {
+      if(!query.comunicaContext.sources)
+      query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+    }
+  })
+
+}
+
+checkIndexSources()
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 let proxyHandler = undefined;
 if (config.httpProxy) {
   proxyHandler = new ProxyHandlerStatic(config.httpProxy);
