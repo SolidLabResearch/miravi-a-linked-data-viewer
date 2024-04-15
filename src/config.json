@@ -185,7 +185,7 @@
     },
     {
       "queryLocation": "texon-index-test.rq",
-      "name": "Components with sources from index index file",
+      "name": "Components with sources from index file",
       "description": "Query components with sources obtained from index files",
       "id": "7200",
       "comunicaContext": {
@@ -194,6 +194,36 @@
       "sourcesIndex": {
         "source": "http://localhost:3000/admin/data/index-example",
         "subject": "http://localhost:3000/admin/data/index-example#index-example",
+        "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+      }
+    },
+    {
+      "queryLocation": "texon-index-test.rq",
+      "name": "Components with sources mixed from comunicaContext sources and index file",
+      "description": "Query components with sources obtained from comunica sources and index files",
+      "id": "7201",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:3005/texon/data/dt/out/components.ttl"
+        ],
+        "lenient": true
+      },
+      "sourcesIndex": {
+        "source": "http://localhost:3000/admin/data/index-example-texon-only",
+        "subject": "http://localhost:3000/admin/data/index-example-texon-only#index-example",
+        "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+      }
+    }
+    ,
+    {
+      "queryLocation": "texon-index-test.rq",
+      "name": "Components with no comunicaContext but only sourcesIndex",
+      "description": "Query components with no comunicaContext and sources obtained from index files",
+      "id": "7202",
+      
+      "sourcesIndex": {
+        "source": "http://localhost:3000/admin/data/index-example-texon-only",
+        "subject": "http://localhost:3000/admin/data/index-example-texon-only#index-example",
         "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
       }
     }

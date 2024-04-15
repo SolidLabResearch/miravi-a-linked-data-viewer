@@ -12,18 +12,8 @@ import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-console.log(config.queries)
+const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex, sourcesList = []) => {
 
-// const sourcesIndex = { // uit de config
-//   source: "http://localhost:3000/admin/data/index-example",
-//   subject: "http://localhost:3000/admin/data/index-example#index-example",
-//   predicate: "http://www.w3.org/2000/01/rdf-schema#seeAlso"
-// };
-
-
-const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
-  const sourcesList = [];
   const queryStringIndexSource = `
     SELECT ?object
     WHERE {
@@ -36,29 +26,31 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   });
 
   bindingsStream.on('data', (binding) => {
-    sourcesList.push(binding.get('object').value);
+    if (!sourcesList.includes(binding.get('object').value)) {
+      sourcesList.push(binding.get('object').value);
+    }
   });
 
-  console.log(sourcesList);
   return sourcesList;
 }
 
 const checkIndexSources = async () => {
-
-  config.queries.forEach(async query => {  // meer testcases nog
-    if (query.sourcesIndex) {
-      if(!query.comunicaContext.sources)
-      query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+  config.queries.forEach(async query => {
+    if (!query.comunicaContext) {
+      query.comunicaContext = {};
     }
-  })
-
+    if (query.sourcesIndex) {
+      if (!query.comunicaContext.sources) {
+        query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+      } else {
+        query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.sources);
+      }
+    }
+  });
 }
 
 checkIndexSources()
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////
 
 let proxyHandler = undefined;
 if (config.httpProxy) {
