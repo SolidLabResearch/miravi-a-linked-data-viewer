@@ -4,18 +4,18 @@ This Web app allows users to easily execute queries over multiple data sources (
 inspect the corresponding results.
 
 Table of contents:
-<!-- TOC -->
 * [Getting Started](#getting-started)
 * [Static build](#static-build)
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
+  * [Specifying sources](#specifying-sources)
+    * [About `sourceIndex`](#about-sourceindex)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
   * [Query icons](#query-icons)
 * [Representation Mapper](#representation-mapper)
 * [Using the local pods](#using-the-local-pods)
 * [Testing](#testing)
-<!-- TOC -->
 
 ## Getting Started
 
@@ -122,21 +122,26 @@ The configuration file follows a simple structure.
   ]
 }
 ```
+
 ### Specifying sources
 
 The set of sources over which a query will be executed is derived from two *optional* inputs in a query entry:
 
-* `comunicaContext.sources`: an array of sources, known at the time of writing the config file;
-* `sourceIndex`: describes an external RDF resource, from which sources are derived at execution time.
+- `comunicaContext.sources`: an array of sources, known at the time of writing the config file;
+- `sourceIndex`: describes an external RDF resource, from which sources are derived at execution time.
 
 If both inputs are present, the query will be executed over the superset of sources.
 
-The external RDF resource should be publicly available at `sourceIndex.url` and should represent triples `<subject> <predicate> <source_url>`.
-The `source_url` of any matching triple will be added to the list of sources. Matching triples are selected as follows:
+#### About `sourceIndex`
 
-* if `sourceIndex.subject` exists, only triples where `<subject> == sourceIndex.subject` match; otherwise triples with any `<subject>` match;
-* if `sourceIndex.predicate` exists, only triples where `<predicate> == sourceIndex.predicate` match; otherwise triples with any `<predicate>` match.
+- `sourceIndex.url` Should contain the URL of a publicly available RDF resource, representing triples `s p o`.
+- `sourceIndex.subject` Is optional. If given, triples where `s` is not equal to `sourceIndex.subject` are not considered.
+- `sourceIndex.predicate` Is optional. If given, triples where `p` is not equal to `sourceIndex.predicate` are not considered.
 
+The `o` of each considered triple is added to the list of sources.
+
+If `sourceIndex` is used and there is no `comunicaContext.lenient` property set for the query yet, it will be added with value `true`.
+This makes sure that a query can succeed if not all sources listed are accessible.
 
 ### Adding variable type
 
