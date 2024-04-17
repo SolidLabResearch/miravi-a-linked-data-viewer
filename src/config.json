@@ -14,6 +14,28 @@
   "introductionText": "Please select a query from the menu on the left.",
   "queries": [
     {
+      "queryLocation": "books.rq",
+      "name": "(1) NO ACCESS",
+      "description": "A short list of some of my favorite books, which I keep secret.",
+      "icon": "MenuBookIcon",
+      "id": "1",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-books"
+        ]
+      }
+    },
+    {
+      "queryLocation": "books.rq",
+      "name": "(2) EMPTY",
+      "description": "A short list of some of my favorite books, which I keep secret.",
+      "icon": "MenuBookIcon",
+      "id": "2",
+      "comunicaContext": {
+        "sources": []
+      }
+    },
+    {
       "queryLocation": "idols.rq",
       "name": "My idols",
       "description": "A simple test query",

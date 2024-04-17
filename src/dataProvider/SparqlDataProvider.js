@@ -27,6 +27,7 @@ if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
 
 export default {
   getList: async function getList(queryName, { pagination, sort, filter, meta }) {
+    // getting here twice in a row, before first return (both cases)
     const query = findQueryWithId(queryName);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
@@ -36,19 +37,30 @@ export default {
       query.variableValues = meta.variables
     }
 
-    let results = await executeQuery(query);
-    if (Object.keys(filter).length > 0) {
-      results = results.filter((result) => {
-        return Object.keys(filter).every((key) => {
-          return result[key] === filter[key];
+    try {
+      let results = await executeQuery(query);
+      if (Object.keys(filter).length > 0) {
+        results = results.filter((result) => {
+          return Object.keys(filter).every((key) => {
+            return result[key] === filter[key];
+          });
         });
-      });
+      }
+      const totalItems = await query.totalItems;
+      // getting here twice in case EMPTY
+      // loading ends normally
+      return {
+        data: results,
+        total: parseInt(totalItems),
+      };
+    } catch (error) {
+      // getting here only once (!) in case NO ACCESS
+      // loading does not end
+      return {
+        data: [],
+        total: 0,
+      };
     }
-    const totalItems = await query.totalItems;
-    return {
-      data: results,
-      total: parseInt(totalItems),
-    };
   },
   getOne: async function getOne() {
     // Our implementation doesn't use this function
@@ -312,7 +324,8 @@ async function countQueryResults(query) {
     fetch: fetch,
     httpProxyHandler: proxyHandler,
   });
-  return (await bindings.toArray())[0].get("totalItems").value;
+  const x = (await bindings.toArray())[0].get("totalItems")
+  return x.value;
 }
 
 const queryTypeHandlers = {
