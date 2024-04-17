@@ -324,8 +324,7 @@ async function countQueryResults(query) {
     fetch: fetch,
     httpProxyHandler: proxyHandler,
   });
-  const x = (await bindings.toArray())[0].get("totalItems")
-  return x.value;
+  return (await bindings.toArray())[0].get("totalItems") .value;
 }
 
 const queryTypeHandlers = {
