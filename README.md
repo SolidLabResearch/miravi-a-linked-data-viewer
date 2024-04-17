@@ -9,7 +9,6 @@ Table of contents:
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
   * [Specifying sources](#specifying-sources)
-    * [About `sourceIndex`](#about-sourceindex)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
   * [Query icons](#query-icons)
@@ -94,7 +93,7 @@ The configuration file follows a simple structure.
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
   "queries": [
     {
-      "queryLocation": "path to the query location, relative to 'queryFolder'",
+      "queryLocation": "Path to the query location, relative to 'queryFolder'",
       "name": "A name for the query",
       "description": "Description of the query",
       "id": "A unique ID for the query",
@@ -105,9 +104,8 @@ The configuration file follows a simple structure.
         ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
       "sourcesIndex": {
-        "url": "URL of the RDF resource acting as an index file for more sources over which the query should be executed",
-        "subject": "Optional subject to restrict the index to",
-        "predicate": "Optional predicate to restrict the index to"
+        "url": "URL of the publicly available RDF resource acting as an index file for more sources over which the query should be executed",
+        "queryLocation": "Path to the location, relative to 'queryFolder', of the (auxiliary) query that yields the sources from above RDF resource"
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
@@ -132,16 +130,10 @@ The set of sources over which a query will be executed is derived from two *opti
 
 If both inputs are present, the query will be executed over the superset of sources.
 
-#### About `sourceIndex`
+The (auxiliary) query provided in `sourceIndex.queryLocation` is executed on `sourceIndex.url` and must result in the list of sources.
 
-- `sourceIndex.url` Should contain the URL of a publicly available RDF resource, representing triples `s p o`.
-- `sourceIndex.subject` Is optional. If given, triples where `s` is not equal to `sourceIndex.subject` are not considered.
-- `sourceIndex.predicate` Is optional. If given, triples where `p` is not equal to `sourceIndex.predicate` are not considered.
-
-The `o` of each considered triple is added to the list of sources.
-
-If `sourceIndex` is used and there is no `comunicaContext.lenient` property set for the query yet, it will be added with value `true`.
-This makes sure that a query can succeed if not all sources listed are accessible.
+If `sourceIndex` is used and there is no `comunicaContext.lenient` property found, one will be created with value `true`.
+This makes sure that the (main) query can succeed if not all obtained sources are accessible.
 
 ### Adding variable type
 
