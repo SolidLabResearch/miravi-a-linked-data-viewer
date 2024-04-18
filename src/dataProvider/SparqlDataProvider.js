@@ -12,17 +12,10 @@ import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
-const getIndexSourceFromQuery = async (sourcesIndex) => {
-
-  const result = (await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`));
-  return `${await result.text()}`;
-}
-
 const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex, sourcesList = []) => {
 
-  const queryStringIndexSource = await getIndexSourceFromQuery(sourcesIndex);
-
-  console.log(queryStringIndexSource)
+  const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
+  const queryStringIndexSource = await result.text();
 
   const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
     sources: [sourcesIndex.url],
@@ -33,26 +26,27 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex, sourcesLi
       sourcesList.push(binding.get('object').value);
     }
   });
-
   return sourcesList;
 }
 
-const checkIndexSources = async () => {
-  config.queries.forEach(async query => {
-    if (!query.comunicaContext) {
-      query.comunicaContext = { lenient: true };    // mss in de sourceIndex ook een lenient optie zetten?? dan kan men dat hier forceren...  vraag aan Martin donderdag...
+const checkIndexSources = async (query) => {
+  
+  if (!query.comunicaContext) {
+    query.comunicaContext = { lenient: true }; 
+  } 
+  else if (query.comunicaContext.lenient === undefined ){
+    query.comunicaContext.lenient = true  
+  }
+
+  if (query.sourcesIndex) {
+    if (!query.comunicaContext.sources) {
+      query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+    } else {
+      query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.sources);
     }
-    if (query.sourcesIndex) {
-      if (!query.comunicaContext.sources) {
-        query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
-      } else {
-        query.comunicaContext.sources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.sources);
-      }
-    }
-  });
+  }
 }
 
-checkIndexSources();
 
 let proxyHandler = undefined;
 if (config.httpProxy) {
@@ -73,12 +67,15 @@ export default {
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
-
+    
+    await checkIndexSources(query)
+  
     if (meta && meta.variables) {
       query.variableValues = meta.variables
     }
 
     let results = await executeQuery(query);
+
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
         return Object.keys(filter).every((key) => {

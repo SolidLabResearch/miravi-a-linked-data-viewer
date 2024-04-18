@@ -220,8 +220,7 @@
       "comunicaContext": {
         "sources": [
           "http://localhost:3005/texon/data/dt/out/components.ttl"
-        ],
-        "lenient": true
+        ]
       },
       "sourcesIndex": {
         "url": "http://localhost:3000/admin/data/index-example-texon-only",
@@ -234,7 +233,6 @@
       "name": "Components with no comunicaContext but only sourcesIndex",
       "description": "Query components with no comunicaContext and sources obtained from index files",
       "id": "7203",
-      
       "sourcesIndex": {
         "url": "http://localhost:3000/admin/data/index-example-texon-only",
         "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
