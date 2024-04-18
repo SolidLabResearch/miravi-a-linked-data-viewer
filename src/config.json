@@ -182,6 +182,48 @@
         ],
         "lenient": true
       }
+    },
+    {
+      "queryLocation": "spo.rq",
+      "name": "Verifiable Credentials test (all good)",
+      "description": "Query some resources whose credentials are to be verified (all verifications good)",
+      "id": "9000",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/manuf1_1_vc",
+          "http://localhost:8080/example/manuf1_2_vc",
+          "http://localhost:8080/example/manuf1_3_vc"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "queryLocation": "spo.rq",
+      "name": "Verifiable Credentials test (one bad)",
+      "description": "Query some resources whose credentials are to be verified (one verification bad)",
+      "id": "9001",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/manuf1_1_vc",
+          "http://localhost:8080/example/manuf1_2_vc",
+          "http://localhost:8080/example/manuf1_3_vc_corrupt"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "queryLocation": "spo.rq",
+      "name": "Verifiable Credentials test (one can't be verified)",
+      "description": "Query some resources whose credentials are to be verified (one can't be verified)",
+      "id": "9002",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/manuf1_1_vc",
+          "http://localhost:8080/example/manuf1_2_vc",
+          "http://localhost:8080/example/manuf1_3"
+        ],
+        "lenient": true
+      }
     }
   ]
 }

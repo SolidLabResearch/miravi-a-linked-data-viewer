@@ -1,0 +1,144 @@
+
+<http://example.com/company/05329617> <http://example.com/voc/1200> "TEXON INTERNATIONAL GROUP LTD";
+  <http://example.com/voc/1201> "Building 5, Skelton Industrial Estate  - Skelton-in-Cleveland";
+  <http://example.com/voc/1202> "Saltburn By The Sea Cleveland";
+  <http://example.com/voc/1203> "TS12 2LH";
+  <http://example.com/voc/1204> "UNITED KINGDOM";
+  <http://example.com/voc/1205> "05329617" .
+
+<http://example.com/company/0596572> <http://example.com/voc/1200> "TEXON INTERNATIONAL (Asia) LTD";
+  <http://example.com/voc/1201> "Unit 1-4, 10/F, The Broadway - 54-62 Lockhart Road";
+  <http://example.com/voc/1202> "Wanchai, Hong Kong";
+  <http://example.com/voc/1203> "999077";
+  <http://example.com/voc/1204> "CHINA";
+  <http://example.com/voc/1205> "0596572" .
+
+<http://example.com/company/MI%201828306> <http://example.com/voc/1200> "Texon International Group Limited - c/o Texon Italy SRL";
+  <http://example.com/voc/1201> "Contrade Menocchia, 16";
+  <http://example.com/voc/1202> "Ripatransone";
+  <http://example.com/voc/1203> "63038";
+  <http://example.com/voc/1204> "ITALY";
+  <http://example.com/voc/1205> "MI 1828306" .
+
+<http://example.com/company/company1> <http://example.com/voc/1304> "China" .
+
+<http://example.com/pcds/texon_uid-product1-1> a <http://w3id.org/CEON/ontology/textile/TextileDataSheet>;
+  <http://example.com/voc/1400> "1";
+  <http://example.com/voc/1401> "45235";
+  <http://example.com/voc/1404> "sales@texon.com";
+  <http://example.com/voc/1405> "0044 (0)1287 650551";
+  <http://example.com/voc/2300> false;
+  <http://example.com/voc/2301> true;
+  <http://example.com/voc/2320> false;
+  <http://example.com/voc/2321> true;
+  <http://example.com/voc/2330> false;
+  <http://example.com/voc/2331> true;
+  <http://example.com/voc/CF200> "Polyester Fibres";
+  <http://example.com/voc/CF200b> "0,4"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF201> "Ethyl Vinyl Acetate film";
+  <http://example.com/voc/CF201b> "0,2"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF202> "Styrene Butadiene latex";
+  <http://example.com/voc/CF202b> "0,25"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF203> "Ethyl Vinyl Acetate Resin";
+  <http://example.com/voc/CF203b> "0,07"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF204> "Inorganic FIller";
+  <http://example.com/voc/CF204b> "0,05"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF205> "Single or double adhesive coating.";
+  <http://w3id.org/CEON/ontology/resourceODP/isAbout> <http://example.com/product/texon_uid-product1>;
+  <http://w3id.org/CEON/ontology/textile/collectionSystem> true;
+  <http://w3id.org/CEON/ontology/textile/designedForRecyclingAtSameQuality> <http://example.com/pcds/texon_uid-product1-1-TextileProductDesignForRecycling> .
+
+<http://example.com/pcds/texon_uid-product1-1-TextileProductDesignForRecycling> <http://w3id.org/CEON/ontology/textile/recyclingAtSameQualityRange>
+    <http://w3id.org/CEON/ontology/textile/_0perc> .
+
+<http://example.com/pcds/texon_uid-product2-1> a <http://w3id.org/CEON/ontology/textile/TextileDataSheet>;
+  <http://example.com/voc/1400> "1";
+  <http://example.com/voc/1401> "45235";
+  <http://example.com/voc/1404> "sales@texon.com";
+  <http://example.com/voc/1405> "00852 2683 2005";
+  <http://example.com/voc/2300> false;
+  <http://example.com/voc/2301> true;
+  <http://example.com/voc/2320> false;
+  <http://example.com/voc/2321> true;
+  <http://example.com/voc/2330> false;
+  <http://example.com/voc/2331> true;
+  <http://example.com/voc/CF200> "recycled Polyester";
+  <http://example.com/voc/CF200b> "0,85"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF201> "Co-polymer raisin";
+  <http://example.com/voc/CF201b> "0,15"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://w3id.org/CEON/ontology/resourceODP/isAbout> <http://example.com/product/texon_uid-product2>;
+  <http://w3id.org/CEON/ontology/textile/collectionSystem> true;
+  <http://w3id.org/CEON/ontology/textile/designedForRecyclingAtSameQuality> <http://example.com/pcds/texon_uid-product2-1-TextileProductDesignForRecycling> .
+
+<http://example.com/pcds/texon_uid-product2-1-TextileProductDesignForRecycling> <http://w3id.org/CEON/ontology/textile/recyclingAtSameQualityRange>
+    <http://w3id.org/CEON/ontology/textile/above99Perc> .
+
+<http://example.com/pcds/texon_uid-product3-1> a <http://w3id.org/CEON/ontology/textile/TextileDataSheet>;
+  <http://example.com/voc/1400> "1";
+  <http://example.com/voc/1401> "45235";
+  <http://example.com/voc/1404> "sales@texon.com";
+  <http://example.com/voc/1405> "0044 (0)1287 650551";
+  <http://example.com/voc/2300> false;
+  <http://example.com/voc/2301> true;
+  <http://example.com/voc/2320> false;
+  <http://example.com/voc/2321> true;
+  <http://example.com/voc/2330> false;
+  <http://example.com/voc/2331> true;
+  <http://example.com/voc/CF200> "Bio derived EVA";
+  <http://example.com/voc/CF200b> "0,6"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF201> "recycled PES fibres";
+  <http://example.com/voc/CF201b> "0,3"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF202> "adhesives";
+  <http://example.com/voc/CF202b> "0,1"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://w3id.org/CEON/ontology/resourceODP/isAbout> <http://example.com/product/texon_uid-product3>;
+  <http://w3id.org/CEON/ontology/textile/collectionSystem> true;
+  <http://w3id.org/CEON/ontology/textile/designedForRecyclingAtSameQuality> <http://example.com/pcds/texon_uid-product3-1-TextileProductDesignForRecycling> .
+
+<http://example.com/pcds/texon_uid-product3-1-TextileProductDesignForRecycling> <http://w3id.org/CEON/ontology/textile/recyclingAtSameQualityRange>
+    <http://w3id.org/CEON/ontology/textile/_95to99Perc> .
+
+<http://example.com/pcds/texon_uid-product4-1> a <http://w3id.org/CEON/ontology/textile/TextileDataSheet>;
+  <http://example.com/voc/1400> "1";
+  <http://example.com/voc/1401> "45235";
+  <http://example.com/voc/1404> "sales@texon.com";
+  <http://example.com/voc/1405> "0039 735 9181";
+  <http://example.com/voc/2300> false;
+  <http://example.com/voc/2301> true;
+  <http://example.com/voc/2320> false;
+  <http://example.com/voc/2321> true;
+  <http://example.com/voc/2330> false;
+  <http://example.com/voc/2331> true;
+  <http://example.com/voc/CF200> "Cellulose Pulp";
+  <http://example.com/voc/CF200b> "0,8"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF201> "Binders";
+  <http://example.com/voc/CF201b> "0,19"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://example.com/voc/CF202> "Dye";
+  <http://example.com/voc/CF202b> "0,01"^^<http://www.w3.org/2001/XMLSchema#decimal>;
+  <http://w3id.org/CEON/ontology/resourceODP/isAbout> <http://example.com/product/texon_uid-product4>;
+  <http://w3id.org/CEON/ontology/textile/collectionSystem> true;
+  <http://w3id.org/CEON/ontology/textile/designedForRecyclingAtSameQuality> <http://example.com/pcds/texon_uid-product4-1-TextileProductDesignForRecycling> .
+
+<http://example.com/product/texon_uid-product1> a <http://w3id.org/CEON/ontology/textile/TextileProduct>;
+  <http://example.com/voc/1100> "REF 2.0";
+  <http://example.com/voc/1101> "TEXON";
+  <http://example.com/voc/1103> "product1";
+  <http://example.com/voc/CF100> "Counter - 100% recyclable thermoplastic - structural solution with extruded - film central core" .
+
+<http://example.com/product/texon_uid-product2> a <http://w3id.org/CEON/ontology/textile/TextileProduct>;
+  <http://example.com/voc/1100> "ECO 1";
+  <http://example.com/voc/1101> "TEXON";
+  <http://example.com/voc/1103> "product2";
+  <http://example.com/voc/CF100> "Shoe insole / reinforcement material" .
+
+<http://example.com/product/texon_uid-product3> a <http://w3id.org/CEON/ontology/textile/TextileProduct>;
+  <http://example.com/voc/1100> "SPO Bio";
+  <http://example.com/voc/1101> "TEXON";
+  <http://example.com/voc/1103> "product3";
+  <http://example.com/voc/CF100> "toe puff - a recyclable, thermoplastic, and filmic structural. Bio based. - solution, providing soft, flexible shapes." .
+
+<http://example.com/product/texon_uid-product4> a <http://w3id.org/CEON/ontology/textile/TextileProduct>;
+  <http://example.com/voc/1100> "Verde";
+  <http://example.com/voc/1101> "TEXON";
+  <http://example.com/voc/1103> "product4";
+  <http://example.com/voc/CF100> "Cellulose based washable paper";
+  <http://example.com/voc/CF101> "multicoloured" .
