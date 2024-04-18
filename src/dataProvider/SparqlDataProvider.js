@@ -12,7 +12,7 @@ import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
-const getIndexSourceFromQuery = async(sourcesIndex) => {
+const getIndexSourceFromQuery = async (sourcesIndex) => {
 
   const result = (await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`));
   return `${await result.text()}`;
@@ -20,7 +20,6 @@ const getIndexSourceFromQuery = async(sourcesIndex) => {
 
 const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex, sourcesList = []) => {
 
-  
   const queryStringIndexSource = await getIndexSourceFromQuery(sourcesIndex);
 
   console.log(queryStringIndexSource)
@@ -41,7 +40,7 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex, sourcesLi
 const checkIndexSources = async () => {
   config.queries.forEach(async query => {
     if (!query.comunicaContext) {
-      query.comunicaContext = {lenient: true};    // mss in de sourceIndex ook een lenient optie zetten?? dan kan men dat hier forceren...  vraag aan Martin donderdag...
+      query.comunicaContext = { lenient: true };    // mss in de sourceIndex ook een lenient optie zetten?? dan kan men dat hier forceren...  vraag aan Martin donderdag...
     }
     if (query.sourcesIndex) {
       if (!query.comunicaContext.sources) {
@@ -53,8 +52,7 @@ const checkIndexSources = async () => {
   });
 }
 
-checkIndexSources()
-
+checkIndexSources();
 
 let proxyHandler = undefined;
 if (config.httpProxy) {

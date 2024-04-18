@@ -196,7 +196,7 @@
       },
       "sourcesIndex": {
         "url": "http://localhost:3000/admin/data/index-example",
-        "queryLocation": "./sourceQueries/index_example_source.rq"
+        "queryLocation": "/sourceQueries/index_example_source.rq"
       }
     },
     {
@@ -209,7 +209,7 @@
       },
       "sourcesIndex": {
         "url": "http://localhost:3000/admin/data/index-example",
-        "queryLocation": "./sourceQueries/index_example_source.rq"
+        "queryLocation": "/sourceQueries/index_example_source.rq"
       }
     },
     {
@@ -225,7 +225,7 @@
       },
       "sourcesIndex": {
         "url": "http://localhost:3000/admin/data/index-example-texon-only",
-        "queryLocation": "./sourceQueries/index_example_texon_only_source.rq"
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
       }
     }
     ,
@@ -237,7 +237,7 @@
       
       "sourcesIndex": {
         "url": "http://localhost:3000/admin/data/index-example-texon-only",
-        "queryLocation": "./sourceQueries/index_example_texon_only_source.rq"
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
       }
     }
   ]
