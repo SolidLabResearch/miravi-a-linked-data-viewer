@@ -183,6 +183,9 @@
         "lenient": true
       }
     },
+
+
+
     {
       "queryLocation": "texon-index-test.rq",
       "name": "Components with sources from index file",
@@ -192,9 +195,8 @@
         "lenient": true
       },
       "sourcesIndex": {
-        "source": "http://localhost:3000/admin/data/index-example",
-        "subject": "http://localhost:3000/admin/data/index-example#index-example",
-        "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        "url": "http://localhost:3000/admin/data/index-example",
+        "queryLocation": "./sourceQueries/index_example_source.rq"
       }
     },
     {
@@ -206,9 +208,8 @@
         "lenient": false
       },
       "sourcesIndex": {
-        "source": "http://localhost:3000/admin/data/index-example",
-        "subject": "http://localhost:3000/admin/data/index-example#index-example",
-        "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        "url": "http://localhost:3000/admin/data/index-example",
+        "queryLocation": "./sourceQueries/index_example_source.rq"
       }
     },
     {
@@ -223,9 +224,8 @@
         "lenient": true
       },
       "sourcesIndex": {
-        "source": "http://localhost:3000/admin/data/index-example-texon-only",
-        "subject": "http://localhost:3000/admin/data/index-example-texon-only#index-example",
-        "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        "url": "http://localhost:3000/admin/data/index-example-texon-only",
+        "queryLocation": "./sourceQueries/index_example_texon_only_source.rq"
       }
     }
     ,
@@ -236,9 +236,8 @@
       "id": "7203",
       
       "sourcesIndex": {
-        "source": "http://localhost:3000/admin/data/index-example-texon-only",
-        "subject": "http://localhost:3000/admin/data/index-example-texon-only#index-example",
-        "predicate": "http://www.w3.org/2000/01/rdf-schema#seeAlso"
+        "url": "http://localhost:3000/admin/data/index-example-texon-only",
+        "queryLocation": "./sourceQueries/index_example_texon_only_source.rq"
       }
     }
   ]
