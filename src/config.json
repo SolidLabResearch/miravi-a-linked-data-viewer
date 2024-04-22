@@ -184,43 +184,15 @@
       }
     },
     {
-      "queryLocation": "spo.rq",
-      "name": "Verifiable Credentials test (all good)",
-      "description": "Query some resources whose credentials are to be verified (all verifications good)",
-      "id": "9000",
+      "queryLocation": "components.rq",
+      "name": "Verifiable Components",
+      "description": "Components are queried from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
+      "id": "7002",
       "comunicaContext": {
         "sources": [
-          "http://localhost:8080/example/manuf1_1_vc",
-          "http://localhost:8080/example/manuf1_2_vc",
-          "http://localhost:8080/example/manuf1_3_vc"
-        ],
-        "lenient": true
-      }
-    },
-    {
-      "queryLocation": "spo.rq",
-      "name": "Verifiable Credentials test (one bad)",
-      "description": "Query some resources whose credentials are to be verified (one verification bad)",
-      "id": "9001",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/manuf1_1_vc",
-          "http://localhost:8080/example/manuf1_2_vc",
-          "http://localhost:8080/example/manuf1_3_vc_corrupt"
-        ],
-        "lenient": true
-      }
-    },
-    {
-      "queryLocation": "spo.rq",
-      "name": "Verifiable Credentials test (one can't be verified)",
-      "description": "Query some resources whose credentials are to be verified (one can't be verified)",
-      "id": "9002",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/manuf1_1_vc",
-          "http://localhost:8080/example/manuf1_2_vc",
-          "http://localhost:8080/example/manuf1_3"
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/verifiable-example/components-vc",
+          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof"
         ],
         "lenient": true
       }
