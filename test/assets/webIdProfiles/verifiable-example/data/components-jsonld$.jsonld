@@ -1,0 +1,68 @@
+[
+  {
+    "@id": "http://www/example.com/data/component-c01",
+    "@type": [
+      "http://www/example.com/ont/Component"
+    ],
+    "http://www/example.com/ont/has-component-bom": [
+      {
+        "@id": "http://www/example.com/data/component-bom-b01"
+      }
+    ],
+    "http://www/example.com/ont/name": [
+      {
+        "@value": "Component 1"
+      }
+    ],
+    "http://www/example.com/ont/recycled-content-percentage": [
+      {
+        "@value": "80",
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      }
+    ]
+  },
+  {
+    "@id": "http://www/example.com/data/component-c02",
+    "@type": [
+      "http://www/example.com/ont/Component"
+    ],
+    "http://www/example.com/ont/has-component-bom": [
+      {
+        "@id": "http://www/example.com/data/component-bom-b02"
+      }
+    ],
+    "http://www/example.com/ont/name": [
+      {
+        "@value": "Component 2"
+      }
+    ],
+    "http://www/example.com/ont/recycled-content-percentage": [
+      {
+        "@value": "20",
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      }
+    ]
+  },
+  {
+    "@id": "http://www/example.com/data/component-c03",
+    "@type": [
+      "http://www/example.com/ont/Component"
+    ],
+    "http://www/example.com/ont/has-component-bom": [
+      {
+        "@id": "http://www/example.com/data/component-bom-b03"
+      }
+    ],
+    "http://www/example.com/ont/name": [
+      {
+        "@value": "Component 3"
+      }
+    ],
+    "http://www/example.com/ont/recycled-content-percentage": [
+      {
+        "@value": "0",
+        "@type": "http://www.w3.org/2001/XMLSchema#integer"
+      }
+    ]
+  }
+]

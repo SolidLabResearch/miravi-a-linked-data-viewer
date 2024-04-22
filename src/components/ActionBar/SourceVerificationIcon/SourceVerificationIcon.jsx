@@ -1,11 +1,21 @@
-import CheckIcon from "@mui/icons-material/Check";
 import { CircularProgress, Tooltip } from "@mui/material";
 import { Component, useState } from "react";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import { Button } from "react-admin";
 import CancelIcon from "@mui/icons-material/Cancel";
 import PropTypes from "prop-types";
+import GppBadIcon from '@mui/icons-material/GppBad'; // FAILED
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'; // NOT VERIFIABLE
+import PrivacyTipIcon from '@mui/icons-material/PrivacyTip'; // SUCCESS
+import WarningIcon from '@mui/icons-material/Warning'; // ERROR
 import myVerify from '../../../../src/vendor/verify';
+
+const VERIFICATION_STATES = {
+  NOT_VERIFIED: 'NOT_VERIFIED',
+  VERIFIED: 'VERIFIED',
+  INVALID_SOURCE: 'INVALID_SOURCE',
+  ERROR: 'ERROR'
+}
 
 /**
  * @param {object} props - the props passed to the component
@@ -24,16 +34,28 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
   const [isVerified, setIsVerified] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
 
-  // This function should be replaced by the actual verification function
+  /**
+   * The verifiable credentials verify function
+   * @param {string} source - the source to check
+   * @param {function} fetchFunction - the fetch function to use
+   * @ returns {string} - one of the VERIFICATION_STATES
+   */
   const verifyFunction = async (source, fetchFunction) => {
     try {
       const response = await fetchFunction(source);
       const verifiableCredential = await response.json();
       const { validationResult, verificationResult } = await myVerify(verifiableCredential);
-
-      return verificationResult.verified;
+      if (validationResult.valid) {
+        if (verificationResult.verified) {
+          return VERIFICATION_STATES.VERIFIED;
+        } else {
+          return VERIFICATION_STATES.NOT_VERIFIED;
+        }
+      } else {
+        return VERIFICATION_STATES.INVALID_SOURCE;
+      }
     } catch (error) {
-      return false;
+      return VERIFICATION_STATES.ERROR;
     }
   };
 
@@ -52,18 +74,35 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
     if (isLoading) {
       return <CircularProgress size={20} />;
     } else {
-      if (isVerified) {
-        return (
-          <Tooltip title="Verification succeeded">
-            <CheckIcon size="small" />
-          </Tooltip>
-        );
-      } else {
-        return (
-          <Tooltip title="Verification failed">
-            <CancelIcon size="small" />
-          </Tooltip>
-        );
+      switch (isVerified) {
+        case VERIFICATION_STATES.VERIFIED:
+          return (
+            <Tooltip title="Verification succeeded">
+              <VerifiedUserIcon size="small" />
+            </Tooltip>
+          );
+          break;
+        case VERIFICATION_STATES.INVALID_SOURCE:
+          return (
+            <Tooltip title="No credential found to verify">
+              <PrivacyTipIcon size="small" />
+            </Tooltip>
+          );
+          break;
+        case VERIFICATION_STATES.NOT_VERIFIED:
+          return (
+            <Tooltip title="Verification failed">
+              <GppBadIcon size="small" />
+            </Tooltip>
+          );
+          break;
+        case VERIFICATION_STATES.ERROR:
+          return (
+            <Tooltip title="Error">
+              <WarningIcon size="small" />
+            </Tooltip>
+          );
+          break;
       }
     }
   } else {
