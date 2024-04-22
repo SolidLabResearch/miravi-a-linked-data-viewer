@@ -187,12 +187,9 @@
     
     {
       "queryLocation": "components-materials.rq",
-      "name": "Components and materials with sources from index file",
+      "name": "Components and materials with sources from only the index file",
       "description": "Query components (including details about materials) with the sources obtained from index files",
       "id": "7200",
-      "comunicaContext": {
-        "lenient": true
-      },
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only",
         "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
@@ -200,12 +197,9 @@
     },
     {
       "queryLocation": "components-materials.rq",
-      "name": "Components and materials with sources from index file and unauthorized favorite-books source",
+      "name": "Components and materials with sources from index file also containing an unauthorized source",
       "description": "Query components (including details about materials) with the sources obtained from index files but also including an unauthorized source of favourite books, to check lenient",
       "id": "7201",
-      "comunicaContext": {
-        "lenient": true
-      },
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-with-unauthorized-source",
         "queryLocation": "/sourceQueries/index-example-with-unauthorized-source.rq"
@@ -213,24 +207,16 @@
     },
     {
       "queryLocation": "components-materials.rq",
-      "name": "Components with sources mixed from comunicaContext sources and index file",
+      "name": "Components with mixed sources from comunicaContext and index file",
       "description": "Query components with sources obtained from comunica sources and index files",
       "id": "7202",
       "comunicaContext": {
         "sources": [
+          "http://localhost:8080/example/favourite-books",
           "http://localhost:8080/example/components"
-        ]
+        ],
+        "lenient" : true
       },
-      "sourcesIndex": {
-        "url": "http://localhost:8080/example/index-example-texon-only",
-        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
-      }
-    },
-    {
-      "queryLocation": "components-materials.rq",
-      "name": "Components with no comunicaContext but only sourcesIndex",
-      "description": "Query components with no comunicaContext and sources obtained from index files",
-      "id": "7203",
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only",
         "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
