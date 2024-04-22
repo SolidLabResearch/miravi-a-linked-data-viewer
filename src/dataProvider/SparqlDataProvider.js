@@ -40,7 +40,24 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   return sourcesList;
 };
 
+const handleComunicaContextCreation = (query) => {
 
+  if (!query.comunicaContext) {
+    query.comunicaContext = {
+      sources: [],
+      lenient: true
+    };
+  }
+  else {
+    if (query.comunicaContext.lenient === undefined) {
+      query.comunicaContext.lenient = true;
+    }
+    if (!query.comunicaContext.sources) {
+      query.comunicaContext.sources = [];
+    }
+  }
+
+}
 
 let proxyHandler = undefined;
 if (config.httpProxy) {
@@ -62,20 +79,7 @@ export default {
     query.offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
 
-    if (!query.comunicaContext) {
-      query.comunicaContext = {
-        sources: [],
-        lenient: true
-      };
-    }
-    else {
-      if (query.comunicaContext.lenient === undefined) {
-        query.comunicaContext.lenient = true;
-      }
-      if (!query.comunicaContext.sources) {
-        query.comunicaContext.sources = [];
-      }
-    }
+    handleComunicaContextCreation(query);
 
     if (query.sourcesIndex) {
       try {
