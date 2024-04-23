@@ -2,17 +2,15 @@ import { CircularProgress, Tooltip } from "@mui/material";
 import { Component, useState } from "react";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import { Button } from "react-admin";
-import CancelIcon from "@mui/icons-material/Cancel";
 import PropTypes from "prop-types";
-import GppBadIcon from '@mui/icons-material/GppBad'; // FAILED
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser'; // NOT VERIFIABLE
-import PrivacyTipIcon from '@mui/icons-material/PrivacyTip'; // SUCCESS
-import WarningIcon from '@mui/icons-material/Warning'; // ERROR
+import GppGoodIcon from '@mui/icons-material/GppGood';
+import GppBadIcon from '@mui/icons-material/GppBad';
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import myVerify from '../../../../src/vendor/verify';
 
 const VERIFICATION_STATES = {
-  NOT_VERIFIED: 'NOT_VERIFIED',
   VERIFIED: 'VERIFIED',
+  NOT_VERIFIED: 'NOT_VERIFIED',
   INVALID_SOURCE: 'INVALID_SOURCE',
   ERROR: 'ERROR'
 }
@@ -31,7 +29,7 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
   }
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isVerified, setIsVerified] = useState(false);
+  const [verificationState, setVerificationState] = useState(undefined);
   const [needsVerification, setNeedsVerification] = useState(false);
 
   /**
@@ -65,7 +63,7 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
   function verify() {
     setNeedsVerification(true);
     verifyFunction(sourceUrl, context.underlyingFetchFunction).then((result) => {
-      setIsVerified(result);
+      setVerificationState(result);
       setIsLoading(false);
     })
   }
@@ -74,18 +72,11 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
     if (isLoading) {
       return <CircularProgress size={20} />;
     } else {
-      switch (isVerified) {
+      switch (verificationState) {
         case VERIFICATION_STATES.VERIFIED:
           return (
             <Tooltip title="Verification succeeded">
-              <VerifiedUserIcon size="small" />
-            </Tooltip>
-          );
-          break;
-        case VERIFICATION_STATES.INVALID_SOURCE:
-          return (
-            <Tooltip title="No credential found to verify">
-              <PrivacyTipIcon size="small" />
+              <GppGoodIcon size="small" />
             </Tooltip>
           );
           break;
@@ -96,10 +87,10 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
             </Tooltip>
           );
           break;
-        case VERIFICATION_STATES.ERROR:
+        default:
           return (
-            <Tooltip title="Error">
-              <WarningIcon size="small" />
+            <Tooltip title="No credential found to verify">
+              <GppMaybeIcon size="small" />
             </Tooltip>
           );
           break;

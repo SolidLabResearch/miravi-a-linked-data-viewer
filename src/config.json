@@ -192,8 +192,7 @@
         "sources": [
           "http://localhost:8080/verifiable-example/components-vc",
           "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
-          "http://localhost:8080/verifiable-example/components-jsonld",
-          "http://localhost:8080/verifiable-example/components-ttl"
+          "http://localhost:8080/example/components"
         ],
         "lenient": true
       }
