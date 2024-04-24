@@ -26,4 +26,6 @@ dist-ssr
 pods*
 
 lintPush.sh
+
 cypress/screenshots
+cypress/downloads

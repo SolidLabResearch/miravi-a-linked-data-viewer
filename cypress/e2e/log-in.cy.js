@@ -78,7 +78,7 @@ describe("Log in", () => {
     cy.visit("/");
 
     cy.contains("A list of my favorite books").click();
-    cy.get("div").should("have.class", "MuiSnackbarContent-message");
+    cy.contains("It Ends With Us").should("not.exist");
   });
 
   it("Do not log in and query public data", () => {
