@@ -1,10 +1,19 @@
-import CheckIcon from "@mui/icons-material/Check";
-import {CircularProgress, Tooltip} from "@mui/material";
-import {Component, useState} from "react";
+import { CircularProgress, Tooltip } from "@mui/material";
+import { Component, useState } from "react";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-import {Button} from "react-admin";
-import CancelIcon from "@mui/icons-material/Cancel";
+import { Button } from "react-admin";
 import PropTypes from "prop-types";
+import GppGoodIcon from '@mui/icons-material/GppGood';
+import GppBadIcon from '@mui/icons-material/GppBad';
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
+import myVerify from '../../../../src/vendor/verify';
+
+const VERIFICATION_STATES = {
+  VERIFIED: 'VERIFIED',
+  NOT_VERIFIED: 'NOT_VERIFIED',
+  INVALID_SOURCE: 'INVALID_SOURCE',
+  ERROR: 'ERROR'
+}
 
 /**
  * @param {object} props - the props passed to the component
@@ -13,23 +22,38 @@ import PropTypes from "prop-types";
  * @param {string} props.proxyUrl - the proxy url to use if the resource is accessed through a proxy
  * @returns {Component} an icon indicating whether the source was verified or not
  */
-function SourceVerificationIcon({context, source, proxyUrl}) {
+function SourceVerificationIcon({ context, source, proxyUrl }) {
   let sourceUrl = source;
   if (context.useProxy) {
     sourceUrl = `${proxyUrl}${source}`;
   }
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isVerified, setIsVerified] = useState(false);
+  const [verificationState, setVerificationState] = useState(undefined);
   const [needsVerification, setNeedsVerification] = useState(false);
 
-  // This function should be replaced by the actual verification function
+  /**
+   * The verifiable credentials verify function
+   * @param {string} source - the source to check
+   * @param {function} fetchFunction - the fetch function to use
+   * @ returns {string} - one of the VERIFICATION_STATES
+   */
   const verifyFunction = async (source, fetchFunction) => {
     try {
       const response = await fetchFunction(source);
-      return response.ok;
+      const verifiableCredential = await response.json();
+      const { validationResult, verificationResult } = await myVerify(verifiableCredential);
+      if (validationResult.valid) {
+        if (verificationResult.verified) {
+          return VERIFICATION_STATES.VERIFIED;
+        } else {
+          return VERIFICATION_STATES.NOT_VERIFIED;
+        }
+      } else {
+        return VERIFICATION_STATES.INVALID_SOURCE;
+      }
     } catch (error) {
-      return false;
+      return VERIFICATION_STATES.ERROR;
     }
   };
 
@@ -39,34 +63,44 @@ function SourceVerificationIcon({context, source, proxyUrl}) {
   function verify() {
     setNeedsVerification(true);
     verifyFunction(sourceUrl, context.underlyingFetchFunction).then((result) => {
-      setIsVerified(result);
+      setVerificationState(result);
       setIsLoading(false);
     })
   }
 
   if (needsVerification) {
     if (isLoading) {
-      return <CircularProgress size={20}/>;
+      return <CircularProgress size={20} />;
     } else {
-      if (isVerified) {
-        return (
-          <Tooltip title="Verification succeeded">
-            <CheckIcon size="small"/>
-          </Tooltip>
-        );
-      } else {
-        return (
-          <Tooltip title="Verification failed">
-            <CancelIcon size="small"/>
-          </Tooltip>
-        );
+      switch (verificationState) {
+        case VERIFICATION_STATES.VERIFIED:
+          return (
+            <Tooltip title="Verification succeeded">
+              <GppGoodIcon size="small" />
+            </Tooltip>
+          );
+          break;
+        case VERIFICATION_STATES.NOT_VERIFIED:
+          return (
+            <Tooltip title="Verification failed">
+              <GppBadIcon size="small" />
+            </Tooltip>
+          );
+          break;
+        default:
+          return (
+            <Tooltip title="No credential found to verify">
+              <GppMaybeIcon size="small" />
+            </Tooltip>
+          );
+          break;
       }
     }
   } else {
     return (
       <Tooltip title="Verify source">
         <Button onClick={verify}>
-          <QuestionMarkIcon size="small"/>
+          <QuestionMarkIcon size="small" />
         </Button>
       </Tooltip>
     );
