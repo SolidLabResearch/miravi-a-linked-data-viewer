@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Clear query cache and refresh" button (#105)
 - Source verification effective code (#77)
+- Query can now also be based on index file (#91)
 
 ### Changed
 
