@@ -12,53 +12,6 @@ import { Term } from "sparqljs";
 
 const myEngine = new QueryEngine();
 
-const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
-  const sourcesList = [];
-  try {
-    const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
-    const queryStringIndexSource = await result.text();
-
-    const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
-      sources: [sourcesIndex.url],
-    });
-
-    await new Promise((resolve, reject) => {
-      bindingsStream.on('data', (binding) => {
-        const source = binding.get('object').value;
-        if (!sourcesList.includes(source)) {
-          sourcesList.push(source);
-        }
-      });
-      bindingsStream.on('end', resolve);
-      bindingsStream.on('error', reject);
-    });
-  } catch (error) {
-    console.error("Error adding sources from index:", error);
-    throw error;
-  }
-
-  return sourcesList;
-};
-
-const handleComunicaContextCreation = (query) => {
-
-  if (!query.comunicaContext) {
-    query.comunicaContext = {
-      sources: [],
-      lenient: true
-    };
-  }
-  else {
-    if (query.comunicaContext.lenient === undefined) {
-      query.comunicaContext.lenient = true;
-    }
-    if (!query.comunicaContext.sources) {
-      query.comunicaContext.sources = [];
-    }
-  }
-
-}
-
 let proxyHandler = undefined;
 if (config.httpProxy) {
   proxyHandler = new ProxyHandlerStatic(config.httpProxy);
@@ -86,7 +39,6 @@ export default {
         const additionalSources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
         query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
       } catch (error) {
-        console.error("Error fetching sources from index:", error);
         throw error;
       }
     }
@@ -95,26 +47,21 @@ export default {
       query.variableValues = meta.variables;
     }
 
-    let results;
-    try {
-      results = await executeQuery(query);
-    } catch (error) {
-      console.error("Error executing query:", error);
-      throw error;
-    }
+    const results = await executeQuery(query);
 
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
-        return Object.keys(filter).every((key) => result[key] === filter[key]);
+        return Object.keys(filter).every((key) => {
+          return result[key] === filter[key];
+        });
       });
     }
 
     const totalItems = await query.totalItems;
 
-
     return {
       data: results,
-      total: parseInt(totalItems, 10),
+      total: parseInt(totalItems),
     };
   },
   getOne: async function getOne() {
@@ -432,3 +379,50 @@ async function configureBindingStream(bindingStream, variables) {
     throw new HttpError(error.message, 500);
   }
 }
+
+const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
+  const sourcesList = [];
+  try {
+    const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
+    const queryStringIndexSource = await result.text();
+
+    const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
+      sources: [sourcesIndex.url],
+    });
+
+    await new Promise((resolve, reject) => {
+      bindingsStream.on('data', (binding) => {
+        const source = binding.get('object').value;
+        if (!sourcesList.includes(source)) {
+          sourcesList.push(source);
+        }
+      });
+      bindingsStream.on('end', resolve);
+      bindingsStream.on('error', reject);
+    });
+  } catch (error) {
+    console.error("Error adding sources from index:", error);
+    throw error;
+  }
+
+  return sourcesList;
+};
+
+const handleComunicaContextCreation = (query) => {
+
+  if (!query.comunicaContext) {
+    query.comunicaContext = {
+      sources: [],
+      lenient: true
+    };
+  }
+  else {
+    if (query.comunicaContext.lenient === undefined) {
+      query.comunicaContext.lenient = true;
+    }
+    if (!query.comunicaContext.sources) {
+      query.comunicaContext.sources = [];
+    }
+  }
+
+};
