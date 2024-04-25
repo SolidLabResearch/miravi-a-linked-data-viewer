@@ -32,11 +32,19 @@ export default {
     query.offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
 
+    handleComunicaContextCreation(query);
+
+    if (query.sourcesIndex) {
+      const additionalSources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+      query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
+    }
+
     if (meta && meta.variables) {
-      query.variableValues = meta.variables
+      query.variableValues = meta.variables;
     }
 
     let results = await executeQuery(query);
+
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
         return Object.keys(filter).every((key) => {
@@ -44,7 +52,9 @@ export default {
         });
       });
     }
+
     const totalItems = await query.totalItems;
+
     return {
       data: results,
       total: parseInt(totalItems),
@@ -365,3 +375,49 @@ async function configureBindingStream(bindingStream, variables) {
     throw new HttpError(error.message, 500);
   }
 }
+
+const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
+  const sourcesList = [];
+  try {
+    const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
+    const queryStringIndexSource = await result.text();
+
+    const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
+      sources: [sourcesIndex.url],
+    });
+
+    await new Promise((resolve, reject) => {
+      bindingsStream.on('data', (binding) => {
+        const source = binding.get('object').value;
+        if (!sourcesList.includes(source)) {
+          sourcesList.push(source);
+        }
+      });
+      bindingsStream.on('end', resolve);
+      bindingsStream.on('error', reject);
+    });
+  }
+  catch (error) {
+    throw new Error(`Error adding sources from index: ${error.message}`);
+  }
+
+  return sourcesList;
+};
+
+const handleComunicaContextCreation = (query) => {
+
+  if (!query.comunicaContext) {
+    query.comunicaContext = {
+      sources: [],
+      lenient: true
+    };
+  }
+  else {
+    if (query.comunicaContext.lenient === undefined) {
+      query.comunicaContext.lenient = true;
+    }
+    if (!query.comunicaContext.sources) {
+      query.comunicaContext.sources = [];
+    }
+  }
+};

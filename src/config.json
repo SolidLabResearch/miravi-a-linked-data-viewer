@@ -170,7 +170,7 @@
       }
     },
     {
-      "queryLocation": "components-materials.rq",
+      "queryLocation": "components_materials.rq",
       "name": "Components and their materials",
       "description": "Query components (including details about materials)",
       "id": "7001",
@@ -195,6 +195,45 @@
           "http://localhost:8080/example/components"
         ],
         "lenient": true
+      }
+    },
+
+    
+    {
+      "queryLocation": "components_materials.rq",
+      "name": "Components and materials with sources from only the index file",
+      "description": "Query components (including details about materials) with the sources obtained from index files",
+      "id": "7200",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only",
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+    {
+      "queryLocation": "components_materials.rq",
+      "name": "Components and materials with sources from index file also containing an unauthorized source",
+      "description": "Query components (including details about materials) with the sources obtained from index files but also including an unauthorized source of favourite books, to check lenient",
+      "id": "7201",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-with-unauthorized-source",
+        "queryLocation": "/sourceQueries/index_example_with_unauthorized_source.rq"
+      }
+    },
+    {
+      "queryLocation": "components_materials.rq",
+      "name": "Components with mixed sources from comunicaContext and index file",
+      "description": "Query components with sources obtained from comunicaContext.sources and index files",
+      "id": "7202",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-books",
+          "http://localhost:8080/example/components"
+        ],
+        "lenient" : true
+      },
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only",
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
       }
     }
   ]
