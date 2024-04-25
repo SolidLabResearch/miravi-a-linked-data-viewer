@@ -27,7 +27,7 @@ function QueryResultList(props) {
   }, [data]);
 
   return (
-    <>
+    <div style={{ paddingLeft: '20px' , paddingRight: '10px' }}>
       <Title title={config.title} />
       
       {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
@@ -49,7 +49,7 @@ function QueryResultList(props) {
         ): 
           <NoValuesDiplay/>
       }
-    </>
+    </div>
   );
 }
 

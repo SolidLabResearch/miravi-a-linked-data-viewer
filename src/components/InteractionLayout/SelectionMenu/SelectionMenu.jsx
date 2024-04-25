@@ -12,12 +12,14 @@ function SelectionMenu() {
   const resources = useResourceDefinitions();
   return (
     <ThemeProvider theme={menuItemTheme}>
+       <div style={{ height: '100%', overflowY: 'auto'}}>
       <Menu>
         <DashboardMenuItem />
         {Object.keys(resources).map((id) => (
           <Menu.ResourceItem key={id} name={id} />
         ))}
       </Menu>
+      </div>
     </ThemeProvider>
   );
 }
