@@ -47,7 +47,7 @@ export default {
       query.variableValues = meta.variables;
     }
 
-    const results = await executeQuery(query);
+    let results = await executeQuery(query);
 
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
