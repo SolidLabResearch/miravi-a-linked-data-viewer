@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Query menu is now scrollable (#102)
+
 ### Removed
 
 ## [1.1.3] - 2024-04-04
