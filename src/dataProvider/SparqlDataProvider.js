@@ -35,12 +35,8 @@ export default {
     handleComunicaContextCreation(query);
 
     if (query.sourcesIndex) {
-      try {
-        const additionalSources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
-        query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
-      } catch (error) {
-        throw error;
-      }
+      const additionalSources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+      query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
     }
 
     if (meta && meta.variables) {
@@ -400,9 +396,9 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
       bindingsStream.on('end', resolve);
       bindingsStream.on('error', reject);
     });
-  } catch (error) {
-    console.error("Error adding sources from index:", error);
-    throw error;
+  }
+  catch (error) {
+    throw new Error(`Error adding sources from index: ${error.message}`);
   }
 
   return sourcesList;
@@ -424,5 +420,4 @@ const handleComunicaContextCreation = (query) => {
       query.comunicaContext.sources = [];
     }
   }
-
 };
