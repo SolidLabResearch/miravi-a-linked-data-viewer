@@ -68,7 +68,7 @@ function App() {
           <Resource
             key={query.id}
             name={query.id}
-            options={{ label: query.name }}
+            options={{ label: query.name, descr: query.description }}
             icon={IconProvider[query.icon]}
             list={TemplatedListResultTable}
           />
