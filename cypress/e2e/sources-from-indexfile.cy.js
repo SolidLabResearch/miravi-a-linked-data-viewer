@@ -40,7 +40,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
-        cy.contains("Components with mixed sources from comunicaContext and index file").click();
+        cy.contains("Components and materials with mixed sources from comunicaContext and index file").click();
 
         // Check that the query finished
         cy.contains("Finished in:");

@@ -221,7 +221,7 @@
     },
     {
       "queryLocation": "components_materials.rq",
-      "name": "Components with mixed sources from comunicaContext and index file",
+      "name": "Components and materials with mixed sources from comunicaContext and index file",
       "description": "Query components with sources obtained from comunicaContext.sources and index files",
       "id": "7202",
       "comunicaContext": {
