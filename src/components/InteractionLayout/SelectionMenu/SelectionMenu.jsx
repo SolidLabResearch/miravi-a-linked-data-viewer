@@ -1,8 +1,8 @@
+import React, { Component } from 'react';
 import { useResourceDefinitions } from "ra-core";
 import { DashboardMenuItem } from "ra-ui-materialui";
 import { Menu } from "react-admin";
-import { ThemeProvider, createTheme } from "@mui/material";
-import { Component } from "react";
+import { ThemeProvider, createTheme, Tooltip, Box, Typography } from "@mui/material";
 
 /**
  * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
@@ -12,13 +12,25 @@ function SelectionMenu() {
   const resources = useResourceDefinitions();
   return (
     <ThemeProvider theme={menuItemTheme}>
-       <div style={{ height: '100%', overflowY: 'auto'}}>
-      <Menu>
-        <DashboardMenuItem />
-        {Object.keys(resources).map((id) => (
-          <Menu.ResourceItem key={id} name={id} />
-        ))}
-      </Menu>
+      <div style={{ height: '100%', overflowY: 'auto', backgroundColor: 'white' }}>
+        <Menu>
+          <DashboardMenuItem />
+          {Object.keys(resources).map((id) => (
+            <Tooltip
+              key={id}
+              placement="right"
+              title={
+                <TooltipContent
+                  title={resources[id].options.label}
+                  description={resources[id].options.descr} />
+              }
+            >
+              <div >
+                <Menu.ResourceItem name={id} />
+              </div>
+            </Tooltip>
+          ))}
+        </Menu>
       </div>
     </ThemeProvider>
   );
@@ -39,15 +51,39 @@ const menuItemTheme = createTheme({
             verticalAlign: "middle",
           },
           "&:hover": {
-            display: "inline-flex",
-            overflow: "visible",
-            whiteSpace: "normal" ,
-            minWidth: "fit-content",
+            display: "block",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
           }
         },
       },
     }
   },
 });
+
+
+const TooltipContent = ({ title, description }) => (
+  <React.Fragment>
+    <Box
+      sx={{
+        width: 'fit-content',
+      }}
+    >
+      <Typography variant="h6" component="div">
+        {title}
+      </Typography>
+
+      <Typography variant="body2" component="div"
+        sx={{
+          fontStyle: 'italic',
+          marginTop: 1,
+        }}
+      >
+        {description}
+      </Typography>
+    </Box>
+  </React.Fragment>
+)
+
 
 export default SelectionMenu;
