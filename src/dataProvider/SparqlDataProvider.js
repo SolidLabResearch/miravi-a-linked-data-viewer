@@ -303,6 +303,8 @@ async function handleQueryExecution(execution, query) {
 async function countQueryResults(query) {
   const parser = new Parser();
   const parsedQuery = parser.parse(query.rawText);
+  const wasDistinct = parsedQuery.distinct;
+  parsedQuery.distinct = false;
   parsedQuery.queryType = "SELECT";
   parsedQuery.variables = [
     {
@@ -310,7 +312,7 @@ async function countQueryResults(query) {
         type: "aggregate",
         aggregation: "count",
         expression: { termType: "Wildcard", value: "*" },
-        distinct: false,
+        distinct: wasDistinct,
       },
       variable: { termType: "Variable", value: "totalItems" },
     },
