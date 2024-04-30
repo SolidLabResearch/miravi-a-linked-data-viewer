@@ -53,11 +53,9 @@ export default {
       });
     }
 
-    const totalItems = await query.totalItems;
-
     return {
       data: results,
-      total: parseInt(totalItems),
+      total: query.totalItems
     };
   },
   getOne: async function getOne() {
@@ -279,12 +277,7 @@ async function handleQueryExecution(execution, query) {
     const resultType = execution.resultType;
     if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
-      const totalItems = metadata.totalItems;
-      if (!totalItems) {
-        query.totalItems = countQueryResults(query);
-      } else {
-        query.totalItems = totalItems;
-      }
+      query.totalItems = await countQueryResults(query);
       variables = metadata.variables.map((val) => {
         return val.value;
       });
@@ -298,7 +291,7 @@ async function handleQueryExecution(execution, query) {
 /**
  *
  * @param {object} query - the query which is to be executed and additional information about the query.
- * @returns {Array<Term>} the results of the query
+ * @returns {number} the actual number of results in the query, if it were executed
  */
 async function countQueryResults(query) {
   const parser = new Parser();
@@ -324,7 +317,7 @@ async function countQueryResults(query) {
     fetch: fetch,
     httpProxyHandler: proxyHandler,
   });
-  return (await bindings.toArray())[0].get("totalItems").value;
+  return parseInt((await bindings.toArray())[0].get("totalItems").value);
 }
 
 const queryTypeHandlers = {
