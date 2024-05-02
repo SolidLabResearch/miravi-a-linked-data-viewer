@@ -20,6 +20,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 function SelectionMenu() {
   const resources = useResourceDefinitions();
   const queryGroups = config.queryGroups;
+  
 
   queryGroups.forEach(group => group.queries = [])
   setUpQueryGroups(queryGroups, resources)
@@ -30,6 +31,28 @@ function SelectionMenu() {
         <Menu>
           <DashboardMenuItem />
           {queryGroups.map((group) => {
+            if (group.id === "loose"){
+              return (
+                <List  key={group.id}>
+                  {group.queries.map((id) => (
+                      <Tooltip
+                          key={id}
+                          placement="right"
+                          title={
+                            <TooltipContent
+                              title={resources[id].options.label}
+                              description={resources[id].options.descr} />
+                          }
+                        >
+                          <div >
+                            <Menu.ResourceItem name={id} />
+                          </div>
+                        </Tooltip>
+                  ))}
+                </List>
+              )
+            }
+
             const [open, setOpen] = useState(false)
             return (
               <List key={group.id} >
@@ -57,7 +80,8 @@ function SelectionMenu() {
                   </List>
                 </Collapse>
               </List>
-            )
+            ) 
+          
           })}
         </Menu>
       </div>

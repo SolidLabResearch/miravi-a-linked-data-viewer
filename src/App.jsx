@@ -55,7 +55,7 @@ function App() {
   const getQueryGroupId = (query) => {
       if(query.queryGroupId)
         return query.queryGroupId
-      return "0"
+      return "loose"
   } 
 
 

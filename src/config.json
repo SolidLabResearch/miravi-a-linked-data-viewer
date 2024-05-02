@@ -14,8 +14,12 @@
   "introductionText": "Please select a query from the menu on the left.",
   "queryGroups" : [
     {
+      "id": "loose", 
+      "name": "loose queries"
+    },
+    {
       "id" : "0" ,
-      "name" : "Other"
+      "name" : "Others"
     } ,
     {
       "id" : "1" ,
