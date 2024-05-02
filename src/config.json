@@ -154,26 +154,36 @@
       "id": "6000",
       "icon": "FunctionsIcon",
       "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/values"
-        ]
+        "sources": ["http://localhost:8080/example/values"]
       }
     },
     {
       "queryLocation": "components.rq",
       "name": "Components",
-      "description": "Query components (no details about materials)",
+      "description": "Query components",
       "id": "7000",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/components"],
-        "lenient": true
+        "sources": ["http://localhost:8080/example/components"]
+      }
+    },
+    {
+      "queryLocation": "components.rq",
+      "name": "Components, with source verification",
+      "description": "Components are queried from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
+      "id": "7001",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/verifiable-example/components-vc",
+          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
+          "http://localhost:8080/example/components"
+        ]
       }
     },
     {
       "queryLocation": "components_materials.rq",
       "name": "Components and their materials",
       "description": "Query components (including details about materials)",
-      "id": "7001",
+      "id": "7100",
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/components",
@@ -184,24 +194,8 @@
       }
     },
     {
-      "queryLocation": "components.rq",
-      "name": "Verifiable Components",
-      "description": "Components are queried from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
-      "id": "7002",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/verifiable-example/components-vc",
-          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
-          "http://localhost:8080/example/components"
-        ],
-        "lenient": true
-      }
-    },
-
-    
-    {
       "queryLocation": "components_materials.rq",
-      "name": "Components and materials with sources from only the index file",
+      "name": "Components and their materials, with sources from only the index file",
       "description": "Query components (including details about materials) with the sources obtained from index files",
       "id": "7200",
       "sourcesIndex": {
@@ -211,8 +205,8 @@
     },
     {
       "queryLocation": "components_materials.rq",
-      "name": "Components and materials with sources from index file also containing an unauthorized source",
-      "description": "Query components (including details about materials) with the sources obtained from index files but also including an unauthorized source of favourite books, to check lenient",
+      "name": "Components and their materials, with sources from index file also containing an unauthorized source",
+      "description": "Query components (including details about materials) with the sources obtained from index files, including an unauthorized source of favourite books, to check lenient",
       "id": "7201",
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-with-unauthorized-source",
@@ -221,8 +215,8 @@
     },
     {
       "queryLocation": "components_materials.rq",
-      "name": "Components with mixed sources from comunicaContext and index file",
-      "description": "Query components with sources obtained from comunicaContext.sources and index files",
+      "name": "Components and their materials, with mixed sources from comunicaContext and index file",
+      "description": "Query components (including details about materials) with sources obtained from both comunicaContext.sources and index files",
       "id": "7202",
       "comunicaContext": {
         "sources": [
@@ -234,6 +228,18 @@
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only",
         "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+    {
+      "queryLocation": "spo_distinct_offset_limit.rq",
+      "name": "A test on DISTINCT LIMIT OFFSET",
+      "description": "Query two sources containing duplicated triples, the query uses DISTINCT, LIMIT and OFFSET",
+      "id": "99000",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/dup1",
+          "http://localhost:8080/example/dup2"
+        ]
       }
     }
   ]

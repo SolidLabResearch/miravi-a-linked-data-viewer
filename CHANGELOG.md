@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Query menu is now scrollable (#102)
+- Pagination is correct when using a query using DISTINCT, OFFSET, LIMIT (#110, #19)
 
 ### Removed
 
