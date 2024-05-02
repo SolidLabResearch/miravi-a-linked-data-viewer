@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Clear query cache at logout (#106)
 - Cypress test suite version updated to ^13.8.0 (#109)
+- Hovering over query menu now displays a tooltip with information instead of expanding inside the menu (#112)
 
 ### Fixed
 
