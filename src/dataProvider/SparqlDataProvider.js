@@ -63,6 +63,7 @@ export default {
     } catch (error) {
       // getting here only once (!) in case NO ACCESS
       // loading does not end
+      // NOTE - this catch clause should not be here in a final solution, this is just to see what happens
       return {
         data: [],
         total: 0,
