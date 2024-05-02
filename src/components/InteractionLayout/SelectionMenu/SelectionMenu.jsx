@@ -68,8 +68,9 @@ const TooltipContent = ({ title, description }) => (
       sx={{
         width: 'fit-content',
         backgroundColor: '#6d6d6d',
-        paddingLeft: 1,
-        marginLeft: -1
+        paddingX: 1,
+        marginX: -1,
+        
       }}
     >
       <Typography variant="h6" component="div">
