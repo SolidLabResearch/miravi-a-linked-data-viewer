@@ -51,6 +51,14 @@ function App() {
       }
     });
   });
+
+  const getQueryGroupId = (query) => {
+      if(query.queryGroupId)
+        return query.queryGroupId
+      return "0"
+  } 
+
+
   return (
     <Admin
       queryClient={queryClient}
@@ -68,7 +76,7 @@ function App() {
           <Resource
             key={query.id}
             name={query.id}
-            options={{ label: query.name, descr: query.description }}
+            options={{ label: query.name, descr: query.description, queryGroupId : getQueryGroupId(query) }}
             icon={IconProvider[query.icon]}
             list={TemplatedListResultTable}
           />
