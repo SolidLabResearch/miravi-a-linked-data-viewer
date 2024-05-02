@@ -12,12 +12,31 @@
   "defaultIDP": "http://localhost:8080",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please select a query from the menu on the left.",
+  "queryGroups" : [
+    {
+      "id" : "0" ,
+      "name" : "Other"
+    } ,
+    {
+      "id" : "1" ,
+      "name" : "Books"
+    },
+    {
+      "id" : "2" ,
+      "name" : "Musicians"
+    } ,
+    {
+      "id" : "3" ,
+      "name" : "Texon"
+    } 
+   ],
   "queries": [
     {
       "queryLocation": "idols.rq",
       "name": "My idols",
       "description": "A simple test query",
       "id": "1000",
+      "queryGroupId" : "0",
       "comunicaContext": {
         "sources": ["http://localhost:8001/example/idols"],
         "useProxy": true
@@ -65,6 +84,7 @@
       "description": "A short list of some of my favorite books, which I keep secret.",
       "icon": "MenuBookIcon",
       "id": "4000",
+      "queryGroupId" : "1",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/favourite-books"]
       }
@@ -75,6 +95,7 @@
       "description": "A list of books I'd love to own",
       "icon": "MenuBookIcon",
       "id": "4100",
+      "queryGroupId" : "1",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/wish-list"]
       }
@@ -85,6 +106,7 @@
       "description": "A short list of some of my favorite books and books I'd love to own",
       "icon": "MenuBookIcon",
       "id": "4200",
+      "queryGroupId" : "1",
       "comunicaContext": {
         "sources": [
             "http://localhost:8080/example/favourite-books", 
@@ -98,6 +120,7 @@
       "name": "My favourite musicians",
       "description": "A list of my favourite musicians",
       "id": "5000",
+      "queryGroupId" : "2",
       "icon": "MusicNoteIcon",
       "comunicaContext": {
         "sources": [
@@ -112,6 +135,7 @@
       "name": "Templated query about my favourite musicians",
       "description": "A list of my favourite musicians for the genre of your choice",
       "id": "5100",
+      "queryGroupId" : "2",
       "icon": "MusicNoteIcon",
       "variables": {
         "genre": [
@@ -129,6 +153,7 @@
       "name": "Templated query #2 about my favourite musicians",
       "description": "An example of a templated query with more than one variable",
       "id": "5200",
+      "queryGroupId" : "2",
       "icon": "MusicNoteIcon",
       "variables": {
         "genre": [
@@ -152,6 +177,7 @@
       "name": "Average value",
       "description": "Calculate the average of some values",
       "id": "6000",
+      "queryGroupId" : "0",
       "icon": "FunctionsIcon",
       "comunicaContext": {
         "sources": [
@@ -164,6 +190,7 @@
       "name": "Components",
       "description": "Query components (no details about materials)",
       "id": "7000",
+      "queryGroupId" : "3",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/components"],
         "lenient": true
@@ -174,6 +201,7 @@
       "name": "Components and their materials",
       "description": "Query components (including details about materials)",
       "id": "7001",
+      "queryGroupId" : "3",
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/components",
@@ -188,6 +216,7 @@
       "name": "Verifiable Components",
       "description": "Components are queried from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
       "id": "7002",
+      "queryGroupId" : "3",
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/verifiable-example/components-vc",
@@ -204,6 +233,7 @@
       "name": "Components and materials with sources from only the index file",
       "description": "Query components (including details about materials) with the sources obtained from index files",
       "id": "7200",
+      "queryGroupId" : "3",
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only",
         "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
@@ -214,6 +244,7 @@
       "name": "Components and materials with sources from index file also containing an unauthorized source",
       "description": "Query components (including details about materials) with the sources obtained from index files but also including an unauthorized source of favourite books, to check lenient",
       "id": "7201",
+      "queryGroupId" : "3",
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-with-unauthorized-source",
         "queryLocation": "/sourceQueries/index_example_with_unauthorized_source.rq"
@@ -224,6 +255,7 @@
       "name": "Components with mixed sources from comunicaContext and index file",
       "description": "Query components with sources obtained from comunicaContext.sources and index files",
       "id": "7202",
+      "queryGroupId" : "3",
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/favourite-books",
