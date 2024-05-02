@@ -3,12 +3,12 @@
 
 <#public>
     a acl:Authorization;
-    acl:accessTo <./components-dup>;
+    acl:accessTo <./dup2>;
     acl:agentClass foaf:Agent;
     acl:mode acl:Read.
 
 <#owner>
     a acl:Authorization;
-    acl:accessTo <./components-dup>;
+    acl:accessTo <./dup2>;
     acl:agent <http://localhost:8080/example/profile/card#me>;
     acl:mode acl:Read, acl:Write, acl:Control.

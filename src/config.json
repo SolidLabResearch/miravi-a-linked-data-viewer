@@ -180,17 +180,6 @@
       }
     },
     {
-      "queryLocation": "components.rq",
-      "name": "Components, with duplicates in different sources",
-      "description": "Query components and test if a DISTINCT query does not count duplicates",
-      "id": "7002",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/components"
-        ]
-      }
-    },
-    {
       "queryLocation": "components_materials.rq",
       "name": "Components and their materials",
       "description": "Query components (including details about materials)",
@@ -239,6 +228,18 @@
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only",
         "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+    {
+      "queryLocation": "spo_distinct_offset_limit.rq",
+      "name": "A test on DISTINCT LIMIT OFFSET",
+      "description": "Query two sources containing duplicated triples, the query uses DISTINCT, LIMIT and OFFSET",
+      "id": "99000",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/dup1",
+          "http://localhost:8080/example/dup2"
+        ]
       }
     }
   ]

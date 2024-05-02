@@ -116,10 +116,14 @@ async function fetchQuery(query) {
     if (!query.variableOntology) {
       query.variableOntology = findPredicates(parsedQuery);
     }
-    if (!parsedQuery.limit) {
+    if (parsedQuery.limit !== undefined && query.offset + query.limit > parsedQuery.limit) {
+      parsedQuery.limit = parsedQuery.limit - query.offset;
+    } else {
       parsedQuery.limit = query.limit;
     }
-    if (!parsedQuery.offset) {
+    if (parsedQuery.offset) {
+      parsedQuery.offset += query.offset;
+    } else {
       parsedQuery.offset = query.offset;
     }
     if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
@@ -296,16 +300,22 @@ async function handleQueryExecution(execution, query) {
 async function countQueryResults(query) {
   const parser = new Parser();
   const parsedQuery = parser.parse(query.rawText);
-  const wasDistinct = parsedQuery.distinct;
-  parsedQuery.distinct = false;
+  const distinctInitial = parsedQuery.distinct;
+  const offsetInitial = parsedQuery.offset;
+  const limitInitial = parsedQuery.limit;
   parsedQuery.queryType = "SELECT";
+  parsedQuery.distinct = false;
+  parsedQuery.offset = 0;
+  if (parsedQuery.limit) {
+    delete parsedQuery.limit;
+  }
   parsedQuery.variables = [
     {
       expression: {
         type: "aggregate",
         aggregation: "count",
         expression: { termType: "Wildcard", value: "*" },
-        distinct: wasDistinct,
+        distinct: distinctInitial
       },
       variable: { termType: "Variable", value: "totalItems" },
     },
@@ -317,7 +327,14 @@ async function countQueryResults(query) {
     fetch: fetch,
     httpProxyHandler: proxyHandler,
   });
-  return parseInt((await bindings.toArray())[0].get("totalItems").value);
+  let totalItems = parseInt((await bindings.toArray())[0].get("totalItems").value);
+  if (offsetInitial) {
+    totalItems -= offsetInitial;
+  }
+  if (limitInitial && totalItems > limitInitial) {
+    totalItems = limitInitial;
+  }
+  return totalItems;
 }
 
 const queryTypeHandlers = {
