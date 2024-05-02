@@ -33,8 +33,15 @@ export default {
     query.offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
 
+    handleComunicaContextCreation(query);
+
+    if (query.sourcesIndex) {
+      const additionalSources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+      query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
+    }
+
     if (meta && meta.variables) {
-      query.variableValues = meta.variables
+      query.variableValues = meta.variables;
     }
 
     try {
@@ -120,10 +127,14 @@ async function fetchQuery(query) {
     if (!query.variableOntology) {
       query.variableOntology = findPredicates(parsedQuery);
     }
-    if (!parsedQuery.limit) {
+    if (parsedQuery.limit !== undefined && query.offset + query.limit > parsedQuery.limit) {
+      parsedQuery.limit = parsedQuery.limit - query.offset;
+    } else {
       parsedQuery.limit = query.limit;
     }
-    if (!parsedQuery.offset) {
+    if (parsedQuery.offset) {
+      parsedQuery.offset += query.offset;
+    } else {
       parsedQuery.offset = query.offset;
     }
     if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
@@ -281,12 +292,7 @@ async function handleQueryExecution(execution, query) {
     const resultType = execution.resultType;
     if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
-      const totalItems = metadata.totalItems;
-      if (!totalItems) {
-        query.totalItems = countQueryResults(query);
-      } else {
-        query.totalItems = totalItems;
-      }
+      query.totalItems = await countQueryResults(query);
       variables = metadata.variables.map((val) => {
         return val.value;
       });
@@ -300,19 +306,27 @@ async function handleQueryExecution(execution, query) {
 /**
  *
  * @param {object} query - the query which is to be executed and additional information about the query.
- * @returns {Array<Term>} the results of the query
+ * @returns {number} the actual number of results in the query, if it were executed
  */
 async function countQueryResults(query) {
   const parser = new Parser();
   const parsedQuery = parser.parse(query.rawText);
+  const distinctInitial = parsedQuery.distinct;
+  const offsetInitial = parsedQuery.offset;
+  const limitInitial = parsedQuery.limit;
   parsedQuery.queryType = "SELECT";
+  parsedQuery.distinct = false;
+  parsedQuery.offset = 0;
+  if (parsedQuery.limit) {
+    delete parsedQuery.limit;
+  }
   parsedQuery.variables = [
     {
       expression: {
         type: "aggregate",
         aggregation: "count",
         expression: { termType: "Wildcard", value: "*" },
-        distinct: false,
+        distinct: distinctInitial
       },
       variable: { termType: "Variable", value: "totalItems" },
     },
@@ -324,7 +338,14 @@ async function countQueryResults(query) {
     fetch: fetch,
     httpProxyHandler: proxyHandler,
   });
-  return (await bindings.toArray())[0].get("totalItems") .value;
+  let totalItems = parseInt((await bindings.toArray())[0].get("totalItems").value);
+  if (offsetInitial) {
+    totalItems -= offsetInitial;
+  }
+  if (limitInitial && totalItems > limitInitial) {
+    totalItems = limitInitial;
+  }
+  return totalItems;
 }
 
 const queryTypeHandlers = {
@@ -377,3 +398,49 @@ async function configureBindingStream(bindingStream, variables) {
     throw new HttpError(error.message, 500);
   }
 }
+
+const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
+  const sourcesList = [];
+  try {
+    const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
+    const queryStringIndexSource = await result.text();
+
+    const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
+      sources: [sourcesIndex.url],
+    });
+
+    await new Promise((resolve, reject) => {
+      bindingsStream.on('data', (binding) => {
+        const source = binding.get('object').value;
+        if (!sourcesList.includes(source)) {
+          sourcesList.push(source);
+        }
+      });
+      bindingsStream.on('end', resolve);
+      bindingsStream.on('error', reject);
+    });
+  }
+  catch (error) {
+    throw new Error(`Error adding sources from index: ${error.message}`);
+  }
+
+  return sourcesList;
+};
+
+const handleComunicaContextCreation = (query) => {
+
+  if (!query.comunicaContext) {
+    query.comunicaContext = {
+      sources: [],
+      lenient: true
+    };
+  }
+  else {
+    if (query.comunicaContext.lenient === undefined) {
+      query.comunicaContext.lenient = true;
+    }
+    if (!query.comunicaContext.sources) {
+      query.comunicaContext.sources = [];
+    }
+  }
+};

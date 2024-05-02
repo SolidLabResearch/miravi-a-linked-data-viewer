@@ -10,12 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - "Clear query cache and refresh" button (#105)
+- Source verification effective code (#77)
+- Query can now also be based on index file (#91)
 
 ### Changed
 
 - Clear query cache at logout (#106)
+- Cypress test suite version updated to ^13.8.0 (#109)
+- Hovering over query menu now displays a tooltip with information instead of expanding inside the menu (#112)
 
 ### Fixed
+
+- Query menu is now scrollable (#102)
+- Pagination is correct when using a query using DISTINCT, OFFSET, LIMIT (#110, #19)
 
 ### Removed
 

@@ -4,18 +4,17 @@ This Web app allows users to easily execute queries over multiple data sources (
 inspect the corresponding results.
 
 Table of contents:
-<!-- TOC -->
 * [Getting Started](#getting-started)
 * [Static build](#static-build)
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
+  * [Specifying sources](#specifying-sources)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
   * [Query icons](#query-icons)
 * [Representation Mapper](#representation-mapper)
 * [Using the local pods](#using-the-local-pods)
 * [Testing](#testing)
-<!-- TOC -->
 
 ## Getting Started
 
@@ -94,15 +93,19 @@ The configuration file follows a simple structure.
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
   "queries": [
     {
-      "queryLocation": "path to the query location, relative to 'queryFolder'",
+      "queryLocation": "Path to the query location, relative to 'queryFolder'",
       "name": "A name for the query",
       "description": "Description of the query",
       "id": "A unique ID for the query",
       "icon": "The key to the icon for the query . This is optional and a default menu icon will be used when left empty.",
       "comunicaContext": {
-        "sources": "Sources over which the query should be executed",
+        "sources": "Initial list of sources over which the query should be executed",
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
         ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
+      },
+      "sourcesIndex": {
+        "url": "URL of the publicly available RDF resource acting as an index file for more sources over which the query should be executed",
+        "queryLocation": "Path to the location, relative to 'queryFolder', of the (auxiliary) query that yields the sources from above RDF resource"
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
@@ -117,6 +120,20 @@ The configuration file follows a simple structure.
   ]
 }
 ```
+
+### Specifying sources
+
+The set of sources over which a query will be executed is derived from two *optional* inputs in a query entry:
+
+- `comunicaContext.sources`: an array of sources, known at the time of writing the config file;
+- `sourceIndex`: describes an external RDF resource, from which sources are derived at execution time.
+
+If both inputs are present, the query will be executed over the superset of sources.
+
+The (auxiliary) query provided in `sourceIndex.queryLocation` is executed on `sourceIndex.url` and must result in the list of sources.
+
+If `sourceIndex` is used and there is no `comunicaContext.lenient` property found, one will be created with value `true`.
+This makes sure that the (main) query can succeed if not all obtained sources are accessible.
 
 ### Adding variable type
 
