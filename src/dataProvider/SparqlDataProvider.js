@@ -27,7 +27,8 @@ if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
 
 export default {
   getList: async function getList(queryName, { pagination, sort, filter, meta }) {
-    // getting here twice in a row, before first return (both cases)
+    // TODO delete
+    console.log("DEBUGGING - entering getList()");
     const query = findQueryWithId(queryName);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
@@ -53,21 +54,16 @@ export default {
           });
         });
       }
-      const totalItems = await query.totalItems;
-      // getting here twice in case EMPTY
-      // loading ends normally
+      // TODO delete
+      console.log(`DEBUGGING - leaving getList(), total = ${query.totalItems}`);
       return {
         data: results,
-        total: parseInt(totalItems),
+        total: query.totalItems
       };
     } catch (error) {
-      // getting here only once (!) in case NO ACCESS
-      // loading does not end
-      // NOTE - this catch clause should not be here in a final solution, this is just to see what happens
-      return {
-        data: [],
-        total: 0,
-      };
+      // TODO delete
+      console.log("DEBUGGING - leaving getList() with an error: ", error);
+      throw (error);
     }
   },
   getOne: async function getOne() {

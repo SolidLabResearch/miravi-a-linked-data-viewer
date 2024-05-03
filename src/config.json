@@ -20,9 +20,8 @@
       "icon": "MenuBookIcon",
       "id": "1",
       "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/favourite-books"
-        ]
+        "sources": ["http://localhost:8080/example/favourite-books"],
+        "lenient": false
       }
     },
     {
@@ -32,7 +31,8 @@
       "icon": "MenuBookIcon",
       "id": "2",
       "comunicaContext": {
-        "sources": []
+        "sources": [],
+        "lenient": false
       }
     },
     {
