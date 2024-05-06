@@ -5,6 +5,7 @@ import PhotoIcon from '@mui/icons-material/Photo';
 import FunctionsIcon from '@mui/icons-material/Functions';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import FactoryIcon from '@mui/icons-material/Factory';
+import BugReportIcon from '@mui/icons-material/BugReport';
 
 export default {
   BrushIcon,
@@ -13,5 +14,6 @@ export default {
   PhotoIcon,
   FunctionsIcon,
   ListAltIcon,
-  FactoryIcon
+  FactoryIcon,
+  BugReportIcon
 };

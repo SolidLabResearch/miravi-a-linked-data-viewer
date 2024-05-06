@@ -4,7 +4,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
-        cy.contains("Components and their materials, with sources from only the index file").click();
+        cy.contains("Sources from an index file").click();
 
         // Check that it finished
         cy.contains("Finished in:");

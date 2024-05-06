@@ -2,7 +2,7 @@ describe("Sources info", () => {
   it("Fetch status on fetch failure", () => {
     cy.visit("/");
 
-    cy.contains("My favourite musicians").click();
+    cy.contains("A query about musicians").click();
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
@@ -12,7 +12,7 @@ describe("Sources info", () => {
   it("Fetch status on fetch success", () => {
     cy.visit("/");
 
-    cy.contains("My wish list").click();
+    cy.contains("A public list of books I'd love to own").click();
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
@@ -39,7 +39,7 @@ describe("Sources info", () => {
   it("Authentication not required for query on public data", () => {
     cy.visit("/");
 
-    cy.contains("My wish list").click();
+    cy.contains("A public list of books I'd love to own").click();
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
@@ -63,7 +63,7 @@ describe("Sources info", () => {
 
     cy.url().should("eq", "http://localhost:5173/");
 
-    cy.contains("A list of my favorite books").click();
+    cy.contains("A secret list of my favorite books").click();
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 
@@ -73,7 +73,7 @@ describe("Sources info", () => {
   it("Authentication uncertain for query on not existing source", () => {
     cy.visit("/");
 
-    cy.contains("My favourite musicians").click();
+    cy.contains("A query about musicians").click();
     cy.contains("Finished in:");
     cy.get('[aria-label="Sources info"]').click();
 

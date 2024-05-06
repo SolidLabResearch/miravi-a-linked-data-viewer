@@ -19,58 +19,53 @@
       
     },
     {
-      "id" : "0" ,
-      "name" : "Other",
+      "id": "a-ex",
+      "name": "General examples",
       "icon": "ListAltIcon"
-      
-    } ,
-    {
-      "id" : "1" ,
-      "name" : "Books",
-      "icon": "MenuBookIcon"
     },
     {
-      "id" : "2" ,
-      "name" : "Musicians",
-      "icon": "MusicNoteIcon"
-    } ,
-    {
-      "id" : "3" ,
-      "name" : "Texon",
+      "id": "b-prj",
+      "name": "Project related examples",
       "icon": "FactoryIcon"
-    } 
-   ],
+    },
+    {
+      "id": "c-tst",
+      "name": "For testing only",
+      "icon": "BugReportIcon"
+    }
+  ],
   "queries": [
     {
+      "id": "1000",
+      "queryGroupId": "a-ex",
       "queryLocation": "idols.rq",
       "name": "My idols",
-      "description": "A simple test query",
-      "id": "1000",
-      "queryGroupId" : "0",
+      "description": "Demonstrates a simple query, using a proxy",
       "comunicaContext": {
         "sources": ["http://localhost:8001/example/idols"],
         "useProxy": true
       }
     },
     {
+      "id": "1010",
+      "queryGroupId": "a-ex",
       "queryLocation": "images_test.rq",
-      "name": "A test for images",
-      "description": "A small test to test the functionality of the Web app concerning images",
+      "name": "Some images",
+      "description": "Demonstrates how to show images in a query result",
       "icon": "PhotoIcon",
-      "id": "2000",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/cute-cats"]
       }
     },
     {
+      "id": "1020",
+      "queryGroupId": "a-ex",
       "queryLocation": "ask_picasso.rq",
       "name": "Is there an artist influenced by Picasso?",
-      "description": "Whether or not there is an artist who is influenced by Picasso",
+      "description": "Demonstrates an ASK query",
       "icon": "BrushIcon",
-      "id": "3000",
       "comunicaContext": {
-        "sources": ["https://fragments.dbpedia.org/2016-04/en"],
-        "useProxy": true
+        "sources": ["https://fragments.dbpedia.org/2016-04/en"]
       },
       "askQuery": {
         "trueText": "There is an artist who is inspired by Picasso!",
@@ -78,59 +73,57 @@
       }
     },
     {
+      "id": "1030",
+      "queryGroupId": "a-ex",
       "queryLocation": "construct_picasso.rq",
       "name": "A graph of artists influenced by Picasso",
-      "description": "A test for quad queries",
+      "description": "Demonstrates a CONSTRUCT query",
       "icon": "BrushIcon",
-      "id": "3100",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/artists"],
-        "useProxy": true
+        "sources": ["http://localhost:8080/example/artists"]
       }
     },
     {
+      "id": "1040",
+      "queryGroupId": "a-ex",
+      "queryLocation": "average.rq",
+      "name": "Average value",
+      "description": "Demonstrates a query calculating some average",
+      "icon": "FunctionsIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/values"
+        ]
+      }
+    },
+    {
+      "id": "1050",
+      "queryGroupId": "a-ex",
       "queryLocation": "books.rq",
-      "name": "A list of my favorite books",
-      "description": "A short list of some of my favorite books, which I keep secret.",
+      "name": "A secret list of my favorite books",
+      "description": "Demonstrates a query whose source requires authentication",
       "icon": "MenuBookIcon",
-      "id": "4000",
-      "queryGroupId" : "1",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/favourite-books"]
       }
     },
     {
+      "id": "1060",
+      "queryGroupId": "a-ex",
       "queryLocation": "books.rq",
-      "name": "My wish list",
-      "description": "A list of books I'd love to own",
+      "name": "A public list of books I'd love to own",
+      "description": "Demonstrates a query whose source does not require authentication",
       "icon": "MenuBookIcon",
-      "id": "4100",
-      "queryGroupId" : "1",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/wish-list"]
       }
     },
     {
-      "queryLocation": "books.rq",
-      "name": "A book query testing sources with and without authentication required",
-      "description": "A short list of some of my favorite books and books I'd love to own",
-      "icon": "MenuBookIcon",
-      "id": "4200",
-      "queryGroupId" : "1",
-      "comunicaContext": {
-        "sources": [
-            "http://localhost:8080/example/favourite-books", 
-            "http://localhost:8080/example/wish-list"
-          ],
-        "lenient": true
-      }
-    },
-    {
+      "id": "1070",
+      "queryGroupId": "a-ex",
       "queryLocation": "musicians.rq",
-      "name": "My favourite musicians",
-      "description": "A list of my favourite musicians",
-      "id": "5000",
-      "queryGroupId" : "2",
+      "name": "A query about musicians",
+      "description": "Demonstrates what happens if one of the sources is not available (fetch failure)",
       "icon": "MusicNoteIcon",
       "comunicaContext": {
         "sources": [
@@ -141,11 +134,11 @@
       }
     },
     {
+      "id": "1080",
+      "queryGroupId": "a-ex",
       "queryLocation": "musicians_variables.rq",
-      "name": "Templated query about my favourite musicians",
-      "description": "A list of my favourite musicians for the genre of your choice",
-      "id": "5100",
-      "queryGroupId" : "2",
+      "name": "A templated query about musicians",
+      "description": "Demonstrates the usage of templated queries",
       "icon": "MusicNoteIcon",
       "variables": {
         "genre": [
@@ -159,11 +152,78 @@
       }
     },
     {
+      "id": "1090",
+      "queryGroupId": "a-ex",
+      "queryLocation": "components.rq",
+      "name": "Source verification",
+      "description": "Demonstrates source verification. Query components from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/verifiable-example/components-vc",
+          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
+          "http://localhost:8080/example/components"
+        ]
+      }
+    },
+    {
+      "id": "1100",
+      "queryGroupId": "a-ex",
+      "queryLocation": "components_materials.rq",
+      "name": "Sources from an index file",
+      "description": "Query components (including details about materials) with the sources obtained from index files",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only",
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+    {
+      "id": "2000",
+      "queryGroupId": "b-prj",
+      "queryLocation": "components.rq",
+      "name": "Components",
+      "description": "Query components",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components"
+        ]
+      }
+    },
+    {
+      "id": "2010",
+      "queryGroupId": "b-prj",
+      "queryLocation": "components_materials.rq",
+      "name": "Components and their materials",
+      "description": "Query components (including details about materials)",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "9000",
+      "queryGroupId": "c-tst",
+      "queryLocation": "books.rq",
+      "name": "A query on a secret and a public list of books",
+      "description": "Demonstrates a query on a source requiring authentication and a source not requiring authentication",
+      "icon": "MenuBookIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-books",
+          "http://localhost:8080/example/wish-list"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "9010",
+      "queryGroupId": "c-tst",
       "queryLocation": "musicians_variables2.rq",
-      "name": "Templated query #2 about my favourite musicians",
-      "description": "An example of a templated query with more than one variable",
-      "id": "5200",
-      "queryGroupId" : "2",
+      "name": "A templated query about musicians, two variables",
+      "description": "Demonstrates the usage of templated queries, here with two variables",
       "icon": "MusicNoteIcon",
       "variables": {
         "genre": [
@@ -179,103 +239,28 @@
         ]
       },
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/favourite-musicians"]
-      }
-    },
-    {
-      "queryLocation": "average.rq",
-      "name": "Average value",
-      "description": "Calculate the average of some values",
-      "id": "6000",
-      "queryGroupId" : "0",
-      "icon": "FunctionsIcon",
-      "comunicaContext": {
-        "sources": ["http://localhost:8080/example/values"]
-      }
-    },
-    {
-      "queryLocation": "components.rq",
-      "name": "Components",
-      "description": "Query components",
-      "id": "7000",
-      "queryGroupId" : "3",
-      "comunicaContext": {
-        "sources": ["http://localhost:8080/example/components"]
-      }
-    },
-    {
-      "queryLocation": "components.rq",
-      "name": "Components, with source verification",
-      "description": "Components are queried from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
-      "id": "7001",
-      "comunicaContext": {
         "sources": [
-          "http://localhost:8080/verifiable-example/components-vc",
-          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
-          "http://localhost:8080/example/components"
+          "http://localhost:8080/example/favourite-musicians"
         ]
       }
     },
     {
-      "queryLocation": "components_materials.rq",
-      "name": "Components and their materials",
-      "description": "Query components (including details about materials)",
-      "id": "7100",
-      "queryGroupId" : "3",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/components",
-          "http://localhost:8080/example/boms",
-          "http://localhost:8080/example/materials"
-        ],
-        "lenient": true
-      }
-    },
-    {
-      "queryLocation": "components.rq",
-      "name": "Verifiable Components",
-      "description": "Components are queried from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
-      "id": "7002",
-      "queryGroupId" : "3",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/verifiable-example/components-vc",
-          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
-          "http://localhost:8080/example/components"
-        ],
-        "lenient": true
-      }
-    },
-
-    
-    {
-      "queryLocation": "components_materials.rq",
-      "name": "Components and their materials, with sources from only the index file",
-      "description": "Query components (including details about materials) with the sources obtained from index files",
-      "id": "7200",
-      "queryGroupId" : "3",
-      "sourcesIndex": {
-        "url": "http://localhost:8080/example/index-example-texon-only",
-        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
-      }
-    },
-    {
+      "id": "9020",
+      "queryGroupId": "c-tst",
       "queryLocation": "components_materials.rq",
       "name": "Components and their materials, with sources from index file also containing an unauthorized source",
       "description": "Query components (including details about materials) with the sources obtained from index files, including an unauthorized source of favourite books, to check lenient",
-      "id": "7201",
-      "queryGroupId" : "3",
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-with-unauthorized-source",
         "queryLocation": "/sourceQueries/index_example_with_unauthorized_source.rq"
       }
     },
     {
+      "id": "9030",
+      "queryGroupId": "c-tst",
       "queryLocation": "components_materials.rq",
       "name": "Components and their materials, with mixed sources from comunicaContext and index file",
       "description": "Query components (including details about materials) with sources obtained from both comunicaContext.sources and index files",
-      "id": "7202",
-      "queryGroupId" : "3",
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/favourite-books",
@@ -289,10 +274,11 @@
       }
     },
     {
+      "id": "9040",
+      "queryGroupId": "c-tst",
       "queryLocation": "spo_distinct_offset_limit.rq",
       "name": "A test on DISTINCT LIMIT OFFSET",
-      "description": "Query two sources containing duplicated triples, the query uses DISTINCT, LIMIT and OFFSET",
-      "id": "99000",
+      "description": "Query two sources containing duplicated triples. The query uses DISTINCT, LIMIT and OFFSET",
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/dup1",
