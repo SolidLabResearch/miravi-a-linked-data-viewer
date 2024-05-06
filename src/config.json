@@ -16,22 +16,28 @@
     {
       "id": "loose", 
       "name": "loose queries"
+      
     },
     {
       "id" : "0" ,
-      "name" : "Others"
+      "name" : "Other",
+      "icon": "ListAltIcon"
+      
     } ,
     {
       "id" : "1" ,
-      "name" : "Books"
+      "name" : "Books",
+      "icon": "MenuBookIcon"
     },
     {
       "id" : "2" ,
-      "name" : "Musicians"
+      "name" : "Musicians",
+      "icon": "MusicNoteIcon"
     } ,
     {
       "id" : "3" ,
-      "name" : "Texon"
+      "name" : "Texon",
+      "icon": "FactoryIcon"
     } 
    ],
   "queries": [

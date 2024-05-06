@@ -6,11 +6,15 @@ import { ThemeProvider, createTheme, Tooltip, Box, Typography } from "@mui/mater
 import config from "../../../config.json";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import IconProvider from "../../../IconProvider/IconProvider";
+
+import ViewListIcon from '@mui/icons-material/ViewList';
 
 
 /**
@@ -21,6 +25,13 @@ function SelectionMenu() {
   const resources = useResourceDefinitions();
   const queryGroups = config.queryGroups;
   
+  const getIconComponent = (iconKey) => {
+    const IconComponent = IconProvider[iconKey];
+    if (IconComponent) {
+      return <IconComponent />; // Return an instantiated component
+    }
+    return <ViewListIcon/>; // Return null if not found
+  };
 
   queryGroups.forEach(group => group.queries = [])
   setUpQueryGroups(queryGroups, resources)
@@ -57,6 +68,9 @@ function SelectionMenu() {
             return (
               <List key={group.id} >
                 <ListItemButton onClick={() => {setOpen(!open)}}>
+                <ListItemIcon>
+                {getIconComponent(group.icon)}
+                </ListItemIcon>
                   <ListItemText primary={group.name} />
                   {open ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
