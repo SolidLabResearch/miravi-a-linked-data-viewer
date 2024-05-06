@@ -1,7 +1,8 @@
 describe("Verify source", () => {
   it("Verification button exists and returns correct result", () => {
     cy.visit("/");
-
+    
+    cy.contains("General examples").click();
     cy.contains("Source verification").click();
 
     cy.get('[aria-label="Sources info"]').click();

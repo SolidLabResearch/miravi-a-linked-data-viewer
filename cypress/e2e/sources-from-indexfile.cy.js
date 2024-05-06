@@ -4,6 +4,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
+        cy.contains("General examples").click();
         cy.contains("Sources from an index file").click();
 
         // Check that it finished
@@ -22,6 +23,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
+        cy.contains("For testing only").click();
         cy.contains("Components and their materials, with sources from index file also containing an unauthorized source").click();
 
         // Check that the query finished
@@ -40,6 +42,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
+        cy.contains("For testing only").click();
         cy.contains("Components and their materials, with mixed sources from comunicaContext and index file").click();
 
         // Check that the query finished

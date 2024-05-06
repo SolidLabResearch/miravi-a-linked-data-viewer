@@ -1,7 +1,7 @@
 describe("No duplicates", () => {
   it("When sources contain identical triples, duplicates should not be counted in a SELECT DISTINCT query", () => {
     cy.visit("/");
-
+    cy.contains("For testing only").click();
     cy.contains("A test on DISTINCT LIMIT OFFSET").click();
     cy.contains("1-10 of 36");
     cy.contains("http://www.example.com/data#s00").should("not.exist");

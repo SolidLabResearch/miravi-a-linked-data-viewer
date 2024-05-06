@@ -3,8 +3,9 @@ describe("Fetch Status", () => {
     it("Fetch data with no authenticated user", () => {
 
         cy.visit("/");
-
+        
         // Go immediately to query
+        cy.contains("For testing only").click();
         cy.contains("A query on a secret and a public list of books").click();  
         
         // Check if the public and restricted sources appear
@@ -49,6 +50,7 @@ describe("Fetch Status", () => {
         cy.url().should("eq", "http://localhost:5173/");
 
         // Go to the mixed book query
+        cy.contains("For testing only").click();
         cy.contains("A query on a secret and a public list of books").click();
 
         // Check if the public and restricted sources appear
@@ -75,6 +77,7 @@ describe("Fetch Status", () => {
         cy.visit("/");
 
         // Go immediately to query
+        cy.contains("General examples").click();
         cy.contains("A query about musicians").click();  
         
         // Check if the good and bad sources appear
