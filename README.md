@@ -91,13 +91,21 @@ The configuration file follows a simple structure.
   "queryFolder": "The base location of the queries, all query locations will start from this folder (relative to public folder.)",
   "httpProxy": "The http proxy through which the requests will be rerouted. When left empty, the Comunica query engine will handle it. This is useful when CORS headers are not set (correctly) on the queried source.",
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
+  "queryGroups" : [
+    {
+      "id": "A unique ID for the query group",
+      "name": "A name for the query group",
+      "icon": "The key to the icon for the query group. This is optional and a default menu icon will be used when left empty."
+    }
+  ],
   "queries": [
     {
+      "id": "A unique ID for the query. This ID appears in the URL of the displayed result. Queries are ordered in the menu according to ascending ID.",
+      "queryGroupId": "ID of the query group too which this query belongs. If not given, the query is displayed outside existing groups.",
       "queryLocation": "Path to the query location, relative to 'queryFolder'",
       "name": "A name for the query",
       "description": "Description of the query",
-      "id": "A unique ID for the query",
-      "icon": "The key to the icon for the query . This is optional and a default menu icon will be used when left empty.",
+      "icon": "The key to the icon for the query. This is optional and a default menu icon will be used when left empty.",
       "comunicaContext": {
         "sources": "Initial list of sources over which the query should be executed",
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
