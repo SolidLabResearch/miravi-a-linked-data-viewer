@@ -5,7 +5,6 @@ import { Menu } from "react-admin";
 import { ThemeProvider, createTheme, Tooltip, Box, Typography } from "@mui/material";
 import config from "../../../config.json";
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -13,9 +12,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import IconProvider from "../../../IconProvider/IconProvider";
-
 import ViewListIcon from '@mui/icons-material/ViewList';
-
 
 /**
  * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
@@ -24,9 +21,6 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 function SelectionMenu() {
   const resources = useResourceDefinitions();
   const queryGroups = config.queryGroups;
-
-
-  
 
   // adding a list to the group that will contain all the queries for said group
   queryGroups.forEach(group => group.queries = [])
@@ -39,22 +33,22 @@ function SelectionMenu() {
       <div style={{ height: '100%', overflowY: 'auto', backgroundColor: 'white' }}>
         <Menu>
           <List>
-          <DashboardMenuItem />
+            <DashboardMenuItem />
 
             {looseQueries.map(id => (
               <Tooltip
-              key={id}
-              placement="right"
-              title={
-                <TooltipContent
-                  title={resources[id].options.label}
-                  description={resources[id].options.descr} />
-              }
-            >
-              <div >
-                <Menu.ResourceItem name={id} />
-              </div>
-            </Tooltip>
+                key={id}
+                placement="right"
+                title={
+                  <TooltipContent
+                    title={resources[id].options.label}
+                    description={resources[id].options.descr} />
+                }
+              >
+                <div >
+                  <Menu.ResourceItem name={id} />
+                </div>
+              </Tooltip>
             ))}
           </List>
           {queryGroups.map((group) => {
@@ -80,7 +74,7 @@ function SelectionMenu() {
                             description={resources[id].options.descr} />
                         }
                       >
-                        <ListItemText sx={{ overflow: 'hidden', ml:3}} >
+                        <ListItemText sx={{ overflow: 'hidden', ml: 1.5 }} >
                           <Menu.ResourceItem name={id} />
                         </ListItemText>
                       </Tooltip>
@@ -89,7 +83,6 @@ function SelectionMenu() {
                 </Collapse>
               </List>
             )
-
           })}
         </Menu>
       </div>
@@ -161,7 +154,7 @@ const setUpQueryGroups = (queryGroups, resources) => {
   Object.keys(resources).forEach((id) => {
     try {
       if (resources[id].options.queryGroupId === undefined) {
-        looseQueries.push(id) 
+        looseQueries.push(id)
       } else {
         queryGroups.find(group => group.id === resources[id].options.queryGroupId).queries.push(id)
       }
@@ -171,6 +164,5 @@ const setUpQueryGroups = (queryGroups, resources) => {
   })
   return looseQueries;
 }
-
 
 export default SelectionMenu;
