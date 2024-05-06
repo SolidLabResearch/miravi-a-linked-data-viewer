@@ -4,7 +4,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
-        cy.contains("Components and materials with sources from only the index file").click();
+        cy.contains("Components and their materials, with sources from only the index file").click();
 
         // Check that it finished
         cy.contains("Finished in:");
@@ -22,7 +22,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
-        cy.contains("Components and materials with sources from index file also containing an unauthorized source").click();
+        cy.contains("Components and their materials, with sources from index file also containing an unauthorized source").click();
 
         // Check that the query finished
         cy.contains("Finished in:");
@@ -40,7 +40,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
-        cy.contains("Components with mixed sources from comunicaContext and index file").click();
+        cy.contains("Components and their materials, with mixed sources from comunicaContext and index file").click();
 
         // Check that the query finished
         cy.contains("Finished in:");

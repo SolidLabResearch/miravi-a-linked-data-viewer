@@ -8,7 +8,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX d: <http://www/example.com/data/>
 PREFIX o: <http://www/example.com/ont/>
 
-SELECT ?component ?componentName ?recycledContentPercentage
+SELECT DISTINCT ?component ?componentName ?recycledContentPercentage
 WHERE {
 	?component
 		a o:Component ;
