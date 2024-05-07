@@ -51,6 +51,7 @@ function App() {
       }
     });
   });
+
   return (
     <Admin
       queryClient={queryClient}
@@ -68,7 +69,7 @@ function App() {
           <Resource
             key={query.id}
             name={query.id}
-            options={{ label: query.name, descr: query.description }}
+            options={{label: query.name, descr: query.description, queryGroupId : query.queryGroupId}}
             icon={IconProvider[query.icon]}
             list={TemplatedListResultTable}
           />

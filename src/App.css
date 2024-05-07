@@ -5,3 +5,18 @@
 .RaSidebar-docked > .MuiPaper-root > .RaSidebar-fixed{
     overflow-x: visible!important; /*The important tag is necessary as react-admin will try to override it*/
 }
+ 
+
+/* 
+    Temporary solution to make the small sidebar invisible
+    Not such a good practise
+    */
+
+ .RaMenu-closed {
+    display: none; 
+    visibility: hidden;
+    overflow: hidden;
+  } 
+
+
+  

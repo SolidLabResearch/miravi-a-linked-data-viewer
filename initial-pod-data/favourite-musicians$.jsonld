@@ -1,7 +1,7 @@
 {
   "@context": "http://schema.org",
   "@type": "ItemList",
-  "name": "My Favourite Musicians",
+  "name": "A query about musicians",
   "ItemListElement": [
     {
       "@type": "Person",

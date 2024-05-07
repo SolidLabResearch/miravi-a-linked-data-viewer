@@ -3,9 +3,10 @@ describe("Fetch Status", () => {
     it("Fetch data with no authenticated user", () => {
 
         cy.visit("/");
-
+        
         // Go immediately to query
-        cy.contains("A book query testing sources with and without authentication required").click();  
+        cy.contains("For testing only").click();
+        cy.contains("A query on a secret and a public list of books").click();  
         
         // Check if the public and restricted sources appear
         cy.get('[aria-label="Sources info"]').click();
@@ -49,7 +50,8 @@ describe("Fetch Status", () => {
         cy.url().should("eq", "http://localhost:5173/");
 
         // Go to the mixed book query
-        cy.contains("A book query testing sources with and without authentication required").click();
+        cy.contains("For testing only").click();
+        cy.contains("A query on a secret and a public list of books").click();
 
         // Check if the public and restricted sources appear
         cy.get('[aria-label="Sources info"]').click();
@@ -75,7 +77,8 @@ describe("Fetch Status", () => {
         cy.visit("/");
 
         // Go immediately to query
-        cy.contains("My favourite musicians").click();  
+        cy.contains("General examples").click();
+        cy.contains("A query about musicians").click();  
         
         // Check if the good and bad sources appear
         cy.get('[aria-label="Sources info"]').click();
