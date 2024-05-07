@@ -9,21 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- "Clear query cache and refresh" button (#105)
-- Source verification effective code (#77)
-- Query can now also be based on index file (#91)
-- Added collapsible query groups to the menu on the left (#89)
-
 ### Changed
-
-- Clear query cache at logout (#106)
-- Cypress test suite version updated to ^13.8.0 (#109)
-- Hovering over query menu now displays a tooltip with information instead of expanding inside the menu (#112)
 
 ### Fixed
 
-- Query menu is now scrollable (#102)
-- Pagination is correct when using a query using DISTINCT, OFFSET, LIMIT (#110, #19)
+## [1.2.0] - 2024-05-07
+
+### Added
+
+- "Clear query cache and refresh" button (#105).
+- Source verification effective code (#77).
+- Query can now also be based on index file (#91).
+- Added collapsible query groups to the menu on the left (#89).
+
+### Changed
+
+- Clear query cache at logout (#106).
+- Cypress test suite version updated to ^13.8.0 (#109).
+- Hovering over query menu now displays a tooltip with information instead of expanding inside the menu (#112).
+
+### Fixed
+
+- Query menu is now scrollable (#102).
+- Pagination is correct when using a query using DISTINCT, OFFSET, LIMIT (#110, #19).
 
 ### Removed
 
@@ -31,18 +39,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added 'Unauthorized' to the fetch status (#90)
-- Query title above the result table (#41)
+- Added 'Unauthorized' to the fetch status (#90).
+- Query title above the result table (#41).
 
 ### Changed
 
-- On empty query result, show clear message (#86)
-- Force accept headers to favor NQuads to remove JSON-LD Context CORS issue problems (#100)
+- On empty query result, show clear message (#86).
+- Force accept headers to favor NQuads to remove JSON-LD Context CORS issue problems (#100).
 
 ### Fixed
 
-- Fixed pagination bug in templated queries (#80)
-- Fixed title display inside the selection menu when hovering, does not flow over table anymore (#41)
+- Fixed pagination bug in templated queries (#80).
+- Fixed title display inside the selection menu when hovering, does not flow over table anymore (#41).
 
 ### Removed
 
@@ -56,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Invalidate query engine cache on user logout (#63)
+- Invalidate query engine cache on user logout (#63).
 
 ### Removed
 
@@ -107,4 +115,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.1
 [1.1.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.2
 [1.1.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.3
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.1.3...HEAD
+[1.2.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.0
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.0...HEAD
