@@ -15,8 +15,7 @@
   "queryGroups" : [
     {
       "id": "a-ex",
-      "name": "General examples",
-      "icon": "ListAltIcon"
+      "name": "General examples"
     },
     {
       "id": "b-prj",

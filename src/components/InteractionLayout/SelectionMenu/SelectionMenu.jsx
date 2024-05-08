@@ -12,7 +12,7 @@ import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import IconProvider from "../../../IconProvider/IconProvider";
-import ViewListIcon from '@mui/icons-material/ViewList';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 /**
  * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
@@ -20,7 +20,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
  */
 function SelectionMenu() {
   const resources = useResourceDefinitions();
-  const queryGroups = config.queryGroups;
+  const queryGroups = config.queryGroups || [];
 
   // adding a list to the group that will contain all the queries for said group
   queryGroups.forEach(group => group.queries = [])
@@ -120,7 +120,7 @@ const getIconComponent = (iconKey) => {
   if (IconComponent) {
     return <IconComponent />;
   }
-  return <ViewListIcon />;
+  return <ListAltIcon />;
 };
 
 const TooltipContent = ({ title, description }) => (
@@ -156,7 +156,12 @@ const setUpQueryGroups = (queryGroups, resources) => {
       if (resources[id].options.queryGroupId === undefined) {
         looseQueries.push(id)
       } else {
-        queryGroups.find(group => group.id === resources[id].options.queryGroupId).queries.push(id)
+        const queryGroup = queryGroups.find(group => group.id === resources[id].options.queryGroupId);
+        if (queryGroup) {
+          queryGroup.queries.push(id);
+        } else {
+          looseQueries.push(id);
+        }
       }
     } catch (error) {
       throw new Error(`Error adding queries to a group: ${error.message}`);
