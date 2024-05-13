@@ -1,7 +1,8 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import {Title} from 'react-admin';
+import { Title } from 'react-admin';
 import PropTypes from 'prop-types';
+import CustomEditor from './CustomQueryEditor/customEditor';
 import './Dashboard.css';
 
 /**
@@ -10,16 +11,22 @@ import './Dashboard.css';
  * @returns {function(): *} - A function that creates a dashboard with an introduction for <Admin>.
  */
 function Dashboard(props) {
-  let {title, text} = props;
+  let { title, text } = props;
 
   title = title || 'You change this title via the config file.';
   text = text || 'You change this text via the config file.';
 
   return (
-    <Card>
-      <Title title={title}/>
-      <CardContent>{text}</CardContent>
-    </Card>
+    <div>
+      
+      <CustomEditor/>
+      <Card>
+        <Title title={title} />
+        <CardContent>{text}</CardContent>
+      </Card>
+      
+
+    </div>
   );
 }
 
