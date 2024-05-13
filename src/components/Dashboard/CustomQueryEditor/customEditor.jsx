@@ -8,35 +8,30 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
 import { QueryEngine } from "@comunica/query-sparql";
+import QueryResultList from "../../ListResultTable/QueryResultList/QueryResultList"
+import ListResultTable from '../../ListResultTable/ListResultTable';
 
 const myEngine = new QueryEngine();
-//import {SimpleForm, TextInput, required } from 'react-admin';
-
 
 export default function CustomEditor() {
 
   const [openEditor, setOpenEditor] = useState(false);
-  const [customQuery, setCustomQuery] = useState('')
-  const [resultList, setResultList] = useState([])
+  const [customQueryData, setCustomQueryData] = useState(null)
 
   const closeEditor = () => {
     setOpenEditor(false)
   }
 
-  const finalise = async () => {
-    //setResultList(await ResultsFromQuery(customQuery.source, customQuery.query))
-    console.log(resultList)
-  }
-
   return (
     <React.Fragment>
       <Button variant="contained" onClick={
-        () => { setOpenEditor(true) }}>
+        () => { setOpenEditor(true) }}
+        sx={{ margin: '10px' }}>
         Custom query
       </Button>
 
       <Button variant="contained" onClick={
-        () => { console.log(resultList, customQuery)}}>
+        () => {console.log(customQueryData)}}>
         Show data
       </Button>
 
@@ -51,12 +46,13 @@ export default function CustomEditor() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
-            
-            setResultList(await ResultsFromQuery(jsonData.source , jsonData.query));
+
+            //   setResultList(await ResultsFromQuery(jsonData.source , jsonData.query));
+
+            setCustomQueryData(await getData(jsonData.query, jsonData.source));
 
             closeEditor();
-            
-            finalise();
+
           },
         }}
       >
@@ -100,41 +96,85 @@ export default function CustomEditor() {
           <Button variant="contained" type="submit">Submit Query</Button>
         </DialogActions>
       </Dialog>
+
+      {/* {customQueryData && <div>
+          this exists
+          {customQueryData.itemListElement.map((e) => {
+            console.log(e)
+            return(
+              <div key={e.name}>
+                {e.name}
+              </div>
+            )
+          })}
+          </div>} */}
+
+      {/* {customQueryData && <div>
+        this exists
+        {Object.keys(customQueryData).map((key) => {
+          console.log(key)
+          return (
+            <div></div>
+          )
+        })}
+      </div>} */}
+
     </React.Fragment>
   )
 
 }
 
-async function ResultsFromQuery (source, query){
+async function executeSPARQLQuery(query, dataSource) {
+  const url = new URL(dataSource);
+  const params = new URLSearchParams();
+  params.append('query', query);
+  url.search = params.toString();
 
-  // const a = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX example: <http://localhost:8080/example/index-example-texon-only#> SELECT ?object WHERE { example:index-example rdfs:seeAlso ?object . }`
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to execute SPARQL query. 333 Status: ${response.status}`);
+    }
 
-  // const b = `http://localhost:8080/example/index-example-texon-only`
+    const data = await response.json();
+    console.log(data)
 
-  console.log(source , query)
-
-  const results = [];
-try{
-  const bindingsStream = await myEngine.queryBindings(query, {
-    sources: [source],
-  });
-
-  await new Promise((resolve, reject) => {
-    bindingsStream.on('data', (binding) => {
-      const source = binding.get('object').value;
-      console.log(binding)
-      if (!results.includes(source)) {
-        results.push(source);
+    const adjustedData = {
+      results: {
+        bindings: data.ItemListElement.map(item => ({
+          name: { value: item.name },
+          genre: { value: item.genre },
+          sameAs_url: { value: item.sameAs["@id"] }
+        }))
       }
+    };
+  
+    console.log(adjustedData)
+    
+    return adjustedData;
+  } catch (error) {
+    throw new Error(`Error executing SPARQL query 111: ${error.message}`);
+  }
+}
+
+async function getData(query, dataSource) {
+  const data = executeSPARQLQuery(query, dataSource)
+
+  
+  try {
+    const result = await myEngine.queryBindings(query, {
+      sources: [{ value: data }],
     });
-    bindingsStream.on('end', resolve);
-    bindingsStream.on('error', reject);
-  });
 
-  return results;
+    console.log('Query results:', result);
+  
 
-}catch(error){
-  console.log('nahhh brooo:' , error)
+    // Process the query results directly
+    
+
+  } catch (error) {
+    console.error('Error executing SPARQL query 222:', error);
+  }
 }
-}
+
 
