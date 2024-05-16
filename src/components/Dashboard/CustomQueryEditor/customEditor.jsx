@@ -6,19 +6,22 @@ import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-
 import { QueryEngine } from "@comunica/query-sparql";
-import QueryResultList from "../../ListResultTable/QueryResultList/QueryResultList"
-import ListResultTable from '../../ListResultTable/ListResultTable';
+// import QueryResultList from "../../ListResultTable/QueryResultList/QueryResultList"
+// import ListResultTable from '../../ListResultTable/ListResultTable';
+
+import TableData from './tableData';
 
 const myEngine = new QueryEngine();
 
 export default function CustomEditor() {
 
   const [openEditor, setOpenEditor] = useState(false);
-  const [customQueryData, setCustomQueryData] = useState(null)
+  const [customQueryData, setCustomQueryData] = useState([])
   const [showError, setShowError] = useState(false)
-  
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const [showTable, setShowTable] = useState(false)
 
   const closeEditor = () => {
     setOpenEditor(false);
@@ -31,12 +34,16 @@ export default function CustomEditor() {
         () => { setOpenEditor(true) }}
         sx={{ margin: '10px' }}>
         Custom query
-      </Button>
 
-      <Button variant="contained" onClick={
-        () => { console.log(customQueryData) }}>
-        Show data
       </Button>
+      {isSubmitted &&
+        <Button variant="outlined" color={showTable ? "error" : "primary"} onClick={
+          () => {
+            setShowTable(!showTable);
+          }}>
+          {showTable ? "Hide Table" : "Show Table"}
+        </Button>
+      }
 
       <Dialog
         open={openEditor}
@@ -49,20 +56,20 @@ export default function CustomEditor() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
-          
-            setCustomQueryData(await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError));
+            const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
+            setIsSubmitted(false)
+            setShowTable(false)
+            setCustomQueryData(data);
             closeEditor();
+            setIsSubmitted(true)
           },
         }}
       >
         <DialogTitle>Custom Query Editor</DialogTitle>
-
-
         <DialogContent>
           <DialogContentText sx={{ color: 'red', mb: '10px' }}>
             {showError ? 'Invalid Query. Check the URL and Query Syntax' : ''}
           </DialogContentText>
-
           <div>
             <TextField
               required
@@ -98,10 +105,12 @@ export default function CustomEditor() {
         </DialogActions>
       </Dialog>
 
+      {showTable && <TableData data={customQueryData} />}
+
     </React.Fragment>
   )
-
 }
+
 
 async function executeSPARQLQuery(query, dataSource, setShowError) {
   const resultingObjects = [];
