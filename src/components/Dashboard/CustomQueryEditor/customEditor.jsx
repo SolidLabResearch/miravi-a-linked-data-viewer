@@ -17,6 +17,7 @@ export default function CustomEditor() {
 
   const [openEditor, setOpenEditor] = useState(false);
   const [customQueryData, setCustomQueryData] = useState(null)
+  const [showError, setShowError] = useState(false)
 
   const closeEditor = () => {
     setOpenEditor(false)
@@ -46,11 +47,10 @@ export default function CustomEditor() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
+            setShowError(false);
 
-            //   setResultList(await ResultsFromQuery(jsonData.source , jsonData.query));
-
-            setCustomQueryData(await getData(jsonData.query, jsonData.source));
-
+            setCustomQueryData(await executeSPARQLQuery(jsonData.query, jsonData.source, showError, setShowError));
+            
             closeEditor();
 
           },
@@ -59,7 +59,7 @@ export default function CustomEditor() {
         <DialogTitle>Custom Query Editor</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Get results from a custom query in SPARQL
+            {showError? 'Something went wrong while querying, please review your query' : ''}
           </DialogContentText>
 
           <div>
@@ -72,7 +72,7 @@ export default function CustomEditor() {
               placeholder="http://examplesource.org"
               helperText="Give the source Url for the query"
               variant='outlined'
-            />/
+            />
           </div>
 
           <div>
@@ -124,57 +124,33 @@ export default function CustomEditor() {
 
 }
 
-async function executeSPARQLQuery(query, dataSource) {
-  const url = new URL(dataSource);
-  const params = new URLSearchParams();
-  params.append('query', query);
-  url.search = params.toString();
+async function executeSPARQLQuery(query, dataSource, setShowError) {
+  
+  const resultingObjects = []
 
+  console.log("query; " , query)
+  console.log("datasource: ", dataSource)
   try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to execute SPARQL query. 333 Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log(data)
-
-    const adjustedData = {
-      results: {
-        bindings: data.ItemListElement.map(item => ({
-          name: { value: item.name },
-          genre: { value: item.genre },
-          sameAs_url: { value: item.sameAs["@id"] }
-        }))
-      }
-    };
-  
-    console.log(adjustedData)
-    
-    return adjustedData;
-  } catch (error) {
-    throw new Error(`Error executing SPARQL query 111: ${error.message}`);
-  }
-}
-
-async function getData(query, dataSource) {
-  const data = executeSPARQLQuery(query, dataSource)
+    const bindingsStream = await myEngine.queryBindings(query, {
+    sources: [dataSource]
+  });
 
   
-  try {
-    const result = await myEngine.queryBindings(query, {
-      sources: [{ value: data }],
-    });
+  bindingsStream.on('data', (binding) => {
+    //console.log(binding);
+    //console.log(binding.toString()); 
 
-    console.log('Query results:', result);
-  
+    resultingObjects.push(JSON.parse(binding.toString()));
 
-    // Process the query results directly
-    
+});
+
 
   } catch (error) {
-    console.error('Error executing SPARQL query 222:', error);
+    setShowError(true);    
+    throw new Error(`Error executing SPARQL query: ${error.message}`);
   }
+
+  return resultingObjects;
 }
 
 
