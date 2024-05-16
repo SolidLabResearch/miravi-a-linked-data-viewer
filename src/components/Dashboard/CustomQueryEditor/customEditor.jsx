@@ -18,9 +18,11 @@ export default function CustomEditor() {
   const [openEditor, setOpenEditor] = useState(false);
   const [customQueryData, setCustomQueryData] = useState(null)
   const [showError, setShowError] = useState(false)
+  
 
   const closeEditor = () => {
-    setOpenEditor(false)
+    setOpenEditor(false);
+    setShowError(false);
   }
 
   return (
@@ -32,7 +34,7 @@ export default function CustomEditor() {
       </Button>
 
       <Button variant="contained" onClick={
-        () => {console.log(customQueryData)}}>
+        () => { console.log(customQueryData) }}>
         Show data
       </Button>
 
@@ -47,19 +49,18 @@ export default function CustomEditor() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
-            setShowError(false);
-
-            setCustomQueryData(await executeSPARQLQuery(jsonData.query, jsonData.source, showError, setShowError));
-            
+          
+            setCustomQueryData(await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError));
             closeEditor();
-
           },
         }}
       >
         <DialogTitle>Custom Query Editor</DialogTitle>
+
+
         <DialogContent>
-          <DialogContentText>
-            {showError? 'Something went wrong while querying, please review your query' : ''}
+          <DialogContentText sx={{ color: 'red', mb: '10px' }}>
+            {showError ? 'Invalid Query. Check the URL and Query Syntax' : ''}
           </DialogContentText>
 
           <div>
@@ -97,59 +98,25 @@ export default function CustomEditor() {
         </DialogActions>
       </Dialog>
 
-      {/* {customQueryData && <div>
-          this exists
-          {customQueryData.itemListElement.map((e) => {
-            console.log(e)
-            return(
-              <div key={e.name}>
-                {e.name}
-              </div>
-            )
-          })}
-          </div>} */}
-
-      {/* {customQueryData && <div>
-        this exists
-        {Object.keys(customQueryData).map((key) => {
-          console.log(key)
-          return (
-            <div></div>
-          )
-        })}
-      </div>} */}
-
     </React.Fragment>
   )
 
 }
 
 async function executeSPARQLQuery(query, dataSource, setShowError) {
-  
-  const resultingObjects = []
-
-  console.log("query; " , query)
-  console.log("datasource: ", dataSource)
+  const resultingObjects = [];
   try {
     const bindingsStream = await myEngine.queryBindings(query, {
-    sources: [dataSource]
-  });
+      sources: [dataSource]
+    });
 
-  
-  bindingsStream.on('data', (binding) => {
-    //console.log(binding);
-    //console.log(binding.toString()); 
-
-    resultingObjects.push(JSON.parse(binding.toString()));
-
-});
-
-
+    bindingsStream.on('data', (binding) => {
+      resultingObjects.push(JSON.parse(binding.toString()));
+    });
   } catch (error) {
-    setShowError(true);    
+    setShowError(true);
     throw new Error(`Error executing SPARQL query: ${error.message}`);
   }
-
   return resultingObjects;
 }
 
