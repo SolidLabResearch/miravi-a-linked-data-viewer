@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import { QueryEngine } from "@comunica/query-sparql";
+
 // import QueryResultList from "../../ListResultTable/QueryResultList/QueryResultList"
 // import ListResultTable from '../../ListResultTable/ListResultTable';
 
@@ -20,6 +21,7 @@ export default function CustomEditor() {
   const [customQueryData, setCustomQueryData] = useState([])
   const [showError, setShowError] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [customQueryJSON, setCustomQueryJSON] = useState({})
 
   const [showTable, setShowTable] = useState(false)
 
@@ -45,6 +47,13 @@ export default function CustomEditor() {
         </Button>
       }
 
+{/* <Button variant="contained" onClick={
+        () => { console.log(customQueryJSON.title) }}
+        sx={{ margin: '10px' }}>
+        logging
+
+      </Button> */}
+
       <Dialog
         open={openEditor}
         onClose={closeEditor}
@@ -56,6 +65,12 @@ export default function CustomEditor() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
+            console.log(jsonData)
+            setCustomQueryJSON(jsonData);
+
+            console.log(customQueryJSON)
+
+
             const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
             setIsSubmitted(false)
             setShowTable(false)
@@ -70,6 +85,20 @@ export default function CustomEditor() {
           <DialogContentText sx={{ color: 'red', mb: '10px' }}>
             {showError ? 'Invalid Query. Check the URL and Query Syntax' : ''}
           </DialogContentText>
+
+          <div>
+            <TextField
+              required
+              fullWidth
+              name='title'
+              id="outlined-required"
+              label="Query title "
+              placeholder="Custom query name"
+              helperText="Give this custom query a name"
+              variant='outlined'
+            />
+          </div>
+
           <div>
             <TextField
               required
@@ -105,7 +134,7 @@ export default function CustomEditor() {
         </DialogActions>
       </Dialog>
 
-      {showTable && <TableData data={customQueryData} />}
+      {showTable && <TableData data={customQueryData} title={customQueryJSON.title} />}
 
     </React.Fragment>
   )

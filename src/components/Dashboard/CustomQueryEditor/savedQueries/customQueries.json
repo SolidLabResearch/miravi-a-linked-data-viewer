@@ -1,0 +1,8 @@
+{"savedQueries" : [
+    
+    {
+        "title" : "customBooks",
+        "source": "http://localhost:8080/example/wish-list",
+        "query": "PREFIX schema: <http://schema.org/> \n\nSELECT * WHERE {\n    ?list schema:name ?listTitle;\n      schema:itemListElement [\n      schema:name ?bookTitle;\n      schema:creator [\n        schema:name ?authorName\n      ]\n    ].\n}"
+    }
+]}

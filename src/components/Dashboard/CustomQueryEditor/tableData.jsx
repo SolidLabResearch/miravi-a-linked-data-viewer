@@ -10,6 +10,9 @@ import Typography from '@mui/material/Typography';
 
 
 export default function TableData(data) {
+
+    //console.log(title)
+
     const keys = []
     if (data.data === null || data.data === undefined || data.data.length === 0) {
         return (
@@ -21,6 +24,9 @@ export default function TableData(data) {
     Object.keys(data.data[0]).forEach((k) => { keys.push(k) })
     return (
         <TableContainer sx={{ marginBottom: '20px', marginTop: '10px' }} component={Paper}>
+            {/* <Typography variant="h6" component="div" style={{ padding: '16px' }}>
+            {title}
+        </Typography> */}
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
