@@ -3,7 +3,6 @@ import { useResourceDefinitions } from "ra-core";
 import { DashboardMenuItem } from "ra-ui-materialui";
 import { Menu } from "react-admin";
 import { ThemeProvider, createTheme, Tooltip, Box, Typography } from "@mui/material";
-import config from "../../../config.json";
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -14,11 +13,15 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import IconProvider from "../../../IconProvider/IconProvider";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 
+import { useConfig  } from '../../../ConfigContext/ConfigContext';
+
 /**
  * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
  * @returns {Component} the selection menu component
  */
 function SelectionMenu() {
+  const {config} = useConfig();
+
   const resources = useResourceDefinitions();
   const queryGroups = config.queryGroups || [];
 

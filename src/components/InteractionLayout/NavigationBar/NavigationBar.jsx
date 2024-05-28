@@ -1,5 +1,4 @@
 import { AppBar, TitlePortal, useRefresh } from "react-admin";
-import config from "../../../config";
 import "./NavigationBar.css";
 import AuthenticationMenu from "../AuthenticationMenu/AuthenticationMenu";
 import { Component } from "react";
@@ -7,6 +6,7 @@ import SparqlDataProvider from "./../../../dataProvider/SparqlDataProvider";
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
+import { useConfig  } from '../../../ConfigContext/ConfigContext';
 
 
 function InvalidateButton() {
@@ -30,6 +30,8 @@ function InvalidateButton() {
  * @returns {Component} custom AppBar as defined by react-admin
  */
 function NavigationBar(props) {
+  const {config} = useConfig();
+
   return (
     <AppBar {...props} userMenu={<AuthenticationMenu />}>
       <img

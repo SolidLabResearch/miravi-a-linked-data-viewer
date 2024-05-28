@@ -1,7 +1,6 @@
 import "./App.css";
 import { Admin, Resource } from "react-admin";
 import SparqlDataProvider from "./dataProvider/SparqlDataProvider";
-import config from "./config";
 import { Component, useEffect, useState } from "react";
 import {
   getDefaultSession,
@@ -10,10 +9,12 @@ import {
 import IconProvider from "./IconProvider/IconProvider";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
-import {QueryClient} from "react-query";
+import { QueryClient } from "react-query";
 import Dashboard from "./components/Dashboard/Dashboard";
 import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
 import TemplatedListResultTable from "./components/ListResultTable/TemplatedListResultTable.jsx";
+
+import { useConfig  } from './ConfigContext/ConfigContext.jsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +30,9 @@ const queryClient = new QueryClient({
 function App() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
+
+  const {config} = useConfig();
+
 
   useEffect(() => {
     const root = document.documentElement;
@@ -53,29 +57,29 @@ function App() {
   });
 
   return (
-    <Admin
-      queryClient={queryClient}
-      dataProvider={SparqlDataProvider}
-      layout={InteractionLayout}
-      authProvider={authenticationProvider}
-      loginPage={SolidLoginForm}
-      requireAuth={false}
-      dashboard={() => {
-        return Dashboard({title: config.title, text: config.introductionText})
-      }}
-    >
-      {config.queries.map((query) => {
-        return (
-          <Resource
-            key={query.id}
-            name={query.id}
-            options={{label: query.name, descr: query.description, queryGroupId : query.queryGroupId}}
-            icon={IconProvider[query.icon]}
-            list={TemplatedListResultTable}
-          />
-        );
-      })}
-    </Admin>
+     <Admin
+        queryClient={queryClient}
+        dataProvider={SparqlDataProvider}
+        layout={InteractionLayout}
+        authProvider={authenticationProvider}
+        loginPage={SolidLoginForm}
+        requireAuth={false}
+        dashboard={() => {
+          return Dashboard({ title: config.title, text: config.introductionText })
+        }}
+      >
+        {config.queries.map((query) => {
+          return (
+            <Resource
+              key={query.id}
+              name={query.id}
+              options={{ label: query.name, descr: query.description, queryGroupId: query.queryGroupId }}
+              icon={IconProvider[query.icon]}
+              list={TemplatedListResultTable}
+            />
+          );
+        })}
+      </Admin>
   );
 }
 
