@@ -1,5 +1,5 @@
 import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
-import config from "../config.json";
+//import config from "../config.json";
 import { QueryEngine } from "@comunica/query-sparql";
 import {
   getDefaultSession,
@@ -10,23 +10,38 @@ import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
 import { Term } from "sparqljs";
 
+import configManager from "../ConfigContext/ConfigManager";
+
 const myEngine = new QueryEngine();
+let config = configManager.getConfig();
 
 let proxyHandler = undefined;
-if (config.httpProxy) {
-  proxyHandler = new ProxyHandlerStatic(config.httpProxy);
-}
 
-if (!config.queryFolder) {
-  config.queryFolder = "./";
-}
+const initializeProxyHandler = () => {
+  if (config.httpProxy) {
+    proxyHandler = new ProxyHandlerStatic(config.httpProxy);
+  }
+};
 
-if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
-  config.queryFolder = `${config.queryFolder}/`;
-}
+const updateConfig = (newConfig) => {
+  config = newConfig;
+  initializeProxyHandler();
+};
+
+initializeProxyHandler();
+configManager.on('configChanged', updateConfig);
+
+// if (!config.queryFolder) {
+//   config.queryFolder = "./";
+// }
+
+// if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
+//   config.queryFolder = `${config.queryFolder}/`;
+// }
 
 export default {
   getList: async function getList(queryName, { pagination, sort, filter, meta }) {
+  
     const query = findQueryWithId(queryName);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;

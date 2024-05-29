@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
-import configFile from "../config.json";
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import configManager from './ConfigManager';
 
 const ConfigContext = createContext();
 
@@ -7,24 +7,25 @@ const ConfigContext = createContext();
 // This variable is used throughout the rest of the application to ensure the config file is read only once here for good practice.
 export const ConfigProvider = ({ children }) => {
 
-    const [config, setConfig] = useState(configFile);
+    const [config, setConfig] = useState(configManager.getConfig());
 
-    const addConfigElement = (key, value) => {
-        setConfig((prevConfig) => ({
-            ...prevConfig,
-            [key]: value,
-        }));
-    };
+    useEffect(() => {
+        const handleConfigChange = (newConfig) => {
+          setConfig(newConfig);
+        };
+        configManager.on('configChanged', handleConfigChange);
+        return () => {
+          configManager.off('configChanged', handleConfigChange);
+        };
+      }, []);
 
-    const addQuery = (newQuery) => {
-        setConfig((prevConfig) => ({
-            ...prevConfig,
-            queries: [...prevConfig.queries, newQuery],
-        }));
-    };
+      const updateConfig = (newConfig) => {
+        configManager.setConfig(newConfig);
+      };
 
+    console.log(config);
     return (
-        <ConfigContext.Provider value={{ config, addConfigElement, addQuery }}>
+        <ConfigContext.Provider value={{ config , updateConfig }}>
             {children}
         </ConfigContext.Provider>
     );
