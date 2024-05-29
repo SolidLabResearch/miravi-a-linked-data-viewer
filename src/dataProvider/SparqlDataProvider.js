@@ -12,28 +12,31 @@ import { Term } from "sparqljs";
 import configManager from "../configManager/configManager";
 
 const myEngine = new QueryEngine();
+
 let config = configManager.getConfig();
 
-let proxyHandler = undefined;
+let proxyHandler;
 
-const initializeProxyHandler = () => {
+const setProxyHandler = () => {
   if (config.httpProxy) {
     proxyHandler = new ProxyHandlerStatic(config.httpProxy);
+  } else {
+    proxyHandler = undefined;
   }
 };
+setProxyHandler();
 
-const updateConfig = (newConfig) => {
+const onConfigChanged = (newConfig) => {
   config = newConfig;
-  initializeProxyHandler();
+  setProxyHandler();
 };
 
-initializeProxyHandler();
-configManager.on('configChanged', updateConfig);
+configManager.on('configChanged', onConfigChanged);
 
 export default {
-  getList: async function getList(queryName, { pagination, sort, filter, meta }) {
+  getList: async function getList(resource, { pagination, sort, filter, meta }) {
   
-    const query = findQueryWithId(queryName);
+    const query = findQueryWithId(resource);
     query.limit = pagination.perPage;
     query.offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
@@ -94,18 +97,18 @@ export default {
 };
 
 /**
- *
+ * Finds a query with the given id in config.queries
  * @param {number} id - identifier of a query
- * @returns {object} the query with the given id from the config file and additional information about it, if it exists.
+ * @returns {object} the query element from the configuration
  */
 function findQueryWithId(id) {
   return config.queries.find((query) => query.id === id);
 }
 
 /**
- * Fetches the the query file from the given query and returns its text.
- * @param {object} query - the query which is to be executed and additional information about the query.
- * @returns {string} the text from the file location provided by the query relative to query location defined in the config file.
+ * Fetches the query file from the given query and returns its text.
+ * @param {object} query - the query element from the configuration
+ * @returns {string} the text from the file location provided by the query relative to query location defined in the config file, modified for our needs.
  */
 async function fetchQuery(query) {
   try {
@@ -160,12 +163,12 @@ function replaceVariables(rawText, variables) {
     rawText = rawText.replace("$" + variableName, variableValue);
   }
 
-  return rawText
+  return rawText;
 }
 
 /**
  * Given a query and an object, this function returns the predicate of the object in the query.
- * @param {object} query - the paresed query in which the predicate is to be looked for.
+ * @param {object} query - the parsed query in which the predicate is to be looked for.
  * @returns {object} an object with the variable as key and the predicate as value.
  */
 function findPredicates(query) {
@@ -189,7 +192,7 @@ function findPredicates(query) {
 
 /**
  * A function that executes a given query and processes every result.
- * @param {object} query - the query which is to be executed and additional information about the query.
+ * @param {object} query - the query element from the configuration
  * @returns {Array<Term>} the results of the query
  */
 async function executeQuery(query) {
@@ -278,7 +281,7 @@ function statusFetch(customFetch, context) {
 /**
  * A function that given a QueryType processes every result.
  * @param {object} execution - a query execution
- * @param {object} query - the query which is to be executed and additional information about the query.
+ * @param {object} query - the query element from the configuration
  * @returns {Array<Term>} the results of the query
  */
 async function handleQueryExecution(execution, query) {
@@ -299,8 +302,8 @@ async function handleQueryExecution(execution, query) {
 }
 
 /**
- *
- * @param {object} query - the query which is to be executed and additional information about the query.
+ * Predict the total number of elements in the result of a query
+ * @param {object} query - the query element from the configuration
  * @returns {number} the actual number of results in the query, if it were executed
  */
 async function countQueryResults(query) {
@@ -394,6 +397,11 @@ async function configureBindingStream(bindingStream, variables) {
   }
 }
 
+/**
+ * Add sources to the Comunica context from a sources index
+ * @param {object} sourcesIndex - the sourcesIndex object as found in the configuration
+ * @returns {array} array of sources found
+ */
 const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   const sourcesList = [];
   try {
@@ -422,6 +430,10 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   return sourcesList;
 };
 
+/**
+ * Creates/extends a comunicaContext property in a query
+ * @param {object} query - the query element from the configuration
+ */
 const handleComunicaContextCreation = (query) => {
 
   if (!query.comunicaContext) {
