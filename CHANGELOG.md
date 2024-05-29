@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Corrected the counting of the total number of items in the result list (#120).
+
 ## [1.2.0] - 2024-05-07
 
 ### Added
