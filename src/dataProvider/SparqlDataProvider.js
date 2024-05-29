@@ -1,5 +1,4 @@
 import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
-//import config from "../config.json";
 import { QueryEngine } from "@comunica/query-sparql";
 import {
   getDefaultSession,
@@ -10,7 +9,7 @@ import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
 import { Term } from "sparqljs";
 
-import configManager from "../ConfigContext/ConfigManager";
+import configManager from "../configManager/configManager";
 
 const myEngine = new QueryEngine();
 let config = configManager.getConfig();
@@ -30,14 +29,6 @@ const updateConfig = (newConfig) => {
 
 initializeProxyHandler();
 configManager.on('configChanged', updateConfig);
-
-// if (!config.queryFolder) {
-//   config.queryFolder = "./";
-// }
-
-// if (config.queryFolder.substring(config.queryFolder.length - 1) !== "/") {
-//   config.queryFolder = `${config.queryFolder}/`;
-// }
 
 export default {
   getList: async function getList(queryName, { pagination, sort, filter, meta }) {

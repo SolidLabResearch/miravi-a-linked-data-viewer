@@ -6,8 +6,9 @@ import SparqlDataProvider from "./../../../dataProvider/SparqlDataProvider";
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
-import { useConfig  } from '../../../ConfigContext/ConfigContext';
 
+import configManager from "../../../configManager/configManager";
+const config = configManager.getConfig();
 
 function InvalidateButton() {
   const refresh = useRefresh();
@@ -30,8 +31,6 @@ function InvalidateButton() {
  * @returns {Component} custom AppBar as defined by react-admin
  */
 function NavigationBar(props) {
-  const {config} = useConfig();
-
   return (
     <AppBar {...props} userMenu={<AuthenticationMenu />}>
       <img

@@ -18,15 +18,15 @@ import InfoIcon from "@mui/icons-material/Info";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
-import { useConfig  } from '../../ConfigContext/ConfigContext.jsx';
+
+import configManager from "../../configManager/configManager.js";
+const config = configManager.getConfig();
 
 /**
  *
  * @returns {Component} custom action bar as defined by react-admin
  */
 function ActionBar() {
-  const {config} = useConfig();
-  
   const { total, isLoading, perPage, resource } = useListContext();
   const [time, setTime] = useState(0);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);

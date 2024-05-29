@@ -14,7 +14,10 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
 import TemplatedListResultTable from "./components/ListResultTable/TemplatedListResultTable.jsx";
 
-import { useConfig  } from './ConfigContext/ConfigContext.jsx';
+
+import configManager from "./configManager/configManager.js";
+
+const config = configManager.getConfig();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,9 +33,6 @@ const queryClient = new QueryClient({
 function App() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
-
-  const {config} = useConfig();
-
 
   useEffect(() => {
     const root = document.documentElement;

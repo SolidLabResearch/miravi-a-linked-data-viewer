@@ -8,14 +8,14 @@ import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import { SvgIcon, Box, Typography } from "@mui/material";
 
-import { useConfig  } from '../../../ConfigContext/ConfigContext';
+import configManager from "../../../configManager/configManager";
+const config = configManager.getConfig();
 
 /**
  * @param {object} props - the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
-  const {config} = useConfig();
   const QueryTitle = useResourceDefinition().options.label;
   const { data } = useListContext(props);
   const {changeVariables, submitted} = props;

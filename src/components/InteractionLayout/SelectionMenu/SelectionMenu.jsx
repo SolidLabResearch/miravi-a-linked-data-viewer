@@ -13,14 +13,14 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import IconProvider from "../../../IconProvider/IconProvider";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 
-import { useConfig  } from '../../../ConfigContext/ConfigContext';
+import configManager from '../../../configManager/configManager';
+const config = configManager.getConfig();
 
 /**
  * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
  * @returns {Component} the selection menu component
  */
 function SelectionMenu() {
-  const {config} = useConfig();
 
   const resources = useResourceDefinitions();
   const queryGroups = config.queryGroups || [];

@@ -19,10 +19,14 @@ class ConfigManager extends EventEmitter {
       return this.config;
     }
   
-    setConfig(newConfig) {
-      this.config = { ...this.config, ...newConfig };
-      this.emit('configChanged', this.config);
-    }
+    // setConfig(newConfig) {
+    //   this.config = { ...this.config, ...newConfig };
+    //   this.emit('configChanged', this.config);
+    // }
+    // addQuery(newQuery) {
+    //   this.config.queries = [...this.config.queries, newQuery];
+    //   this.emit('configChanged', this.config);
+    // }
   }
   
   const configManager = new ConfigManager();
