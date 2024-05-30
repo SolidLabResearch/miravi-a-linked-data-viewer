@@ -1,4 +1,4 @@
-import configFile from "../../config.json";
+import configFile from "../config.json";
 import { EventEmitter } from 'events';
 
 /**
