@@ -275,7 +275,7 @@ The development version might be tested repeatedly during development.
 
 The procedure is the same as for testing the production version, except for step 1, which is now:
 
-1. In a new terminal window, start the Web application in development mode:
+1. Start the Web application in development mode:
 
    ```bash
    npm run dev
