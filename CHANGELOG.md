@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the broken production version due to a missing package (#123).
+
 ## [1.2.0] - 2024-05-07
 
 ### Added
