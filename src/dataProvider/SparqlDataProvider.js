@@ -35,7 +35,6 @@ configManager.on('configChanged', onConfigChanged);
 
 export default {
   getList: async function getList(resource, { pagination, sort, filter, meta }) {
-    //console.log("getList in");
     const query = findQueryWithId(resource);
     const limit = pagination.perPage;
     const offset = (pagination.page - 1) * pagination.perPage;
@@ -64,7 +63,6 @@ export default {
       });
     }
 
-    //console.log("getList out");
     return {
       data: results,
       total: totalItems
