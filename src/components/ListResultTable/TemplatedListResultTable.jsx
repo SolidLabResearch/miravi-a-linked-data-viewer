@@ -2,10 +2,11 @@ import {useState} from 'react';
 import {useResourceContext} from "react-admin";
 import {useLocation, useNavigate} from 'react-router-dom';
 import {Component} from "react";
-
 import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
 import ListResultTable from "./ListResultTable.jsx";
-import config from "../../config";
+
+import configManager from '../../configManager/configManager.js';
+const config = configManager.getConfig();
 
 /**
  * A wrapper component around ListResultTable, to support templated queries
@@ -13,6 +14,7 @@ import config from "../../config";
  * @returns {Component} the wrapper component
  */
 const TemplatedListResultTable = (props) => {
+  
   const resource = useResourceContext();
   const location = useLocation();
   const navigate = useNavigate();

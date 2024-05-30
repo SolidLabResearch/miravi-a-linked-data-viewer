@@ -1,7 +1,6 @@
 import { Component, useEffect, useState } from "react";
 import { ExportButton, TopToolbar, useListContext } from "react-admin";
 import Time from "./Time";
-import config from "../../config";
 import "./ActionBar.css";
 import {
   Grid,
@@ -19,6 +18,9 @@ import InfoIcon from "@mui/icons-material/Info";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
+
+import configManager from "../../configManager/configManager.js";
+const config = configManager.getConfig();
 
 /**
  *
