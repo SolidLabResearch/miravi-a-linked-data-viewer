@@ -35,10 +35,9 @@ configManager.on('configChanged', onConfigChanged);
 
 export default {
   getList: async function getList(resource, { pagination, sort, filter, meta }) {
-  
     const query = findQueryWithId(resource);
-    query.limit = pagination.perPage;
-    query.offset = (pagination.page - 1) * pagination.perPage;
+    const limit = pagination.perPage;
+    const offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
 
     handleComunicaContextCreation(query);
@@ -53,6 +52,8 @@ export default {
     }
 
     let results = await executeQuery(query);
+    let totalItems = results.length;
+    results = results.slice(offset, offset + limit);
 
     if (Object.keys(filter).length > 0) {
       results = results.filter((result) => {
@@ -64,7 +65,7 @@ export default {
 
     return {
       data: results,
-      total: query.totalItems
+      total: totalItems
     };
   },
   getOne: async function getOne() {
@@ -124,16 +125,6 @@ async function fetchQuery(query) {
     const parsedQuery = parser.parse(rawText);
     if (!query.variableOntology) {
       query.variableOntology = findPredicates(parsedQuery);
-    }
-    if (parsedQuery.limit !== undefined && query.offset + query.limit > parsedQuery.limit) {
-      parsedQuery.limit = parsedQuery.limit - query.offset;
-    } else {
-      parsedQuery.limit = query.limit;
-    }
-    if (parsedQuery.offset) {
-      parsedQuery.offset += query.offset;
-    } else {
-      parsedQuery.offset = query.offset;
     }
     if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
       const { field, order } = query.sort;
@@ -290,7 +281,6 @@ async function handleQueryExecution(execution, query) {
     const resultType = execution.resultType;
     if (execution.resultType !== "boolean") {
       const metadata = await execution.metadata();
-      query.totalItems = await countQueryResults(query);
       variables = metadata.variables.map((val) => {
         return val.value;
       });
@@ -299,51 +289,6 @@ async function handleQueryExecution(execution, query) {
   } catch (error) {
     throw new HttpError(error.message, 500);
   }
-}
-
-/**
- * Predict the total number of elements in the result of a query
- * @param {object} query - the query element from the configuration
- * @returns {number} the actual number of results in the query, if it were executed
- */
-async function countQueryResults(query) {
-  const parser = new Parser();
-  const parsedQuery = parser.parse(query.rawText);
-  const distinctInitial = parsedQuery.distinct;
-  const offsetInitial = parsedQuery.offset;
-  const limitInitial = parsedQuery.limit;
-  parsedQuery.queryType = "SELECT";
-  parsedQuery.distinct = false;
-  parsedQuery.offset = 0;
-  if (parsedQuery.limit) {
-    delete parsedQuery.limit;
-  }
-  parsedQuery.variables = [
-    {
-      expression: {
-        type: "aggregate",
-        aggregation: "count",
-        expression: { termType: "Wildcard", value: "*" },
-        distinct: distinctInitial
-      },
-      variable: { termType: "Variable", value: "totalItems" },
-    },
-  ];
-  const generator = new Generator();
-  const countQuery = generator.stringify(parsedQuery);
-  const bindings = await myEngine.queryBindings(countQuery, {
-    sources: query.comunicaContext.sources,
-    fetch: fetch,
-    httpProxyHandler: proxyHandler,
-  });
-  let totalItems = parseInt((await bindings.toArray())[0].get("totalItems").value);
-  if (offsetInitial) {
-    totalItems -= offsetInitial;
-  }
-  if (limitInitial && totalItems > limitInitial) {
-    totalItems = limitInitial;
-  }
-  return totalItems;
 }
 
 const queryTypeHandlers = {
