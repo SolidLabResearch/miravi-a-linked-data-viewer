@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a single point of access to the config.json file (#32).
+
 ### Changed
 
 ### Fixed
