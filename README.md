@@ -5,7 +5,7 @@ inspect the corresponding results.
 
 Table of contents:
 * [Getting Started](#getting-started)
-* [Static build](#static-build)
+* [Static, production build](#static-production-build)
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
   * [Specifying sources](#specifying-sources)
@@ -58,7 +58,7 @@ you also need to activate the supporting resources:
 Some queries require a log in.
 Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
 
-## Static build
+## Static, production build
 
 To make a standalone version of the result of this project, you can make a static build and serve it using any webserver. Execute:
 
@@ -66,7 +66,7 @@ To make a standalone version of the result of this project, you can make a stati
 npm run build
 ```
 
-The static build appears in the `dist` folder. 
+The static build appears in the `dist` folder.
 
 ## Logging in
 
@@ -234,7 +234,13 @@ The development version might be tested repeatedly during development.
 1. Build the production version of the Web application and serve it:
 
    ```bash
+   # make really, really sure to build from scratch
+   rm -rf node_modules/
+   rm -rf dist/
+   npm install
+   # build
    npm run build
+   # serve
    npx http-server -p 5173 ./dist
    ```
 
