@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a `configManager` to create a single point of acces to the config.json file, to prevent multiple files from reading the config.json #32
+
 ### Changed
 
 ### Fixed
