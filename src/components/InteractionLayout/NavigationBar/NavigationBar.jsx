@@ -1,5 +1,4 @@
 import { AppBar, TitlePortal, useRefresh } from "react-admin";
-import config from "../../../config";
 import "./NavigationBar.css";
 import AuthenticationMenu from "../AuthenticationMenu/AuthenticationMenu";
 import { Component } from "react";
@@ -8,6 +7,8 @@ import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
 
+import configManager from "../../../configManager/configManager";
+const config = configManager.getConfig();
 
 function InvalidateButton() {
   const refresh = useRefresh();

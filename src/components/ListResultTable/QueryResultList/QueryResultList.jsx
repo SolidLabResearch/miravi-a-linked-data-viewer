@@ -3,11 +3,13 @@ import { Datagrid, ListView, Title, useListContext, useResourceDefinition } from
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
-import config from "../../../config";
 import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import { SvgIcon, Box, Typography } from "@mui/material";
+
+import configManager from "../../../configManager/configManager";
+const config = configManager.getConfig();
 
 /**
  * @param {object} props - the props passed down to the component
