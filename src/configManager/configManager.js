@@ -47,6 +47,18 @@ class ConfigManager extends EventEmitter {
     this.emit('configChanged', this.config);
   }
 
+  addNewQueryGroup(id, name, icon=null) {
+    const newGroup = { id, name };
+      if (icon) {
+        newGroup.icon = icon;
+      }
+    
+
+    this.config.queryGroups = [...this.config.queryGroups, newGroup];
+
+    this.emit('configChanged', this.config);
+  }
+
   /**
    * Adds as query element to the config.queries array in the configuration
    * 

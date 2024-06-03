@@ -49,13 +49,6 @@ export default function CustomEditor() {
         </Button>
       }
 
-{/* <Button variant="contained" onClick={
-        () => { console.log(customQueryJSON.title) }}
-        sx={{ margin: '10px' }}>
-        logging
-
-      </Button> */}
-
       <Dialog
         open={openEditor}
         onClose={closeEditor}
@@ -67,14 +60,16 @@ export default function CustomEditor() {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
-            console.log(jsonData)
+
+            makeCustomGroup('cstm' , 'Custom queries' , 'EditNoteIcon')
+
+            //console.log(jsonData)
             setCustomQueryJSON(jsonData);
 
             addQuery(jsonData.title , jsonData.query)
-            // console.log(customQueryJSON)
-            // console.log(Date.now())
-
+          
             const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
+            
             setIsSubmitted(false)
             setShowTable(false)
             setCustomQueryData(data);
@@ -159,12 +154,23 @@ async function executeSPARQLQuery(query, dataSource, setShowError) {
     throw new Error(`Error executing SPARQL query: ${error.message}`);
   }
   return resultingObjects;
+};
+
+const makeCustomGroup = (id, name, icon) => {
+  const config = configManager.getConfig()
+  const groupExists = config.queryGroups.find(group => group.id === id);
+
+  if(groupExists === undefined){
+    configManager.addNewQueryGroup(id, name, icon)
+  }
+
 }
 
 //Mock query
 const addQuery = (title, queryString) => {
   configManager.addQuery({
     id: Date.now().toString(),
+    queryGroupId: "cstm",
     queryString: queryString ,
     queryLocation: "components.rq",
     name: title,

@@ -7,6 +7,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import FactoryIcon from '@mui/icons-material/Factory';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 export default {
   BrushIcon,
@@ -17,5 +18,6 @@ export default {
   ListAltIcon,
   FactoryIcon,
   BugReportIcon,
-  ConstructionIcon
+  ConstructionIcon,
+  EditNoteIcon
 };
