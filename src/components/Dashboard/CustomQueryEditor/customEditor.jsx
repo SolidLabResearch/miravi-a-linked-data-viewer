@@ -11,6 +11,8 @@ import { QueryEngine } from "@comunica/query-sparql";
 // import QueryResultList from "../../ListResultTable/QueryResultList/QueryResultList"
 // import ListResultTable from '../../ListResultTable/ListResultTable';
 
+import configManager from '../../../configManager/configManager';
+
 import TableData from './tableData';
 
 const myEngine = new QueryEngine();
@@ -43,7 +45,7 @@ export default function CustomEditor() {
           () => {
             setShowTable(!showTable);
           }}>
-          {showTable ? "Hide Table" : "Show Table"}
+          {showTable ? "Hide Results" : "Show Results"}
         </Button>
       }
 
@@ -68,8 +70,9 @@ export default function CustomEditor() {
             console.log(jsonData)
             setCustomQueryJSON(jsonData);
 
-            console.log(customQueryJSON)
-
+            addQuery(jsonData.title , jsonData.query)
+            // console.log(customQueryJSON)
+            // console.log(Date.now())
 
             const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
             setIsSubmitted(false)
@@ -158,4 +161,18 @@ async function executeSPARQLQuery(query, dataSource, setShowError) {
   return resultingObjects;
 }
 
-
+//Mock query
+const addQuery = (title, queryString) => {
+  configManager.addQuery({
+    id: Date.now().toString(),
+    queryString: queryString ,
+    queryLocation: "components.rq",
+    name: title,
+    description: "Query components",
+    comunicaContext: {
+      sources: [
+        "http://localhost:8080/example/components"
+      ]
+    }
+  });
+};

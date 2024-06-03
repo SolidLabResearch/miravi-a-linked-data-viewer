@@ -17,7 +17,6 @@ import TemplatedListResultTable from "./components/ListResultTable/TemplatedList
 
 import configManager from "./configManager/configManager.js";
 
-const config = configManager.getConfig();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,10 +32,27 @@ const queryClient = new QueryClient({
 function App() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
+  const [config, setConfig] = useState(configManager.getConfig());
+  const [queryLength, setQueryLength] = useState(config.queries.length)
 
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--text-color", config.textColor);
+  }, []);
+
+  useEffect(() => {
+    const handleConfigChange = (newConfig) => {
+      setConfig(newConfig);
+      setQueryLength(newConfig.queries.length)
+    };
+
+    // Listen for config changes
+    configManager.on('configChanged', handleConfigChange);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      configManager.off('configChanged', handleConfigChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -68,7 +84,7 @@ function App() {
           return Dashboard({ title: config.title, text: config.introductionText })
         }}
       >
-        {config.queries.map((query) => {
+        {queryLength && config.queries.map((query) => {
           return (
             <Resource
               key={query.id}

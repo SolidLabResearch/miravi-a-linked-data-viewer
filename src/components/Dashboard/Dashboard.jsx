@@ -19,12 +19,12 @@ function Dashboard(props) {
   return (
     <div>
       
-      <CustomEditor/>
       <Card>
         <Title title={title} />
         <CardContent>{text}</CardContent>
       </Card>
       
+      <CustomEditor/>
 
     </div>
   );

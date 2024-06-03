@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useResourceDefinitions } from "ra-core";
 import { DashboardMenuItem } from "ra-ui-materialui";
 import { Menu } from "react-admin";
@@ -10,55 +10,109 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import IconProvider from "../../../IconProvider/IconProvider";
 import ListAltIcon from '@mui/icons-material/ListAlt';
-
+import IconProvider from "../../../IconProvider/IconProvider";
 import configManager from '../../../configManager/configManager';
-const config = configManager.getConfig();
 
-/**
- * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
- * @returns {Component} the selection menu component
- */
-function SelectionMenu() {
-
+const SelectionMenu = () => {
   const resources = useResourceDefinitions();
-  const queryGroups = config.queryGroups || [];
+  const [config, setConfig] = useState(configManager.getConfig());
+  const [nrOfQueries, setNrOfQueries] = useState(config.queries.length);
+  const [displayMenu, setDisplayMenu] = useState({
+    queryGroups: config.queryGroups || [],
+    looseQueries: []
+  });
+  useEffect(() => {
+    const handleConfigChange = (newConfig) => {
+      setConfig(newConfig);
 
-  // adding a list to the group that will contain all the queries for said group
-  queryGroups.forEach(group => group.queries = [])
+      if(newConfig.queries.length > nrOfQueries){
+        addCustomQuery(config.queries.at(-1))
+        setNrOfQueries(newConfig.queries.length);
+      }
+    };
 
-  // fill in the groups, and put the ones without a group inside the looseQueries list
-  const looseQueries = setUpQueryGroups(queryGroups, resources);
+    // Listen for config changes
+    configManager.on('configChanged', handleConfigChange);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      configManager.off('configChanged', handleConfigChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    setUpQueryGroups(displayMenu, setDisplayMenu, resources);
+  }, [resources]);
+
+  const setUpQueryGroups = (displayMenu, setDisplayMenu, resources) => {
+    const looseQueries = [];
+    const updatedQueryGroups = displayMenu.queryGroups.map(group => ({
+      ...group,
+      queries: []
+    }));
+
+    Object.keys(resources).forEach((id) => {
+      try {
+        const queryGroupId = resources[id].options.queryGroupId;
+        if (queryGroupId === undefined) {
+          looseQueries.push(id);
+        } else {
+          const queryGroup = updatedQueryGroups.find(group => group.id === queryGroupId);
+          if (queryGroup) {
+            queryGroup.queries.push(id);
+          } else {
+            looseQueries.push(id);
+          }
+        }
+      } catch (error) {
+        throw new Error(`Error adding queries to a group: ${error.message}`);
+      }
+    });
+
+    setDisplayMenu(prevState => ({
+      ...prevState,
+      queryGroups: updatedQueryGroups,
+      looseQueries
+    }));
+  };
+
+  const addCustomQuery = (newQuery) => {
+    setDisplayMenu(prevState => {
+      return({
+      ...prevState,
+      looseQueries: [...prevState.looseQueries, newQuery]
+    })});
+  };
 
   return (
     <ThemeProvider theme={menuItemTheme}>
       <div style={{ height: '100%', overflowY: 'auto', backgroundColor: 'white' }}>
         <Menu>
+          {nrOfQueries}
           <List>
             <DashboardMenuItem />
-
-            {looseQueries.map(id => (
+            {displayMenu.looseQueries.map(id => (
               <Tooltip
                 key={id}
                 placement="right"
                 title={
                   <TooltipContent
-                    title={resources[id].options.label}
-                    description={resources[id].options.descr} />
+                    title={resources[id] ? resources[id].options.label : 'tabonbonbon'}
+                    description={resources[id] ? resources[id].options.descr : ' no desc'} />
                 }
               >
-                <div >
+                <div>
                   <Menu.ResourceItem name={id} />
                 </div>
               </Tooltip>
             ))}
           </List>
-          {queryGroups.map((group) => {
-            const [open, setOpen] = useState(false)
+          {displayMenu.queryGroups.map((group) => {
+            const [open, setOpen] = useState(false);
             return (
-              <List key={group.id} disablePadding >
-                <ListItemButton onClick={() => { setOpen(!open) }}>
+              <List key={group.id} disablePadding>
+                <ListItemButton onClick={() => setOpen(!open)}>
                   <ListItemIcon>
                     {getIconComponent(group.icon)}
                   </ListItemIcon>
@@ -67,7 +121,7 @@ function SelectionMenu() {
                 </ListItemButton>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
-                    {group.queries.map((id) => (
+                    {group.queries && group.queries.map((id) => (
                       <Tooltip
                         key={id}
                         placement="right"
@@ -77,7 +131,7 @@ function SelectionMenu() {
                             description={resources[id].options.descr} />
                         }
                       >
-                        <ListItemText sx={{ overflow: 'hidden', ml: 1.5 }} >
+                        <ListItemText sx={{ overflow: 'hidden', ml: 1.5 }}>
                           <Menu.ResourceItem name={id} />
                         </ListItemText>
                       </Tooltip>
@@ -85,13 +139,13 @@ function SelectionMenu() {
                   </List>
                 </Collapse>
               </List>
-            )
+            );
           })}
         </Menu>
       </div>
     </ThemeProvider>
   );
-}
+};
 
 const menuItemTheme = createTheme({
   components: {
@@ -127,50 +181,26 @@ const getIconComponent = (iconKey) => {
 };
 
 const TooltipContent = ({ title, description }) => (
-  <React.Fragment>
-    <Box
+  <Box
+    sx={{
+      width: 'fit-content',
+      backgroundColor: '#6d6d6d',
+      paddingX: 1,
+      marginX: -1,
+    }}
+  >
+    <Typography variant="h6" component="div">
+      {title}
+    </Typography>
+    <Typography variant="body2" component="div"
       sx={{
-        width: 'fit-content',
-        backgroundColor: '#6d6d6d',
-        paddingX: 1,
-        marginX: -1,
+        fontStyle: 'italic',
+        marginTop: 1,
       }}
     >
-      <Typography variant="h6" component="div">
-        {title}
-      </Typography>
-
-      <Typography variant="body2" component="div"
-        sx={{
-          fontStyle: 'italic',
-          marginTop: 1,
-        }}
-      >
-        {description}
-      </Typography>
-    </Box>
-  </React.Fragment>
-)
-
-const setUpQueryGroups = (queryGroups, resources) => {
-  const looseQueries = [];
-  Object.keys(resources).forEach((id) => {
-    try {
-      if (resources[id].options.queryGroupId === undefined) {
-        looseQueries.push(id)
-      } else {
-        const queryGroup = queryGroups.find(group => group.id === resources[id].options.queryGroupId);
-        if (queryGroup) {
-          queryGroup.queries.push(id);
-        } else {
-          looseQueries.push(id);
-        }
-      }
-    } catch (error) {
-      throw new Error(`Error adding queries to a group: ${error.message}`);
-    }
-  })
-  return looseQueries;
-}
+      {description}
+    </Typography>
+  </Box>
+);
 
 export default SelectionMenu;
