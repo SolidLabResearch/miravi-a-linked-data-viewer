@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
@@ -20,17 +20,19 @@ const myEngine = new QueryEngine();
 export default function CustomEditor() {
 
   const [openEditor, setOpenEditor] = useState(false);
-  const [customQueryData, setCustomQueryData] = useState([])
-  const [showError, setShowError] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [customQueryJSON, setCustomQueryJSON] = useState({})
+  const [customQueryData, setCustomQueryData] = useState([]);
+  const [showError, setShowError] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [customQueryJSON, setCustomQueryJSON] = useState({});
 
-  const [showTable, setShowTable] = useState(false)
+  const [showTable, setShowTable] = useState(false);
 
   const closeEditor = () => {
     setOpenEditor(false);
     setShowError(false);
   }
+  
+  //investigate state re-render? maybe send to dashboard instead of own component
 
   return (
     <React.Fragment>
@@ -39,7 +41,7 @@ export default function CustomEditor() {
         sx={{ margin: '10px' }}>
         Custom query
 
-      </Button>
+      </Button>   
       {isSubmitted &&
         <Button variant="outlined" color={showTable ? "error" : "primary"} onClick={
           () => {
@@ -61,16 +63,17 @@ export default function CustomEditor() {
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
 
-            makeCustomGroup('cstm' , 'Custom queries' , 'EditNoteIcon')
+            // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
+            const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
 
+            configManager.addNewQueryGroup('cstm' , 'Custom queries' , 'EditNoteIcon');
+            addQuery(jsonData.title , jsonData.query)
+            
             //console.log(jsonData)
             setCustomQueryJSON(jsonData);
-
-            addQuery(jsonData.title , jsonData.query)
-          
-            const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
             
-            setIsSubmitted(false)
+            
+            setIsSubmitted(false)          
             setShowTable(false)
             setCustomQueryData(data);
             closeEditor();
@@ -156,15 +159,6 @@ async function executeSPARQLQuery(query, dataSource, setShowError) {
   return resultingObjects;
 };
 
-const makeCustomGroup = (id, name, icon) => {
-  const config = configManager.getConfig()
-  const groupExists = config.queryGroups.find(group => group.id === id);
-
-  if(groupExists === undefined){
-    configManager.addNewQueryGroup(id, name, icon)
-  }
-
-}
 
 //Mock query
 const addQuery = (title, queryString) => {
