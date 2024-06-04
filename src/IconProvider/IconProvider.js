@@ -8,6 +8,7 @@ import FactoryIcon from '@mui/icons-material/Factory';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
 export default {
   BrushIcon,
@@ -19,5 +20,6 @@ export default {
   FactoryIcon,
   BugReportIcon,
   ConstructionIcon,
-  EditNoteIcon
+  EditNoteIcon,
+  AutoAwesomeIcon
 };

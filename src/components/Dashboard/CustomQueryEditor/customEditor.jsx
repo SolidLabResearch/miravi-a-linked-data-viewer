@@ -31,7 +31,7 @@ export default function CustomEditor() {
     setOpenEditor(false);
     setShowError(false);
   }
-  
+
   //investigate state re-render? maybe send to dashboard instead of own component
 
   return (
@@ -41,7 +41,7 @@ export default function CustomEditor() {
         sx={{ margin: '10px' }}>
         Custom query
 
-      </Button>   
+      </Button>
       {isSubmitted &&
         <Button variant="outlined" color={showTable ? "error" : "primary"} onClick={
           () => {
@@ -63,19 +63,20 @@ export default function CustomEditor() {
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
 
-            // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
-            const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
+            console.log(jsonData)
 
-            configManager.addNewQueryGroup('cstm' , 'Custom queries' , 'EditNoteIcon');
-            addQuery(jsonData.title , jsonData.query)
-            
-            //console.log(jsonData)
+            // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
+            //  const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
+
+            configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+            addQuery(jsonData)
+
             setCustomQueryJSON(jsonData);
-            
-            
-            setIsSubmitted(false)          
+
+
+            setIsSubmitted(false)
             setShowTable(false)
-            setCustomQueryData(data);
+            //setCustomQueryData(data);
             closeEditor();
             setIsSubmitted(true)
           },
@@ -98,6 +99,19 @@ export default function CustomEditor() {
               helperText="Give this custom query a name"
               variant='outlined'
             />
+
+            <TextField
+              required
+              id="outlined-multiline-flexible"
+              label="Description"
+              name='description'
+              multiline
+              fullWidth
+              minRows={2}
+              variant='outlined'
+              helperText="Give a description for the query"
+              placeholder={`This is a custom query.`}
+            />
           </div>
 
           <div>
@@ -107,8 +121,8 @@ export default function CustomEditor() {
               name='source'
               id="outlined-required"
               label="Data Source "
-              placeholder="http://examplesource.org"
-              helperText="Give the source Url for the query"
+              placeholder="http://examplesource.org ; source2"
+              helperText="Give the source Url('s) for the query. You can add more than one source separated with ' ; '"
               variant='outlined'
             />
           </div>
@@ -141,12 +155,12 @@ export default function CustomEditor() {
   )
 }
 
-
+// Temporary bindingstream
 async function executeSPARQLQuery(query, dataSource, setShowError) {
   const resultingObjects = [];
   try {
     const bindingsStream = await myEngine.queryBindings(query, {
-      sources: [dataSource]
+      sources: dataSource.split(';').map(source => source.trim())
     });
 
     bindingsStream.on('data', (binding) => {
@@ -161,18 +175,19 @@ async function executeSPARQLQuery(query, dataSource, setShowError) {
 
 
 //Mock query
-const addQuery = (title, queryString) => {
+const addQuery = (formData) => {
   configManager.addQuery({
     id: Date.now().toString(),
     queryGroupId: "cstm",
-    queryString: queryString ,
-    queryLocation: "components.rq",
-    name: title,
-    description: "Query components",
+    icon: "AutoAwesomeIcon",
+    queryString: formData.queryString,
+    name: formData.title,
+    description: formData.description,
     comunicaContext: {
-      sources: [
-        "http://localhost:8080/example/components"
-      ]
-    }
+      sources: formData.source.split(';').map(source => source.trim())
+    },
+
+    // Location for testing purposes, delete after it works with the querystring
+    queryLocation: "components.rq"
   });
 };
