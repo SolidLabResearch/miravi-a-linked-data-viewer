@@ -7,6 +7,7 @@ import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import { SvgIcon, Box, Typography } from "@mui/material";
+import CustomQueryEditButton from "../../Dashboard/CustomQueryEditor/customQueryEditButton";
 
 import configManager from "../../../configManager/configManager";
 const config = configManager.getConfig();
@@ -16,7 +17,9 @@ const config = configManager.getConfig();
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
-  const QueryTitle = useResourceDefinition().options.label;
+  const resource = useResourceDefinition();
+  
+  const QueryTitle = resource.options.label;
   const { data } = useListContext(props);
   const {changeVariables, submitted} = props;
   const [values, setValues] = useState(undefined);
@@ -31,7 +34,7 @@ function QueryResultList(props) {
   return (
     <div style={{ paddingLeft: '20px' , paddingRight: '10px' }}>
       <Title title={config.title} />
-      
+      {resource.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resource.name}/>}
       {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
       <Typography fontSize={"2rem"} mt={2} > {QueryTitle} </Typography>
       {values ?(

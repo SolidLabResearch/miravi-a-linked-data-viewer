@@ -11,8 +11,6 @@ import Typography from '@mui/material/Typography';
 
 export default function TableData(data) {
 
-    //console.log(title)
-
     const keys = []
     if (data.data === null || data.data === undefined || data.data.length === 0) {
         return (

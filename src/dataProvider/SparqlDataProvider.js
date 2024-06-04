@@ -112,10 +112,11 @@ function findQueryWithId(id) {
  */
 async function fetchQuery(query) {
   try {
-    const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
     const parser = new Parser();
-    let rawText = await result.text();
-
+   // const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
+    let rawText = await configManager.getQueryText(query)
+    
+    
     if (query.variableValues) {
       rawText = replaceVariables(rawText, query.variableValues);
     }

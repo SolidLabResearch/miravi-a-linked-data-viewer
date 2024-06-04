@@ -8,8 +8,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import { QueryEngine } from "@comunica/query-sparql";
 
-// import QueryResultList from "../../ListResultTable/QueryResultList/QueryResultList"
-// import ListResultTable from '../../ListResultTable/ListResultTable';
+//import { useLocation, useNavigate } from 'react-router-dom';
+
 
 import configManager from '../../../configManager/configManager';
 
@@ -20,10 +20,8 @@ const myEngine = new QueryEngine();
 export default function CustomEditor() {
 
   const [openEditor, setOpenEditor] = useState(false);
-  const [customQueryData, setCustomQueryData] = useState([]);
   const [showError, setShowError] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [customQueryJSON, setCustomQueryJSON] = useState({});
 
   const [showTable, setShowTable] = useState(false);
 
@@ -63,20 +61,16 @@ export default function CustomEditor() {
             const formData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(formData.entries());
 
-            console.log(jsonData)
-
             // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
             //  const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
 
             configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
             addQuery(jsonData)
 
-            setCustomQueryJSON(jsonData);
 
 
             setIsSubmitted(false)
             setShowTable(false)
-            //setCustomQueryData(data);
             closeEditor();
             setIsSubmitted(true)
           },
@@ -149,7 +143,7 @@ export default function CustomEditor() {
         </DialogActions>
       </Dialog>
 
-      {showTable && <TableData data={customQueryData} title={customQueryJSON.title} />}
+      {/* {showTable && <TableData data={customQueryData} title={customQueryJSON.title} />} */}
 
     </React.Fragment>
   )
@@ -180,7 +174,7 @@ const addQuery = (formData) => {
     id: Date.now().toString(),
     queryGroupId: "cstm",
     icon: "AutoAwesomeIcon",
-    queryString: formData.queryString,
+    queryString: formData.query,
     name: formData.title,
     description: formData.description,
     comunicaContext: {
@@ -188,6 +182,6 @@ const addQuery = (formData) => {
     },
 
     // Location for testing purposes, delete after it works with the querystring
-    queryLocation: "components.rq"
+   // queryLocation: "components.rq"
   });
 };
