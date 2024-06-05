@@ -15,26 +15,22 @@ import {
   Tooltip,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import PropTypes from "prop-types";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
 
-import configManager from "../../configManager/configManager.js";
-const config = configManager.getConfig();
-
 /**
- *
+ * the ActionBar component
+ * @param {object} props - the props passed down to the component
  * @returns {Component} custom action bar as defined by react-admin
  */
-function ActionBar() {
-  const { total, isLoading, perPage, resource } = useListContext();
+function ActionBar(props) {
+  const { config, query } = props;
+  const { total, isLoading, perPage } = useListContext();
   const [time, setTime] = useState(0);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
-  const context = config.queries.filter((query) => query.id === resource)[0]
-    .comunicaContext;
-
-  const sources = context.sources;
   useEffect(() => {
     if (isLoading) {
       setTime(0);
@@ -49,6 +45,8 @@ function ActionBar() {
     return () => clearInterval(intervalId);
   }, [time, isLoading]);
 
+  const context = query.comunicaContext;
+  const sources = context.sources;
   const resultCount = total <= perPage ? total : perPage;
 
   return (
@@ -124,5 +122,10 @@ function ActionBar() {
     </Grid>
   );
 }
+
+ActionBar.propTypes = {
+  config: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired
+};
 
 export default ActionBar;

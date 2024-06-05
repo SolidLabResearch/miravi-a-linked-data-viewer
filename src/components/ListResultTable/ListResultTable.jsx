@@ -18,8 +18,6 @@ function ListResultTable(props) {
     resource,
     sort,
     variables,
-    changeVariables,
-    submitted,
     ...rest
   } = props;
 
@@ -45,7 +43,7 @@ function ListResultTable(props) {
       sort={sort}
     >
       {isLoading && <Loading loadingSecondary={"The page is loading. Just a moment please."} />}
-      {!isLoading && <QueryResultList {...rest} changeVariables={changeVariables} submitted={submitted} />}
+      {!isLoading && <QueryResultList {...rest} />}
     </ListBase>
   );
 }
@@ -61,7 +59,10 @@ ListResultTable.propTypes = {
   queryOptions: PropTypes.object,
   resource: PropTypes.string,
   sort: PropTypes.object,
-  variables: PropTypes.object,
+  config: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
+  variables: PropTypes.object.isRequired,
+  changeVariables: PropTypes.func.isRequired
 };
 
 export default ListResultTable;

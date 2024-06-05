@@ -7,9 +7,7 @@ import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import { SvgIcon, Box, Typography } from "@mui/material";
-
-import configManager from "../../../configManager/configManager";
-const config = configManager.getConfig();
+import PropTypes from "prop-types";
 
 /**
  * @param {object} props - the props passed down to the component
@@ -18,7 +16,7 @@ const config = configManager.getConfig();
 function QueryResultList(props) {
   const QueryTitle = useResourceDefinition().options.label;
   const { data } = useListContext(props);
-  const {changeVariables, submitted} = props;
+  const { config, query, changeVariables, submitted} = props;
   const [values, setValues] = useState(undefined);
   useEffect(() => {
     if (data && data.length > 0) {
@@ -35,8 +33,8 @@ function QueryResultList(props) {
       {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
       <Typography fontSize={"2rem"} mt={2} > {QueryTitle} </Typography>
       {values ?(
-          <ListView title=" " actions={<ActionBar />} {...props} >
-            <Datagrid header={<TableHeader config={config}/>} bulkActionButtons={false}>
+        <ListView title=" " actions={<ActionBar config={config} query={query} />} {...props} >
+            <Datagrid header={<TableHeader query={query}/>} bulkActionButtons={false}>
               {Object.keys(values).map((key) => {
                 return (
                   <GenericField
@@ -49,11 +47,17 @@ function QueryResultList(props) {
             </Datagrid>
           </ListView>
         ): 
-          <NoValuesDiplay/>
+          <NoValuesDisplay/>
       }
     </div>
   );
 }
+
+QueryResultList.propTypes = {
+  config: PropTypes.object.isRequired,
+  query: PropTypes.object.isRequired,
+  changeVariables: PropTypes.func.isRequired
+};
 
 /**
  *
@@ -81,7 +85,7 @@ const Aside = (props) => {
     </div>
 )}
 
-const NoValuesDiplay = () => {
+const NoValuesDisplay = () => {
   return(
     <div>
       <Box display="flex" alignItems="center" sx={{m:3}}>

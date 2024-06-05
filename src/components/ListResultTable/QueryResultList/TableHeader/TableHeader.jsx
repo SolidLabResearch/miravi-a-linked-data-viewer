@@ -12,14 +12,12 @@ import { Component } from "react";
  * 
  * @param {object} props - the props passed down to the component
  * @param {Array<Component>} props.children - the children of the component 
- * @param {object} props.config - the config object of the application
+ * @param {object} props.query - the query object working copy
  * @returns {Component} the header of the table containing the column names, the sort icons and ontology links
  */
-function TableHeader({ children, config }) {
-  const { sort, setSort, resource } = useListContext();
-  const { variableOntology } = config.queries.filter(
-    (query) => query.id === resource
-  )[0];
+function TableHeader({ children, query }) {
+  const { sort, setSort } = useListContext();
+  const variableOntology = query.variableOntology;
   
   /**
    * Handles the click on a header and sets the sort state accordingly
@@ -91,7 +89,6 @@ function TableHeader({ children, config }) {
 
 TableHeader.propTypes = {
   children: PropTypes.node,
-  config: PropTypes.object.isRequired,
-
+  query: PropTypes.object.isRequired,
 }
 export default TableHeader;

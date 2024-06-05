@@ -6,7 +6,6 @@ import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
 import ListResultTable from "./ListResultTable.jsx";
 
 import configManager from '../../configManager/configManager.js';
-const config = configManager.getConfig();
 
 /**
  * A wrapper component around ListResultTable, to support templated queries
@@ -22,10 +21,8 @@ const TemplatedListResultTable = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [searchPar, setSearchPar] = useState({});
 
-  const query = config.queries.filter(
-    (query) => query.id === resource
-  )[0];
-
+  const config = configManager.getConfig();
+  const query = configManager.getQueryWorkingCopyById(resource);
   const isTemplatedQuery = query.variables !== undefined;
   let tableEnabled = !isTemplatedQuery;
   
@@ -83,7 +80,7 @@ const TemplatedListResultTable = (props) => {
           searchPar={searchPar} 
         />
       }
-      {tableEnabled && <ListResultTable {...props} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
+      {tableEnabled && <ListResultTable {...props} config={config} query={query} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
     </>
   )
 }
