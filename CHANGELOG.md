@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the display "Loaded: x results" in the action bar to avoid confusion (#83).
+
 ### Fixed
 
 - Fixed the broken production version due to a missing package (#123).
