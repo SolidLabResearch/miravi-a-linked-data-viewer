@@ -35,7 +35,10 @@ configManager.on('configChanged', onConfigChanged);
 
 export default {
   getList: async function getList(resource, { pagination, sort, filter, meta }) {
-    const query = findQueryWithId(resource);
+    // make a working copy of the query object found in the configuration, to prevent changing the configuration
+    // this copy is extended here
+    // rendering should occur based on this working copy
+    const query = configManager.getQueryWorkingCopyById(resource);
     const limit = pagination.perPage;
     const offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
@@ -98,30 +101,20 @@ export default {
 };
 
 /**
- * Finds a query with the given id in config.queries
- * @param {number} id - identifier of a query
- * @returns {object} the query element from the configuration
+ * Fetches the query file and builds the final query text.
+ * @param {object} query - the query object working copy
+ * @returns {string} the built query text
  */
-function findQueryWithId(id) {
-  return config.queries.find((query) => query.id === id);
-}
-
-/**
- * Fetches the query file from the given query and returns its text.
- * @param {object} query - the query element from the configuration
- * @returns {string} the text from the file location provided by the query relative to query location defined in the config file, modified for our needs.
- */
-async function fetchQuery(query) {
+async function buildQueryText(query) {
   try {
-    const result = await fetch(`${config.queryFolder}${query.queryLocation}`);
-    const parser = new Parser();
-    let rawText = await result.text();
+    let rawText = await configManager.getQueryText(query);
 
     if (query.variableValues) {
       rawText = replaceVariables(rawText, query.variableValues);
     }
 
     query.rawText = rawText;
+    const parser = new Parser();
     const parsedQuery = parser.parse(rawText);
     if (!query.variableOntology) {
       query.variableOntology = findPredicates(parsedQuery);
@@ -182,13 +175,13 @@ function findPredicates(query) {
 }
 
 /**
- * A function that executes a given query and processes every result.
- * @param {object} query - the query element from the configuration
+ * Executes the query in scope and processes every result.
+ * @param {object} query - the query object working copy
  * @returns {Array<Term>} the results of the query
  */
 async function executeQuery(query) {
   try {
-    query.queryText = await fetchQuery(query);
+    query.queryText = await buildQueryText(query);
     return handleQueryExecution(
       await myEngine.query(query.queryText, {
         ...generateContext(query.comunicaContext),

@@ -14,16 +14,15 @@ import IconProvider from "../../../IconProvider/IconProvider";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 
 import configManager from '../../../configManager/configManager';
-const config = configManager.getConfig();
 
 /**
  * A custom menu as defined in React Admin for selecting the query the user whishes to execute.
  * @returns {Component} the selection menu component
  */
 function SelectionMenu() {
-
-  const resources = useResourceDefinitions();
+  const config = configManager.getConfig();
   const queryGroups = config.queryGroups || [];
+  const resources = useResourceDefinitions();
 
   // adding a list to the group that will contain all the queries for said group
   queryGroups.forEach(group => group.queries = [])

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the broken production version due to a missing package (#123).
 - Corrected the counting of the total number of items in the result list (#120).
+- Avoided extending query objects in the configuration (#126).
 
 ## [1.2.0] - 2024-05-07
 

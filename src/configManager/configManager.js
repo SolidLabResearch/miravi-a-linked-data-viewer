@@ -2,7 +2,10 @@ import configFile from "../config.json";
 import { EventEmitter } from 'events';
 
 /**
- * A class maintaining a configuration object, initially read from the configuration file
+ * A class maintaining a configuration object, initially read from the configuration file.
+ * In addition, working copies of query objects are maintained as well.
+ * These working copies are meant for usage by clients that may extend those query objects,
+ * but shouldn't change the configuration object.
  */
 class ConfigManager extends EventEmitter {
   constructor() {
@@ -16,6 +19,8 @@ class ConfigManager extends EventEmitter {
     if (this.config.queryFolder.substring(this.config.queryFolder.length - 1) !== "/") {
       this.config.queryFolder = `${this.config.queryFolder}/`;
     }
+
+    this.queryWorkingCopies = {};
   }
 
   /**
@@ -34,6 +39,7 @@ class ConfigManager extends EventEmitter {
    */
   setConfig(newConfig) {
     this.config = { ...newConfig };
+    this.queryWorkingCopies = {};
     this.emit('configChanged', this.config);
   }
 
@@ -44,6 +50,7 @@ class ConfigManager extends EventEmitter {
    */
   changeConfig(changes) {
     this.config = { ...this.config, ...changes };
+    this.queryWorkingCopies = {};
     this.emit('configChanged', this.config);
   }
 
@@ -55,6 +62,43 @@ class ConfigManager extends EventEmitter {
   addQuery(newQuery) {
     this.config.queries = [...this.config.queries, newQuery];
     this.emit('configChanged', this.config);
+  }
+
+  /**
+  * Gets the query with the given id in the config.queries array in the configuration
+  * @param {string} id - id property a query
+  * @returns {object} the query
+  */
+  getQueryById(id) {
+    return this.config.queries.find((query) => query.id === id);
+  }
+
+  /**
+  * Gets a working copy of the query with the given id (make a working copy first if needed)
+  * @param {string} id - id property a query
+  * @returns {object} the query
+  */
+  getQueryWorkingCopyById(id) {
+    let workingCopy = this.queryWorkingCopies[id];
+    if (!workingCopy) {
+      workingCopy = JSON.parse(JSON.stringify(this.getQueryById(id)));
+      this.queryWorkingCopies[id] = workingCopy;
+    }
+    return workingCopy;
+  }
+
+  /**
+   * Gets the query text from a query
+   * @param {object} query - the input query
+   * @returns {string} the query text
+   */
+  async getQueryText(query) {
+
+    if (query.queryLocation) {
+      const fetchResult = await fetch(`${this.config.queryFolder}${query.queryLocation}`);
+      return await fetchResult.text();
+    }
+    return query.queryString;
   }
 }
 

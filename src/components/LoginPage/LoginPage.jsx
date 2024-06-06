@@ -1,13 +1,13 @@
 import "./LoginPage.css";
 import { useLogin, useNotify } from "react-admin";
 import { Component, useState } from "react";
+
 import configManager from "../../configManager/configManager";
 
 /**
  * @returns {Component} a login form for logging into your Identity Provider.
  */
 function SolidLoginForm() {
-  const config = configManager.getConfig();
   const login = useLogin();
   const notify = useNotify();
   const [isIdp, setIsIdp] = useState(true);
@@ -24,6 +24,8 @@ function SolidLoginForm() {
       notify(error.message);
     }
   }
+
+  const config = configManager.getConfig();
 
   return (
     <form onSubmit={handleLogin} className="login-form">

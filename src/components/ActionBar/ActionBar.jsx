@@ -20,7 +20,6 @@ import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
 
 import configManager from "../../configManager/configManager.js";
-const config = configManager.getConfig();
 
 /**
  *
@@ -31,10 +30,6 @@ function ActionBar() {
   const [time, setTime] = useState(0);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
-  const context = config.queries.filter((query) => query.id === resource)[0]
-    .comunicaContext;
-
-  const sources = context.sources;
   useEffect(() => {
     if (isLoading) {
       setTime(0);
@@ -49,6 +44,10 @@ function ActionBar() {
     return () => clearInterval(intervalId);
   }, [time, isLoading]);
 
+  const config = configManager.getConfig();
+  const query = configManager.getQueryWorkingCopyById(resource);
+  const context = query.comunicaContext;
+  const sources = context.sources;
   const resultCount = total <= perPage ? total : perPage;
 
   return (
