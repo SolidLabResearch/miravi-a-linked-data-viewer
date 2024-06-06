@@ -15,7 +15,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import PropTypes from "prop-types";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
@@ -23,7 +22,7 @@ import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationI
 import configManager from "../../configManager/configManager.js";
 
 /**
- * the ActionBar component
+ *
  * @returns {Component} custom action bar as defined by react-admin
  */
 function ActionBar() {

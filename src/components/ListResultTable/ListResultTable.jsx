@@ -63,8 +63,7 @@ ListResultTable.propTypes = {
   queryOptions: PropTypes.object,
   resource: PropTypes.string.isRequired,
   sort: PropTypes.object,
-  variables: PropTypes.object.isRequired,
-  changeVariables: PropTypes.func.isRequired
+  variables: PropTypes.object.isRequired
 };
 
 export default ListResultTable;

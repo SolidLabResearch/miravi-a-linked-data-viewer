@@ -59,6 +59,7 @@ function QueryResultList(props) {
 }
 
 QueryResultList.propTypes = {
+  resource: PropTypes.string.isRequired,
   changeVariables: PropTypes.func.isRequired,
   submitted: PropTypes.bool.isRequired
 };
