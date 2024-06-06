@@ -8,7 +8,6 @@ import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
 
 import configManager from "../../../configManager/configManager";
-const config = configManager.getConfig();
 
 function InvalidateButton() {
   const refresh = useRefresh();
@@ -31,6 +30,7 @@ function InvalidateButton() {
  * @returns {Component} custom AppBar as defined by react-admin
  */
 function NavigationBar(props) {
+  const config = configManager.getConfig();
   return (
     <AppBar {...props} userMenu={<AuthenticationMenu />}>
       <img

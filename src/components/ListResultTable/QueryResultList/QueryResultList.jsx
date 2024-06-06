@@ -9,14 +9,16 @@ import SearchOffIcon from '@mui/icons-material/SearchOff';
 import { SvgIcon, Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 
+import configManager from "../../../configManager/configManager";
+
 /**
  * @param {object} props - the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
-  const QueryTitle = useResourceDefinition().options.label;
+  const queryTitle = useResourceDefinition().options.label;
   const { data } = useListContext(props);
-  const { config, query, changeVariables, submitted} = props;
+  const { resource, changeVariables, submitted} = props;
   const [values, setValues] = useState(undefined);
   useEffect(() => {
     if (data && data.length > 0) {
@@ -26,14 +28,17 @@ function QueryResultList(props) {
     }
   }, [data]);
 
+  const config = configManager.getConfig();
+  const query = configManager.getQueryWorkingCopyById(resource);
+
   return (
     <div style={{ paddingLeft: '20px' , paddingRight: '10px' }}>
       <Title title={config.title} />
       
       {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
-      <Typography fontSize={"2rem"} mt={2} > {QueryTitle} </Typography>
+      <Typography fontSize={"2rem"} mt={2} > {queryTitle} </Typography>
       {values ?(
-        <ListView title=" " actions={<ActionBar config={config} query={query} />} {...props} >
+        <ListView title=" " actions={<ActionBar />} {...props} >
             <Datagrid header={<TableHeader query={query}/>} bulkActionButtons={false}>
               {Object.keys(values).map((key) => {
                 return (
@@ -54,9 +59,8 @@ function QueryResultList(props) {
 }
 
 QueryResultList.propTypes = {
-  config: PropTypes.object.isRequired,
-  query: PropTypes.object.isRequired,
-  changeVariables: PropTypes.func.isRequired
+  changeVariables: PropTypes.func.isRequired,
+  submitted: PropTypes.bool.isRequired
 };
 
 /**

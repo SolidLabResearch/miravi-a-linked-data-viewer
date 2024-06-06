@@ -20,14 +20,14 @@ import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthentic
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
 
+import configManager from "../../configManager/configManager.js";
+
 /**
  * the ActionBar component
- * @param {object} props - the props passed down to the component
  * @returns {Component} custom action bar as defined by react-admin
  */
-function ActionBar(props) {
-  const { config, query } = props;
-  const { total, isLoading, perPage } = useListContext();
+function ActionBar() {
+  const { total, isLoading, perPage, resource } = useListContext();
   const [time, setTime] = useState(0);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
@@ -45,6 +45,8 @@ function ActionBar(props) {
     return () => clearInterval(intervalId);
   }, [time, isLoading]);
 
+  const config = configManager.getConfig();
+  const query = configManager.getQueryWorkingCopyById(resource);
   const context = query.comunicaContext;
   const sources = context.sources;
   const resultCount = total <= perPage ? total : perPage;
@@ -122,10 +124,5 @@ function ActionBar(props) {
     </Grid>
   );
 }
-
-ActionBar.propTypes = {
-  config: PropTypes.object.isRequired,
-  query: PropTypes.object.isRequired
-};
 
 export default ActionBar;

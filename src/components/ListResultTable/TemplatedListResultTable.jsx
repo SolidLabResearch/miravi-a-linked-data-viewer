@@ -21,13 +21,10 @@ const TemplatedListResultTable = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [searchPar, setSearchPar] = useState({});
 
-  const config = configManager.getConfig();
   const query = configManager.getQueryWorkingCopyById(resource);
   const isTemplatedQuery = query.variables !== undefined;
   let tableEnabled = !isTemplatedQuery;
   
-  
-
   if (isTemplatedQuery) {
     // Update variables from query parameters
     const queryParams = new URLSearchParams(location.search);
@@ -80,7 +77,7 @@ const TemplatedListResultTable = (props) => {
           searchPar={searchPar} 
         />
       }
-      {tableEnabled && <ListResultTable {...props} config={config} query={query} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
+      {tableEnabled && <ListResultTable {...props} resource={resource} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
     </>
   )
 }

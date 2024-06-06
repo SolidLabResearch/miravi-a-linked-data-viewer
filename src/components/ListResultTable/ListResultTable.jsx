@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import {Component} from "react";
 import QueryResultList from "./QueryResultList/QueryResultList";
 
+import configManager from "../../configManager/configManager";
+
 /**
  * @param {object} props - the props passed down to the component
  * @returns {Component} custom List as defined by react-admin which either shows a loading indicator or the query results
@@ -29,6 +31,8 @@ function ListResultTable(props) {
     }
   });
 
+  const query = configManager.getQueryWorkingCopyById(resource);
+
   return (
     <ListBase
       debounce={debounce}
@@ -43,7 +47,7 @@ function ListResultTable(props) {
       sort={sort}
     >
       {isLoading && <Loading loadingSecondary={"The page is loading. Just a moment please."} />}
-      {!isLoading && <QueryResultList {...rest} />}
+      {!isLoading && <QueryResultList resource={resource} { ...rest } />}
     </ListBase>
   );
 }
@@ -57,10 +61,8 @@ ListResultTable.propTypes = {
   filterDefaultValues: PropTypes.object,
   perPage: PropTypes.number,
   queryOptions: PropTypes.object,
-  resource: PropTypes.string,
+  resource: PropTypes.string.isRequired,
   sort: PropTypes.object,
-  config: PropTypes.object.isRequired,
-  query: PropTypes.object.isRequired,
   variables: PropTypes.object.isRequired,
   changeVariables: PropTypes.func.isRequired
 };

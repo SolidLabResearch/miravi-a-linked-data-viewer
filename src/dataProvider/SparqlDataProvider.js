@@ -35,7 +35,9 @@ configManager.on('configChanged', onConfigChanged);
 
 export default {
   getList: async function getList(resource, { pagination, sort, filter, meta }) {
-    // make a working copy of the query object found in the configuration, to prevent changing the configuration 
+    // make a working copy of the query object found in the configuration, to prevent changing the configuration
+    // this copy is extended here
+    // rendering should occur based on this working copy
     const query = configManager.getQueryWorkingCopyById(resource);
     const limit = pagination.perPage;
     const offset = (pagination.page - 1) * pagination.perPage;

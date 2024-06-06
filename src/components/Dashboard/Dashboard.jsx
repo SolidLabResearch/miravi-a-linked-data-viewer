@@ -1,31 +1,25 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import {Title} from 'react-admin';
-import PropTypes from 'prop-types';
 import './Dashboard.css';
+
+import configManager from '../../configManager/configManager';
 
 /**
  * This function returns a function that creates a dashboard with an introduction for <Admin>.
- * @param {object} props - This has the properties `title` (text for the app bar) and `text` (the introduction text).
  * @returns {function(): *} - A function that creates a dashboard with an introduction for <Admin>.
  */
-function Dashboard(props) {
-  let {title, text} = props;
-
-  title = title || 'You change this title via the config file.';
-  text = text || 'You change this text via the config file.';
+function Dashboard() {
+  const config = configManager.getConfig();
+  const title = config.title || 'You change this title via the config file.';
+  const introductionText = config.introductionText || 'You change this introduction text via the config file.';
 
   return (
     <Card>
       <Title title={title}/>
-      <CardContent>{text}</CardContent>
+      <CardContent>{introductionText}</CardContent>
     </Card>
   );
 }
-
-Dashboard.propTypes = {
-  title: PropTypes.string,
-  text: PropTypes.string
-};
 
 export default Dashboard;
