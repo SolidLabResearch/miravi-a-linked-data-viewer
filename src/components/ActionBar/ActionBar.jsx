@@ -26,7 +26,7 @@ import configManager from "../../configManager/configManager.js";
  * @returns {Component} custom action bar as defined by react-admin
  */
 function ActionBar() {
-  const { total, isLoading, perPage, resource } = useListContext();
+  const { total, isLoading, resource } = useListContext();
   const [time, setTime] = useState(0);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
@@ -48,7 +48,6 @@ function ActionBar() {
   const query = configManager.getQueryWorkingCopyById(resource);
   const context = query.comunicaContext;
   const sources = context.sources;
-  const resultCount = total <= perPage ? total : perPage;
 
   return (
     <Grid container direction="row" width={"100%"} rowSpacing={1}>
@@ -56,11 +55,6 @@ function ActionBar() {
         <TopToolbar style={{ width: "100%", height: "fit-content" }}>
           <div style={{ flex: "1" }}></div>
           <div className="query-information">
-            <div className="information-box">
-              {isLoading && <strong>Loading: </strong>}
-              {!isLoading && <strong>Loaded: </strong>}
-              <span>{resultCount} results</span>
-            </div>
             <div className="information-box">
               {isLoading && <strong>Runtime: </strong>}
               {!isLoading && <strong>Finished in: </strong>}
