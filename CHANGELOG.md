@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2024-06-17
+
 ### Added
 
 - Added a single point of access to the config.json file (#32).
@@ -124,4 +126,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.2
 [1.1.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.3
 [1.2.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.0
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.0...HEAD
+[1.2.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.1
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.1...HEAD
