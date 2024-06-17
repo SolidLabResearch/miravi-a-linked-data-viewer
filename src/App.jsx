@@ -1,5 +1,5 @@
 import "./App.css";
-import { Admin, Resource } from "react-admin";
+import { Admin, Resource, CustomRoutes } from "react-admin";
 import SparqlDataProvider from "./dataProvider/SparqlDataProvider";
 import { Component, useEffect, useState } from "react";
 import {
@@ -14,6 +14,8 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
 import TemplatedListResultTable from "./components/ListResultTable/TemplatedListResultTable.jsx";
 
+import { Route } from "react-router-dom";
+import CustomEditor from "./components/Dashboard/CustomQueryEditor/customEditor.jsx";
 
 import configManager from "./configManager/configManager.js";
 
@@ -93,6 +95,9 @@ function App() {
             />
           );
         })}
+        <CustomRoutes>
+          <Route key="customQuery" path="/customQuery" element={<CustomEditor/>}/>
+        </CustomRoutes>
       </Admin>
   );
 }

@@ -50,6 +50,7 @@ const SelectionMenu = () => {
         <Menu>
           <List>
             <DashboardMenuItem />
+            <Menu.Item to="/customQuery" primaryText="Custom Query Editor" leftIcon={<IconProvider.DashboardCustomizeIcon/>}/>
             {looseQueries.map(id => (
               <Tooltip
                 key={id}

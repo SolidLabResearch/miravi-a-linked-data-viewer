@@ -1,7 +1,6 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Title } from 'react-admin';
-import CustomEditor from './CustomQueryEditor/customEditor';
 import './Dashboard.css';
 
 import configManager from '../../configManager/configManager';
@@ -17,14 +16,10 @@ function Dashboard() {
 
   return (
     <div>
-      
       <Card>
         <Title title={title} />
         <CardContent>{introductionText}</CardContent>
       </Card>
-      
-      <CustomEditor/>
-
     </div>
   );
 }

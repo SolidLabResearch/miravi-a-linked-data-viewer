@@ -1,110 +1,110 @@
 import React, { useState, useEffect } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import { QueryEngine } from "@comunica/query-sparql";
 
-//import { useLocation, useNavigate } from 'react-router-dom';
+import { QueryEngine } from "@comunica/query-sparql";
+import {   CardActions, Typography } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 
 
 import configManager from '../../../configManager/configManager';
-
-import TableData from './tableData';
-
 const myEngine = new QueryEngine();
 
 export default function CustomEditor() {
 
-  const [openEditor, setOpenEditor] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    source: '',
+    query: ''
+  });
   const [showError, setShowError] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const [showTable, setShowTable] = useState(false);
+  //delete tabledata when everything is finished
 
-  const closeEditor = () => {
-    setOpenEditor(false);
-    setShowError(false);
-  }
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const title = searchParams.get('title') || '';
+    const description = searchParams.get('description') || '';
+    const source = searchParams.get('source') || '';
+    const query = searchParams.get('query') || '';
+    
+    setFormData({ title, description, source, query });
+  }, [location.search]);
 
-  //investigate state re-render? maybe send to dashboard instead of own component
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const jsonData = Object.fromEntries(formData.entries());
+
+    const searchParams = new URLSearchParams(jsonData);
+    navigate({ search: searchParams.toString() });
+
+    // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
+    // const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError);
+
+    configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+    addQuery(jsonData);
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
   return (
     <React.Fragment>
-      <Button variant="contained" onClick={
-        () => { setOpenEditor(true) }}
-        sx={{ margin: '10px' }}>
-        Custom query
-
-      </Button>
-      {isSubmitted &&
-        <Button variant="outlined" color={showTable ? "error" : "primary"} onClick={
-          () => {
-            setShowTable(!showTable);
-          }}>
-          {showTable ? "Hide Results" : "Show Results"}
-        </Button>
-      }
-
-      <Dialog
-        open={openEditor}
-        onClose={closeEditor}
-        maxWidth={'md'}
-        fullWidth
-        PaperProps={{
-          component: 'form',
-          onSubmit: async (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const jsonData = Object.fromEntries(formData.entries());
-
-            // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
-            //  const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError)
-
-            configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
-            addQuery(jsonData)
-
-
-
-            setIsSubmitted(false)
-            setShowTable(false)
-            closeEditor();
-            setIsSubmitted(true)
-          },
-        }}
+   
+      <Card
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ padding: '16px', marginTop: '16px', width: '100%' }}
       >
-        <DialogTitle>Custom Query Editor</DialogTitle>
-        <DialogContent>
-          <DialogContentText sx={{ color: 'red', mb: '10px' }}>
-            {showError ? 'Invalid Query. Check the URL and Query Syntax' : ''}
-          </DialogContentText>
+        <CardContent>
+          <Typography variant="h6">Custom Query Editor</Typography>
+          {showError && (
+            <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
+              Invalid Query. Check the URL and Query Syntax
+            </Typography>
+          )}
 
           <div>
             <TextField
               required
               fullWidth
-              name='title'
+              name="title"
               id="outlined-required"
-              label="Query title "
+              label="Query title"
               placeholder="Custom query name"
               helperText="Give this custom query a name"
-              variant='outlined'
+              variant="outlined"
+              value={formData.title}
+              onChange={handleChange}
+              sx={{ marginBottom: '16px' }}
             />
 
             <TextField
               required
               id="outlined-multiline-flexible"
               label="Description"
-              name='description'
+              name="description"
               multiline
               fullWidth
               minRows={2}
-              variant='outlined'
+              variant="outlined"
               helperText="Give a description for the query"
-              placeholder={`This is a custom query.`}
+              placeholder="This is a custom query."
+              value={formData.description}
+              onChange={handleChange}
+              sx={{ marginBottom: '16px' }}
             />
           </div>
 
@@ -112,12 +112,15 @@ export default function CustomEditor() {
             <TextField
               required
               fullWidth
-              name='source'
+              name="source"
               id="outlined-required"
-              label="Data Source "
+              label="Data Source"
               placeholder="http://examplesource.org ; source2"
-              helperText="Give the source Url('s) for the query. You can add more than one source separated with ' ; '"
-              variant='outlined'
+              helperText="Give the source Url(s) for the query. You can add more than one source separated with ' ; '"
+              variant="outlined"
+              value={formData.source}
+              onChange={handleChange}
+              sx={{ marginBottom: '16px' }}
             />
           </div>
 
@@ -126,23 +129,24 @@ export default function CustomEditor() {
               required
               id="outlined-multiline-flexible"
               label="Custom Query"
-              name='query'
+              name="query"
               multiline
               fullWidth
               minRows={5}
-              variant='outlined'
+              variant="outlined"
               helperText="Give the SPARQL query"
               placeholder={`SELECT ?s ?p ?o \nWHERE { \n\t?s ?p ?o \n}`}
+              value={formData.query}
+              onChange={handleChange}
+              sx={{ marginBottom: '16px' }}
             />
           </div>
-        </DialogContent>
+        </CardContent>
 
-        <DialogActions>
-          <Button onClick={closeEditor}>Cancel</Button>
+        <CardActions>
           <Button variant="contained" type="submit">Submit Query</Button>
-        </DialogActions>
-      </Dialog>
-
+        </CardActions>
+      </Card>
       {/* {showTable && <TableData data={customQueryData} title={customQueryJSON.title} />} */}
 
     </React.Fragment>
@@ -168,7 +172,7 @@ async function executeSPARQLQuery(query, dataSource, setShowError) {
 };
 
 
-//Mock query
+
 const addQuery = (formData) => {
   configManager.addQuery({
     id: Date.now().toString(),
@@ -180,8 +184,5 @@ const addQuery = (formData) => {
     comunicaContext: {
       sources: formData.source.split(';').map(source => source.trim())
     },
-
-    // Location for testing purposes, delete after it works with the querystring
-   // queryLocation: "components.rq"
   });
 };
