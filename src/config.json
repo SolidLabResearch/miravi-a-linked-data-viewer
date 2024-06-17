@@ -279,6 +279,16 @@
           "http://localhost:8080/example/dup2"
         ]
       }
+    },
+    {
+      "id": "9050",
+      "queryGroupId": "c-tst",
+      "queryLocation": "so_distinct.rq",
+      "name": "A test on counting the total number results",
+      "description": "Query a source containing ?s ?p1 ?o and ?s ?p2 ?o with p1 != p2 and request only ?s ?o",
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/dup1"]
+      }
     }
   ]
 }

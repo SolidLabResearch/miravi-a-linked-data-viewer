@@ -20,21 +20,16 @@ import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
 
 import configManager from "../../configManager/configManager.js";
-const config = configManager.getConfig();
 
 /**
  *
  * @returns {Component} custom action bar as defined by react-admin
  */
 function ActionBar() {
-  const { total, isLoading, perPage, resource } = useListContext();
+  const { total, isLoading, resource } = useListContext();
   const [time, setTime] = useState(0);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
-  const context = config.queries.filter((query) => query.id === resource)[0]
-    .comunicaContext;
-
-  const sources = context.sources;
   useEffect(() => {
     if (isLoading) {
       setTime(0);
@@ -49,7 +44,10 @@ function ActionBar() {
     return () => clearInterval(intervalId);
   }, [time, isLoading]);
 
-  const resultCount = total <= perPage ? total : perPage;
+  const config = configManager.getConfig();
+  const query = configManager.getQueryWorkingCopyById(resource);
+  const context = query.comunicaContext;
+  const sources = context.sources;
 
   return (
     <Grid container direction="row" width={"100%"} rowSpacing={1}>
@@ -57,11 +55,6 @@ function ActionBar() {
         <TopToolbar style={{ width: "100%", height: "fit-content" }}>
           <div style={{ flex: "1" }}></div>
           <div className="query-information">
-            <div className="information-box">
-              {isLoading && <strong>Loading: </strong>}
-              {!isLoading && <strong>Loaded: </strong>}
-              <span>{resultCount} results</span>
-            </div>
             <div className="information-box">
               {isLoading && <strong>Runtime: </strong>}
               {!isLoading && <strong>Finished in: </strong>}

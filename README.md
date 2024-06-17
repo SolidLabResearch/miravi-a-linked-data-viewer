@@ -5,7 +5,7 @@ inspect the corresponding results.
 
 Table of contents:
 * [Getting Started](#getting-started)
-* [Static build](#static-build)
+* [Static, production build](#static-production-build)
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
   * [Specifying sources](#specifying-sources)
@@ -15,6 +15,8 @@ Table of contents:
 * [Representation Mapper](#representation-mapper)
 * [Using the local pods](#using-the-local-pods)
 * [Testing](#testing)
+  * [Testing the production version](#testing-the-production-version)
+  * [Testing the development version](#testing-the-development-version)
 
 ## Getting Started
 
@@ -38,7 +40,7 @@ you also need to activate the supporting resources:
 1. In a new terminal window, prepare and start the local pods:
 
    ```bash
-   npm run prepare:pods && npm run start:pods
+   npm run reset:pods && npm run start:pods
    ```
 
 2. In a new terminal window, start the http proxy:
@@ -56,7 +58,7 @@ you also need to activate the supporting resources:
 Some queries require a log in.
 Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
 
-## Static build
+## Static, production build
 
 To make a standalone version of the result of this project, you can make a static build and serve it using any webserver. Execute:
 
@@ -64,7 +66,7 @@ To make a standalone version of the result of this project, you can make a stati
 npm run build
 ```
 
-The static build appears in the `dist` folder. 
+The static build appears in the `dist` folder.
 
 ## Logging in
 
@@ -217,22 +219,35 @@ You can make use of these for your own tests. Follow these steps:
 
 - Add your data and `.acl` files in the `initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
-- Prepare the pods by executing `npm run prepare:pods`.
+- Prepare the pods by executing `npm run reset:pods`.
 
 ## Testing
 
-For testing we use [Cypress](https://www.cypress.io/). To test, follow the next steps:
+For testing we use [Cypress](https://www.cypress.io/).
 
-1. Prepare and start the local pods:
+> It is important to test the production version at least at the end of a development cycle.
+
+The development version might be tested repeatedly during development.
+
+### Testing the production version
+
+1. Build the production version of the Web application and serve it:
 
    ```bash
-   npm run prepare:pods && npm run start:pods
+   # make really, really sure to build from scratch
+   rm -rf node_modules/
+   rm -rf dist/
+   npm install
+   # build
+   npm run build
+   # serve
+   npx http-server -p 5173 ./dist
    ```
 
-2. In a new terminal window, start the Web application:
+2. In a new terminal window, prepare and start the local pods:
 
    ```bash
-   npm run dev
+   npm run reset:pods && npm run start:pods
    ```
 
 3. In a new terminal window, start the http proxy:
@@ -250,5 +265,18 @@ For testing we use [Cypress](https://www.cypress.io/). To test, follow the next 
 5. Finally, in a new terminal window, you can execute the tests by running:
 
    ```bash
+   ## for normal test execution:
    npm run test
+   ## for interactive testing:
+   npm run test:interactive
+   ```
+
+### Testing the development version
+
+The procedure is the same as for testing the production version, except for step 1, which is now:
+
+1. Start the Web application in development mode:
+
+   ```bash
+   npm run dev
    ```

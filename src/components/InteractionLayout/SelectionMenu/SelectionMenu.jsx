@@ -15,6 +15,7 @@ import IconProvider from "../../../IconProvider/IconProvider";
 import configManager from '../../../configManager/configManager';
 
 
+
 const SelectionMenu = () => {
   const resources = useResourceDefinitions();
   const [config, setConfig] = useState(configManager.getConfig());

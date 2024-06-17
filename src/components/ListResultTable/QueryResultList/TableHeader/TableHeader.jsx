@@ -8,18 +8,16 @@ import LinkIcon from "@mui/icons-material/Link";
 import PropTypes from "prop-types";
 import { Component } from "react";
 
+import configManager from "../../../../configManager/configManager";
+
 /**
  * 
  * @param {object} props - the props passed down to the component
  * @param {Array<Component>} props.children - the children of the component 
- * @param {object} props.config - the config object of the application
  * @returns {Component} the header of the table containing the column names, the sort icons and ontology links
  */
-function TableHeader({ children, config }) {
+function TableHeader({ children }) {
   const { sort, setSort, resource } = useListContext();
-  const { variableOntology } = config.queries.filter(
-    (query) => query.id === resource
-  )[0];
   
   /**
    * Handles the click on a header and sets the sort state accordingly
@@ -36,6 +34,9 @@ function TableHeader({ children, config }) {
     }
     setSort(newSort);
   }
+
+  const query = configManager.getQueryWorkingCopyById(resource);
+  const variableOntology = query.variableOntology;
 
   return (
     <TableHead>
@@ -90,8 +91,6 @@ function TableHeader({ children, config }) {
 }
 
 TableHeader.propTypes = {
-  children: PropTypes.node,
-  config: PropTypes.object.isRequired,
-
+  children: PropTypes.node
 }
 export default TableHeader;

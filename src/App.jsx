@@ -80,9 +80,7 @@ function App() {
         authProvider={authenticationProvider}
         loginPage={SolidLoginForm}
         requireAuth={false}
-        dashboard={() => {
-          return Dashboard({ title: config.title, text: config.introductionText })
-        }}
+        dashboard={Dashboard}
       >
         {queryLength && config.queries.map((query) => {
           return (
