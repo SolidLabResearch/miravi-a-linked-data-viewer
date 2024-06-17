@@ -17,11 +17,11 @@ import configManager from "../../../configManager/configManager";
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
-  const resource = useResourceDefinition();
-  
-  const QueryTitle = resource.options.label;
-  const { data } = useListContext(props);
   const { resource, changeVariables, submitted} = props;
+  const resourceDef = useResourceDefinition();
+  
+  const queryTitle = resourceDef.options.label;
+  const { data } = useListContext(props);
   const [values, setValues] = useState(undefined);
   useEffect(() => {
     if (data && data.length > 0) {
@@ -37,8 +37,8 @@ function QueryResultList(props) {
   return (
     <div style={{ paddingLeft: '20px' , paddingRight: '10px' }}>
       <Title title={config.title} />
-      {resource.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resource.name}/>}
-      {submitted && <Aside changeVariables={changeVariables}/> /*  Adding button to make a new query - top left corner */ } 
+      {resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name}/>}
+      {submitted && <Aside changeVariables={changeVariables}/> } 
       <Typography fontSize={"2rem"} mt={2} > {queryTitle} </Typography>
       {values ?(
         <ListView title=" " actions={<ActionBar />} {...props} >
