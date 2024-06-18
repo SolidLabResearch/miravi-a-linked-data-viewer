@@ -125,6 +125,7 @@ class ConfigManager extends EventEmitter {
     if (index !== -1) {
         this.config.queries[index] = updatedQuery;
     }
+    this.queryWorkingCopies = {};
     this.emit('configChanged', this.config);
   }
 

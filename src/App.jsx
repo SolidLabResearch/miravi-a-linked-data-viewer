@@ -35,7 +35,7 @@ function App() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
   const [config, setConfig] = useState(configManager.getConfig());
-  const [queryLength, setQueryLength] = useState(config.queries.length)
+  const [configChangeTrigger, setConfigChangeTrigger] = useState(config.queries.length)
 
   useEffect(() => {
     const root = document.documentElement;
@@ -45,7 +45,7 @@ function App() {
   useEffect(() => {
     const handleConfigChange = (newConfig) => {
       setConfig(newConfig);
-      setQueryLength(newConfig.queries.length)
+      setConfigChangeTrigger(Date.now().toString())
     };
 
     // Listen for config changes
@@ -75,30 +75,37 @@ function App() {
   });
 
   return (
-     <Admin
-        queryClient={queryClient}
-        dataProvider={SparqlDataProvider}
-        layout={InteractionLayout}
-        authProvider={authenticationProvider}
-        loginPage={SolidLoginForm}
-        requireAuth={false}
-        dashboard={Dashboard}
-      >
-        {queryLength && config.queries.map((query) => {
-          return (
-            <Resource
-              key={query.id}
-              name={query.id}
-              options={{ label: query.name, descr: query.description, queryGroupId: query.queryGroupId }}
-              icon={IconProvider[query.icon]}
-              list={TemplatedListResultTable}
-            />
-          );
+    <Admin
+      queryClient={queryClient}
+      dataProvider={SparqlDataProvider}
+      layout={InteractionLayout}
+      authProvider={authenticationProvider}
+      loginPage={SolidLoginForm}
+      requireAuth={false}
+      dashboard={Dashboard}
+    >
+      {configChangeTrigger && config.queries.map((query) => {
+        return (
+          <Resource
+            key={query.id}
+            name={query.id}
+            options={{ label: query.name, descr: query.description, queryGroupId: query.queryGroupId }}
+            icon={IconProvider[query.icon]}
+            list={TemplatedListResultTable}
+          />
+        );
+      })}
+      <CustomRoutes>
+        <Route key="customQuery" path="/customQuery" element={<CustomEditor newQuery={true} />} />
+        {config.queries.map((query) => {
+          if (query.queryGroupId === 'cstm') {
+            return (
+              <Route key={`edit${query.id}`} path={`/${query.id}/editCustom`} element={<CustomEditor newQuery={false} id={query.id} />} />
+            );
+          }
         })}
-        <CustomRoutes>
-          <Route key="customQuery" path="/customQuery" element={<CustomEditor/>}/>
-        </CustomRoutes>
-      </Admin>
+      </CustomRoutes>
+    </Admin>
   );
 }
 

@@ -5,15 +5,19 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 import { QueryEngine } from "@comunica/query-sparql";
-import {   CardActions, Typography } from '@mui/material';
+import { CardActions, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-
-
 import configManager from '../../../configManager/configManager';
+
+
+
 const myEngine = new QueryEngine();
 
-export default function CustomEditor() {
+export default function CustomEditor(props) {
+
+  //console.log(props)
+
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,31 +29,52 @@ export default function CustomEditor() {
   });
   const [showError, setShowError] = useState(false);
 
+
   //delete tabledata when everything is finished
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const title = searchParams.get('title') || '';
-    const description = searchParams.get('description') || '';
-    const source = searchParams.get('source') || '';
-    const query = searchParams.get('query') || '';
-    
-    setFormData({ title, description, source, query });
+    if (props.newQuery) {
+      const searchParams = new URLSearchParams(location.search);
+      const title = searchParams.get('title') || '';
+      const description = searchParams.get('description') || '';
+      const source = searchParams.get('source') || '';
+      const query = searchParams.get('query') || '';
+      setFormData({ title, description, source, query });
+
+    } else{
+      const edittingQuery = configManager.getQueryById(props.id);
+      setFormData({ 
+        title: edittingQuery.name, 
+        description: edittingQuery.description, 
+        source:  edittingQuery.comunicaContext.sources.join(' ; '), 
+        query: edittingQuery.queryString });
+    }
   }, [location.search]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const jsonData = Object.fromEntries(formData.entries());
+    if (props.newQuery) {
+  
+      const searchParams = new URLSearchParams(jsonData);
+      navigate({ search: searchParams.toString() });
 
-    const searchParams = new URLSearchParams(jsonData);
-    navigate({ search: searchParams.toString() });
-
-    // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
-    // const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError);
-
-    configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
-    addQuery(jsonData);
+      // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
+      // const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError);
+  
+      configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+      
+      //const savedUrl = `http://localhost:5173/#${location.pathname}?${searchParams.toString()}`
+      // jsonData.savedUrl = savedUrl;
+      // console.log(jsonData);
+      addQuery(jsonData);
+    }
+    else{
+     
+      const customQuery = configManager.getQueryById(props.id);
+      updateQuery(jsonData, customQuery);
+    }
   };
 
   const handleChange = (event) => {
@@ -60,16 +85,49 @@ export default function CustomEditor() {
     }));
   };
 
+  const addQuery = (formData) => {
+    configManager.addQuery({
+      id: Date.now().toString(),
+      queryGroupId: "cstm",
+      icon: "AutoAwesomeIcon",
+      queryString: formData.query,
+      name: formData.title,
+      description: formData.description,
+      comunicaContext: {
+        sources: formData.source.split(';').map(source => source.trim())
+      },
+    });
+  };
+  
+  const updateQuery = (formData, customQuery) => { 
+    console.log(formData , customQuery)
+    const { title, description, query, source } = formData;
+
+    // NAAM EN BESCHRIJVING WILLEN visueel NIET MEE UPDATEIN IN DE RESOURCES 
+    configManager.updateQuery({
+        ...customQuery,
+        name: title,
+        description: description,
+        queryString: query,
+        comunicaContext: {
+            sources: source.split(';').map(src => src.trim())
+        },
+       // queryLocation: "components.rq"  // Location for testing purposes, delete after it works with the querystring
+    });
+  
+    navigate(`/${customQuery.id}`)
+  };
+
   return (
     <React.Fragment>
-   
+
       <Card
         component="form"
         onSubmit={handleSubmit}
         sx={{ padding: '16px', marginTop: '16px', width: '100%' }}
       >
         <CardContent>
-          <Typography variant="h6">Custom Query Editor</Typography>
+          <Typography variant="h6">{props.newQuery?'Custom Query Editor':'Edit'}</Typography>
           {showError && (
             <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
               Invalid Query. Check the URL and Query Syntax
@@ -173,16 +231,4 @@ async function executeSPARQLQuery(query, dataSource, setShowError) {
 
 
 
-const addQuery = (formData) => {
-  configManager.addQuery({
-    id: Date.now().toString(),
-    queryGroupId: "cstm",
-    icon: "AutoAwesomeIcon",
-    queryString: formData.query,
-    name: formData.title,
-    description: formData.description,
-    comunicaContext: {
-      sources: formData.source.split(';').map(source => source.trim())
-    },
-  });
-};
+
