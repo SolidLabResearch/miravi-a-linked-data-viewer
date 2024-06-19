@@ -79,7 +79,7 @@ export default {
       const dataSet = await getProfileAll(webId, { fetch: fetch });
       const profile = dataSet.webIdProfile;
       const webIdThing = getThing(profile, webId);
-      identity.fullName = getName(webIdThing);
+      identity.fullName = getName(webIdThing) || webIdThing.url;
       identity.avatar = getProfilePicture(webIdThing);
     } catch (error) {
       return identity;
@@ -121,8 +121,6 @@ function getName(webIdThing) {
   const literalName = getLiteral(webIdThing, FOAF.name);
   if (literalName) {
     return literalName.value;
-  } else {
-    return "Username not given";
   }
 }
 
