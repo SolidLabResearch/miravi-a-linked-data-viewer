@@ -11,6 +11,12 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddIcon from '@mui/icons-material/Add';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import SaveIcon from '@mui/icons-material/Save';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import TuneIcon from '@mui/icons-material/Tune';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
 
 export default {
   BrushIcon,
@@ -25,5 +31,11 @@ export default {
   EditNoteIcon,
   AutoAwesomeIcon,
   AddIcon,
-  DashboardCustomizeIcon
+  DashboardCustomizeIcon,
+  DeleteIcon,
+  ContentCopyIcon,
+  SaveIcon,
+  ModeEditIcon,
+  TuneIcon,
+  SaveAsIcon
 };
