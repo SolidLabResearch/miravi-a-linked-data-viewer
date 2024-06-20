@@ -73,7 +73,7 @@ The static build appears in the `dist` folder.
 Some queries access data sources that are only readable by authenticated users. This requires you to log in.
 To log in, you need to provide an Identity Provider or a WebID.
 The application will detect which one you use and redirect you to the login page of your Identity Provider.
-If you use your WebID, the first Identity Provider found in the given WebID is used.
+If you provide a WebID, the first Identity Provider found in the given WebID is used.
 
 ## Configuration file
 
