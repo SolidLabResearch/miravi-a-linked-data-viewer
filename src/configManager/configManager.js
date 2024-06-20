@@ -123,7 +123,20 @@ class ConfigManager extends EventEmitter {
   updateQuery(updatedQuery) {
     let index = this.config.queries.findIndex(query => query.id === updatedQuery.id);
     if (index !== -1) {
-        this.config.queries[index] = updatedQuery;
+      this.config.queries[index] = updatedQuery;
+    }
+    this.queryWorkingCopies = {};
+    this.emit('configChanged', this.config);
+  }
+
+  /**
+ * Deletes the query with the given id in the config.queries array in the configuration
+ * @param {string} id - id property of the query to delete
+ */
+  deleteQueryById(id) {
+    let index = this.config.queries.findIndex(query => query.id === id);
+    if (index !== -1) {
+      this.config.queries.splice(index, 1);
     }
     this.queryWorkingCopies = {};
     this.emit('configChanged', this.config);
@@ -145,15 +158,15 @@ class ConfigManager extends EventEmitter {
    * @returns {string} the query text
    */
   async getQueryText(query) {
-    
+
     if (query.queryLocation) {
       const fetchResult = await fetch(`${this.config.queryFolder}${query.queryLocation}`);
       return await fetchResult.text();
     }
-      return query.queryString;
+    return query.queryString;
   }
 
-} 
+}
 
 const configManager = new ConfigManager();
 export default configManager;
