@@ -246,7 +246,7 @@ function statusFetch(customFetch, context) {
     try {
       const response = await customFetch(arg, {
         headers: {
-          Accept: "application/n-quads,application/trig;q=0.95,application/ld+json;q=0.9,application/n-triples;q=0.8,*/*;q=0.1"
+          Accept: "application/n-quads,application/trig;q=0.9,text/turtle;q=0.8,application/n-triples;q=0.7,*/*;q=0.1"
         }
       });
       context.fetchSuccess[arg] = response.ok;
