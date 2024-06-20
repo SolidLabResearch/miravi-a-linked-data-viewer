@@ -11,24 +11,24 @@ export default function CustomQueryEditButton({ queryID }) {
 
 
     const customQuery = configManager.getQueryById(queryID);
-    const sourcesString = customQuery.comunicaContext.sources.join(' ; ');
+   // const sourcesString = customQuery.comunicaContext.sources.join(' ; ');
 
     const navigate = useNavigate();
-    const location = useLocation();
+  //  const location = useLocation();
 
     const handleEditClick = () => {
         navigate(`/${queryID}/editCustom`)
     }
 
     const handleSave = () => {
-        // const searchParams = new URLSearchParams(customQuery);
 
-        //newSearchaparam(geconverteerd object voor form)
-        //const savedUrl = `http://localhost:5173/#${location.pathname}?${searchParams.toString()}`
-
-        // const savedUrl = `http://localhost:5173/#/customQuery?${searchParams.toString()}`
-        // console.log(customQuery)
-        // console.log(savedUrl)
+        
+        const url = new URL( window.location.href);
+        const serverURL = `${url.protocol}//${url.hostname}${url.port ? ':' + url.port : ''}`;
+        
+        const savedUrl = `${serverURL}/#/customQuery?${customQuery.searchParams.toString()}`
+        console.log(savedUrl)
+        
 
     }
 
