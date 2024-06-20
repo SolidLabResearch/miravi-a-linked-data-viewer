@@ -12,23 +12,21 @@ import SparqlDataProvider from "./../dataProvider/SparqlDataProvider";
 const queryEngine = new QueryEngine();
 
 export default {
-  login: async function login({ type, value }) {
+  login: async function login({ value }) {
     const session = getDefaultSession();
     let idp;
-    if (type !== "idp") {
-      try {
-        idp = await queryIDPfromWebId(value);
-      } catch (error) {
-        // Nothing to do here, the input `idpOrWebId` might be an IDP already
-        throw new Error("Couldn't query the Identity Provider from the WebID");
-      }
-    }
-    else{
-      idp = value;
+
+    try {
+      // assume it is a WebID
+      idp = await queryIDPfromWebId(value);
+    } catch (error) {
+      // continue anyway, value may be an IDP
     }
 
     if (!idp) {
-      throw new Error("No IDP found");
+      // value couldn't be queried or there was no IDP returned from the query
+      // value can be an IDP
+      idp = value;
     }
 
     try {

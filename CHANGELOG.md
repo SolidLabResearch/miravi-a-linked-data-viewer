@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - For logged in users not having a username, the webID is displayed (#133).
+- Automatic detection of Identity Provider or webID in login screen (#67).
 
 ### Fixed
 

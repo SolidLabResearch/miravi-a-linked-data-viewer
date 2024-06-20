@@ -10,7 +10,6 @@ import configManager from "../../configManager/configManager";
 function SolidLoginForm() {
   const login = useLogin();
   const notify = useNotify();
-  const [isIdp, setIsIdp] = useState(true);
 
   /**
    * Handling what should happen when the user is trying to log in by pressing the log in button.
@@ -19,7 +18,7 @@ function SolidLoginForm() {
   async function handleLogin(event) {
     event.preventDefault();
     try {
-      await login({ type: isIdp ? "idp" : "webId", value: event.target[2].value });
+      await login({ value: event.target[0].value });
     } catch (error) {
       notify(error.message);
     }
@@ -29,16 +28,6 @@ function SolidLoginForm() {
 
   return (
     <form onSubmit={handleLogin} className="login-form">
-      <div className="login-form-type-selection-box">
-        <label className=".login-form-label">
-          Identity Provider
-        </label>
-        <input type="radio" onChange={() => {setIsIdp(!isIdp)}} name="idpOrWebId" value="idp" defaultChecked="checked"/>
-        <label className=".login-form-label">
-          WebID
-        </label>
-        <input type="radio" onChange={() => {setIsIdp(!isIdp)}} name="idpOrWebId" value="webId" />
-      </div>
       <input
         required
         name="idp"
