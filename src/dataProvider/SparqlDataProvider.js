@@ -343,8 +343,13 @@ async function configureBindingStream(bindingStream, variables) {
 const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   const sourcesList = [];
   try {
-    const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
-    const queryStringIndexSource = await result.text();
+    let queryStringIndexSource;
+    if (sourcesIndex.queryLocation){
+      const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
+      queryStringIndexSource = await result.text();
+    }else{
+       queryStringIndexSource = sourcesIndex.queryString;
+    }
 
     const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
       sources: [sourcesIndex.url],
