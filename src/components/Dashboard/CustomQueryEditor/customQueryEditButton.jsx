@@ -132,6 +132,7 @@ export default function CustomQueryEditButton({ queryID, submitted }) {
                     <Box width={500}>
                         <TextField
                             label='Query URL'
+                            name='queryURL'
                             fullWidth
                             multiline
                             minRows={5}
