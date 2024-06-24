@@ -163,14 +163,15 @@ export default function CustomEditor(props) {
         sx={{ padding: '16px', marginTop: '16px', width: '100%' }}
       >
         <CardContent>
-          <Typography variant="h6">{props.newQuery ? 'Custom Query Editor' : 'Edit'}</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{props.newQuery ? 'Custom Query Editor' : 'Edit'}</Typography>
           {showError && (
             <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
               Invalid Query. Check the URL and Query Syntax
             </Typography>
           )}
          
-          <Card sx={{ px: '10px', my: 2 }}>
+          <Card sx={{ py: '10px', px: '20px' , my: 2 }}>
+          <Typography variant="h5" sx={{ mt: 2  }}> Basic Information</Typography>
             <div>
               <TextField
                 required
@@ -205,7 +206,7 @@ export default function CustomEditor(props) {
               <TextField
                 required  
                 id="outlined-multiline-flexible"
-                label="Custom Query"
+                label="SPARQL Query Text"
                 name="queryString"
                 multiline
                 fullWidth
@@ -220,7 +221,7 @@ export default function CustomEditor(props) {
             </div>
           </Card>
 
-          <Card sx={{ px: '10px', my: 2 }}>
+          <Card sx={{ py: '10px', px: '20px' , my: 2 }}>
 
             <Typography variant="h5" sx={{ mt: 2 }}> Comunica Context</Typography>
             <div>
@@ -277,8 +278,8 @@ export default function CustomEditor(props) {
             }
           </Card>
 
-          <Card sx={{ px: '10px', my: 2 }}>
-
+          <Card sx={{ py: '10px', px: '20px' , my: 2 }}>
+          <Typography variant="h5" sx={{ mt: 2 }}> Extra Options</Typography>
             <div>
               <FormControlLabel
                 control={<Checkbox
