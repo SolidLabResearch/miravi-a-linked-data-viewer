@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
-
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useLocation, useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
 import IconProvider from '../../../IconProvider/IconProvider';
-
 import configManager from '../../../configManager/configManager';
-
-
 
 export default function CustomQueryEditButton({ queryID }) {
 
@@ -35,7 +32,6 @@ export default function CustomQueryEditButton({ queryID }) {
 
     const handleSave = () => {
 
-
         const url = new URL(window.location.href);
         const serverURL = `${url.protocol}//${url.hostname}${url.port ? ':' + url.port : ''}`;
 
@@ -46,30 +42,37 @@ export default function CustomQueryEditButton({ queryID }) {
 
     return (
         <React.Fragment>
-            <Button variant="contained" startIcon={<IconProvider.ModeEditIcon/>} onClick={
-                () => {
-                    handleEditClick()
-                }}
-                sx={{ margin: '10px' }}>
-                Edit Query
+            <Box display="flex" justifyContent="space-between" width="80%" >
+                <Box>
+                    <Button variant="contained" startIcon={<IconProvider.ModeEditIcon />} onClick={
+                        () => {
+                            handleEditClick()
+                        }}
+                        sx={{ margin: '10px' }}>
+                        Edit Query
+                    </Button>
+                </Box>
 
-            </Button>
+                {/* // TODO NOW PROVIDE  AN OPTION TO SAVE  BY COPYING TO CLIP BOARD !! */}
+                <Box>
 
-            <Button variant="outlined" color="success" startIcon={<IconProvider.SaveIcon/>} onClick={
-                () => {
-                    handleSave()
-                }}
-                sx={{ margin: '10px' }}>
-                Save Query
-            </Button>
+                    <Button variant="outlined" color="success" startIcon={<IconProvider.SaveIcon />} onClick={
+                        () => {
+                            handleSave()
+                        }}
+                        sx={{ margin: '10px' }}>
+                        Save Query
+                    </Button>
 
-            <Button variant="outlined" color="error" startIcon={<IconProvider.DeleteIcon/>} onClick={
-                () => {
-                    setOpen(true)
-                }}
-                sx={{ margin: '10px' }}>
-                Delete Query
-            </Button>
+                    <Button variant="outlined" color="error" startIcon={<IconProvider.DeleteIcon />} onClick={
+                        () => {
+                            setOpen(true)
+                        }}
+                        sx={{ margin: '10px' }}>
+                        Delete Query
+                    </Button>
+                </Box>
+            </Box>
 
             <Dialog
                 open={open}

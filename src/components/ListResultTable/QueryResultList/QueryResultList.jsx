@@ -90,8 +90,9 @@ function reduceDataToObject(data) {
 const Aside = (props) => {
   const { changeVariables } = props;
   return (
-    
+    <Box>
       <Button variant="contained" onClick={changeVariables} startIcon={<IconProvider.TuneIcon/>} sx={{ margin: '10px' }}>Change Variables</Button>
+    </Box>
     
   )
 }
