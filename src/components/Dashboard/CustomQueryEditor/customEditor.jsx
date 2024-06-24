@@ -70,7 +70,6 @@ export default function CustomEditor(props) {
       addQuery(jsonData);
     }
     else {
-      console.log(jsonData)
       const customQuery = configManager.getQueryById(props.id);
       updateQuery(jsonData, customQuery);
     }

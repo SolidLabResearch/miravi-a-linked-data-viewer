@@ -39,7 +39,7 @@ function QueryResultList(props) {
       <Title title={config.title} />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         {submitted && <Aside changeVariables={changeVariables} />}
-        {resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name} />}
+        {resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name} submitted={submitted} />}
       </div>
       <Typography fontSize={"2rem"} mt={2} > {queryTitle} </Typography>
       {values ? (

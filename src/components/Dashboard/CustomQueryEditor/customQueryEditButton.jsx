@@ -10,22 +10,26 @@ import { useNavigate } from 'react-router-dom';
 import IconProvider from '../../../IconProvider/IconProvider';
 import configManager from '../../../configManager/configManager';
 
-export default function CustomQueryEditButton({ queryID }) {
+import TextField from '@mui/material/TextField';
 
-    const [open, setOpen] = useState(false);
+export default function CustomQueryEditButton({ queryID, submitted }) {
 
     const customQuery = configManager.getQueryById(queryID);
-    // const sourcesString = customQuery.comunicaContext.sources.join(' ; ');
-
     const navigate = useNavigate();
-    //  const location = useLocation();
+
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [saveOpen, setSaveOpen] = useState(false);
+
+    const [copyURL, setCopyUrl] = useState('');
+    const [feedback, setFeedback] = useState('');
+
 
     const handleEditClick = () => {
         navigate(`/${queryID}/editCustom`)
     }
 
     const handleDelete = () => {
-        setOpen(false)
+        setDeleteOpen(false)
         navigate(`/`)
         configManager.deleteQueryById(queryID)
     }
@@ -35,14 +39,28 @@ export default function CustomQueryEditButton({ queryID }) {
         const url = new URL(window.location.href);
         const serverURL = `${url.protocol}//${url.hostname}${url.port ? ':' + url.port : ''}`;
 
-        const savedUrl = `${serverURL}/#/customQuery?${customQuery.searchParams.toString()}`
-        console.log(savedUrl)
-
+        const savedUrl = `${serverURL}/#/customQuery?${customQuery.searchParams.toString()}`;
+        setCopyUrl(savedUrl);
     }
+
+    const handleSaveClose = () => {
+        setSaveOpen(false)
+        setFeedback('')
+    }
+
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(copyURL);
+            setFeedback('Text successfully copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+            setFeedback('Failed to copy text.');
+        }
+    };
 
     return (
         <React.Fragment>
-            <Box display="flex" justifyContent="space-between" width="80%" >
+            <Box display="flex" justifyContent="space-between" width={submitted ? '80%' : '100%'} >
                 <Box>
                     <Button variant="contained" startIcon={<IconProvider.ModeEditIcon />} onClick={
                         () => {
@@ -53,12 +71,11 @@ export default function CustomQueryEditButton({ queryID }) {
                     </Button>
                 </Box>
 
-                {/* // TODO NOW PROVIDE  AN OPTION TO SAVE  BY COPYING TO CLIP BOARD !! */}
                 <Box>
-
                     <Button variant="outlined" color="success" startIcon={<IconProvider.SaveIcon />} onClick={
                         () => {
                             handleSave()
+                            setSaveOpen(true)
                         }}
                         sx={{ margin: '10px' }}>
                         Save Query
@@ -66,7 +83,7 @@ export default function CustomQueryEditButton({ queryID }) {
 
                     <Button variant="outlined" color="error" startIcon={<IconProvider.DeleteIcon />} onClick={
                         () => {
-                            setOpen(true)
+                            setDeleteOpen(true)
                         }}
                         sx={{ margin: '10px' }}>
                         Delete Query
@@ -75,9 +92,8 @@ export default function CustomQueryEditButton({ queryID }) {
             </Box>
 
             <Dialog
-                open={open}
-                onClose={() => { setOpen(false) }}
-
+                open={deleteOpen}
+                onClose={() => { setDeleteOpen(false) }}
             >
                 <DialogTitle>
                     Delete custom query
@@ -88,9 +104,47 @@ export default function CustomQueryEditButton({ queryID }) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={() => { setOpen(false) }}>Cancel</Button>
+                    <Button variant="text" onClick={() => { setDeleteOpen(false) }}>Cancel</Button>
                     <Button variant="contained" color="error" onClick={handleDelete} autoFocus>
                         Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={saveOpen}
+                onClose={() => { setSaveOpen(false) }}
+
+            >
+                <DialogTitle>
+                    Save custom query
+                </DialogTitle>
+
+                <DialogContent>
+                    <DialogContentText >
+                        Copy the url to save the query. This is the link to the full creation form.
+                    </DialogContentText>
+
+                    <DialogContentText style={{ color: feedback.includes('successfully') ? 'green' : 'red' }} >
+                        {feedback}
+                    </DialogContentText>
+
+                    <Box width={500}>
+                        <TextField
+                            label='Query URL'
+                            fullWidth
+                            multiline
+                            minRows={5}
+                            value={copyURL}
+                            variant="filled"
+                        />
+                    </Box>
+                </DialogContent>
+
+                <DialogActions >
+                    <Button variant="text" onClick={handleSaveClose}>Cancel</Button>
+                    <Button variant="contained" onClick={handleCopy} autoFocus startIcon={<IconProvider.ContentCopyIcon />}>
+                        Copy
                     </Button>
                 </DialogActions>
             </Dialog>
