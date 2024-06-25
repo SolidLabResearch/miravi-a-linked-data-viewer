@@ -12,23 +12,21 @@ import SparqlDataProvider from "./../dataProvider/SparqlDataProvider";
 const queryEngine = new QueryEngine();
 
 export default {
-  login: async function login({ type, value }) {
+  login: async function login({ value }) {
     const session = getDefaultSession();
     let idp;
-    if (type !== "idp") {
-      try {
-        idp = await queryIDPfromWebId(value);
-      } catch (error) {
-        // Nothing to do here, the input `idpOrWebId` might be an IDP already
-        throw new Error("Couldn't query the Identity Provider from the WebID");
-      }
-    }
-    else{
-      idp = value;
+
+    try {
+      // assume it is a WebID
+      idp = await queryIDPfromWebId(value);
+    } catch (error) {
+      // continue anyway, value may be an IDP
     }
 
     if (!idp) {
-      throw new Error("No IDP found");
+      // value couldn't be queried or there was no IDP returned from the query
+      // value can be an IDP
+      idp = value;
     }
 
     try {
@@ -79,7 +77,7 @@ export default {
       const dataSet = await getProfileAll(webId, { fetch: fetch });
       const profile = dataSet.webIdProfile;
       const webIdThing = getThing(profile, webId);
-      identity.fullName = getName(webIdThing);
+      identity.fullName = getName(webIdThing) || webIdThing.url;
       identity.avatar = getProfilePicture(webIdThing);
     } catch (error) {
       return identity;
@@ -121,8 +119,6 @@ function getName(webIdThing) {
   const literalName = getLiteral(webIdThing, FOAF.name);
   if (literalName) {
     return literalName.value;
-  } else {
-    return "Username not given";
   }
 }
 

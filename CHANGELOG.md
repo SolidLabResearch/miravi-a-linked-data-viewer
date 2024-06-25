@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+- For logged in users not having a username, the webID is displayed (#133).
+- Automatic detection of Identity Provider or webID in login screen (#67).
+
+### Fixed
+
+- Forced CSS's to not return content type application/ld+json, which induced a CORS error on some CSS server versions (#131).
+
+## [1.2.1] - 2024-06-17
+
+### Added
+
 - Added a single point of access to the config.json file (#32).
 
 ### Changed
@@ -124,4 +137,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.2
 [1.1.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.3
 [1.2.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.0
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.0...HEAD
+[1.2.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.1
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.1...HEAD
