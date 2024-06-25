@@ -33,9 +33,6 @@ export default function CustomEditor(props) {
 
   const [showError, setShowError] = useState(false);
 
-
-  // ADD A CONTROLE TO NOT SUBMIT WHEN PARSING ERRORS!!!!!!!!!!!!!!!!!!!!!
-
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
@@ -144,13 +141,15 @@ export default function CustomEditor(props) {
   }
 
   const addQuery = (formData) => {
+    const creationID = Date.now().toString();
     formData = parseAllObjectsToJSON(formData);
     configManager.addQuery({
       ...formData,
-      id: Date.now().toString(),
+      id: creationID,
       queryGroupId: "cstm",
       icon: "AutoAwesomeIcon",
     });
+    navigate(`/${creationID}`)
   };
 
   const updateQuery = (formData, customQuery) => {
@@ -362,8 +361,9 @@ export default function CustomEditor(props) {
                     minRows={5}
                     variant="outlined"
                     helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery) : formData.askQuery : `{\n\t"trueText" : " ",\n\t"falseText" : " " \n}`}
+                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery) : formData.askQuery : formData.askQuery === '' ? '' : `{\n\t"trueText" : " ",\n\t"falseText" : " " \n}`}
                     placeholder={`{\n\t"trueText" : "this displays when true.",\n\t"falseText" : "this displays when false." \n}`}
+                    onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     sx={{ marginBottom: '16px' }}
                   />
@@ -397,8 +397,9 @@ export default function CustomEditor(props) {
                     minRows={5}
                     variant="outlined"
                     helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables) : formData.variables : ''}
+                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables) : formData.variables : formData.variables === '' ? '' : `{\n\t"variableOne" : ["option1", "option2", "option3"],\n\t"variableTwo" : ["option1", "option2", "option3"]\n}`}
                     placeholder={`{\n\tvariableOne : ["option1","option2","option3"],\n\tvariableTwo : ["option1","option2","option3"], \n\t...\n}`}
+                    onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     sx={{ marginBottom: '16px' }}
                   />
