@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- It is now possible to add and edit custom queries (#54).
+
 ### Changed
 
 - For logged in users not having a username, the webID is displayed (#133).
