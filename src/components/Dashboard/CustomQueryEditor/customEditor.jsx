@@ -180,7 +180,7 @@ export default function CustomEditor(props) {
                 id="outlined-required"
                 label="Query name"
                 placeholder="Custom query name"
-                helperText="Give this custom query a name"
+                helperText="Give this custom query a name."
                 variant="outlined"
                 value={!!formData.name ? formData.name : ''}
                 onChange={handleChange}
@@ -196,7 +196,7 @@ export default function CustomEditor(props) {
                 fullWidth
                 minRows={2}
                 variant="outlined"
-                helperText="Give a description for the query"
+                helperText="Give a description for the query."
                 placeholder="This is a custom query."
                 value={!!formData.description ? formData.description : ''}
                 onChange={handleChange}
@@ -206,13 +206,13 @@ export default function CustomEditor(props) {
               <TextField
                 required  
                 id="outlined-multiline-flexible"
-                label="SPARQL Query Text"
+                label="SPARQL query"
                 name="queryString"
                 multiline
                 fullWidth
                 minRows={5}
                 variant="outlined"
-                helperText="Give the SPARQL query"
+                helperText="Enter your SPARQL query here."
                 placeholder={`SELECT ?s ?p ?o \nWHERE { \n\t?s ?p ?o \n}`}
                 value={!!formData.queryString ? formData.queryString : ''}
                 onChange={handleChange}
@@ -246,9 +246,9 @@ export default function CustomEditor(props) {
               fullWidth
               name="source"
               id="outlined-required"
-              label="Data Source"
+              label="Data source(s)"
               placeholder="http://examplesource.org ; source2"
-              helperText="Give the source Url(s) for the query. You can add more than one source separated with ' ; '"
+              helperText="Give the source URL(s) for the query. Separate URLs with with ';'."
               variant="outlined"
               value={!!formData.source ? formData.source : ''}
               onChange={handleChange}
@@ -261,14 +261,14 @@ export default function CustomEditor(props) {
                 <TextField
                   required={ensureBoolean(formData.comunicaContextCheck)}
                   id="outlined-multiline-flexible"
-                  label="Comunica Context Configuration"
+                  label="Comunica context configuration"
                   name="comunicaContext"
                   multiline
                   fullWidth
                   error={parsingErrorComunica}
                   minRows={5}
                   variant="outlined"
-                  helperText={`Write the extra configurations in JSON-format  ${parsingErrorComunica ? ' (Invalid Syntax)' : ''}`}
+                  helperText={`Write the extra configurations in JSON-format${parsingErrorComunica ? ' (Invalid Syntax)' : '.'}`}
                   value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext) : formData.comunicaContext : ''}
                   placeholder={`{\n\t"lenient" : true,\n\t"other" : "some other options"\n}`}
                   onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
@@ -293,7 +293,7 @@ export default function CustomEditor(props) {
                       }))
                     }
                   }
-                />} label="Source from index file" />
+                />} label="Sources from index file" />
 
               {formData.sourceIndexCheck &&
                 <div>
@@ -302,9 +302,9 @@ export default function CustomEditor(props) {
                     fullWidth
                     name="indexSourceUrl"
                     id="outlined-required"
-                    label="Index File url"
+                    label="Index file URL"
                     placeholder="http://examplesource.org ; source2"
-                    helperText="Give the index file to use as IndexSource."
+                    helperText="Give the URL of the index file."
                     variant="outlined"
                     value={!!formData.indexSourceUrl ? formData.indexSourceUrl : ''}
                     onChange={handleChange}
@@ -314,13 +314,13 @@ export default function CustomEditor(props) {
                   <TextField
                     required={ensureBoolean(formData.sourceIndexCheck)}
                     id="outlined-multiline-flexible"
-                    label="Query to get the source from index file"
+                    label="SPARQL query"
                     name="indexSourceQuery"
                     multiline
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText="Give the SPARQL query to retrieve the sources"
+                    helperText="Give the SPARQL query to get the sources from the index file."
                     placeholder={`SELECT ?s ?p ?o \nWHERE { \n\t?s ?p ?o \n}`}
                     value={!!formData.indexSourceQuery ? formData.indexSourceQuery : ''}
                     onChange={handleChange}
@@ -341,7 +341,7 @@ export default function CustomEditor(props) {
                       }))
                     }
                   }
-                />} label="add an askQuery" />
+                />} label="ASK query" />
 
               {formData.askQueryCheck &&
                 <div>
@@ -354,7 +354,7 @@ export default function CustomEditor(props) {
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write contents of the askQuery in JSON-format ${parsingErrorAsk ? ' (Invalid Syntax)' : ''}`}
+                    helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Invalid Syntax)' : '.'}`}
                     value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery) : formData.askQuery : `{\n\t"trueText" : " ",\n\t"falseText" : " " \n}`}
                     placeholder={`{\n\t"trueText" : "this displays when true.",\n\t"falseText" : "this displays when false." \n}`}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
@@ -374,20 +374,20 @@ export default function CustomEditor(props) {
                       }))
                     }
                   }
-                />} label="Templated Query" />
+                />} label="Templated query" />
 
               {formData.templatedQueryCheck &&
                 <div>
                   <TextField
                     id="outlined-multiline-flexible"
-                    label="Variables for the templated query"
+                    label="Variables specification"
                     name="variables"
                     error={parsingErrorTemplate}
                     multiline
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write the variables in JSON-format ${parsingErrorTemplate ? ' (Invalid Syntax)' : ''}`}
+                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
                     value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables) : formData.variables : ''}
                     placeholder={`{\n\tvariableOne : ["option1","option2","option3"],\n\tvariableTwo : ["option1","option2","option3"], \n\t...\n}`}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}

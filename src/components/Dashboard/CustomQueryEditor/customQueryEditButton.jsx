@@ -78,7 +78,7 @@ export default function CustomQueryEditButton({ queryID, submitted }) {
                             setSaveOpen(true)
                         }}
                         sx={{ margin: '10px' }}>
-                        Save Query
+                        Save Query Link
                     </Button>
 
                     <Button variant="outlined" color="error" startIcon={<IconProvider.DeleteIcon />} onClick={
@@ -117,12 +117,12 @@ export default function CustomQueryEditButton({ queryID, submitted }) {
 
             >
                 <DialogTitle>
-                    Save custom query
+                    Save custom query link
                 </DialogTitle>
 
                 <DialogContent>
                     <DialogContentText >
-                        Copy the url to save the query. This is the link to the full creation form.
+                        Use this link ro recreate this custom query later.
                     </DialogContentText>
 
                     <DialogContentText style={{ color: feedback.includes('successfully') ? 'green' : 'red' }} >
@@ -145,7 +145,7 @@ export default function CustomQueryEditButton({ queryID, submitted }) {
                 <DialogActions >
                     <Button variant="text" onClick={handleSaveClose}>Cancel</Button>
                     <Button variant="contained" onClick={handleCopy} autoFocus startIcon={<IconProvider.ContentCopyIcon />}>
-                        Copy
+                        Copy to clipboard
                     </Button>
                 </DialogActions>
             </Dialog>
