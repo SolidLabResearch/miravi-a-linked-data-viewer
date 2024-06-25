@@ -11,7 +11,7 @@
   "showMilliseconds": false,
   "defaultIDP": "http://localhost:8080",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
-  "introductionText": "Please select a query from the menu on the left.",
+  "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
   "queryGroups" : [
     {
       "id": "a-ex",
