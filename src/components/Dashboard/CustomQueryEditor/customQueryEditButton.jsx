@@ -60,18 +60,16 @@ export default function CustomQueryEditButton({ queryID, submitted=false }) {
 
     return (
         <React.Fragment>
-            <Box display="flex" justifyContent="space-between" width={submitted ? '80%' : '100%'} >
-                <Box>
-                    <Button variant="contained" startIcon={<IconProvider.ModeEditIcon />} onClick={
+            <Box display="flex" justifyContent="flex-end" width={submitted ? '80%' : '100%'} >
+                
+                    <Button variant="outlined" startIcon={<IconProvider.ModeEditIcon />} onClick={
                         () => {
                             handleEditClick()
                         }}
                         sx={{ margin: '10px' }}>
                         Edit Query
                     </Button>
-                </Box>
-
-                <Box>
+                
                     <Button variant="outlined" color="success" startIcon={<IconProvider.SaveIcon />} onClick={
                         () => {
                             handleSave()
@@ -88,7 +86,7 @@ export default function CustomQueryEditButton({ queryID, submitted=false }) {
                         sx={{ margin: '10px' }}>
                         Delete Query
                     </Button>
-                </Box>
+                
             </Box>
 
             <Dialog
