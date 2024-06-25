@@ -251,8 +251,8 @@ export default function CustomEditor(props) {
               name="source"
               id="outlined-required"
               label="Data source(s)"
-              placeholder="http://examplesource.org ; source2"
-              helperText="Give the source URL(s) for the query. Separate URLs with with ';'."
+              placeholder="http://example.com/source1; http://example.com/source2"
+              helperText="Give the source URL(s) for the query. Separate URLs with with '; '."
               variant="outlined"
               value={!!formData.source ? formData.source : ''}
               onChange={handleChange}
@@ -308,7 +308,7 @@ export default function CustomEditor(props) {
                     name="indexSourceUrl"
                     id="outlined-required"
                     label="Index file URL"
-                    placeholder="http://examplesource.org"
+                    placeholder="http://example.com/index"
                     helperText="Give the URL of the index file."
                     variant="outlined"
                     value={!!formData.indexSourceUrl ? formData.indexSourceUrl : ''}
