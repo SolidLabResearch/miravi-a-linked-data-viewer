@@ -12,6 +12,7 @@ Table of contents:
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
   * [Query icons](#query-icons)
+* [Custom queries](#custom-queries)
 * [Representation Mapper](#representation-mapper)
 * [Using the local pods](#using-the-local-pods)
 * [Testing](#testing)
@@ -177,6 +178,20 @@ You configure this icon per query in the configuration file.
 For this to work you need to add the icon to the exports in [IconProvider.js](./src/IconProvider/IconProvider.js).
 We advise to use the [Material UI icons](https://material-ui.com/components/material-icons/) as this is what's used internally in `react-admin` and it is also included in the dependencies.
 Nevertheless, you can use any React component you want, just make sure it's a functional component.
+
+## Custom queries
+
+Besides the prepared queries in the configuration file, a user can edit custom queries:
+
+- To create a custom query, open "Custom Query Editor" from the menu on the left.
+- Complete the custom query editor form and click the "CREATE QUERY" button when ready.
+- Your new query is added to the "Custom queries" group and you are redirected to the query's result view.
+- If not satisfied with the query result, you can click "EDIT QUERY" to further edit your query.
+  When saving changes, the result is recalculated.
+- Because the custom query only lives as long as your browser remembers it, a "SAVE QUERY LINK" button is provided.
+  Use it to generate a unique URL for this custom query. Copy that URL to your clipboard and save it.
+  You can then visit that URL any time later, to recreate this query.
+- To clean up an unwanted custom query, there is always a button "DELETE QUERY"...  
 
 ## Representation Mapper
 
