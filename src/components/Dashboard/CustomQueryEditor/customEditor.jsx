@@ -273,8 +273,9 @@ export default function CustomEditor(props) {
                   minRows={5}
                   variant="outlined"
                   helperText={`Write the extra configurations in JSON-format${parsingErrorComunica ? ' (Invalid Syntax)' : '.'}`}
-                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext) : formData.comunicaContext : ''}
+                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext,null,2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : `{\n\t"lenient" : true \n}`}
                   placeholder={`{\n\t"lenient" : true,\n\t"other" : "some other options"\n}`}
+                  onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   sx={{ marginBottom: '16px' }}
                 />
@@ -307,7 +308,7 @@ export default function CustomEditor(props) {
                     name="indexSourceUrl"
                     id="outlined-required"
                     label="Index file URL"
-                    placeholder="http://examplesource.org ; source2"
+                    placeholder="http://examplesource.org"
                     helperText="Give the URL of the index file."
                     variant="outlined"
                     value={!!formData.indexSourceUrl ? formData.indexSourceUrl : ''}
@@ -361,7 +362,7 @@ export default function CustomEditor(props) {
                     minRows={5}
                     variant="outlined"
                     helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery) : formData.askQuery : formData.askQuery === '' ? '' : `{\n\t"trueText" : " ",\n\t"falseText" : " " \n}`}
+                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery,null,2) : formData.askQuery : formData.askQuery === '' ? '' : `{\n\t"trueText" : " ",\n\t"falseText" : " " \n}`}
                     placeholder={`{\n\t"trueText" : "this displays when true.",\n\t"falseText" : "this displays when false." \n}`}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
@@ -397,7 +398,7 @@ export default function CustomEditor(props) {
                     minRows={5}
                     variant="outlined"
                     helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables) : formData.variables : formData.variables === '' ? '' : `{\n\t"variableOne" : ["option1", "option2", "option3"],\n\t"variableTwo" : ["option1", "option2", "option3"]\n}`}
+                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables,null,2) : formData.variables : formData.variables === '' ? '' : `{\n\t"variableOne" : ["option1", "option2", "option3"],\n\t"variableTwo" : ["option1", "option2", "option3"]\n}`}
                     placeholder={`{\n\tvariableOne : ["option1","option2","option3"],\n\tvariableTwo : ["option1","option2","option3"], \n\t...\n}`}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}

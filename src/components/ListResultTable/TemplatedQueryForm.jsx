@@ -33,7 +33,7 @@ const TemplatedQueryForm = (props) => {
   
   return (
     <SimpleForm toolbar={<MyToolbar />} onSubmit={onSubmit}>
-       {resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name}/>}
+       {!!resourceDef.options && resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name}/>}
       {Object.entries(variableOptions).map(([name, options]) => (
         <SelectInput key={name} source={name} name={name} label={name} validate={required()} choices={
           options.map((option) => ({
