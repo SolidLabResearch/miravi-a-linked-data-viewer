@@ -33,6 +33,9 @@ export default function CustomEditor(props) {
 
   const [showError, setShowError] = useState(false);
 
+
+  // ADD A CONTROLE TO NOT SUBMIT WHEN PARSING ERRORS!!!!!!!!!!!!!!!!!!!!!
+
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
@@ -40,38 +43,44 @@ export default function CustomEditor(props) {
   useEffect(() => {
     let searchParams
     if (props.newQuery) {
-       searchParams = new URLSearchParams(location.search);
-    } else{
+      searchParams = new URLSearchParams(location.search);
+    } else {
       const edittingQuery = configManager.getQueryById(props.id);
       searchParams = edittingQuery.searchParams;
     }
-      const obj = {}
-      searchParams.forEach((value, key) => {
-        obj[key] = value
-      })
-      setFormData(obj)
+    const obj = {}
+    searchParams.forEach((value, key) => {
+      obj[key] = value
+    })
+    setFormData(obj)
   }, [location.search]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const jsonData = Object.fromEntries(formData.entries());
 
-    const searchParams = new URLSearchParams(jsonData);
-    jsonData.searchParams = searchParams;
+    if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorTemplate) {
+      setShowError(false)
+      const formData = new FormData(event.currentTarget);
+      const jsonData = Object.fromEntries(formData.entries());
 
-    if (props.newQuery) {
-      navigate({ search: searchParams.toString() });
+      const searchParams = new URLSearchParams(jsonData);
+      jsonData.searchParams = searchParams;
 
-      // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
-      // const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError);
+      if (props.newQuery) {
+        navigate({ search: searchParams.toString() });
 
-      configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
-      addQuery(jsonData);
-    }
-    else {
-      const customQuery = configManager.getQueryById(props.id);
-      updateQuery(jsonData, customQuery);
+        // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
+        // const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError);
+
+        configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+        addQuery(jsonData);
+      }
+      else {
+        const customQuery = configManager.getQueryById(props.id);
+        updateQuery(jsonData, customQuery);
+      }
+    }else{
+      setShowError(true)
     }
   };
 
@@ -151,7 +160,7 @@ export default function CustomEditor(props) {
       ...formData
     });
 
-   navigate(`/${customQuery.id}`)
+    navigate(`/${customQuery.id}`)
   };
 
 
@@ -164,14 +173,9 @@ export default function CustomEditor(props) {
       >
         <CardContent>
           <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{props.newQuery ? 'Custom Query Editor' : 'Edit'}</Typography>
-          {showError && (
-            <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
-              Invalid Query. Check the URL and Query Syntax
-            </Typography>
-          )}
-         
-          <Card sx={{ py: '10px', px: '20px' , my: 2 }}>
-          <Typography variant="h5" sx={{ mt: 2  }}> Basic Information</Typography>
+
+          <Card sx={{ py: '10px', px: '20px', my: 2 }}>
+            <Typography variant="h5" sx={{ mt: 2 }}> Basic Information</Typography>
             <div>
               <TextField
                 required
@@ -204,7 +208,7 @@ export default function CustomEditor(props) {
               />
 
               <TextField
-                required  
+                required
                 id="outlined-multiline-flexible"
                 label="SPARQL Query Text"
                 name="queryString"
@@ -221,7 +225,7 @@ export default function CustomEditor(props) {
             </div>
           </Card>
 
-          <Card sx={{ py: '10px', px: '20px' , my: 2 }}>
+          <Card sx={{ py: '10px', px: '20px', my: 2 }}>
 
             <Typography variant="h5" sx={{ mt: 2 }}> Comunica Context</Typography>
             <div>
@@ -231,6 +235,7 @@ export default function CustomEditor(props) {
                   checked={!!formData.comunicaContextCheck}
                   onChange={
                     () => {
+                      setParsingErrorComunica(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'comunicaContextCheck': !formData.comunicaContextCheck,
@@ -278,8 +283,8 @@ export default function CustomEditor(props) {
             }
           </Card>
 
-          <Card sx={{ py: '10px', px: '20px' , my: 2 }}>
-          <Typography variant="h5" sx={{ mt: 2 }}> Extra Options</Typography>
+          <Card sx={{ py: '10px', px: '20px', my: 2 }}>
+            <Typography variant="h5" sx={{ mt: 2 }}> Extra Options</Typography>
             <div>
               <FormControlLabel
                 control={<Checkbox
@@ -335,6 +340,7 @@ export default function CustomEditor(props) {
                   checked={!!formData.askQueryCheck}
                   onChange={
                     () => {
+                      setParsingErrorAsk(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'askQueryCheck': !formData.askQueryCheck,
@@ -368,6 +374,7 @@ export default function CustomEditor(props) {
                   checked={!!formData.templatedQueryCheck}
                   onChange={
                     () => {
+                      setParsingErrorTemplate(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'templatedQueryCheck': !formData.templatedQueryCheck,
@@ -398,9 +405,13 @@ export default function CustomEditor(props) {
             </div>
           </Card>
         </CardContent>
-
+        {showError && (
+            <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
+              Invalid Query. Check the JSON-Syntax
+            </Typography>
+          )}
         <CardActions>
-          <Button variant="contained" type="submit" startIcon={props.newQuery ?<IconProvider.AddIcon/>: <IconProvider.SaveAsIcon/>}>{props.newQuery ? 'Create Query' : 'Save Changes'}</Button>
+          <Button variant="contained" type="submit" startIcon={props.newQuery ? <IconProvider.AddIcon /> : <IconProvider.SaveAsIcon />}>{props.newQuery ? 'Create Query' : 'Save Changes'}</Button>
         </CardActions>
       </Card>
 

@@ -1,7 +1,8 @@
-import {Toolbar, SaveButton, SelectInput, SimpleForm, required} from "react-admin";
+import {Toolbar, SaveButton, SelectInput, SimpleForm, required, useResourceDefinition} from "react-admin";
 import DoneIcon from '@mui/icons-material/Done';
 import {Component, useEffect} from "react";
 import PropTypes from "prop-types";
+import CustomQueryEditButton from "../Dashboard/CustomQueryEditor/customQueryEditButton";
 
 const MyToolbar = () => (
   <Toolbar>
@@ -22,15 +23,17 @@ const TemplatedQueryForm = (props) => {
     searchPar,
   } = props;
 
+  const resourceDef = useResourceDefinition();
+
   useEffect(() => {
     if (submitted){
       onSubmit(searchPar);
     }
   }, [submitted])
   
-  
   return (
     <SimpleForm toolbar={<MyToolbar />} onSubmit={onSubmit}>
+       {resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name}/>}
       {Object.entries(variableOptions).map(([name, options]) => (
         <SelectInput key={name} source={name} name={name} label={name} validate={required()} choices={
           options.map((option) => ({

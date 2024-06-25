@@ -12,7 +12,7 @@ import configManager from '../../../configManager/configManager';
 
 import TextField from '@mui/material/TextField';
 
-export default function CustomQueryEditButton({ queryID, submitted }) {
+export default function CustomQueryEditButton({ queryID, submitted=false }) {
 
     const customQuery = configManager.getQueryById(queryID);
     const navigate = useNavigate();
