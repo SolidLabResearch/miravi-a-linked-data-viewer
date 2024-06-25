@@ -352,6 +352,7 @@ export default function CustomEditor(props) {
               {formData.askQueryCheck &&
                 <div>
                   <TextField
+                    required={ensureBoolean(formData.askQueryCheck)}
                     id="outlined-multiline-flexible"
                     label="Creating an ask query"
                     name="askQuery"
@@ -386,6 +387,7 @@ export default function CustomEditor(props) {
               {formData.templatedQueryCheck &&
                 <div>
                   <TextField
+                    required={ensureBoolean(formData.templatedQueryCheck)}
                     id="outlined-multiline-flexible"
                     label="Variables specification"
                     name="variables"
