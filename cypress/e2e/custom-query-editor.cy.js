@@ -1,5 +1,5 @@
 
-describe("Simple Custom Query Editor tests", () => {
+describe("Custom Query Editor tests", () => {
 
   it("Create a new query", () => {
 
@@ -116,16 +116,15 @@ ORDER BY ?componentName
 
     cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
-
-            SELECT * WHERE {
-                ?list schema:name ?listTitle;
-                  schema:itemListElement [
-                  schema:name ?bookTitle;
-                  schema:creator [
-                    schema:name ?authorName
-                  ]
-                ].
-            }`);
+SELECT * WHERE {
+    ?list schema:name ?listTitle;
+      schema:itemListElement [
+      schema:name ?bookTitle;
+      schema:creator [
+        schema:name ?authorName
+      ]
+    ].
+}`);
 
     // Submit the correct query
     cy.get('button[type="submit"]').click();
@@ -148,7 +147,6 @@ ORDER BY ?componentName
 
     cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
-
 SELECT * WHERE {
     ?list schema:name ?listTitle;
       schema:itemListElement [
@@ -164,8 +162,9 @@ SELECT * WHERE {
     cy.get('button').contains("Save Query").click();
 
     cy.get('textarea[name="queryURL"]').invoke('val').then((val) => {
-      expect(val).to.include('?name=new+query&description=new+description&queryString=PREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E+%0A%0ASELECT+*+WHERE+%7B%0A++++%3Flist+schema%3Aname+%3FlistTitle%3B%0A++++++schema%3AitemListElement+%5B%0A++++++schema%3Aname+%3FbookTitle%3B%0A++++++schema%3Acreator+%5B%0A++++++++schema%3Aname+%3FauthorName%0A++++++%5D%0A++++%5D.%0A%7D&source=http%3A%2F%2Flocalhost%3A8080%2Fexample%2Fwish-list');
+      expect(val).to.include('?name=new+query&description=new+description&queryString=PREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E+%0ASELECT+*+WHERE+%7B%0A++++%3Flist+schema%3Aname+%3FlistTitle%3B%0A++++++schema%3AitemListElement+%5B%0A++++++schema%3Aname+%3FbookTitle%3B%0A++++++schema%3Acreator+%5B%0A++++++++schema%3Aname+%3FauthorName%0A++++++%5D%0A++++%5D.%0A%7D&source=http%3A%2F%2Flocalhost%3A8080%2Fexample%2Fwish-list');
   });
+  
     
   })
 
@@ -179,13 +178,13 @@ SELECT * WHERE {
     // Query handling a variable
     cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
-      SELECT ?name ?sameAs_url WHERE {
-        ?list schema:name ?listTitle;
-          schema:name ?name;
-          schema:genre $genre;
-          schema:sameAs ?sameAs_url;
-      }`
-  );
+SELECT ?name ?sameAs_url WHERE {
+  ?list schema:name ?listTitle;
+    schema:name ?name;
+    schema:genre $genre;
+    schema:sameAs ?sameAs_url;
+}`
+);
 
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="templatedQueryCheck"]').click()
@@ -223,33 +222,32 @@ SELECT * WHERE {
 
     // Query handling a variable
     cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`
-          # Query Texon's components and their materials
-          # Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/boms.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/materials.ttl
+    cy.get('textarea[name="queryString"]').type(`# Query Texon's components and their materials
+# Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/boms.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/materials.ttl
 
-          PREFIX oo: <http://purl.org/openorg/>
-          PREFIX ao: <http://purl.org/ontology/ao/core#>
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          PREFIX d: <http://www/example.com/data/>
-          PREFIX o: <http://www/example.com/ont/>
+PREFIX oo: <http://purl.org/openorg/>
+PREFIX ao: <http://purl.org/ontology/ao/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX d: <http://www/example.com/data/>
+PREFIX o: <http://www/example.com/ont/>
 
-          SELECT ?component ?componentName ?material ?materialName ?percentage
-          WHERE {
-            ?component
-              a o:Component ;
-              o:name ?componentName ;
-              o:has-component-bom [
-                o:has-component-material-assoc [
-                  o:percentage ?percentage ;
-                  o:has-material ?material ;
-                ];
-              ];
-            .
-            ?material o:name ?materialName ;
-          }
-          ORDER BY ?componentName`
-    );
+SELECT ?component ?componentName ?material ?materialName ?percentage
+WHERE {
+  ?component
+    a o:Component ;
+    o:name ?componentName ;
+    o:has-component-bom [
+      o:has-component-material-assoc [
+        o:percentage ?percentage ;
+        o:has-material ?material ;
+      ];
+    ];
+  .
+  ?material o:name ?materialName ;
+}
+ORDER BY ?componentName`
+);
 
     // No Comunica Sources Required
    
@@ -258,16 +256,15 @@ SELECT * WHERE {
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
     cy.get('textarea[name="indexSourceQuery"]').clear();
-    cy.get('textarea[name="indexSourceQuery"]').type(`
-          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-          PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
+    cy.get('textarea[name="indexSourceQuery"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
 
-          SELECT ?object
-          WHERE {
-            example:index-example rdfs:seeAlso ?object .
-          }`
-    )
+SELECT ?object
+WHERE {
+  example:index-example rdfs:seeAlso ?object .
+}`
+)
     cy.get('button[type="submit"]').click();
 
     cy.contains("http://www/example.com/data/component-c01").should('exist');
