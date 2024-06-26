@@ -42,9 +42,9 @@ WHERE {
   ?s ?p ?o
 }`;
   const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?object
+SELECT ?source
 WHERE {
-  ?s rdfs:seeAlso ?object
+  ?s rdfs:seeAlso ?source
 }`;
   const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
   const defaultAskQueryDetails = JSON.stringify({"trueText": "this displays when true.", "falseText": "this displays when false."}, null, 2);
