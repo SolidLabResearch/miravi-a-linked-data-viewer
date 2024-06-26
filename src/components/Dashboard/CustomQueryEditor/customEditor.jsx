@@ -162,6 +162,15 @@ export default function CustomEditor(props) {
     navigate(`/${customQuery.id}`)
   };
 
+  const defaultSparqlQuery = `SELECT ?s ?p ?o
+WHERE {
+  ?s ?p ?o
+}`;
+  const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?object
+WHERE {
+  ?s rdfs:seeAlso ?object
+}`;
   const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
   const defaultAskQueryDetails = JSON.stringify({"trueText": "this displays when true.", "falseText": "this displays when false."}, null, 2);
 
@@ -218,8 +227,8 @@ export default function CustomEditor(props) {
                 minRows={5}
                 variant="outlined"
                 helperText="Enter your SPARQL query here."
-                placeholder={`SELECT ?s ?p ?o \nWHERE { \n\t?s ?p ?o \n}`}
-                value={!!formData.queryString ? formData.queryString : ''}
+                placeholder={defaultSparqlQuery}
+                value={!!formData.queryString ? formData.queryString : formData.queryString === '' ? '' : defaultSparqlQuery}
                 onChange={handleChange}
                 sx={{ marginBottom: '16px' }}
               />
@@ -328,8 +337,8 @@ export default function CustomEditor(props) {
                     minRows={5}
                     variant="outlined"
                     helperText="Give the SPARQL query to get the sources from the index file."
-                    placeholder={`SELECT ?s ?p ?o \nWHERE { \n\t?s ?p ?o \n}`}
-                    value={!!formData.indexSourceQuery ? formData.indexSourceQuery : ''}
+                    placeholder={defaultSparqlQueryIndexSources}
+                    value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
                     onChange={handleChange}
                     sx={{ marginBottom: '16px' }}
                   />

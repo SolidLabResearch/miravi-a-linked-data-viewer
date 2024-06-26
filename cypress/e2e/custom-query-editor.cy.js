@@ -7,6 +7,7 @@ describe("Simple Custom Query Editor tests", () => {
 
     cy.get('input[name="name"]').type("new query");
     cy.get('textarea[name="description"]').type("new description");
+    cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
 
 SELECT * WHERE {
@@ -32,6 +33,7 @@ SELECT * WHERE {
 
     cy.get('input[name="name"]').type("material query");
     cy.get('textarea[name="description"]').type("this query has 3 sources");
+    cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`# Query Texon's components
 # Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl
 
@@ -89,6 +91,7 @@ ORDER BY ?componentName
     cy.get('input[name="name"]').type("broken query");
     cy.get('textarea[name="description"]').type("just a description");
 
+    cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type("this is faultive querytext")
 
     cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
@@ -170,6 +173,7 @@ SELECT * WHERE {
     cy.get('textarea[name="description"]').type("description for template");
 
     // Query handeling a variable
+    cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
       SELECT ?name ?sameAs_url WHERE {
         ?list schema:name ?listTitle;
@@ -214,6 +218,7 @@ SELECT * WHERE {
     cy.get('textarea[name="description"]').type("description for index");
 
     // Query handeling a variable
+    cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`
           # Query Texon's components and their materials
           # Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/boms.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/materials.ttl
@@ -248,6 +253,7 @@ SELECT * WHERE {
 
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
+    cy.get('textarea[name="indexSourceQuery"]').clear();
     cy.get('textarea[name="indexSourceQuery"]').type(`
           PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
