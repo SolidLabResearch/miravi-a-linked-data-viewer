@@ -162,6 +162,8 @@ export default function CustomEditor(props) {
     navigate(`/${customQuery.id}`)
   };
 
+  const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
+  const defaultAskQueryDetails = JSON.stringify({"trueText": "this displays when true.", "falseText": "this displays when false."}, null, 2);
 
   return (
     <React.Fragment>
@@ -273,8 +275,8 @@ export default function CustomEditor(props) {
                   minRows={5}
                   variant="outlined"
                   helperText={`Write the extra configurations in JSON-format${parsingErrorComunica ? ' (Invalid Syntax)' : '.'}`}
-                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext,null,2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : `{\n\t"lenient" : true \n}`}
-                  placeholder={`{\n\t"lenient" : true,\n\t"other" : "some other options"\n}`}
+                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
+                  placeholder={defaultExtraComunicaContext}
                   onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   sx={{ marginBottom: '16px' }}
@@ -362,8 +364,8 @@ export default function CustomEditor(props) {
                     minRows={5}
                     variant="outlined"
                     helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery,null,2) : formData.askQuery : formData.askQuery === '' ? '' : `{\n\t"trueText" : " ",\n\t"falseText" : " " \n}`}
-                    placeholder={`{\n\t"trueText" : "this displays when true.",\n\t"falseText" : "this displays when false." \n}`}
+                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery, null, 2) : formData.askQuery : formData.askQuery === '' ? '' : defaultAskQueryDetails}
+                    placeholder={defaultAskQueryDetails}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     sx={{ marginBottom: '16px' }}
