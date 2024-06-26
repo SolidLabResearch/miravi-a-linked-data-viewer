@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- It is now possible to add and edit custom queries (#54).
+
 ### Changed
 
 - For logged in users not having a username, the webID is displayed (#133).
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Forced CSS's to not return content type application/ld+json, which induced a CORS error on some CSS server versions (#131).
+- Queries based on index file now work for any variable, not just ?object (#136).
 
 ## [1.2.1] - 2024-06-17
 

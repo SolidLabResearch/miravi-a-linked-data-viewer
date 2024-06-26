@@ -1,6 +1,6 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import {Title} from 'react-admin';
+import { Title } from 'react-admin';
 import './Dashboard.css';
 
 import configManager from '../../configManager/configManager';
@@ -15,10 +15,12 @@ function Dashboard() {
   const introductionText = config.introductionText || 'You change this introduction text via the config file.';
 
   return (
-    <Card>
-      <Title title={title}/>
-      <CardContent>{introductionText}</CardContent>
-    </Card>
+    <div>
+      <Card>
+        <Title title={title} />
+        <CardContent>{introductionText}</CardContent>
+      </Card>
+    </div>
   );
 }
 

@@ -54,7 +54,7 @@ function TableHeader({ children }) {
               >
                 {child.props.label}
               </span>
-              {variableOntology[child.props.source] && (
+              {!!variableOntology && variableOntology[child.props.source] && (
                 <Link
                   target="_blank"
                   href={variableOntology[child.props.source]}

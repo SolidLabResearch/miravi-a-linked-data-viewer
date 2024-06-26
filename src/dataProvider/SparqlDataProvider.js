@@ -343,18 +343,28 @@ async function configureBindingStream(bindingStream, variables) {
 const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   const sourcesList = [];
   try {
-    const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
-    const queryStringIndexSource = await result.text();
+    let queryStringIndexSource;
+    if (sourcesIndex.queryLocation){
+      const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
+      queryStringIndexSource = await result.text();
+    }else{
+       queryStringIndexSource = sourcesIndex.queryString;
+    }
 
     const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
       sources: [sourcesIndex.url],
     });
 
     await new Promise((resolve, reject) => {
-      bindingsStream.on('data', (binding) => {
-        const source = binding.get('object').value;
-        if (!sourcesList.includes(source)) {
-          sourcesList.push(source);
+      bindingsStream.on('data', (bindings) => {
+        // the bindings should have exactly one key (any name is allowed) and we accept the value as a source
+        if (bindings.size == 1) {
+          for (const term of bindings.values()) {
+            const source = term.value;
+            if (!sourcesList.includes(source)) {
+              sourcesList.push(source);
+            }
+          }
         }
       });
       bindingsStream.on('end', resolve);
@@ -363,6 +373,10 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   }
   catch (error) {
     throw new Error(`Error adding sources from index: ${error.message}`);
+  }
+
+  if (sourcesList.length == 0) {
+    throw new Error(`The resulting list of sources is empty`);
   }
 
   return sourcesList;

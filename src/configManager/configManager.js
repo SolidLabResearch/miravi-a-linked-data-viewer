@@ -54,8 +54,22 @@ class ConfigManager extends EventEmitter {
     this.emit('configChanged', this.config);
   }
 
+  addNewQueryGroup(id, name, icon = null) {
+
+    const groupExists = this.config.queryGroups.find(group => group.id === id);
+
+    if (groupExists === undefined) {
+      const newGroup = { id, name };
+      if (icon) {
+        newGroup.icon = icon;
+      }
+      this.config.queryGroups = [...this.config.queryGroups, newGroup];
+      this.emit('configChanged', this.config);
+    }
+  }
+
   /**
-   * Adds as query element to the config.queries array in the configuration
+   * Adds a query element to the config.queries array in the configuration
    * 
    * @param {object} newQuery - the query element to be added
    */
@@ -100,6 +114,58 @@ class ConfigManager extends EventEmitter {
     }
     return query.queryString;
   }
+
+
+  /**
+   * Updates a query element to the config.queries array in the configuration
+   * @param {Object} updatedQuery - the updated query element to replace
+   */
+  updateQuery(updatedQuery) {
+    let index = this.config.queries.findIndex(query => query.id === updatedQuery.id);
+    if (index !== -1) {
+      this.config.queries[index] = updatedQuery;
+    }
+    this.queryWorkingCopies = {};
+    this.emit('configChanged', this.config);
+  }
+
+  /**
+ * Deletes the query with the given id in the config.queries array in the configuration
+ * @param {string} id - id property of the query to delete
+ */
+  deleteQueryById(id) {
+    let index = this.config.queries.findIndex(query => query.id === id);
+    if (index !== -1) {
+      this.config.queries.splice(index, 1);
+    }
+    this.queryWorkingCopies = {};
+    this.emit('configChanged', this.config);
+  }
+
+
+  /**
+  * Gets the query with the given id in the config.queries array in the configuration
+  * @param {string} id - id property a query
+  * @returns {object} the query
+  */
+  getQueryById(id) {
+    return this.config.queries.find((query) => query.id === id);
+  }
+
+  /**
+   * Gets the query text from a query
+   * @param {object} query - the input query
+   * @returns {string} the query text
+   */
+  async getQueryText(query) {
+
+    if (query.queryLocation) {
+      const fetchResult = await fetch(`${this.config.queryFolder}${query.queryLocation}`);
+      return await fetchResult.text();
+    }
+    return query.queryString;
+  }
+
 }
 
 const configManager = new ConfigManager();
