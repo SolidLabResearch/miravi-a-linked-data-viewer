@@ -141,7 +141,7 @@ The set of sources over which a query will be executed is derived from two *opti
 
 If both inputs are present, the query will be executed over the superset of sources.
 
-The (auxiliary) query provided in `sourceIndex.queryLocation` is executed on `sourceIndex.url` and must result in the list of sources.
+The (auxiliary) query provided in `sourceIndex.queryLocation` is executed on `sourceIndex.url` and must result in the list of source URLs.
 
 If `sourceIndex` is used and there is no `comunicaContext.lenient` property found, one will be created with value `true`.
 This makes sure that the (main) query can succeed if not all obtained sources are accessible.
