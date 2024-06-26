@@ -66,7 +66,7 @@ ORDER BY ?componentName
   it("Check if all possible parameters are filled in with parameterized URL", () => {
 
     // Navigate to the URL of a saved query with completely filled-in form
-    cy.visit("/#/customQuery?name=Query+Name&description=Query+Description&queryString=Sparql+query+text&comunicaContextCheck=on&source=The+Comunica+Source&comunicaContext=%7B%22Advanced+Comunica+Context%22%3Atrue%7D&sourceIndexCheck=on&indexSourceUrl=Index+Source&indexSourceQuery=Index+Query+&askQueryCheck=on&askQuery=%7B%22trueText%22%3A%22+filled+in%22%2C%22falseText%22%3A%22not+filled+in%22%7D&templatedQueryCheck=on&variables=%7B%22firstvariables%22%3A%5B%22only+one%22%5D%7D")
+    cy.visit("/#/customQuery?name=Query+Name&description=Query+Description&queryString=Sparql+query+text&comunicaContextCheck=on&source=The+Comunica+Source&comunicaContext=%7B%22Advanced+Comunica+Context%22%3Atrue%7D&sourceIndexCheck=on&indexSourceUrl=Index+Source&indexSourceQuery=Index+Query+&askQueryCheck=on&askQuery=%7B%22trueText%22%3A%22+filled+in%22%2C%22falseText%22%3A%22not+filled+in%22%7D&templatedQueryCheck=on&templateOptions=%7B%22firstvariables%22%3A%5B%22only+one%22%5D%7D")
 
     // Verify that every field is correctly filled-in
     cy.get('input[name="name"]').should('have.value', 'Query Name');
@@ -81,7 +81,7 @@ ORDER BY ?componentName
 
     cy.get('textarea[name="askQuery"]').should('have.value', `{"trueText":" filled in","falseText":"not filled in"}`);
 
-    cy.get('textarea[name="variables"]').should('have.value', `{"firstvariables":["only one"]}`);
+    cy.get('textarea[name="templateOptions"]').should('have.value', `{"firstvariables":["only one"]}`);
 
   })
 
@@ -190,14 +190,14 @@ SELECT * WHERE {
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="templatedQueryCheck"]').click()
 
-    cy.get('textarea[name="variables"]').clear()
-    cy.get('textarea[name="variables"]').type(`{
+    cy.get('textarea[name="templateOptions"]').clear()
+    cy.get('textarea[name="templateOptions"]').type(`{"variables" : {
         "genre": [
           "\\"Romantic\\"",
           "\\"Baroque\\"",
           "\\"Classical\\""
         ]
-      }`)
+    }}`)
     cy.get('button[type="submit"]').click();
 
 

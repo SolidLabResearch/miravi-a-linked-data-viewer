@@ -14,7 +14,7 @@ import IconProvider from '../../../IconProvider/IconProvider';
 //const myEngine = new QueryEngine();
 
 export default function CustomEditor(props) {
-
+  
   const location = useLocation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -23,20 +23,33 @@ export default function CustomEditor(props) {
     source: '',
     queryString: '',
     comunicaContext: '',
-
+    
     comunicaContextCheck: false,
     sourceIndexCheck: false,
     askQueryCheck: false,
     templatedQueryCheck: false,
-
+    
   });
-
+  
   const [showError, setShowError] = useState(false);
-
+  
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
 
+  const defaultSparqlQuery = `SELECT ?s ?p ?o
+WHERE {
+  ?s ?p ?o
+}`;
+  const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?object
+WHERE {
+  ?s rdfs:seeAlso ?object
+}`;
+  const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
+  const defaultAskQueryDetails = JSON.stringify({"trueText": "this displays when true.", "falseText": "this displays when false."}, null, 2);
+  const defaultTemplateOptions = JSON.stringify({"variables" : {"variableOne" : ["option1", "option2", "option3"],"variableTwo" : ["option1", "option2", "option3"]}}, null, 5)
+  
   useEffect(() => {
     let searchParams
     if (props.newQuery) {
@@ -135,7 +148,25 @@ export default function CustomEditor(props) {
       parsedObject.askQuery = JSON.parse(dataWithStrings.askQuery);
     }
     if (ensureBoolean(dataWithStrings.templatedQueryCheck)) {
-      parsedObject.variables = JSON.parse(dataWithStrings.variables);
+      //parsedObject.variables = JSON.parse(dataWithStrings.variables);
+      
+      // hier de logica voor .variables en .querystring voor latere updates
+      // form name variables gaan hernoemen naar templateOptions
+
+      const options = JSON.parse(dataWithStrings.templateOptions);
+
+      if (options.variables){
+        console.log('het werkt')
+        console.log(options)
+        parsedObject.variables = options.variables;
+      }
+
+      // This will serve for the extention of customizable query variables
+      if (options.templatedVarSourceQueryString){
+        parsedObject.templatedVarSourceQueryString = options.templatedVarSourceQueryString;
+      }
+
+
     }
     return parsedObject;
   }
@@ -162,17 +193,6 @@ export default function CustomEditor(props) {
     navigate(`/${customQuery.id}`)
   };
 
-  const defaultSparqlQuery = `SELECT ?s ?p ?o
-WHERE {
-  ?s ?p ?o
-}`;
-  const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?source
-WHERE {
-  ?s rdfs:seeAlso ?source
-}`;
-  const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
-  const defaultAskQueryDetails = JSON.stringify({"trueText": "this displays when true.", "falseText": "this displays when false."}, null, 2);
 
   return (
     <React.Fragment>
@@ -401,16 +421,16 @@ WHERE {
                   <TextField
                     required={ensureBoolean(formData.templatedQueryCheck)}
                     id="outlined-multiline-flexible"
-                    label="Variables specification"
-                    name="variables"
+                    label="Templated query options"
+                    name="templateOptions"
                     error={parsingErrorTemplate}
                     multiline
                     fullWidth
                     minRows={5}
                     variant="outlined"
                     helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables,null,2) : formData.variables : formData.variables === '' ? '' : `{\n\t"variableOne" : ["option1", "option2", "option3"],\n\t"variableTwo" : ["option1", "option2", "option3"]\n}`}
-                    placeholder={`{\n\tvariableOne : ["option1","option2","option3"],\n\tvariableTwo : ["option1","option2","option3"], \n\t...\n}`}
+                    value={!!formData.templateOptions ? typeof formData.templateOptions === 'object' ? JSON.stringify(formData.templateOptions,null,5) : formData.templateOptions : formData.templateOptions === '' ? '' : defaultTemplateOptions}
+                    placeholder={defaultTemplateOptions}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     sx={{ marginBottom: '16px' }}
