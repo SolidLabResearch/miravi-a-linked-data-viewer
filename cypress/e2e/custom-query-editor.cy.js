@@ -7,6 +7,7 @@ describe("Simple Custom Query Editor tests", () => {
 
     cy.get('input[name="name"]').type("new query");
     cy.get('textarea[name="description"]').type("new description");
+
     cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
 
@@ -33,6 +34,7 @@ SELECT * WHERE {
 
     cy.get('input[name="name"]').type("material query");
     cy.get('textarea[name="description"]').type("this query has 3 sources");
+
     cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`# Query Texon's components
 # Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl
@@ -143,6 +145,8 @@ ORDER BY ?componentName
     // First create a simple query
     cy.get('input[name="name"]').type("new query");
     cy.get('textarea[name="description"]').type("new description");
+
+    cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
 
 SELECT * WHERE {
@@ -172,7 +176,7 @@ SELECT * WHERE {
     cy.get('input[name="name"]').type("custom template");
     cy.get('textarea[name="description"]').type("description for template");
 
-    // Query handeling a variable
+    // Query handling a variable
     cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
       SELECT ?name ?sameAs_url WHERE {
@@ -217,7 +221,7 @@ SELECT * WHERE {
     cy.get('input[name="name"]').type("custom with index file");
     cy.get('textarea[name="description"]').type("description for index");
 
-    // Query handeling a variable
+    // Query handling a variable
     cy.get('textarea[name="queryString"]').clear();
     cy.get('textarea[name="queryString"]').type(`
           # Query Texon's components and their materials
