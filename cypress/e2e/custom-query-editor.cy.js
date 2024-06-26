@@ -211,8 +211,6 @@ SELECT ?name ?sameAs_url WHERE {
     cy.get('.column-name').find('span').contains("Antonio Caldara").should('exist');
   })
 
-  // NOG EEN INDEX FILE TEST
-
   it("Custom Query With Index File", () => {
 
     cy.visit("/#/customQuery");
@@ -250,9 +248,7 @@ ORDER BY ?componentName`
 );
 
     // No Comunica Sources Required
-   
     cy.get('input[name="sourceIndexCheck"]').click()
-
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
     cy.get('textarea[name="indexSourceQuery"]').clear();

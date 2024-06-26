@@ -120,7 +120,7 @@ export default function CustomQueryEditButton({ queryID, submitted=false }) {
 
                 <DialogContent>
                     <DialogContentText >
-                        Use this link ro recreate this custom query later.
+                        Use this link to recreate this custom query later.
                     </DialogContentText>
 
                     <DialogContentText style={{ color: feedback.includes('successfully') ? 'green' : 'red' }} >

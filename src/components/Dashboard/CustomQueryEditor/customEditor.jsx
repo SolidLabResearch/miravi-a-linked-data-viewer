@@ -10,8 +10,6 @@ import Checkbox from '@mui/material/Checkbox';
 import configManager from '../../../configManager/configManager';
 import IconProvider from '../../../IconProvider/IconProvider';
 
-//import { QueryEngine } from "@comunica/query-sparql";
-//const myEngine = new QueryEngine();
 
 export default function CustomEditor(props) {
   
@@ -79,9 +77,6 @@ WHERE {
       if (props.newQuery) {
         navigate({ search: searchParams.toString() });
 
-        // TODO: NEED A CHECK HERE TO SEE IF WE MAY SUBMIT (correct query)
-        // const data = await executeSPARQLQuery(jsonData.query, jsonData.source, setShowError);
-
         configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
         addQuery(jsonData);
       }
@@ -148,16 +143,10 @@ WHERE {
       parsedObject.askQuery = JSON.parse(dataWithStrings.askQuery);
     }
     if (ensureBoolean(dataWithStrings.templatedQueryCheck)) {
-      //parsedObject.variables = JSON.parse(dataWithStrings.variables);
       
-      // hier de logica voor .variables en .querystring voor latere updates
-      // form name variables gaan hernoemen naar templateOptions
-
       const options = JSON.parse(dataWithStrings.templateOptions);
 
       if (options.variables){
-        console.log('het werkt')
-        console.log(options)
         parsedObject.variables = options.variables;
       }
 
@@ -454,26 +443,6 @@ WHERE {
   )
 }
 
-// Temporary bindingstream this is if you want a check on the simple queries before submitting
-/*
-async function executeSPARQLQuery(query, dataSource, setShowError) {
-  const resultingObjects = [];
-  try {
-    const bindingsStream = await myEngine.queryBindings(query, {
-      sources: dataSource.split(';').map(source => source.trim())
-    });
-
-    bindingsStream.on('data', (binding) => {
-      resultingObjects.push(JSON.parse(binding.toString()));
-    });
-  } catch (error) {
-    setShowError(true);
-    throw new Error(`Error executing SPARQL query: ${error.message}`);
-  }
-  return resultingObjects;
-};
-
-*/
 
 
 
