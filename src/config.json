@@ -178,7 +178,7 @@
       "description": "Query components (including details about materials) with the sources obtained from index files that require authentication to retrieve said sources.",
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only-AUTH",
-        "queryLocation": "/sourceQueries/index_example_texon_required_authentication.rq"
+        "queryLocation": "/sourceQueries/index_example_texon_only_source_AUTH.rq"
       }
     },
 

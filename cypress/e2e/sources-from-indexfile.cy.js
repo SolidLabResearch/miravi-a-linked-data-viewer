@@ -12,7 +12,7 @@ describe("Sources from index file", () => {
 
         // Check that it indeed had 3 sources
         cy.get('.information-box').contains('Sources: 3');
-      
+
         // Check if correct data is displayed
         cy.contains("http://www/example.com/data/component-c01");
         cy.contains("Component 1");
@@ -31,7 +31,7 @@ describe("Sources from index file", () => {
 
         // Check that all 4 sources were used
         cy.get('.information-box').contains('Sources: 4');
-      
+
         // Check if correct data is still displayed even if one source was unauthorized
         cy.contains("http://www/example.com/data/component-c01");
         cy.contains("Component 1");
@@ -50,11 +50,58 @@ describe("Sources from index file", () => {
 
         // Check that the 4 sources were successfully merged
         cy.get('.information-box').contains('Sources: 4');
-      
+
         // Check if correct data is still displayed even if one source was unauthorized and different sources were merged
         cy.contains("http://www/example.com/data/component-c01");
         cy.contains("Component 1");
         cy.contains("Material 1");
     });
+
+    it("Sources from an unauthorized source. Before and after log in.", () => {
+        cy.visit("/");
+
+        cy.intercept('GET', 'http://localhost:8080/example/index-example-texon-only-AUTH').as('getRequest');
+
+        // Navigate to correct query
+        cy.contains("For testing only").click();
+        cy.contains("Sources from an index file (requiring authentication)").click();
+
+        // Wait for the request and assert the response
+        cy.wait('@getRequest').then((interception) => {
+            expect(interception.response.statusCode).to.equal(401);
+        });
+
+
+        cy.contains("http://www/example.com/data/component-c01").should("not.exist");
+        cy.contains("Component 1").should("not.exist");
+        cy.contains("Material 1").should("not.exist");
+
+        //log in
+        cy.get('[aria-label="Profile"]').click();
+        cy.contains('[role="menuitem"]', "Login").click();
+
+        cy.get('input[name="idp"]')
+            .clear();
+        cy.get('input[name="idp"]')
+            .type("http://localhost:8080/example/profile/card#me");
+        cy.contains("Login").click();
+
+        cy.get("input#email").type("hello@example.com");
+        cy.get("input#password").type("abc123");
+        cy.contains("button", "Log in").click();
+        cy.contains("button", "Authorize").click();
+
+        cy.url().should("eq", "http://localhost:5173/");
+
+        //now try again
+        cy.contains("For testing only").click();
+        cy.contains("Sources from an index file (requiring authentication)").click();
+
+        cy.contains("http://www/example.com/data/component-c01").should("not.exist");
+        cy.contains("Component 1").should("exist");
+        cy.contains("Material 1").should("exist");
+    })
+
+
 
 });
