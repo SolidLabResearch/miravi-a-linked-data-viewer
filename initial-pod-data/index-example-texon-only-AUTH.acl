@@ -3,7 +3,7 @@
 
 <#owner>
     a acl:Authorization;
-    acl:accessTo <./index-example-texon-only>;
+    acl:accessTo <./index-example-texon-only-AUTH>;
     acl:agent <http://localhost:8080/example/profile/card#me>;
     acl:mode acl:Read, acl:Write, acl:Control.
 
