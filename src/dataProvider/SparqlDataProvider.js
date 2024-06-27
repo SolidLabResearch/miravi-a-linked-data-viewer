@@ -350,11 +350,7 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
     }else{
        queryStringIndexSource = sourcesIndex.queryString;
     }
-
-    // const queryForSourceRetrieval = query
-    // console.log(queryForSourceRetrieval)
-    // queryForSourceRetrieval.comunicaContext.sources =  [query.sourcesIndex.url]
-
+    
     const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
       ...generateContext({sources: [sourcesIndex.url]}),
     });
