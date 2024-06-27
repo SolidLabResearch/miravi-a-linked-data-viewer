@@ -350,11 +350,10 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
     }else{
        queryStringIndexSource = sourcesIndex.queryString;
     }
-
+    
     const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
-      sources: [sourcesIndex.url],
+      ...generateContext({sources: [sourcesIndex.url]}),
     });
-
     await new Promise((resolve, reject) => {
       bindingsStream.on('data', (bindings) => {
         // the bindings should have exactly one key (any name is allowed) and we accept the value as a source
@@ -381,7 +380,6 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
 
   return sourcesList;
 };
-
 /**
  * Creates/extends a comunicaContext property in a query
  * @param {object} query - the query element from the configuration
