@@ -26,6 +26,11 @@
       "id": "c-tst",
       "name": "For testing only",
       "icon": "BugReportIcon"
+    },
+    {
+      "id": "d-gqx",
+      "name": "Generic query examples",
+      "icon": "InfoIcon"
     }
   ],
   "queries": [
@@ -300,6 +305,213 @@
       "description": "Query a source containing ?s ?p1 ?o and ?s ?p2 ?o with p1 != p2 and request only ?s ?o",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/dup1"]
+      }
+    },
+    {
+      "id": "10000",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_spo.rq",
+      "name": "All triples (limit 50)",
+      "description": "Yields all triples in a given (list of) data source(s) (limited to 50 results)",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10001",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_s.rq",
+      "name": "All subjects (limit 50)",
+      "description": "Yields all subjects in a given (list of) data source(s) (limited to 50 results)",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10002",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_p.rq",
+      "name": "All predicates (limit 50)",
+      "description": "Yields all predicates in a given (list of) data source(s) (limited to 50 results)",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10003",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_o.rq",
+      "name": "All objects (limit 50)",
+      "description": "Yields all objects in a given (list of) data source(s) (limited to 50 results)",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10004",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_sxpo.rq",
+      "name": "All triples with a given subject (limit 50)",
+      "description": "Yields all triples with a given subject in a given (list of) data source(s) (limited to 50 results)",
+      "variables": {
+        "subject": [
+          "<http://www/example.com/data/component-bom-b01>",
+          "<http://www/example.com/data/component-bom-b02>",
+          "<http://www/example.com/data/component-bom-b03>",
+          "<http://www/example.com/data/component-c01>",
+          "<http://www/example.com/data/component-c02>",
+          "<http://www/example.com/data/component-c03>",
+          "<http://www/example.com/data/component-material-assoc-b01-m01>",
+          "<http://www/example.com/data/component-material-assoc-b01-m02>",
+          "<http://www/example.com/data/component-material-assoc-b01-m03>",
+          "<http://www/example.com/data/component-material-assoc-b02-m04>",
+          "<http://www/example.com/data/component-material-assoc-b02-m05>",
+          "<http://www/example.com/data/component-material-assoc-b02-m06>",
+          "<http://www/example.com/data/component-material-assoc-b02-m07>",
+          "<http://www/example.com/data/component-material-assoc-b02-m08>",
+          "<http://www/example.com/data/component-material-assoc-b02-m09>",
+          "<http://www/example.com/data/component-material-assoc-b03-m10>",
+          "<http://www/example.com/data/component-material-assoc-b03-m11>",
+          "<http://www/example.com/data/material-m01>",
+          "<http://www/example.com/data/material-m02>",
+          "<http://www/example.com/data/material-m03>",
+          "<http://www/example.com/data/material-m04>",
+          "<http://www/example.com/data/material-m05>",
+          "<http://www/example.com/data/material-m06>",
+          "<http://www/example.com/data/material-m07>",
+          "<http://www/example.com/data/material-m08>",
+          "<http://www/example.com/data/material-m09>",
+          "<http://www/example.com/data/material-m10>",
+          "<http://www/example.com/data/material-m11>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10005",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_spxo.rq",
+      "name": "All triples with a given predicate (limit 50)",
+      "description": "Yields all triples with a given predicate in a given (list of) data source(s) (limited to 50 results)",
+      "variables": {
+        "predicate": [
+          "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+          "<http://www/example.com/ont/has-component-bom>",
+          "<http://www/example.com/ont/has-component-material-assoc>",
+          "<http://www/example.com/ont/has-material>",
+          "<http://www/example.com/ont/name>",
+          "<http://www/example.com/ont/percentage>",
+          "<http://www/example.com/ont/recycled-content-percentage>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10006",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_spox.rq",
+      "name": "All triples with a given object (limit 50)",
+      "description": "Yields all triples with a given object in a given (list of) data source(s) (limited to 50 results)",
+      "variables": {
+        "object": [
+          "<http://www/example.com/data/component-bom-b01>",
+          "<http://www/example.com/data/component-bom-b02>",
+          "<http://www/example.com/data/component-bom-b03>",
+          "<http://www/example.com/data/component-material-assoc-b01-m01>",
+          "<http://www/example.com/data/component-material-assoc-b01-m02>",
+          "<http://www/example.com/data/component-material-assoc-b01-m03>",
+          "<http://www/example.com/data/component-material-assoc-b02-m04>",
+          "<http://www/example.com/data/component-material-assoc-b02-m05>",
+          "<http://www/example.com/data/component-material-assoc-b02-m06>",
+          "<http://www/example.com/data/component-material-assoc-b02-m07>",
+          "<http://www/example.com/data/component-material-assoc-b02-m08>",
+          "<http://www/example.com/data/component-material-assoc-b02-m09>",
+          "<http://www/example.com/data/component-material-assoc-b03-m10>",
+          "<http://www/example.com/data/component-material-assoc-b03-m11>",
+          "<http://www/example.com/data/material-m01>",
+          "<http://www/example.com/data/material-m02>",
+          "<http://www/example.com/data/material-m03>",
+          "<http://www/example.com/data/material-m04>",
+          "<http://www/example.com/data/material-m05>",
+          "<http://www/example.com/data/material-m06>",
+          "<http://www/example.com/data/material-m07>",
+          "<http://www/example.com/data/material-m08>",
+          "<http://www/example.com/data/material-m09>",
+          "<http://www/example.com/data/material-m10>",
+          "<http://www/example.com/data/material-m11>",
+          "<http://www/example.com/ont/Component>",
+          "<http://www/example.com/ont/component-bom>",
+          "<http://www/example.com/ont/component-material-assoc>",
+          "0", "3", "5", "7", "10", "15", "20", "25", "30", "40", "60", "80", "85",
+          "\"Component 1\"", "\"Component 2\"", "\"Component 3\"",
+          "\"Material 1\"", "\"Material 2\"", "\"Material 3\"", "\"Material 4\"",
+          "\"Material 5\"", "\"Material 6\"", "\"Material 7\"", "\"Material 8\"",
+          "\"Material 9\"", "\"Material 10\"", "\"Material 11\""
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10007",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_type.rq",
+      "name": "All terms of a given type (limit 50)",
+      "description": "Yields all terms of a given rdf:type in a given (list of) data source(s) (limited to 50 results)",
+      "variables": {
+        "type": [
+          "<http://www/example.com/ont/component-bom>",
+          "<http://www/example.com/ont/Component>",
+          "<http://www/example.com/ont/component-material-assoc>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
       }
     }
   ]
