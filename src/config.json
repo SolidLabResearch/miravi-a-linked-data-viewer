@@ -26,6 +26,11 @@
       "id": "c-tst",
       "name": "For testing only",
       "icon": "BugReportIcon"
+    },
+    {
+      "id": "d-gqx",
+      "name": "Generic query examples",
+      "icon": "InfoIcon"
     }
   ],
   "queries": [
@@ -300,6 +305,181 @@
       "description": "Query a source containing ?s ?p1 ?o and ?s ?p2 ?o with p1 != p2 and request only ?s ?o",
       "comunicaContext": {
         "sources": ["http://localhost:8080/example/dup1"]
+      }
+    },
+    {
+      "id": "10000",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_count_spo.rq",
+      "name": "Count",
+      "description": "Gives the count of triples in the indicated datasources",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10001",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_spo.rq",
+      "name": "Triples",
+      "description": "Gives at most 50 triples in the indicated datasources",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10002",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_s.rq",
+      "name": "Subjects",
+      "description": "Gives at most 50 subjects in the indicated datasources",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10003",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_p.rq",
+      "name": "Predicates",
+      "description": "Gives at most 50 predicates in the indicated datasources",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10004",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_o.rq",
+      "name": "Objects",
+      "description": "Gives at most 50 objects in the indicated datasources",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10005",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_sxpo.rq",
+      "name": "Triples with subject",
+      "description": "Gives at most 50 triples with a given subject in the indicated datasources",
+      "variables": {
+        "subject": [
+          "<https://www.example.com/data/component-bom-b01>",
+          "<https://www.example.com/data/component-c01>",
+          "<https://www.example.com/data/component-material-assoc-b01-m01>",
+          "<https://www.example.com/data/material-m01>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10006",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_spxo.rq",
+      "name": "Triples with predicate",
+      "description": "Gives at most 50 triples with a given predicate in the indicated datasources",
+      "variables": {
+        "predicate": [
+          "<https://www.example.com/ont/has-component-bom>",
+          "<https://www.example.com/ont/has-component-material-assoc>",
+          "<https://www.example.com/ont/has-material>",
+          "<https://www.example.com/ont/name>",
+          "<https://www.example.com/ont/percentage>",
+          "<https://www.example.com/ont/recycled-content-percentage>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10007",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_spox.rq",
+      "name": "Triples with object",
+      "description": "Gives at most 50 triples with a given object in the indicated datasources",
+      "variables": {
+        "object": [
+          "<https://www.example.com/data/component-bom-b01>",
+          "<https://www.example.com/data/component-material-assoc-b01-m01>",
+          "<https://www.example.com/data/material-m01>",
+          "<https://www.example.com/ont/Component>",
+          "<https://www.example.com/ont/component-bom>",
+          "<https://www.example.com/ont/component-material-assoc>",
+          "0",
+          "20",
+          "80",
+          "\"Component 1\"",
+          "\"Material 1\""
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "10008",
+      "queryGroupId": "d-gqx",
+      "queryLocation": "example_type.rq",
+      "name": "Terms of type",
+      "description": "Gives at most 50 terms of a given rdf:type in the indicated datasources",
+      "variables": {
+        "type": [
+          "<https://www.example.com/ont/component-bom>",
+          "<https://www.example.com/ont/Component>",
+          "<https://www.example.com/ont/component-material-assoc>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
       }
     }
   ]

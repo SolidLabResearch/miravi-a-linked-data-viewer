@@ -7,6 +7,8 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import FactoryIcon from '@mui/icons-material/Factory';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import ConstructionIcon from '@mui/icons-material/Construction';
+import CheckroomIcon from '@mui/icons-material/Checkroom';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,6 +19,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TuneIcon from '@mui/icons-material/Tune';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
+import InfoIcon from '@mui/icons-material/Info';
 
 export default {
   BrushIcon,
@@ -28,6 +31,8 @@ export default {
   FactoryIcon,
   BugReportIcon,
   ConstructionIcon,
+  CheckroomIcon,
+  ElectricBoltIcon,
   EditNoteIcon,
   AutoAwesomeIcon,
   AddIcon,
@@ -37,5 +42,6 @@ export default {
   SaveIcon,
   ModeEditIcon,
   TuneIcon,
-  SaveAsIcon
+  SaveAsIcon,
+  InfoIcon
 };

@@ -1,33 +1,33 @@
 
-<http://www/example.com/data/material-m01> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 1" .
+<https://www.example.com/data/material-m01> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 1" .
 
-<http://www/example.com/data/material-m02> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 2" .
+<https://www.example.com/data/material-m02> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 2" .
 
-<http://www/example.com/data/material-m03> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 3" .
+<https://www.example.com/data/material-m03> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 3" .
 
-<http://www/example.com/data/material-m04> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 4" .
+<https://www.example.com/data/material-m04> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 4" .
 
-<http://www/example.com/data/material-m05> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 5" .
+<https://www.example.com/data/material-m05> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 5" .
 
-<http://www/example.com/data/material-m06> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 6" .
+<https://www.example.com/data/material-m06> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 6" .
 
-<http://www/example.com/data/material-m07> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 7" .
+<https://www.example.com/data/material-m07> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 7" .
 
-<http://www/example.com/data/material-m08> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 8" .
+<https://www.example.com/data/material-m08> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 8" .
 
-<http://www/example.com/data/material-m09> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 9" .
+<https://www.example.com/data/material-m09> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 9" .
 
-<http://www/example.com/data/material-m10> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 10" .
+<https://www.example.com/data/material-m10> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 10" .
 
-<http://www/example.com/data/material-m11> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/name> "Material 11" .
+<https://www.example.com/data/material-m11> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/name> "Material 11" .

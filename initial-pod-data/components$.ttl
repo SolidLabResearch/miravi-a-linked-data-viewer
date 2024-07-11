@@ -1,15 +1,15 @@
 
-<http://www/example.com/data/component-c01> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/has-component-bom> <http://www/example.com/data/component-bom-b01>;
-  <http://www/example.com/ont/name> "Component 1";
-  <http://www/example.com/ont/recycled-content-percentage> 80 .
+<https://www.example.com/data/component-c01> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/has-component-bom> <https://www.example.com/data/component-bom-b01>;
+  <https://www.example.com/ont/name> "Component 1";
+  <https://www.example.com/ont/recycled-content-percentage> 80 .
 
-<http://www/example.com/data/component-c02> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/has-component-bom> <http://www/example.com/data/component-bom-b02>;
-  <http://www/example.com/ont/name> "Component 2";
-  <http://www/example.com/ont/recycled-content-percentage> 20 .
+<https://www.example.com/data/component-c02> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/has-component-bom> <https://www.example.com/data/component-bom-b02>;
+  <https://www.example.com/ont/name> "Component 2";
+  <https://www.example.com/ont/recycled-content-percentage> 20 .
 
-<http://www/example.com/data/component-c03> a <http://www/example.com/ont/Component>;
-  <http://www/example.com/ont/has-component-bom> <http://www/example.com/data/component-bom-b03>;
-  <http://www/example.com/ont/name> "Component 3";
-  <http://www/example.com/ont/recycled-content-percentage> 0 .
+<https://www.example.com/data/component-c03> a <https://www.example.com/ont/Component>;
+  <https://www.example.com/ont/has-component-bom> <https://www.example.com/data/component-bom-b03>;
+  <https://www.example.com/ont/name> "Component 3";
+  <https://www.example.com/ont/recycled-content-percentage> 0 .

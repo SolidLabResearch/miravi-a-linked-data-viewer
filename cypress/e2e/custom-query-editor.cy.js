@@ -43,8 +43,8 @@ PREFIX oo: <http://purl.org/openorg/>
 PREFIX ao: <http://purl.org/ontology/ao/core#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX d: <http://www/example.com/data/>
-PREFIX o: <http://www/example.com/ont/>
+PREFIX d: <https://www.example.com/data/>
+PREFIX o: <https://www.example.com/ont/>
 
 SELECT DISTINCT ?component ?componentName ?recycledContentPercentage
 WHERE {
@@ -60,7 +60,7 @@ ORDER BY ?componentName
     cy.get('button[type="submit"]').click();
 
     // Checking if the query works
-    cy.contains("http://www/example.com/data/component-c01").should('exist');
+    cy.contains("https://www.example.com/data/component-c01").should('exist');
   });
 
   it("Check if all possible parameters are filled in with parameterized URL", () => {
@@ -227,8 +227,8 @@ PREFIX oo: <http://purl.org/openorg/>
 PREFIX ao: <http://purl.org/ontology/ao/core#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX d: <http://www/example.com/data/>
-PREFIX o: <http://www/example.com/ont/>
+PREFIX d: <https://www.example.com/data/>
+PREFIX o: <https://www.example.com/ont/>
 
 SELECT ?component ?componentName ?material ?materialName ?percentage
 WHERE {
@@ -263,7 +263,7 @@ WHERE {
 )
     cy.get('button[type="submit"]').click();
 
-    cy.contains("http://www/example.com/data/component-c01").should('exist');
+    cy.contains("https://www.example.com/data/component-c01").should('exist');
 
   })
 

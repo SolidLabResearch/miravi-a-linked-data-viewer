@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- A group of generic query examples was added (#135).
+- Some icons for well known query groups were added (#146).
+
 ## [1.2.2] - 2024-06-27
 
 ### Added
