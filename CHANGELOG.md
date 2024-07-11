@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2024-07-11
+
 ### Added
 
 - A group of generic query examples was added (#135).
@@ -150,4 +152,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.2.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.0
 [1.2.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.1
 [1.2.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.2
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.2...HEAD
+[1.2.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.3
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.3...HEAD
