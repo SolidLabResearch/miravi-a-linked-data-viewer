@@ -1,58 +1,58 @@
 
-<http://www/example.com/data/component-bom-b01> a <http://www/example.com/ont/component-bom>;
-  <http://www/example.com/ont/has-component-material-assoc> <http://www/example.com/data/component-material-assoc-b01-m01>,
-    <http://www/example.com/data/component-material-assoc-b01-m02>, <http://www/example.com/data/component-material-assoc-b01-m03> .
+<https://www.example.com/data/component-bom-b01> a <https://www.example.com/ont/component-bom>;
+  <https://www.example.com/ont/has-component-material-assoc> <https://www.example.com/data/component-material-assoc-b01-m01>,
+    <https://www.example.com/data/component-material-assoc-b01-m02>, <https://www.example.com/data/component-material-assoc-b01-m03> .
 
-<http://www/example.com/data/component-bom-b02> a <http://www/example.com/ont/component-bom>;
-  <http://www/example.com/ont/has-component-material-assoc> <http://www/example.com/data/component-material-assoc-b02-m04>,
-    <http://www/example.com/data/component-material-assoc-b02-m05>, <http://www/example.com/data/component-material-assoc-b02-m06>,
-    <http://www/example.com/data/component-material-assoc-b02-m07>, <http://www/example.com/data/component-material-assoc-b02-m08>,
-    <http://www/example.com/data/component-material-assoc-b02-m09> .
+<https://www.example.com/data/component-bom-b02> a <https://www.example.com/ont/component-bom>;
+  <https://www.example.com/ont/has-component-material-assoc> <https://www.example.com/data/component-material-assoc-b02-m04>,
+    <https://www.example.com/data/component-material-assoc-b02-m05>, <https://www.example.com/data/component-material-assoc-b02-m06>,
+    <https://www.example.com/data/component-material-assoc-b02-m07>, <https://www.example.com/data/component-material-assoc-b02-m08>,
+    <https://www.example.com/data/component-material-assoc-b02-m09> .
 
-<http://www/example.com/data/component-bom-b03> a <http://www/example.com/ont/component-bom>;
-  <http://www/example.com/ont/has-component-material-assoc> <http://www/example.com/data/component-material-assoc-b03-m10>,
-    <http://www/example.com/data/component-material-assoc-b03-m11> .
+<https://www.example.com/data/component-bom-b03> a <https://www.example.com/ont/component-bom>;
+  <https://www.example.com/ont/has-component-material-assoc> <https://www.example.com/data/component-material-assoc-b03-m10>,
+    <https://www.example.com/data/component-material-assoc-b03-m11> .
 
-<http://www/example.com/data/component-material-assoc-b01-m01> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m01>;
-  <http://www/example.com/ont/percentage> 60 .
+<https://www.example.com/data/component-material-assoc-b01-m01> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m01>;
+  <https://www.example.com/ont/percentage> 60 .
 
-<http://www/example.com/data/component-material-assoc-b01-m02> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m02>;
-  <http://www/example.com/ont/percentage> 30 .
+<https://www.example.com/data/component-material-assoc-b01-m02> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m02>;
+  <https://www.example.com/ont/percentage> 30 .
 
-<http://www/example.com/data/component-material-assoc-b01-m03> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m03>;
-  <http://www/example.com/ont/percentage> 10 .
+<https://www.example.com/data/component-material-assoc-b01-m03> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m03>;
+  <https://www.example.com/ont/percentage> 10 .
 
-<http://www/example.com/data/component-material-assoc-b02-m04> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m04>;
-  <http://www/example.com/ont/percentage> 40 .
+<https://www.example.com/data/component-material-assoc-b02-m04> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m04>;
+  <https://www.example.com/ont/percentage> 40 .
 
-<http://www/example.com/data/component-material-assoc-b02-m05> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m05>;
-  <http://www/example.com/ont/percentage> 20 .
+<https://www.example.com/data/component-material-assoc-b02-m05> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m05>;
+  <https://www.example.com/ont/percentage> 20 .
 
-<http://www/example.com/data/component-material-assoc-b02-m06> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m06>;
-  <http://www/example.com/ont/percentage> 25 .
+<https://www.example.com/data/component-material-assoc-b02-m06> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m06>;
+  <https://www.example.com/ont/percentage> 25 .
 
-<http://www/example.com/data/component-material-assoc-b02-m07> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m07>;
-  <http://www/example.com/ont/percentage> 7 .
+<https://www.example.com/data/component-material-assoc-b02-m07> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m07>;
+  <https://www.example.com/ont/percentage> 7 .
 
-<http://www/example.com/data/component-material-assoc-b02-m08> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m08>;
-  <http://www/example.com/ont/percentage> 5 .
+<https://www.example.com/data/component-material-assoc-b02-m08> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m08>;
+  <https://www.example.com/ont/percentage> 5 .
 
-<http://www/example.com/data/component-material-assoc-b02-m09> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m09>;
-  <http://www/example.com/ont/percentage> 3 .
+<https://www.example.com/data/component-material-assoc-b02-m09> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m09>;
+  <https://www.example.com/ont/percentage> 3 .
 
-<http://www/example.com/data/component-material-assoc-b03-m10> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m10>;
-  <http://www/example.com/ont/percentage> 85 .
+<https://www.example.com/data/component-material-assoc-b03-m10> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m10>;
+  <https://www.example.com/ont/percentage> 85 .
 
-<http://www/example.com/data/component-material-assoc-b03-m11> a <http://www/example.com/ont/component-material-assoc>;
-  <http://www/example.com/ont/has-material> <http://www/example.com/data/material-m11>;
-  <http://www/example.com/ont/percentage> 15 .
+<https://www.example.com/data/component-material-assoc-b03-m11> a <https://www.example.com/ont/component-material-assoc>;
+  <https://www.example.com/ont/has-material> <https://www.example.com/data/material-m11>;
+  <https://www.example.com/ont/percentage> 15 .

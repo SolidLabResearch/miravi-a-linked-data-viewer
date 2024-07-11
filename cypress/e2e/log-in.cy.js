@@ -41,10 +41,12 @@ describe("Log in", () => {
       .type("http://localhost:8080/example/profile/card#me");
     cy.contains("Login").click();
 
-    cy.get("input#email").type("hello@example.com");
-    cy.get("input#password").type("abc123");
-    cy.contains("button", "Log in").click();
-    cy.contains("button", "Authorize").click();
+    cy.origin('http://localhost:8080', () => {
+      cy.get("input#email").type("hello@example.com");
+      cy.get("input#password").type("abc123");
+      cy.contains("button", "Log in").click();
+      cy.contains("button", "Authorize").click();
+    });
 
     cy.url().should("eq", "http://localhost:5173/");
   });
@@ -74,11 +76,13 @@ describe("Log in", () => {
     cy.get('input[name="idp"]').type("http://localhost:8080");
     cy.contains("Login").click();
 
-    cy.get("input#email").type("hello@example.com");
-    cy.get("input#password").type("abc123");
-    cy.contains("button", "Log in").click();
-    cy.contains("button", "Authorize").click();
-
+    cy.origin('http://localhost:8080', () => {
+      cy.get("input#email").type("hello@example.com");
+      cy.get("input#password").type("abc123");
+      cy.contains("button", "Log in").click();
+      cy.contains("button", "Authorize").click();
+    });
+    
     cy.url().should("eq", "http://localhost:5173/");
 
     cy.contains("General examples").click();
