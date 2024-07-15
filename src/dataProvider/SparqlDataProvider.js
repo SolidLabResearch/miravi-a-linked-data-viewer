@@ -113,7 +113,7 @@ async function buildQueryText(query) {
       throw new Error("Invalid query location.")
     }
     if (rawText === null || rawText === '' ) {
-      throw new Error("Empty query text.")
+      throw new Error("Empty query text. Check your query and location.")
     }
 
     if (query.variableValues) {
