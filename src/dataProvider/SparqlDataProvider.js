@@ -109,6 +109,13 @@ async function buildQueryText(query) {
   try {
     let rawText = await configManager.getQueryText(query);
 
+    if (rawText === undefined) {
+      throw new Error("Invalid query location.")
+    }
+    if (rawText === null || rawText === '' ) {
+      throw new Error("Empty query text.")
+    }
+
     if (query.variableValues) {
       rawText = replaceVariables(rawText, query.variableValues);
     }
@@ -344,15 +351,15 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   const sourcesList = [];
   try {
     let queryStringIndexSource;
-    if (sourcesIndex.queryLocation){
+    if (sourcesIndex.queryLocation) {
       const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
       queryStringIndexSource = await result.text();
-    }else{
-       queryStringIndexSource = sourcesIndex.queryString;
+    } else {
+      queryStringIndexSource = sourcesIndex.queryString;
     }
-    
+
     const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
-      ...generateContext({sources: [sourcesIndex.url]}),
+      ...generateContext({ sources: [sourcesIndex.url] }),
     });
     await new Promise((resolve, reject) => {
       bindingsStream.on('data', (bindings) => {
