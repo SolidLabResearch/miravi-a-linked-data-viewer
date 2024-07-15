@@ -175,8 +175,10 @@ WHERE {
   const updateQuery = (formData, customQuery) => {
     formData = parseAllObjectsToJSON(formData);
     configManager.updateQuery({
-      ...customQuery,
-      ...formData
+      ...formData,
+      id: customQuery.id,
+      queryGroupId: customQuery.queryGroupId,
+      icon: customQuery.icon
     });
 
     navigate(`/${customQuery.id}`)
