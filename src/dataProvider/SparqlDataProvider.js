@@ -1,17 +1,11 @@
 import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
-import { QueryEngine } from "@comunica/query-sparql";
-import {
-  getDefaultSession,
-  fetch as authFetch,
-} from "@inrupt/solid-client-authn-browser";
 import { HttpError } from "react-admin";
 import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
 import { Term } from "sparqljs";
 
 import configManager from "../configManager/configManager";
-
-const myEngine = new QueryEngine();
+import comunicaEngineWrapper from "../comunicaEngineWrapper/comunicaEngineWrapper";
 
 let config = configManager.getConfig();
 
@@ -96,8 +90,7 @@ export default {
   },
   deleteMany: async function deleteMany() {
     throw new NotImplementedError();
-  },
-  queryEngine: myEngine
+  }
 };
 
 /**
@@ -182,25 +175,15 @@ function findPredicates(query) {
 async function executeQuery(query) {
   try {
     query.queryText = await buildQueryText(query);
-    return handleQueryExecution(
-      await myEngine.query(query.queryText, {
-        ...generateContext(query.comunicaContext),
-      }),
-      query
-    );
+    return comunicaEngineWrapper.query(query.queryText, { ...generateContext(query.comunicaContext), });
   } catch (error) {
-    if (query.comunicaContext && query.comunicaContext.sources) {
-      for (const source of query.comunicaContext.sources) {
-        myEngine.invalidateHttpCache(source);
-      }
-    }
     throw new HttpError(error.message, 500);
   }
 }
 
 /**
  * Generates the context for a query execution to be passed to Comunica engine when querying.
- * @param {object} context - the context for the query given in the config file.
+ * @param {object} context - the context to start from.
  * @returns {object} the context for a query execution to be passed to Comunica engine when querying.
  */
 function generateContext(context) {
@@ -211,128 +194,11 @@ function generateContext(context) {
     throw new HttpError("No sources provided", 500);
   }
 
-  if (!context.fetchSuccess) {
-    context.fetchSuccess = {};
-    context.fetchStatusNumber = {};
-    // avoid faulty fetch status for sources cached in Comunica
-    for (const source of context.sources) {
-      context.fetchSuccess[source] = true;
-    }
-  }
-
-  let underlyingFetchFunction = fetch;
-  if (getDefaultSession().info.isLoggedIn) {
-    underlyingFetchFunction = authFetch;
-  }
-
-  context.underlyingFetchFunction = underlyingFetchFunction;
-  context.fetch = statusFetch(underlyingFetchFunction, context);
-
   if (context.useProxy) {
     context.httpProxyHandler = proxyHandler;
   }
 
   return context;
-}
-
-/**
- * Given a fetch function, returns a function that wraps the fetch function and sets the fetchSuccess flag in the context.
- * @param {Function} customFetch - a fetch function to be wrapped
- * @param {*} context - the context for the query given in the config file.
- * @returns {Function} a function that wraps the fetch function and sets the fetchSuccess flag in the context.
- */
-function statusFetch(customFetch, context) {
-  const wrappedFetchFunction = async (arg) => {
-    try {
-      const response = await customFetch(arg, {
-        headers: {
-          Accept: "application/n-quads,application/trig;q=0.9,text/turtle;q=0.8,application/n-triples;q=0.7,*/*;q=0.1"
-        }
-      });
-      context.fetchSuccess[arg] = response.ok;
-      context.fetchStatusNumber[arg] = response.status;
-      return response;
-    }
-    catch (error) {
-      context.fetchSuccess[arg] = false;
-      throw error;
-    }
-  }
-
-  return wrappedFetchFunction;
-}
-
-/**
- * A function that given a QueryType processes every result.
- * @param {object} execution - a query execution
- * @param {object} query - the query element from the configuration
- * @returns {Array<Term>} the results of the query
- */
-async function handleQueryExecution(execution, query) {
-  try {
-    let variables;
-    const resultType = execution.resultType;
-    if (execution.resultType !== "boolean") {
-      const metadata = await execution.metadata();
-      variables = metadata.variables.map((val) => {
-        return val.value;
-      });
-    }
-    return queryTypeHandlers[resultType](await execution.execute(), variables);
-  } catch (error) {
-    throw new HttpError(error.message, 500);
-  }
-}
-
-const queryTypeHandlers = {
-  bindings: configureBindingStream,
-  quads: configureQuadStream,
-};
-
-/**
- * Configures how a query resulting in a stream of quads should be processed.
- * @param {object} quadStream - a stream of Quads
- * @returns {Array<Term>} the results of the query
- */
-async function configureQuadStream(quadStream) {
-  try {
-    const results = (await quadStream.toArray()).flat();
-    return results.map((result, index) => {
-      const newResults = {
-        subject: result.subject,
-        predicate: result.predicate,
-        object: result.object,
-        graph: result.graph,
-        id: index,
-      };
-      return newResults;
-    });
-  } catch (error) {
-    throw new HttpError(error.message, 500);
-  }
-}
-
-/**
- * Configures how a query resulting in a stream of bindings should be processed.
- * @param {object} bindingStream - a stream of Bindings
- * @param {Array<string>} variables - all the variables of the query behind the binding stream.
- * @returns {Array<Term>} the results of the query
- */
-async function configureBindingStream(bindingStream, variables) {
-  try {
-    const results = await bindingStream.toArray();
-    return results.map((result, index) => {
-      const newResults = {};
-      for (const variable of variables) {
-        const value = result.get(variable);
-        newResults[variable] = value;
-      }
-      newResults.id = index;
-      return newResults;
-    });
-  } catch (error) {
-    throw new HttpError(error.message, 500);
-  }
 }
 
 /**
@@ -351,24 +217,24 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
        queryStringIndexSource = sourcesIndex.queryString;
     }
     
-    const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
-      ...generateContext({sources: [sourcesIndex.url]}),
-    });
-    await new Promise((resolve, reject) => {
-      bindingsStream.on('data', (bindings) => {
-        // the bindings should have exactly one key (any name is allowed) and we accept the value as a source
-        if (bindings.size == 1) {
-          for (const term of bindings.values()) {
-            const source = term.value;
-            if (!sourcesList.includes(source)) {
-              sourcesList.push(source);
-            }
-          }
-        }
-      });
-      bindingsStream.on('end', resolve);
-      bindingsStream.on('error', reject);
-    });
+    // const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
+    //   ...generateContext({sources: [sourcesIndex.url]}),
+    // });
+    // await new Promise((resolve, reject) => {
+    //   bindingsStream.on('data', (bindings) => {
+    //     // the bindings should have exactly one key (any name is allowed) and we accept the value as a source
+    //     if (bindings.size == 1) {
+    //       for (const term of bindings.values()) {
+    //         const source = term.value;
+    //         if (!sourcesList.includes(source)) {
+    //           sourcesList.push(source);
+    //         }
+    //       }
+    //     }
+    //   });
+    //   bindingsStream.on('end', resolve);
+    //   bindingsStream.on('error', reject);
+    // });
   }
   catch (error) {
     throw new Error(`Error adding sources from index: ${error.message}`);
