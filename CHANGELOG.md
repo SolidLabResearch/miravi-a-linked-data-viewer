@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Forced CSS's to not return content type application/ld+json, which induced a CORS error on some CSS server versions (#131).
 - Queries based on index file now work for any variable, not just ?object (#136).
 - Queries based on index file now work for index files requiring authentication (#139).
+- Correct error display when the queryLocation is a non existing file or faultive (#147).
+- Fixed a bug where the edit did not correctly removed unchecked options (#150).
 
 ## [1.2.1] - 2024-06-17
 
