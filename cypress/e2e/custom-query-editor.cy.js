@@ -163,9 +163,9 @@ SELECT * WHERE {
 
     cy.get('textarea[name="queryURL"]').invoke('val').then((val) => {
       expect(val).to.include('?name=new+query&description=new+description&queryString=PREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E+%0ASELECT+*+WHERE+%7B%0A++++%3Flist+schema%3Aname+%3FlistTitle%3B%0A++++++schema%3AitemListElement+%5B%0A++++++schema%3Aname+%3FbookTitle%3B%0A++++++schema%3Acreator+%5B%0A++++++++schema%3Aname+%3FauthorName%0A++++++%5D%0A++++%5D.%0A%7D&source=http%3A%2F%2Flocalhost%3A8080%2Fexample%2Fwish-list');
-  });
-  
-    
+    });
+
+
   })
 
   it("Custom templated query", () => {
@@ -184,7 +184,7 @@ SELECT ?name ?sameAs_url WHERE {
     schema:genre $genre;
     schema:sameAs ?sameAs_url;
 }`
-);
+    );
 
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="templatedQueryCheck"]').click()
@@ -245,7 +245,7 @@ WHERE {
   ?material o:name ?materialName ;
 }
 ORDER BY ?componentName`
-);
+    );
 
     // No Comunica Sources Required
     cy.get('input[name="sourceIndexCheck"]').click()
@@ -260,11 +260,149 @@ SELECT ?object
 WHERE {
   example:index-example rdfs:seeAlso ?object .
 }`
-)
+    )
     cy.get('button[type="submit"]').click();
 
     cy.contains("https://www.example.com/data/component-c01").should('exist');
 
+  })
+
+
+
+  it("Make a templated query, then edit it to make it a normal query", () => {
+
+    // First create the query
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("custom template");
+    cy.get('textarea[name="description"]').type("description for template");
+
+    // Query handling a variable
+    cy.get('textarea[name="queryString"]').clear();
+    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+      SELECT ?name ?sameAs_url WHERE {
+        ?list schema:name ?listTitle;
+          schema:name ?name;
+          schema:genre $genre;
+          schema:sameAs ?sameAs_url;
+      }`
+          );
+  
+    cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
+    cy.get('input[name="templatedQueryCheck"]').click()
+
+    cy.get('textarea[name="templateOptions"]').clear()
+    cy.get('textarea[name="templateOptions"]').type(`{"variables" : {
+          "genre": [
+            "\\"Romantic\\"",
+            "\\"Baroque\\"",
+            "\\"Classical\\""
+          ]
+      }}`)
+    cy.get('button[type="submit"]').click();
+
+
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Baroque').click();
+
+    // Comfirm query
+    cy.get('button[type="submit"]').click();
+
+    cy.get('.column-name').find('span').contains("Antonio Caldara").should('exist');
+
+    // Now that this templated one works, lets edit it to make a normal query from it
+    cy.get('button').contains("Edit Query").click();
+
+    cy.get('textarea[name="queryString"]').clear();
+    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+  SELECT ?name ?genre ?sameAs_url WHERE {
+    ?list schema:name ?listTitle;
+      schema:name ?name;
+      schema:genre ?genre;
+      schema:sameAs ?sameAs_url;
+  }`
+    );
+
+    // Remove the templated options
+    cy.get('input[name="templatedQueryCheck"]').click()
+
+    cy.get('button[type="submit"]').click();
+
+    cy.get('form').should('not.exist')
+
+    cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should('exist');
+  })
+
+  // Reverse logic
+  
+  it("Make a normal query, then edit it to make it a templated query", () => {
+
+    // First create the query
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("custom template");
+    cy.get('textarea[name="description"]').type("description for template");
+
+    // Query handling a variable
+    cy.get('textarea[name="queryString"]').clear();
+    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+      SELECT ?name ?genre ?sameAs_url WHERE {
+        ?list schema:name ?listTitle;
+          schema:name ?name;
+          schema:genre ?genre;
+          schema:sameAs ?sameAs_url;
+      }`
+        );
+
+    cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
+   
+    cy.get('button[type="submit"]').click();
+
+    cy.get('form').should('not.exist')
+
+    cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should('exist');
+
+
+   
+
+    // Now that this normal one works, lets edit it to make a templated query from it
+    cy.get('button').contains("Edit Query").click();
+
+    cy.get('textarea[name="queryString"]').clear();
+    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+  SELECT ?name ?sameAs_url WHERE {
+    ?list schema:name ?listTitle;
+      schema:name ?name;
+      schema:genre $genre;
+      schema:sameAs ?sameAs_url;
+  }`
+    );
+
+    cy.get('input[name="templatedQueryCheck"]').click()
+
+    cy.get('textarea[name="templateOptions"]').clear()
+    cy.get('textarea[name="templateOptions"]').type(`{"variables" : {
+          "genre": [
+            "\\"Romantic\\"",
+            "\\"Baroque\\"",
+            "\\"Classical\\""
+          ]
+      }}`)
+
+    cy.get('button[type="submit"]').click();
+
+
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Baroque').click();
+
+    // Comfirm query
+    cy.get('button[type="submit"]').click();
+
+    cy.get('.column-name').find('span').contains("Antonio Caldara").should('exist');
   })
 
 })

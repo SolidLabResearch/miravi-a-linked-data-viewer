@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added 
+
+### Changed
+
+### Fixed
+
+- Correct error display when the queryLocation is a non existing file or faultive (#147).
+- Fixed a bug where editing a custom query did not correctly remove unchecked options (#150).
+
 ## [1.2.3] - 2024-07-11
 
 ### Added
