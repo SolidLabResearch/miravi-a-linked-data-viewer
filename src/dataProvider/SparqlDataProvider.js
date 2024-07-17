@@ -95,6 +95,7 @@ export default {
 
 /**
  * Fetches the query file and builds the final query text.
+ * 
  * @param {object} query - the query object working copy
  * @returns {string} the built query text
  */
@@ -130,6 +131,7 @@ async function buildQueryText(query) {
 
 /**
  * Replace the variable placeholders in a query's raw text by the specified value.
+ * 
  * @param {string} rawText - the raw text of a query.
  * @param {object} variables - an object containing the variable names and specified values (as strings).
  * @returns {string} the resulting raw text of the query after replacing the variables.
@@ -145,6 +147,7 @@ function replaceVariables(rawText, variables) {
 
 /**
  * Given a query and an object, this function returns the predicate of the object in the query.
+ * 
  * @param {object} query - the parsed query in which the predicate is to be looked for.
  * @returns {object} an object with the variable as key and the predicate as value.
  */
@@ -169,6 +172,7 @@ function findPredicates(query) {
 
 /**
  * Executes the query in scope and processes every result.
+ * 
  * @param {object} query - the query object working copy
  * @returns {Array<Term>} the results of the query
  */
@@ -212,6 +216,7 @@ async function executeQuery(query) {
 
 /**
  * Gets sources from a sources index
+ * 
  * @param {object} sourcesIndex - the sourcesIndex object as found in the configuration
  * @param {boolean} useProxy - true if the main query needs a proxy (in which case we implicitly use it to access the sources index too)
  * @returns {array} array of sources found
@@ -223,22 +228,26 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
     if (sourcesIndex.queryLocation){
       const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
       queryStringIndexSource = await result.text();
-    }else{
+    } else {
        queryStringIndexSource = sourcesIndex.queryString;
     }
-    const callbackBindings = (bindings) => {
-      for (const term of bindings.values()) {
-        const source = term.value;
-        if (!sourcesList.includes(source)) {
-          sourcesList.push(source);
+
+    const bindingsStream = await comunicaEngineWrapper.queryBindings(queryStringIndexSource,
+      { sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) });
+    await new Promise((resolve, reject) => {
+      bindingsStream.on('data', (bindings) => {
+        for (const term of bindings.values()) {
+          const source = term.value;
+          if (!sourcesList.includes(source)) {
+            sourcesList.push(source);
+          }
+          // we only want the first term, whatever the variable's name is (note: a for ... of loop seems the only way to access it)
+          break;
         }
-        // we only want the first term, whatever the variable's name is (note: a for ... of loop seems the only way to access it)
-        break;
-      }
-    };
-    await comunicaEngineWrapper.query(queryStringIndexSource,
-      { sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) },
-      { "bindings": callbackBindings });
+      });
+      bindingsStream.on('end', resolve);
+      bindingsStream.on('error', reject);
+    });
   }
   catch (error) {
     throw new Error(`Error adding sources from index: ${error.message}`);
@@ -253,6 +262,7 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
 
 /**
  * Creates/extends a comunicaContext property in a query
+ * 
  * @param {object} query - the query element from the configuration
  */
 function handleComunicaContextCreation(query) {
@@ -261,8 +271,7 @@ function handleComunicaContextCreation(query) {
       sources: [],
       lenient: true
     };
-  }
-  else {
+  } else {
     if (query.comunicaContext.lenient === undefined) {
       query.comunicaContext.lenient = true;
     }

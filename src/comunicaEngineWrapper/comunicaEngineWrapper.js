@@ -31,31 +31,35 @@ class ComunicaEngineWrapper {
     this._underlyingFetchFunction = undefined;
   }
 
-   /**
-   * Executes one SPARQL query with the Comunica engine
-   * 
-   * Support the following callback functions. Forward only the ones you need.
-   * - "variables": will be called once with an array of variable names, in case of a SELECT query
-   * - "bindings": will be called for all bindings, in case of a SELECT query
-   * - "quads": will be called for every quad, in case of a CONSTRUCT query
-   * - "boolean": will be called for the resulting boolean, in case of an ASK query
-   * 
-   * @param {string} queryText - the SPARQL query text
-   * @param {object} context - the context to provide to the Comunica engine
-   * @param {object} callbacks - an object contains the callback functions you specifiy
-   */
+  getFetchSuccess(arg) {
+    return this._fetchSuccess[arg];
+  }
+
+  getFetchStatusNumber(arg) {
+    return this._fetchStatusNumber[arg];
+  }
+
+  getUnderlyingFetchFunction() {
+    return this._underlyingFetchFunction;
+  }
+
+  /**
+  * Executes one generic SPARQL query with the Comunica engine
+  * 
+  * Support the following callback functions. Forward only the ones you need.
+  * - "variables": will be called once with an array of variable names, in case of a SELECT query
+  * - "bindings": will be called for every bindings combo, in case of a SELECT query
+  * - "quads": will be called for every quad, in case of a CONSTRUCT query
+  * - "boolean": will be called for the resulting boolean, in case of an ASK query
+  * 
+  * @param {string} queryText - the SPARQL query text
+  * @param {object} context - the context to provide to the Comunica engine
+  * @param {object} callbacks - an object contains the callback functions you specify
+  * @returns {void} when the query has finished
+  */
   async query(queryText, context, callbacks) {
     try {
-      // avoid faulty fetch status for sources cached in Comunica
-      for (const source of context.sources) {
-        this._fetchSuccess[source] = true;
-      }
-      this._underlyingFetchFunction = fetch;
-      if (getDefaultSession().info.isLoggedIn) {
-        this._underlyingFetchFunction = authFetch;
-      }
-      context.fetch = ComunicaEngineWrapper.getWrappedFetchFunction(this._underlyingFetchFunction, this);
-
+      this._prepareQuery(context);
       let result = await this._engine.query(queryText, context);
       switch (result.resultType) {
         case 'bindings':
@@ -105,12 +109,47 @@ class ComunicaEngineWrapper {
   }
 
   /**
+  * Executes one SPARQL SELECT query with the Comunica engine
+  * 
+  * @param {string} queryText - the SPARQL SELECT query text
+  * @param {object} context - the context to provide to the Comunica engine
+  * @returns {Promise <BindingsStream>} Promis to the bindings stream
+  */
+  async queryBindings(queryText, context) {
+    try {
+      this._prepareQuery(context);
+      return this._engine.queryBindings(queryText, context);
+    } catch (error) {
+      this.reset();
+      throw error;
+    }
+  }
+
+  /**
+   * Prepares a call to any engine's query function
+   *
+   * @param {object} context - the context that will be used
+   */
+  _prepareQuery(context) {
+    // avoid faulty fetch status for sources cached in Comunica
+    for (const source of context.sources) {
+      this._fetchSuccess[source] = true;
+    }
+    this._underlyingFetchFunction = fetch;
+    if (getDefaultSession().info.isLoggedIn) {
+      this._underlyingFetchFunction = authFetch;
+    }
+    context.fetch = ComunicaEngineWrapper._getWrappedFetchFunction(this._underlyingFetchFunction, this);
+  }
+
+  /**
    * Returns a function that wraps the underlying fetch function and sets the fetch success information in member variables of _this.
+   * 
    * @param underlyingFetchFunction - the underlying fetch functin
    * @param {ComunicaEngineWrapper} _this - the calling ComunicaEngineWrapper object
    * @returns {Function} that function.
    */
-  static getWrappedFetchFunction(underlyingFetchFunction, _this) {
+  static _getWrappedFetchFunction(underlyingFetchFunction, _this) {
     const wrappedFetchFunction = async (arg) => {
       try {
         const response = await underlyingFetchFunction(arg, {
@@ -130,21 +169,7 @@ class ComunicaEngineWrapper {
 
     return wrappedFetchFunction;
   }
-
-  getFetchSuccess(arg) {
-    return this._fetchSuccess[arg];
-  }
-
-  getFetchStatusNumber(arg) {
-    return this._fetchStatusNumber[arg];
-  }
-
-  getUnderlyingFetchFunction() {
-    return this._underlyingFetchFunction;
-  }
-
 }
-
 
 const comunicaEngineWrapper = new ComunicaEngineWrapper();
 export default comunicaEngineWrapper;
