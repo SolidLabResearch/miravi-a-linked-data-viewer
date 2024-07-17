@@ -44,10 +44,10 @@ export default {
       query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
     }
 
-    if (query.indirectVariables){                                  
-      const vars = await getInderectVariables(query.indirectVariables, query.comunicaContext.sources, query.comunicaContext.useProxy )           
-      configManager.updateQuery({...query, variables : vars })                                        
-    }  
+    if (query.indirectVariables) {
+      const vars = await getInderectVariables(query)
+      configManager.updateQuery({ ...query, variables: vars })
+    }
 
     if (meta && meta.variables) {
       query.variableValues = meta.variables;
@@ -111,7 +111,7 @@ async function buildQueryText(query) {
     if (rawText === undefined) {
       throw new Error("Invalid query location.")
     }
-    if (rawText === null || rawText === '' ) {
+    if (rawText === null || rawText === '') {
       throw new Error("Empty query text. Check your query and location.")
     }
 
@@ -241,7 +241,7 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
       const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
       queryStringIndexSource = await result.text();
     } else {
-       queryStringIndexSource = sourcesIndex.queryString;
+      queryStringIndexSource = sourcesIndex.queryString;
     }
 
     const bindingsStream = await comunicaEngineWrapper.queryBindings(queryStringIndexSource,
@@ -274,37 +274,45 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
 
 
 
-async function getInderectVariables(queryString, sources,  useProxy) {
-  const variables = {};
+async function getInderectVariables(query) {
+
+  let variables;
+  if (query.variables) {
+    variables = query.variables
+  } else {
+    variables = {}
+  }
+
   try {
+    for (const queryString of query.indirectVariables) {
+      console.log(queryString)
+      const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
+        { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
+      await new Promise((resolve, reject) => {
 
-    const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
-      { sources: sources, httpProxyHandler: (useProxy ? proxyHandler : undefined) });
-    await new Promise((resolve, reject) => {
+        bindingsStream.on('data', (bindings) => {
+          bindings.forEach((value, key) => {
+            if (!variables[key.value]) {
+              variables[key.value] = [];
+            }
+            let termValue;
+            // If it's an url, it must be surrounded with <> , if its not then with " "
+            try {
+              new URL(value.value);
+              termValue = `<${value.value}>`;
+            } catch (e) {
+              termValue = `"${value.value}"`;
+            }
 
-      bindingsStream.on('data', (bindings) => {
-        bindings.forEach((value, key) => {
-          if (!variables[key.value]) {
-            variables[key.value] = [];
-          }
-          let termValue;
-          // If it's an url, it must be surrounded with <> , if its not then with " "
-          try {
-            new URL(value.value);
-            termValue = `<${value.value}>`;
-          } catch (e) {
-            termValue = `"${value.value}"`;
-          }
-
-          if (!variables[key.value].includes(termValue)) {
-            variables[key.value].push(termValue)
-          }
-        })
+            if (!variables[key.value].includes(termValue)) {
+              variables[key.value].push(termValue)
+            }
+          })
+        });
+        bindingsStream.on('end', resolve);
+        bindingsStream.on('error', reject);
       });
-      bindingsStream.on('end', resolve);
-      bindingsStream.on('error', reject);
-    });
-    
+    }
   }
   catch (error) {
     throw new Error(`Error adding indirect variables: ${error.message}`);
