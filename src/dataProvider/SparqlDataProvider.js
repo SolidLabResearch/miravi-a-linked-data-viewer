@@ -44,6 +44,11 @@ export default {
       query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
     }
 
+    if (query.indirectVariables){                                  
+      const vars = await getInderectVariables(query.indirectVariables, query.comunicaContext.sources, query.comunicaContext.useProxy )           
+      configManager.updateQuery({...query, variables : vars })                                        
+    }  
+
     if (meta && meta.variables) {
       query.variableValues = meta.variables;
     }
@@ -266,6 +271,51 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
 
   return sourcesList;
 }
+
+
+
+async function getInderectVariables(queryString, sources,  useProxy) {
+  const variables = {};
+  try {
+
+    const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
+      { sources: sources, httpProxyHandler: (useProxy ? proxyHandler : undefined) });
+    await new Promise((resolve, reject) => {
+
+      bindingsStream.on('data', (bindings) => {
+        bindings.forEach((value, key) => {
+          if (!variables[key.value]) {
+            variables[key.value] = [];
+          }
+          let termValue;
+          // If it's an url, it must be surrounded with <> , if its not then with " "
+          try {
+            new URL(value.value);
+            termValue = `<${value.value}>`;
+          } catch (e) {
+            termValue = `"${value.value}"`;
+          }
+
+          if (!variables[key.value].includes(termValue)) {
+            variables[key.value].push(termValue)
+          }
+        })
+      });
+      bindingsStream.on('end', resolve);
+      bindingsStream.on('error', reject);
+    });
+    
+  }
+  catch (error) {
+    throw new Error(`Error adding indirect variables: ${error.message}`);
+  }
+
+  if (variables == {}) {
+    throw new Error(`The variables are empty`);
+  }
+  return variables;
+}
+
 
 /**
  * Creates/extends a comunicaContext property in a query
