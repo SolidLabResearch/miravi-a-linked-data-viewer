@@ -177,6 +177,32 @@
       }
     },
     {
+      "id": "1085",
+      "queryGroupId": "b-prj",
+      "queryLocation": "musicians_variables.rq",
+      "name": "Indirect templated query about musicians",
+      "description": "Demonstrates the usage of templated queries with indirect variables",
+      "icon": "MusicNoteIcon",
+      "indirectVariables":  "PREFIX schema: <http://schema.org/> \n\nSELECT DISTINCT ?genre WHERE {\n\t?list\n\tschema:genre ?genre;\n}",
+      "comunicaContext": {
+        "sources": ["http://localhost:8080/example/favourite-musicians"]
+      }
+    },
+    {
+      "id": "1086",
+      "queryGroupId": "b-prj",
+      "queryLocation": "musicians_variables2.rq",
+      "name": "Indirect templated query about musicians, two variables",
+      "description":  "Demonstrates the usage of templated queries with indirect variables, here with two variables",
+      "icon": "MusicNoteIcon",
+      "indirectVariables":  "PREFIX schema: <http://schema.org/>\n\nSELECT DISTINCT ?genre ?sameAsUrl WHERE {\n\t?list\n\tschema:genre ?genre;\n\tschema:sameAs ?sameAsUrl;\n}  ",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
       "id": "1090",
       "queryGroupId": "a-ex",
       "queryLocation": "components.rq",
