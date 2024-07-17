@@ -40,7 +40,7 @@ export default {
     handleComunicaContextCreation(query);
 
     if (query.sourcesIndex) {
-      const additionalSources = await addComunicaContextSourcesFromSourcesIndex(query.sourcesIndex);
+      const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.useProxy);
       query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
     }
 
@@ -175,38 +175,48 @@ function findPredicates(query) {
 async function executeQuery(query) {
   try {
     query.queryText = await buildQueryText(query);
-    return comunicaEngineWrapper.query(query.queryText, { ...generateContext(query.comunicaContext), });
+    let variables;
+    let results = [];
+    let index = 0;
+    const callbackVariables = (vars) => {
+      variables = vars;
+    };
+    const callbackBindings = (bindings) => {
+      const newResult = {};
+      for (const variable of variables) {
+        const term = bindings.get(variable);
+        newResult[variable] = term;
+      }
+      newResult.id = index++;
+      results.push(newResult);
+    };
+    const callbackQuads = (quad) => {
+      const newResult = {
+        subject: quad.subject,
+        predicate: quad.predicate,
+        object: quad.object,
+        graph: quad.graph,
+        id: index++
+      }
+      results.push(newResult);
+    };
+    await comunicaEngineWrapper.query(query.queryText,
+      // !!! we need to make a copy of the context here (a shallow copy is fine); reason: concurrent calls
+      { ...query.comunicaContext },
+      { "variables": callbackVariables, "bindings": callbackBindings, "quads": callbackQuads });
+    return results;
   } catch (error) {
     throw new HttpError(error.message, 500);
   }
 }
 
 /**
- * Generates the context for a query execution to be passed to Comunica engine when querying.
- * @param {object} context - the context to start from.
- * @returns {object} the context for a query execution to be passed to Comunica engine when querying.
- */
-function generateContext(context) {
-  if (!context) {
-    throw new HttpError("No context provided", 500);
-  }
-  if (!context.sources) {
-    throw new HttpError("No sources provided", 500);
-  }
-
-  if (context.useProxy) {
-    context.httpProxyHandler = proxyHandler;
-  }
-
-  return context;
-}
-
-/**
- * Add sources to the Comunica context from a sources index
+ * Gets sources from a sources index
  * @param {object} sourcesIndex - the sourcesIndex object as found in the configuration
+ * @param {boolean} useProxy - true if the main query needs a proxy (in which case we implicitly use it to access the sources index too)
  * @returns {array} array of sources found
  */
-const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
+async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
   const sourcesList = [];
   try {
     let queryStringIndexSource;
@@ -216,25 +226,19 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
     }else{
        queryStringIndexSource = sourcesIndex.queryString;
     }
-    
-    // const bindingsStream = await myEngine.queryBindings(queryStringIndexSource, {
-    //   ...generateContext({sources: [sourcesIndex.url]}),
-    // });
-    // await new Promise((resolve, reject) => {
-    //   bindingsStream.on('data', (bindings) => {
-    //     // the bindings should have exactly one key (any name is allowed) and we accept the value as a source
-    //     if (bindings.size == 1) {
-    //       for (const term of bindings.values()) {
-    //         const source = term.value;
-    //         if (!sourcesList.includes(source)) {
-    //           sourcesList.push(source);
-    //         }
-    //       }
-    //     }
-    //   });
-    //   bindingsStream.on('end', resolve);
-    //   bindingsStream.on('error', reject);
-    // });
+    const callbackBindings = (bindings) => {
+      for (const term of bindings.values()) {
+        const source = term.value;
+        if (!sourcesList.includes(source)) {
+          sourcesList.push(source);
+        }
+        // we only want the first term, whatever the variable's name is (note: a for ... of loop seems the only way to access it)
+        break;
+      }
+    };
+    await comunicaEngineWrapper.query(queryStringIndexSource,
+      { sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) },
+      { "bindings": callbackBindings });
   }
   catch (error) {
     throw new Error(`Error adding sources from index: ${error.message}`);
@@ -245,13 +249,13 @@ const addComunicaContextSourcesFromSourcesIndex = async (sourcesIndex) => {
   }
 
   return sourcesList;
-};
+}
+
 /**
  * Creates/extends a comunicaContext property in a query
  * @param {object} query - the query element from the configuration
  */
-const handleComunicaContextCreation = (query) => {
-
+function handleComunicaContextCreation(query) {
   if (!query.comunicaContext) {
     query.comunicaContext = {
       sources: [],
@@ -265,5 +269,8 @@ const handleComunicaContextCreation = (query) => {
     if (!query.comunicaContext.sources) {
       query.comunicaContext.sources = [];
     }
+    if (query.comunicaContext.useProxy) {
+      query.comunicaContext.httpProxyHandler = proxyHandler;
+    }
   }
-};
+}

@@ -9,33 +9,37 @@ import {
  */
 class ComunicaEngineWrapper {
 
-  static _queryTypeHandlers = {
-    bindings: ComunicaEngineWrapper._configureBindingStream,
-    quads: ComunicaEngineWrapper._configureQuadStream,
-  };
-
   constructor() {
-    this.reset(); 
-  }
-
-  /**
-   * Resets the engine and all we maintained here about executed queries
-   */
-  reset() {
     this.engine = new QueryEngine();
     this.fetchSuccess = {};
     this.fetchStatusNumber = {};
     this.underlyingFetchFunction = undefined;
   }
 
+  /**
+   * Resets the engine and all we maintained here about executed queries
+   */
+  reset() {
+    this.engine.invalidateHttpCache();
+    this.fetchSuccess = {};
+    this.fetchStatusNumber = {};
+    this.underlyingFetchFunction = undefined;
+  }
+
    /**
-   * Executes one query
+   * Executes one SPARQL query with the Comunica engine
+   * 
+   * Support the following callback functions. Forward only the ones you need.
+   * - "variables": will be called once with an array of variable names, in case of a SELECT query
+   * - "bindings": will be called for all bindings, in case of a SELECT query
+   * - "quads": will be called for every quad, in case of a CONSTRUCT query
+   * - "boolean": will be called for the resulting boolean, in case of an ASK query
    * 
    * @param {string} queryText - the SPARQL query text
    * @param {object} context - the context to provide to the Comunica engine
-   * 
+   * @param {object} callbacks - an object contains the callback functions you specifiy
    */
-  async query(queryText, context) {
+  async query(queryText, context, callbacks) {
     try {
       // avoid faulty fetch status for sources cached in Comunica
       for (const source of context.sources) {
@@ -47,7 +51,48 @@ class ComunicaEngineWrapper {
       }
       context.fetch = ComunicaEngineWrapper._statusFetch(this.underlyingFetchFunction, this);
 
-      return ComunicaEngineWrapper._handleQueryExecution(await this.engine.query(queryText, context));
+      let result = await this.engine.query(queryText, context);
+      switch (result.resultType) {
+        case 'bindings':
+          const metadata = await result.metadata();
+          const variables = metadata.variables.map((val) => {
+            return val.value;
+          });
+          if (callbacks["variables"]) {
+            callbacks["variables"](variables);
+          }
+          const bindingsStream = await result.execute();
+          await new Promise((resolve, reject) => {
+            if (callbacks["bindings"]) {
+              bindingsStream.on('data', (bindings) => {
+                callbacks["bindings"](bindings);
+              });
+            }
+            bindingsStream.on('end', resolve);
+            bindingsStream.on('error', reject);
+          });
+          break;
+        case 'quads':
+          const quadStream = await result.execute();
+          await new Promise((resolve, reject) => {
+            if (callbacks["quads"]) {
+              quadStream.on('data', (quad) => {
+                callbacks["quads"](quad);
+              });
+            }
+            quadStream.on('end', resolve);
+            quadStream.on('error', reject);
+          });
+          break;
+        case 'boolean':
+          const answer = await result.execute();
+          if (callbacks["boolean"]) {
+            callbacks["boolean"](answer);
+          }
+          break;
+        default:
+          break;
+      }
     } catch (error) {
       this.reset();
       throw error;
@@ -81,60 +126,6 @@ class ComunicaEngineWrapper {
     return wrappedFetchFunction;
   }
 
-  /**
-   * A function that given a QueryType processes every result.
-   * @param {object} execution - a query execution
-   * @returns {Array<Term>} the results of the query
-   */
-  static async _handleQueryExecution(execution) {
-    let variables;
-    const resultType = execution.resultType;
-    if (execution.resultType !== "boolean") {
-      const metadata = await execution.metadata();
-      variables = metadata.variables.map((val) => {
-        return val.value;
-      });
-    }
-    return ComunicaEngineWrapper._queryTypeHandlers[resultType](await execution.execute(), variables);
-  }
-
-  /**
-   * Configures how a query resulting in a stream of bindings should be processed.
-   * @param {object} bindingStream - a stream of Bindings
-   * @param {Array<string>} variables - all the variables of the query behind the binding stream.
-   * @returns {Array<Term>} the results of the query
-   */
-  static async _configureBindingStream(bindingStream, variables) {
-    const results = await bindingStream.toArray();
-    return results.map((result, index) => {
-      const newResults = {};
-      for (const variable of variables) {
-        const value = result.get(variable);
-        newResults[variable] = value;
-      }
-      newResults.id = index;
-      return newResults;
-    });
-  }
-
-  /**
-   * Configures how a query resulting in a stream of quads should be processed.
-   * @param {object} quadStream - a stream of Quads
-   * @returns {Array<Term>} the results of the query
-   */
-  static async _configureQuadStream(quadStream) {
-    const results = (await quadStream.toArray()).flat();
-    return results.map((result, index) => {
-      const newResults = {
-        subject: result.subject,
-        predicate: result.predicate,
-        object: result.object,
-        graph: result.graph,
-        id: index,
-      };
-      return newResults;
-    });
-  }
 }
 
 const comunicaEngineWrapper = new ComunicaEngineWrapper();
