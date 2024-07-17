@@ -4,6 +4,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Tooltip } from "@mui/material";
 import PropTypes from "prop-types";
 import { Component } from "react";
+import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngineWrapper';
 
 /**
  * @param {object} props - the props passed to the component
@@ -17,9 +18,9 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
   if (context.useProxy) {
     actualSource = `${proxyUrl}${source}`;
   }
-  const status = context.fetchStatusNumber[actualSource];
+  const status = comunicaEngineWrapper.getFetchStatusNumber(actualSource);
 
-  if (context.fetchSuccess[actualSource]) {
+  if (comunicaEngineWrapper.getFetchSuccess(actualSource)) {
     return (
       <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />

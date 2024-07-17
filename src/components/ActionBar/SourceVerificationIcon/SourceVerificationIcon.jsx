@@ -7,6 +7,7 @@ import GppGoodIcon from '@mui/icons-material/GppGood';
 import GppBadIcon from '@mui/icons-material/GppBad';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import myVerify from '../../../../src/vendor/verify';
+import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngineWrapper';
 
 const VERIFICATION_STATES = {
   VERIFIED: 'VERIFIED',
@@ -62,7 +63,7 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
    */
   function verify() {
     setNeedsVerification(true);
-    verifyFunction(sourceUrl, context.underlyingFetchFunction).then((result) => {
+    verifyFunction(sourceUrl, comunicaEngineWrapper.getUnderlyingFetchFunction()).then((result) => {
       setVerificationState(result);
       setIsLoading(false);
     })

@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added 
+### Added
 
 ### Changed
+
+- Refactoring: isolated the Comunica engine with accompanying operations into a wrapper class (#152).
 
 ### Fixed
 
