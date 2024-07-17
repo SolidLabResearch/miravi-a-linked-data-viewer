@@ -63,7 +63,7 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
    */
   function verify() {
     setNeedsVerification(true);
-    verifyFunction(sourceUrl, comunicaEngineWrapper.underlyingFetchFunction).then((result) => {
+    verifyFunction(sourceUrl, comunicaEngineWrapper.getUnderlyingFetchFunction()).then((result) => {
       setVerificationState(result);
       setIsLoading(false);
     })

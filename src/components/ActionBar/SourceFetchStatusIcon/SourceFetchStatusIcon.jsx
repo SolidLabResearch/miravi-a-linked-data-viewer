@@ -18,9 +18,9 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
   if (context.useProxy) {
     actualSource = `${proxyUrl}${source}`;
   }
-  const status = comunicaEngineWrapper.fetchStatusNumber[actualSource];
+  const status = comunicaEngineWrapper.getFetchStatusNumber(actualSource);
 
-  if (comunicaEngineWrapper.fetchSuccess[actualSource]) {
+  if (comunicaEngineWrapper.getFetchSuccess(actualSource)) {
     return (
       <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />

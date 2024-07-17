@@ -9,21 +9,26 @@ import {
  */
 class ComunicaEngineWrapper {
 
+  _engine;
+  _fetchSuccess;
+  _fetchStatusNumber;
+  _underlyingFetchFunction;
+
   constructor() {
-    this.engine = new QueryEngine();
-    this.fetchSuccess = {};
-    this.fetchStatusNumber = {};
-    this.underlyingFetchFunction = undefined;
+    this._engine = new QueryEngine();
+    this._fetchSuccess = {};
+    this._fetchStatusNumber = {};
+    this._underlyingFetchFunction = undefined;
   }
 
   /**
    * Resets the engine and all we maintained here about executed queries
    */
   reset() {
-    this.engine.invalidateHttpCache();
-    this.fetchSuccess = {};
-    this.fetchStatusNumber = {};
-    this.underlyingFetchFunction = undefined;
+    this._engine.invalidateHttpCache();
+    this._fetchSuccess = {};
+    this._fetchStatusNumber = {};
+    this._underlyingFetchFunction = undefined;
   }
 
    /**
@@ -43,15 +48,15 @@ class ComunicaEngineWrapper {
     try {
       // avoid faulty fetch status for sources cached in Comunica
       for (const source of context.sources) {
-        this.fetchSuccess[source] = true;
+        this._fetchSuccess[source] = true;
       }
-      this.underlyingFetchFunction = fetch;
+      this._underlyingFetchFunction = fetch;
       if (getDefaultSession().info.isLoggedIn) {
-        this.underlyingFetchFunction = authFetch;
+        this._underlyingFetchFunction = authFetch;
       }
-      context.fetch = ComunicaEngineWrapper._statusFetch(this.underlyingFetchFunction, this);
+      context.fetch = ComunicaEngineWrapper.getWrappedFetchFunction(this._underlyingFetchFunction, this);
 
-      let result = await this.engine.query(queryText, context);
+      let result = await this._engine.query(queryText, context);
       switch (result.resultType) {
         case 'bindings':
           const metadata = await result.metadata();
@@ -100,25 +105,25 @@ class ComunicaEngineWrapper {
   }
 
   /**
-   * Given a fetch function and an object, returns a function that wraps the fetch function and sets the fetch success information in member variables of the object.
-   * @param {Function} customFetch - a fetch function to be wrapped.
-   * @param {object} obj - the object
+   * Returns a function that wraps the underlying fetch function and sets the fetch success information in member variables of _this.
+   * @param underlyingFetchFunction - the underlying fetch functin
+   * @param {ComunicaEngineWrapper} _this - the calling ComunicaEngineWrapper object
    * @returns {Function} that function.
    */
-  static _statusFetch(customFetch, obj) {
+  static getWrappedFetchFunction(underlyingFetchFunction, _this) {
     const wrappedFetchFunction = async (arg) => {
       try {
-        const response = await customFetch(arg, {
+        const response = await underlyingFetchFunction(arg, {
           headers: {
             Accept: "application/n-quads,application/trig;q=0.9,text/turtle;q=0.8,application/n-triples;q=0.7,*/*;q=0.1"
           }
         });
-        obj.fetchSuccess[arg] = response.ok;
-        obj.fetchStatusNumber[arg] = response.status;
+        _this._fetchSuccess[arg] = response.ok;
+        _this._fetchStatusNumber[arg] = response.status;
         return response;
       }
       catch (error) {
-        obj.fetchSuccess[arg] = false;
+        _this._fetchSuccess[arg] = false;
         throw error;
       }
     }
@@ -126,7 +131,20 @@ class ComunicaEngineWrapper {
     return wrappedFetchFunction;
   }
 
+  getFetchSuccess(arg) {
+    return this._fetchSuccess[arg];
+  }
+
+  getFetchStatusNumber(arg) {
+    return this._fetchStatusNumber[arg];
+  }
+
+  getUnderlyingFetchFunction() {
+    return this._underlyingFetchFunction;
+  }
+
 }
+
 
 const comunicaEngineWrapper = new ComunicaEngineWrapper();
 export default comunicaEngineWrapper;
