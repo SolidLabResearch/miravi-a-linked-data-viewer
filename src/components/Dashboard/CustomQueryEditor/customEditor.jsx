@@ -151,8 +151,8 @@ WHERE {
       }
 
       // This will serve for the extention of customizable query variables
-      if (options.templatedVarSourceQueryString){
-        parsedObject.templatedVarSourceQueryString = options.templatedVarSourceQueryString;
+      if (options.indirectVariables){
+        parsedObject.indirectVariables = options.indirectVariables;
       }
 
 
