@@ -103,6 +103,13 @@ async function buildQueryText(query) {
   try {
     let rawText = await configManager.getQueryText(query);
 
+    if (rawText === undefined) {
+      throw new Error("Invalid query location.")
+    }
+    if (rawText === null || rawText === '' ) {
+      throw new Error("Empty query text. Check your query and location.")
+    }
+
     if (query.variableValues) {
       rawText = replaceVariables(rawText, query.variableValues);
     }
@@ -225,7 +232,7 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
   const sourcesList = [];
   try {
     let queryStringIndexSource;
-    if (sourcesIndex.queryLocation){
+    if (sourcesIndex.queryLocation) {
       const result = await fetch(`${config.queryFolder}${sourcesIndex.queryLocation}`);
       queryStringIndexSource = await result.text();
     } else {

@@ -96,6 +96,32 @@
       }
     },
     {
+      "id": "1045",
+      "queryGroupId": "c-tst",
+      "queryLocation": "average",
+      "name": "Average value - queryLocation without rq",
+      "description": "Should demonstrates a query calculating some average, but the queryLocation is faultive.",
+      "icon": "FunctionsIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/values"
+        ]
+      }
+    },
+    {
+      "id": "1046",
+      "queryGroupId": "c-tst",
+      "queryLocation": "averagefefefefe.rq",
+      "name": "Average value - unexisting queryLocation (ends in .rq)",
+      "description": "Should demonstrates a query calculating some average, but the queryLocation is faultive.",
+      "icon": "FunctionsIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/values"
+        ]
+      }
+    },
+    {
       "id": "1050",
       "queryGroupId": "a-ex",
       "queryLocation": "books.rq",

@@ -160,6 +160,11 @@ class ConfigManager extends EventEmitter {
   async getQueryText(query) {
 
     if (query.queryLocation) {
+      
+      if(!query.queryLocation.endsWith('.rq')){
+        return undefined
+      }
+      
       const fetchResult = await fetch(`${this.config.queryFolder}${query.queryLocation}`);
       return await fetchResult.text();
     }
