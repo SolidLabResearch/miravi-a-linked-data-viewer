@@ -283,17 +283,27 @@ async function getIndirectVariables(query) {
     variables = {}
   }
 
-  if (query.indirectVariables.queryLocations){
-    for (const location of query.indirectVariables.queryLocations ){
+  if (query.indirectVariables.queryLocations) {
+    
+    for (const location of query.indirectVariables.queryLocations) {
+      // Checks for a valid queryLocation
+      if (!location.endsWith('.rq')) {
+        throw new Error("Wrong filetype for the indirectVariables query.")
+      }
       const result = await fetch(`${config.queryFolder}${location}`);
-      queryStingList.push(await result.text());
+      const queryStr = await result.text();
+
+      if (queryStr === null || queryStr === '') {
+        throw new Error("Empty variable query text. Check the query and locations for indirectVariables.")
+      }
+      queryStingList.push(queryStr);
     }
-  } 
-  else if (query.indirectVariables.queryStrings){
+  }
+  else if (query.indirectVariables.queryStrings) {
     queryStingList = query.indirectVariables.queryStrings
-  } 
-  else{
-    throw new Error("No variable queries...")
+  }
+  else {
+    throw new Error("No indirectVariable queries were given...")
   }
 
   try {
