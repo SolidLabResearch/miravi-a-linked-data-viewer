@@ -161,16 +161,42 @@ The underscore `_` here is crucial to make a clear distinction between name and 
 
 This application supports queries whose contents are not completely fixed upfront: they contain variables whose value can be set interactively.
 
-To change a query into a templated query:
-- replace the fixed portion(s) of the query with (a) variable(s); a variable is an identifier preceded by a `$` sign, e.g. `$genre`
-- add a `variables` object in the query's entry in the configuration file
-- in the `variables` object, for each variable, add a property with name equal to the variable's identifier
-- set each such property's value to an array of possible values for the corresponding variable
+#### To change a query into a templated query there are 2 ways:
 
-Note that variables' values are not restricted to strings: URIs for example are alo possible.
-As a consequence, for strings the surround double quotes `"` must be added to the values in the list.
+1. **With fixed variables**
+  - Replace the fixed portion(s) of the query with (a) variable(s); a variable is an identifier preceded by a `$` sign, e.g. `$genre`.
+  - Add a `variables` object in the query's entry in the configuration file.
+  - In the `variables` object, for each variable, add a property with name equal to the variable's identifier.
+  - Set each such property's value to an array of possible values for the corresponding variable.
+
+Note that variables' values are not restricted to strings: URIs for example are also possible.
+As a consequence, for strings the surround double quotes `"` must be added to the values in the list. And for URIs you must add surrounding angle brackets `<>`.
 This is shown in the configuration structure above.
 
+2. **With indirect variables**
+  
+  To use indirect variables, you need to create one or more auxiliary queries that retrieve all the values for the chosen variable identifiers. The locations of these queries should be listed in the `queryLocations` property within the `indirectVariables` object, as shown in the configuration example above. Here's a step-by-step guide with examples: 
+
+- Replace the fixed portion(s) of the main query with one or more variables. A variable is an identifier preceded by a `$` sign, e.g., `$genre`.
+
+- Create one or more auxiliary queries that return values for these variables. Ensure that the variable name in the auxiliary query exactly **matches** the variable in the main query. You can create multiple auxiliary queries, each for different variables. 
+
+- Example auxiliary query for the variable `$genre`:
+
+    ```turtle
+      PREFIX schema: <http://schema.org/> 
+
+      SELECT DISTINCT ?genre WHERE {
+          ?list
+          schema:genre ?genre;
+      } 
+    ```
+- Add an `indirectVariables` object in the query's entry in the configuration file.
+- Within the `indirectVariables` object, add the `queryLocations` property. Set its value to a list.
+- Fill this list with all the paths to the locations of the auxiliary queries required to retrieve the variables. These paths must be relative to `queryFolder`.
+
+
+    
 ### Query icons
 
 In the selection menu the name of the query is proceeded by an icon.
