@@ -12,7 +12,7 @@
   "defaultIDP": "http://localhost:8080",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
-  "queryGroups" : [
+  "queryGroups": [
     {
       "id": "a-ex",
       "name": "General examples"
@@ -41,7 +41,9 @@
       "name": "My idols",
       "description": "Demonstrates a simple query, using a proxy",
       "comunicaContext": {
-        "sources": ["http://localhost:8001/example/idols"],
+        "sources": [
+          "http://localhost:8001/example/idols"
+        ],
         "useProxy": true
       }
     },
@@ -53,7 +55,9 @@
       "description": "Demonstrates how to show images in a query result",
       "icon": "PhotoIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/cute-cats"]
+        "sources": [
+          "http://localhost:8080/example/cute-cats"
+        ]
       }
     },
     {
@@ -64,7 +68,9 @@
       "description": "Demonstrates an ASK query",
       "icon": "BrushIcon",
       "comunicaContext": {
-        "sources": ["https://fragments.dbpedia.org/2016-04/en"]
+        "sources": [
+          "https://fragments.dbpedia.org/2016-04/en"
+        ]
       },
       "askQuery": {
         "trueText": "There is an artist who is inspired by Picasso!",
@@ -79,7 +85,9 @@
       "description": "Demonstrates a CONSTRUCT query",
       "icon": "BrushIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/artists"]
+        "sources": [
+          "http://localhost:8080/example/artists"
+        ]
       }
     },
     {
@@ -129,7 +137,9 @@
       "description": "Demonstrates a query whose source requires authentication",
       "icon": "MenuBookIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/favourite-books"]
+        "sources": [
+          "http://localhost:8080/example/favourite-books"
+        ]
       }
     },
     {
@@ -140,7 +150,9 @@
       "description": "Demonstrates a query whose source does not require authentication",
       "icon": "MenuBookIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/wish-list"]
+        "sources": [
+          "http://localhost:8080/example/wish-list"
+        ]
       }
     },
     {
@@ -173,7 +185,9 @@
         ]
       },
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/favourite-musicians"]
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
       }
     },
     {
@@ -183,9 +197,15 @@
       "name": "Indirect templated query about musicians",
       "description": "Demonstrates the usage of templated queries with indirect variables",
       "icon": "MusicNoteIcon",
-      "indirectVariables": [ "PREFIX schema: <http://schema.org/> \n\nSELECT DISTINCT ?genre WHERE {\n\t?list\n\tschema:genre ?genre;\n}", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?name WHERE { ?list schema:name ?name;}"],
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq"
+        ]
+      },
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/favourite-musicians"]
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
       }
     },
     {
@@ -193,15 +213,21 @@
       "queryGroupId": "b-prj",
       "queryLocation": "musicians_variables2.rq",
       "name": "Indirect templated query about musicians, two variables",
-      "description":  "Demonstrates the usage of templated queries with indirect variables, here with two variables",
+      "description": "Demonstrates the usage of templated queries with indirect variables, here with two variables",
       "icon": "MusicNoteIcon",
-      "indirectVariables":  ["PREFIX schema: <http://schema.org/>\n\nSELECT DISTINCT ?genre ?sameAsUrl WHERE {\n\t?list\n\tschema:genre ?genre;\n\tschema:sameAs ?sameAsUrl;\n}"],
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq",
+          "variableQueries/musicians_sameAs_variable.rq"
+        ]
+      },
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/favourite-musicians"
         ]
       }
     },
+    
     {
       "id": "1090",
       "queryGroupId": "a-ex",
@@ -238,7 +264,6 @@
         "queryLocation": "/sourceQueries/index_example_texon_only_source_AUTH.rq"
       }
     },
-
     {
       "id": "2000",
       "queryGroupId": "b-prj",
@@ -329,7 +354,7 @@
           "http://localhost:8080/example/favourite-books",
           "http://localhost:8080/example/components"
         ],
-        "lenient" : true
+        "lenient": true
       },
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only",
@@ -356,7 +381,9 @@
       "name": "A test on counting the total number results",
       "description": "Query a source containing ?s ?p1 ?o and ?s ?p2 ?o with p1 != p2 and request only ?s ?o",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/dup1"]
+        "sources": [
+          "http://localhost:8080/example/dup1"
+        ]
       }
     },
     {

@@ -1,0 +1,6 @@
+PREFIX schema: <http://schema.org/> 
+
+SELECT DISTINCT ?genre WHERE {
+    ?list
+    schema:genre ?genre;
+} 
