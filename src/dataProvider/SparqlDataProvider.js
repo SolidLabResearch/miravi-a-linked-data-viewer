@@ -284,7 +284,7 @@ async function getIndirectVariables(query) {
   }
 
   if (query.indirectVariables.queryLocations) {
-
+    
     for (const location of query.indirectVariables.queryLocations) {
       // Checks for a valid queryLocation
       if (!location.endsWith('.rq')) {
@@ -296,7 +296,7 @@ async function getIndirectVariables(query) {
       if (queryStr === null || queryStr === '') {
         throw new Error("Empty variable query text. Check the query and locations for indirectVariables.")
       }
-      queryStingList.push();
+      queryStingList.push(queryStr);
     }
   }
   else if (query.indirectVariables.queryStrings) {
