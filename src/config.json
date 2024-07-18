@@ -192,10 +192,10 @@
     },
     {
       "id": "1085",
-      "queryGroupId": "b-prj",
+      "queryGroupId": "a-ex",
       "queryLocation": "musicians_variables.rq",
-      "name": "Indirect templated query about musicians",
-      "description": "Demonstrates the usage of templated queries with indirect variables",
+      "name": "A templated query about musicians (indirect variables)",
+      "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values",
       "icon": "MusicNoteIcon",
       "indirectVariables": {
         "queryLocations": [
@@ -208,26 +208,6 @@
         ]
       }
     },
-    {
-      "id": "1086",
-      "queryGroupId": "b-prj",
-      "queryLocation": "musicians_variables2.rq",
-      "name": "Indirect templated query about musicians, two variables",
-      "description": "Demonstrates the usage of templated queries with indirect variables, here with two variables",
-      "icon": "MusicNoteIcon",
-      "indirectVariables": {
-        "queryLocations": [
-          "variableQueries/musicians_genre_variable.rq",
-          "variableQueries/musicians_sameAs_variable.rq"
-        ]
-      },
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/favourite-musicians"
-        ]
-      }
-    },
-    
     {
       "id": "1090",
       "queryGroupId": "a-ex",
@@ -324,6 +304,25 @@
           "<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>",
           "<https://en.wikipedia.org/wiki/Johann_Sebastian_Bach>",
           "<https://en.wikipedia.org/wiki/Franz_Schubert>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
+      "id": "9011",
+      "queryGroupId": "c-tst",
+      "queryLocation": "musicians_variables2.rq",
+      "name": "A templated query about musicians, two variables  (indirect variables)",
+      "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values and with two variables",
+      "icon": "MusicNoteIcon",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq",
+          "variableQueries/musicians_sameAs_variable.rq"
         ]
       },
       "comunicaContext": {
