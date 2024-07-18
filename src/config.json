@@ -257,6 +257,23 @@
       }
     },
     {
+      "id": "2001",
+      "queryGroupId": "b-prj",
+      "queryLocation": "components_variable.rq",
+      "name": "Components (select one)",
+      "description": "Query one component; select it by name",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components"
+        ]
+      }
+    },
+    {
       "id": "2010",
       "queryGroupId": "b-prj",
       "queryLocation": "components_materials.rq",
@@ -269,6 +286,26 @@
           "http://localhost:8080/example/materials"
         ],
         "lenient": true
+      }
+    },
+    {
+      "id": "2011",
+      "queryGroupId": "b-prj",
+      "queryLocation": "component_material_variables.rq",
+      "name": "Component (select one) and percentage of a material (select one)",
+      "description": "Select a component by its name and a material by its name to see by what percentage the material is used in that component (empty result of not used)",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq",
+          "variableQueries/materials_name_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ]
       }
     },
     {
