@@ -45,7 +45,7 @@ export default {
     }
 
     if (query.indirectVariables) {
-      const vars = await getInderectVariables(query)
+      const vars = await getIndirectVariables(query)
       configManager.updateQuery({ ...query, variables: vars })
     }
 
@@ -248,7 +248,7 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
       { sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) });
     await new Promise((resolve, reject) => {
       bindingsStream.on('data', (bindings) => {
-        for (const term of bindings.values()) {
+        for (const term of bindings.values()) {  // check for 1st value
           const source = term.value;
           if (!sourcesList.includes(source)) {
             sourcesList.push(source);
@@ -272,20 +272,32 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
   return sourcesList;
 }
 
-
-
-async function getInderectVariables(query) {
+async function getIndirectVariables(query) {
 
   let variables;
+  let queryStingList = [];
+
   if (query.variables) {
     variables = query.variables
   } else {
     variables = {}
   }
 
+  if (query.indirectVariables.queryLocations){
+    for (const location of query.indirectVariables.queryLocations ){
+      const result = await fetch(`${config.queryFolder}${location}`);
+      queryStingList.push(await result.text());
+    }
+  } 
+  else if (query.indirectVariables.queryStrings){
+    queryStingList = query.indirectVariables.queryStrings
+  } 
+  else{
+    throw new Error("No variable queries...")
+  }
+
   try {
-    for (const queryString of query.indirectVariables) {
-      console.log(queryString)
+    for (const queryString of queryStingList) {
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
         { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
       await new Promise((resolve, reject) => {
