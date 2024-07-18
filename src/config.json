@@ -353,7 +353,7 @@
       "id": "9011",
       "queryGroupId": "c-tst",
       "queryLocation": "musicians_variables2.rq",
-      "name": "A templated query about musicians, two variables  (indirect variables)",
+      "name": "A templated query about musicians, two variables (indirect variables)",
       "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values and with two variables",
       "icon": "MusicNoteIcon",
       "indirectVariables": {
