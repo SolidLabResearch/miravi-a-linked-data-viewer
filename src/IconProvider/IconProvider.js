@@ -20,6 +20,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import TuneIcon from '@mui/icons-material/Tune';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import InfoIcon from '@mui/icons-material/Info';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default {
   BrushIcon,
@@ -43,5 +44,6 @@ export default {
   ModeEditIcon,
   TuneIcon,
   SaveAsIcon,
-  InfoIcon
+  InfoIcon,
+  CloseIcon
 };
