@@ -284,7 +284,7 @@ async function getIndirectVariables(query) {
   }
 
   if (query.indirectVariables.queryLocations) {
-    
+
     for (const location of query.indirectVariables.queryLocations) {
       // Checks for a valid queryLocation
       if (!location.endsWith('.rq')) {
@@ -317,13 +317,20 @@ async function getIndirectVariables(query) {
             if (!variables[key.value]) {
               variables[key.value] = [];
             }
+
             let termValue;
+            let val = value.value
+
+            if (val.includes('"')) {
+              val = val.replace(/"/g, '\\"');
+            }
+
             // If it's an url, it must be surrounded with <> , if its not then with " "
             try {
-              new URL(value.value);
-              termValue = `<${value.value}>`;
+              new URL(val);
+              termValue = `<${val}>`;
             } catch (e) {
-              termValue = `"${value.value}"`;
+              termValue = `"${val}"`;
             }
 
             if (!variables[key.value].includes(termValue)) {

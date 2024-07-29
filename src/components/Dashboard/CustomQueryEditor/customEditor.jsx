@@ -12,7 +12,7 @@ import IconProvider from '../../../IconProvider/IconProvider';
 
 
 export default function CustomEditor(props) {
-  
+
   const location = useLocation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -21,16 +21,15 @@ export default function CustomEditor(props) {
     source: '',
     queryString: '',
     comunicaContext: '',
-    
     comunicaContextCheck: false,
     sourceIndexCheck: false,
     askQueryCheck: false,
     templatedQueryCheck: false,
-    
+
   });
-  
+
   const [showError, setShowError] = useState(false);
-  
+
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
@@ -45,22 +44,29 @@ WHERE {
   ?s rdfs:seeAlso ?source
 }`;
   const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
-  const defaultAskQueryDetails = JSON.stringify({"trueText": "this displays when true.", "falseText": "this displays when false."}, null, 2);
-  const defaultTemplateOptions = JSON.stringify({"variables" : {"variableOne" : ["option1", "option2", "option3"],"variableTwo" : ["option1", "option2", "option3"]}}, null, 5)
-  
+  const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
+  const defaultTemplateOptions = JSON.stringify({ "variables": { "variableOne": ["option1", "option2", "option3"], "variableTwo": ["option1", "option2", "option3"] } }, null, 5)
+
+  const [editError, setEditError] = useState(false)
+
   useEffect(() => {
-    let searchParams
-    if (props.newQuery) {
-      searchParams = new URLSearchParams(location.search);
-    } else {
-      const edittingQuery = configManager.getQueryById(props.id);
-      searchParams = edittingQuery.searchParams;
+    try {
+      let searchParams
+      if (props.newQuery) {
+        searchParams = new URLSearchParams(location.search);
+      } else {
+        const edittingQuery = configManager.getQueryById(props.id);
+        searchParams = edittingQuery.searchParams;
+      }
+      const obj = {}
+      searchParams.forEach((value, key) => {
+        obj[key] = value
+      })
+      setFormData(obj)
+
+    } catch (error) {
+      setEditError(true)
     }
-    const obj = {}
-    searchParams.forEach((value, key) => {
-      obj[key] = value
-    })
-    setFormData(obj)
   }, [location.search]);
 
   const handleSubmit = async (event) => {
@@ -84,7 +90,7 @@ WHERE {
         const customQuery = configManager.getQueryById(props.id);
         updateQuery(jsonData, customQuery);
       }
-    }else{
+    } else {
       setShowError(true)
     }
   };
@@ -143,15 +149,15 @@ WHERE {
       parsedObject.askQuery = JSON.parse(dataWithStrings.askQuery);
     }
     if (ensureBoolean(dataWithStrings.templatedQueryCheck)) {
-      
+
       const options = JSON.parse(dataWithStrings.templateOptions);
 
-      if (options.variables){
+      if (options.variables) {
         parsedObject.variables = options.variables;
       }
 
       // This will serve for the extention of customizable query variables
-      if (options.indirectVariables){
+      if (options.indirectVariables) {
         parsedObject.indirectVariables = options.indirectVariables;
       }
 
@@ -193,6 +199,8 @@ WHERE {
         sx={{ padding: '16px', marginTop: '16px', width: '100%' }}
       >
         <CardContent>
+
+          {editError ? <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'darkred' }}> Apologies, something went wrong with the loading of your data... </Typography> : null   /* This is a small work around an error that occurs with indirect variables. */}
           <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{props.newQuery ? 'Custom Query Editor' : 'Edit'}</Typography>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
@@ -420,7 +428,7 @@ WHERE {
                     minRows={5}
                     variant="outlined"
                     helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.templateOptions ? typeof formData.templateOptions === 'object' ? JSON.stringify(formData.templateOptions,null,5) : formData.templateOptions : formData.templateOptions === '' ? '' : defaultTemplateOptions}
+                    value={!!formData.templateOptions ? typeof formData.templateOptions === 'object' ? JSON.stringify(formData.templateOptions, null, 5) : formData.templateOptions : formData.templateOptions === '' ? '' : defaultTemplateOptions}
                     placeholder={defaultTemplateOptions}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
@@ -432,12 +440,14 @@ WHERE {
           </Card>
         </CardContent>
         {showError && (
-            <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
-              Invalid Query. Check the JSON-Syntax
-            </Typography>
-          )}
+          <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
+            Invalid Query. Check the JSON-Syntax
+          </Typography>
+        )}
         <CardActions>
           <Button variant="contained" type="submit" startIcon={props.newQuery ? <IconProvider.AddIcon /> : <IconProvider.SaveAsIcon />}>{props.newQuery ? 'Create Query' : 'Save Changes'}</Button>
+          {props.newQuery ? null :<Button variant="outlined" color='error' onClick={()=>{navigate(`/${props.id}/`)}} startIcon={ <IconProvider.CloseIcon /> }>{'Cancel'}</Button>}
+       
         </CardActions>
       </Card>
 
@@ -445,7 +455,7 @@ WHERE {
   )
 }
 
-
+ 
 
 
 
