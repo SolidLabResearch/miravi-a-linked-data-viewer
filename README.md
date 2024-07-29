@@ -11,6 +11,8 @@ Table of contents:
   * [Specifying sources](#specifying-sources)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
+    * [Templated queries with fixed values for the template variables](#templated-queries-with-fixed-values-for-the-template-variables)
+    * [Templated queries with values for the template variables to be derived from the data](#templated-queries-with-values-for-the-template-variables-to-be-derived-from-the-data)
   * [Query icons](#query-icons)
 * [Custom queries](#custom-queries)
 * [Representation Mapper](#representation-mapper)
@@ -122,6 +124,13 @@ The configuration file follows a simple structure.
         "variableExampleString": ["\"String1\"", "\"String2\""],
         "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"]
       },
+      "indirectVariables": {
+        "queryLocations": [
+          "Path to the location, relative to 'queryFolder' of a query yielding some template variable values",
+          ...
+        ]
+      },
+
       "askQuery": {
         "trueText": "The text that is to be shown when the query result is true (in ASK queries).",
         "falseText": "The text that is to be shown when the query result is false (in ASK queries)."
@@ -159,44 +168,50 @@ The underscore `_` here is crucial to make a clear distinction between name and 
 
 ### Templated queries
 
-This application supports queries whose contents are not completely fixed upfront: they contain variables whose value can be set interactively.
+This application supports templated queries: queries whose contents are not completely fixed upfront.
+They can contain *template variables*.
+A template variable is an identifier preceded by a `$` sign, e.g. `$genre`.
+Before submitting the SPARQL query, each template variable will be replaced by the actual value assigned to it interactively.
 
-#### To change a query into a templated query there are 2 ways:
+#### Templated queries with fixed values for the template variables
 
-1. **With fixed variables**
-  - Replace the fixed portion(s) of the query with (a) variable(s); a variable is an identifier preceded by a `$` sign, e.g. `$genre`.
+If all possible values for the template variables are fixed and hence can be written in the config file, proceed as follows.
+
+- Replace the fixed portion(s) of the original query with (a) template variable(s).
+- In the config file:
   - Add a `variables` object in the query's entry in the configuration file.
-  - In the `variables` object, for each variable, add a property with name equal to the variable's identifier.
-  - Set each such property's value to an array of possible values for the corresponding variable.
+  - In the `variables` object, for each template variable, add a property with name equal to the template variable's identifier.
+  - Set each such property's value to an array of possible values for the corresponding template variable.
 
-Note that variables' values are not restricted to strings: URIs for example are also possible.
-As a consequence, for strings the surround double quotes `"` must be added to the values in the list. And for URIs you must add surrounding angle brackets `<>`.
+Note that template variables' values are not restricted to strings: URIs for example are also possible.
+As a consequence, for strings the surround double quotes `"` must be added to the values in the list.
+For URIs you must add surrounding angle brackets `<>`.
 This is shown in the configuration structure above.
 
-2. **With indirect variables**
-  
-  To use indirect variables, you need to create one or more auxiliary queries that retrieve all the values for the chosen variable identifiers. The locations of these queries should be listed in the `queryLocations` property within the `indirectVariables` object, as shown in the configuration example above. Here's a step-by-step guide with examples: 
+#### Templated queries with values for the template variables to be derived from the data
 
-- Replace the fixed portion(s) of the main query with one or more variables. A variable is an identifier preceded by a `$` sign, e.g., `$genre`.
+In most cases, the values for the template variables are not fixed, but depend on *the data to query*.
+For those cases, these values can be specified indirectly, by referring to one or more auxiliary queries.
+Proceed as follows.
 
-- Create one or more auxiliary queries that return values for these variables. Ensure that the variable name in the auxiliary query exactly **matches** the variable in the main query. You can create multiple auxiliary queries, each for different variables. 
+- Write one or more auxiliary queries that yield the values of the template variable(s).
+  The variable names in the SELECT statement must match the template variable names (e.g `?genre` for template variable `$genre`).
+- Replace the fixed portion(s) of the original query with (a) template variable(s).
+- In the config file:
+  - Add an `indirectVariables` object in the query's entry in the configuration file.
+  - In the `indirectVariables` object, add a property `queryLocations`: this must be an *array*,
+    listing the location(s) of the one or more auxiliary queries that you wrote.
 
-- Example auxiliary query for the variable `$genre`:
+An example auxiliary query for the variable `$genre`, as used in one of the provided example templated queries:
 
-    ```turtle
-      PREFIX schema: <http://schema.org/> 
+```text
+PREFIX schema: <http://schema.org/> 
 
-      SELECT DISTINCT ?genre WHERE {
-          ?list
-          schema:genre ?genre;
-      } 
-    ```
-- Add an `indirectVariables` object in the query's entry in the configuration file.
-- Within the `indirectVariables` object, add the `queryLocations` property. Set its value to a list.
-- Fill this list with all the paths to the locations of the auxiliary queries required to retrieve the variables. These paths must be relative to `queryFolder`.
+SELECT DISTINCT ?genre WHERE {
+  ?list schema:genre ?genre;
+} 
+```
 
-
-    
 ### Query icons
 
 In the selection menu the name of the query is proceeded by an icon.
