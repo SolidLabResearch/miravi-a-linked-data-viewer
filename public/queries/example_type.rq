@@ -1,5 +1,0 @@
-SELECT DISTINCT ?term  WHERE {
-  ?term <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> $type
-}
-ORDER BY ?term
-LIMIT 50
