@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {useResourceContext} from "react-admin";
 import {useLocation, useNavigate} from 'react-router-dom';
 import {Component} from "react";
@@ -6,6 +6,7 @@ import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
 import ListResultTable from "./ListResultTable.jsx";
 
 import configManager from '../../configManager/configManager.js';
+import comunicaEngineWrapper from '../../comunicaEngineWrapper/comunicaEngineWrapper.js';
 
 /**
  * A wrapper component around ListResultTable, to support templated queries
@@ -20,10 +21,27 @@ const TemplatedListResultTable = (props) => {
   const [variables, setVariables] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [searchPar, setSearchPar] = useState({});
+  const [query, setQuery] = useState(configManager.getQueryWorkingCopyById(resource));
+ // const query = configManager.getQueryWorkingCopyById(resource);
+  useEffect(() => {
 
-  const query = configManager.getQueryWorkingCopyById(resource);
+    const fetchQuery = async () => {
+     // const query = configManager.getQueryWorkingCopyById(resource);
+
+      if (query.indirectVariables) {
+        const vars = await getIndirectVariables(query);
+      //  query.variables = vars;
+        setQuery({...query, variables : vars });
+      }
+    };
+
+    fetchQuery();
+  }, [resource]);
+
   const isTemplatedQuery = query.variables !== undefined;
   let tableEnabled = !isTemplatedQuery;
+
+
   
   if (isTemplatedQuery) {
     // Update variables from query parameters
@@ -99,5 +117,87 @@ function equalSimpleObjects(obj1, obj2) {
   }
   return true;
 }
+
+async function getIndirectVariables(query) {
+  const config = configManager.getConfig()
+  let variables;
+  let queryStingList = [];
+
+  if (query.variables) {
+    variables = query.variables
+  } else {
+    variables = {}
+  }
+
+  if (query.indirectVariables.queryLocations) {
+
+    for (const location of query.indirectVariables.queryLocations) {
+      // Checks for a valid queryLocation
+      if (!location.endsWith('.rq')) {
+        throw new Error("Wrong filetype for the indirectVariables query.")
+      }
+      const result = await fetch(`${config.queryFolder}${location}`);
+      const queryStr = await result.text();
+
+      if (queryStr === null || queryStr === '') {
+        throw new Error("Empty variable query text. Check the query and locations for indirectVariables.")
+      }
+      queryStingList.push(queryStr);
+    }
+  }
+  else if (query.indirectVariables.queryStrings) {
+    queryStingList = query.indirectVariables.queryStrings
+  }
+  else {
+    throw new Error("No indirectVariable queries were given...")
+  }
+
+  try {
+    for (const queryString of queryStingList) {
+      const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
+        { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
+      await new Promise((resolve, reject) => {
+
+        bindingsStream.on('data', (bindings) => {
+          bindings.forEach((value, key) => {
+            if (!variables[key.value]) {
+              variables[key.value] = [];
+            }
+
+            let termValue;
+            let val = value.value
+
+            if (val.includes('"')) {
+              val = val.replace(/"/g, '\\"');
+            }
+
+            // If it's an url, it must be surrounded with <> , if its not then with " "
+            try {
+              new URL(val);
+              termValue = `<${val}>`;
+            } catch (e) {
+              termValue = `"${val}"`;
+            }
+
+            if (!variables[key.value].includes(termValue)) {
+              variables[key.value].push(termValue)
+            }
+          })
+        });
+        bindingsStream.on('end', resolve);
+        bindingsStream.on('error', reject);
+      });
+    }
+  }
+  catch (error) {
+    throw new Error(`Error adding indirect variables: ${error.message}`);
+  }
+
+  if (variables == {}) {
+    throw new Error(`The variables are empty`);
+  }
+  return variables;
+}
+
 
 export default TemplatedListResultTable;

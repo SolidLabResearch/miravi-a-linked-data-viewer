@@ -44,10 +44,11 @@ export default {
       query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
     }
 
-    if (query.indirectVariables) {
-      const vars = await getIndirectVariables(query)
-      configManager.updateQuery({ ...query, variables: vars })
-    }
+    // if (query.indirectVariables) {
+    //   const vars = await getIndirectVariables(query)
+    //  // query.variables = vars;
+    //   configManager.updateQuery({ ...query, variables: vars })
+    // }
 
     if (meta && meta.variables) {
       query.variableValues = meta.variables;
@@ -272,86 +273,86 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
   return sourcesList;
 }
 
-async function getIndirectVariables(query) {
+// async function getIndirectVariables(query) {
 
-  let variables;
-  let queryStingList = [];
+//   let variables;
+//   let queryStingList = [];
 
-  if (query.variables) {
-    variables = query.variables
-  } else {
-    variables = {}
-  }
+//   if (query.variables) {
+//     variables = query.variables
+//   } else {
+//     variables = {}
+//   }
 
-  if (query.indirectVariables.queryLocations) {
+//   if (query.indirectVariables.queryLocations) {
 
-    for (const location of query.indirectVariables.queryLocations) {
-      // Checks for a valid queryLocation
-      if (!location.endsWith('.rq')) {
-        throw new Error("Wrong filetype for the indirectVariables query.")
-      }
-      const result = await fetch(`${config.queryFolder}${location}`);
-      const queryStr = await result.text();
+//     for (const location of query.indirectVariables.queryLocations) {
+//       // Checks for a valid queryLocation
+//       if (!location.endsWith('.rq')) {
+//         throw new Error("Wrong filetype for the indirectVariables query.")
+//       }
+//       const result = await fetch(`${config.queryFolder}${location}`);
+//       const queryStr = await result.text();
 
-      if (queryStr === null || queryStr === '') {
-        throw new Error("Empty variable query text. Check the query and locations for indirectVariables.")
-      }
-      queryStingList.push(queryStr);
-    }
-  }
-  else if (query.indirectVariables.queryStrings) {
-    queryStingList = query.indirectVariables.queryStrings
-  }
-  else {
-    throw new Error("No indirectVariable queries were given...")
-  }
+//       if (queryStr === null || queryStr === '') {
+//         throw new Error("Empty variable query text. Check the query and locations for indirectVariables.")
+//       }
+//       queryStingList.push(queryStr);
+//     }
+//   }
+//   else if (query.indirectVariables.queryStrings) {
+//     queryStingList = query.indirectVariables.queryStrings
+//   }
+//   else {
+//     throw new Error("No indirectVariable queries were given...")
+//   }
 
-  try {
-    for (const queryString of queryStingList) {
-      const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
-        { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
-      await new Promise((resolve, reject) => {
+//   try {
+//     for (const queryString of queryStingList) {
+//       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
+//         { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
+//       await new Promise((resolve, reject) => {
 
-        bindingsStream.on('data', (bindings) => {
-          bindings.forEach((value, key) => {
-            if (!variables[key.value]) {
-              variables[key.value] = [];
-            }
+//         bindingsStream.on('data', (bindings) => {
+//           bindings.forEach((value, key) => {
+//             if (!variables[key.value]) {
+//               variables[key.value] = [];
+//             }
 
-            let termValue;
-            let val = value.value
+//             let termValue;
+//             let val = value.value
 
-            if (val.includes('"')) {
-              val = val.replace(/"/g, '\\"');
-            }
+//             if (val.includes('"')) {
+//               val = val.replace(/"/g, '\\"');
+//             }
 
-            // If it's an url, it must be surrounded with <> , if its not then with " "
-            try {
-              new URL(val);
-              termValue = `<${val}>`;
-            } catch (e) {
-              termValue = `"${val}"`;
-            }
+//             // If it's an url, it must be surrounded with <> , if its not then with " "
+//             try {
+//               new URL(val);
+//               termValue = `<${val}>`;
+//             } catch (e) {
+//               termValue = `"${val}"`;
+//             }
 
-            if (!variables[key.value].includes(termValue)) {
-              variables[key.value].push(termValue)
-            }
-          })
-        });
-        bindingsStream.on('end', resolve);
-        bindingsStream.on('error', reject);
-      });
-    }
-  }
-  catch (error) {
-    throw new Error(`Error adding indirect variables: ${error.message}`);
-  }
+//             if (!variables[key.value].includes(termValue)) {
+//               variables[key.value].push(termValue)
+//             }
+//           })
+//         });
+//         bindingsStream.on('end', resolve);
+//         bindingsStream.on('error', reject);
+//       });
+//     }
+//   }
+//   catch (error) {
+//     throw new Error(`Error adding indirect variables: ${error.message}`);
+//   }
 
-  if (variables == {}) {
-    throw new Error(`The variables are empty`);
-  }
-  return variables;
-}
+//   if (variables == {}) {
+//     throw new Error(`The variables are empty`);
+//   }
+//   return variables;
+// }
 
 
 /**
