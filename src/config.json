@@ -503,12 +503,9 @@
       "queryLocation": "example_sxpo.rq",
       "name": "Triples with subject",
       "description": "Gives at most 50 triples with a given subject in the indicated datasources",
-      "variables": {
-        "subject": [
-          "<https://www.example.com/data/component-bom-b01>",
-          "<https://www.example.com/data/component-c01>",
-          "<https://www.example.com/data/component-material-assoc-b01-m01>",
-          "<https://www.example.com/data/material-m01>"
+      "indirectVariables": {
+        "queryLocations": [
+          "example_s.rq"
         ]
       },
       "comunicaContext": {
@@ -526,14 +523,9 @@
       "queryLocation": "example_spxo.rq",
       "name": "Triples with predicate",
       "description": "Gives at most 50 triples with a given predicate in the indicated datasources",
-      "variables": {
-        "predicate": [
-          "<https://www.example.com/ont/has-component-bom>",
-          "<https://www.example.com/ont/has-component-material-assoc>",
-          "<https://www.example.com/ont/has-material>",
-          "<https://www.example.com/ont/name>",
-          "<https://www.example.com/ont/percentage>",
-          "<https://www.example.com/ont/recycled-content-percentage>"
+      "indirectVariables": {
+        "queryLocations": [
+          "example_p.rq"
         ]
       },
       "comunicaContext": {
@@ -551,19 +543,9 @@
       "queryLocation": "example_spox.rq",
       "name": "Triples with object",
       "description": "Gives at most 50 triples with a given object in the indicated datasources",
-      "variables": {
-        "object": [
-          "<https://www.example.com/data/component-bom-b01>",
-          "<https://www.example.com/data/component-material-assoc-b01-m01>",
-          "<https://www.example.com/data/material-m01>",
-          "<https://www.example.com/ont/Component>",
-          "<https://www.example.com/ont/component-bom>",
-          "<https://www.example.com/ont/component-material-assoc>",
-          "0",
-          "20",
-          "80",
-          "\"Component 1\"",
-          "\"Material 1\""
+      "indirectVariables": {
+        "queryLocations": [
+          "example_o.rq"
         ]
       },
       "comunicaContext": {
@@ -578,14 +560,12 @@
     {
       "id": "10008",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_type.rq",
+      "queryLocation": "example_terms_of_type.rq",
       "name": "Terms of type",
       "description": "Gives at most 50 terms of a given rdf:type in the indicated datasources",
-      "variables": {
-        "type": [
-          "<https://www.example.com/ont/component-bom>",
-          "<https://www.example.com/ont/Component>",
-          "<https://www.example.com/ont/component-material-assoc>"
+      "indirectVariables": {
+        "queryLocations": [
+          "example_types.rq"
         ]
       },
       "comunicaContext": {

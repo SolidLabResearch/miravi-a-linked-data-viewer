@@ -1,0 +1,5 @@
+SELECT DISTINCT ?term  WHERE {
+  ?term a $type
+}
+ORDER BY ?term
+LIMIT 50
