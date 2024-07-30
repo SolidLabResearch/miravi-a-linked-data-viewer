@@ -1,0 +1,12 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX data: <https://www.example.com/data/>
+PREFIX ont: <https://www.example.com/ont/>
+
+data:s1 ont:p1 data:o1 ;
+  ont:p2 'This is a string containing some "double quotes"' ;
+  ont:p3 "This is a string in English"@en ;
+  ont:p4 "Ceci est une chaîne de charactères en français"@fr ;
+  ont:p5 1 ;
+  ont:p6 1.3 ;
+  ont:p7 1.5E6 ;
+  ont:p8 true .

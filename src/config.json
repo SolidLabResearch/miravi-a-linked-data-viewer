@@ -423,6 +423,24 @@
       }
     },
     {
+      "id": "9070",
+      "queryGroupId": "c-tst",
+      "queryLocation": "example_spox.rq",
+      "name": "Triples with object, objects of different types",
+      "description": "Gives at most 50 triples with a given object in the indicated datasources",
+      "indirectVariables": {
+        "queryLocations": [
+          "example_o.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/test-objects"
+        ],
+        "lenient": true
+      }
+    },
+    {
       "id": "10000",
       "queryGroupId": "d-gqx",
       "queryLocation": "example_count_spo.rq",
