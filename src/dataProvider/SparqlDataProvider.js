@@ -311,7 +311,6 @@ async function getIndirectVariables(query) {
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
         { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
       await new Promise((resolve, reject) => {
-
         bindingsStream.on('data', (bindings) => {
           bindings.forEach((value, key) => {
             if (!variables[key.value]) {
