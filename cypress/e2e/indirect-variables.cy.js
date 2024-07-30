@@ -52,6 +52,75 @@ describe("Indirect variable query", () => {
         cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("not.exist");
         cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
 
+        // Run some testcases now
+
+        cy.get('button').contains("Change Variables").should("exist");
+        cy.get('button').contains("Change Variables").click();
+
+        // Existing combination (only Mozart)
+        cy.get('form').within(() => {
+            cy.get('#genre').click();
+        });
+        cy.get('li').contains('Classical').click();
+
+        cy.get('form').within(() => {
+            cy.get('#sameAsUrl').click();
+        });
+        cy.get('li').contains('Mozart').click();
+
+        cy.get('button[type="submit"]').click();
+
+
+        cy.contains("Finished in:");
+        cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("exist");;
+
+        cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
+        cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("not.exist");
+        cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
+
+        // Change variables and make an unexisting combination
+        cy.get('button').contains("Change Variables").should("exist");
+        cy.get('button').contains("Change Variables").click();
+
+        cy.get('form').within(() => {
+            cy.get('#genre').click();
+        });
+        cy.get('li').contains('Baroque').click();
+
+        cy.get('form').within(() => {
+            cy.get('#sameAsUrl').click();
+        });
+        cy.get('li').contains('Beethoven').click();
+
+        cy.get('button[type="submit"]').click();
+
+        cy.get('span').contains("The result list is empty.").should("exist");
+
+
+
+        // Change variables and make another existing combination
+
+        cy.get('button').contains("Change Variables").should("exist");
+        cy.get('button').contains("Change Variables").click();
+
+        cy.get('form').within(() => {
+            cy.get('#genre').click();
+        });
+        cy.get('li').contains('Romantic').click();
+
+        cy.get('form').within(() => {
+            cy.get('#sameAsUrl').click();
+        });
+        cy.get('li').contains('Schubert').click();
+
+        cy.get('button[type="submit"]').click();
+
+        cy.get('span').contains("The result list is empty.").should("not.exist");
+        cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
+        cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("not.exist");
+        cy.get('.column-name').find('span').contains("Antonio Vivaldi").should("not.exist");
+        cy.get('.column-name').find('span').contains("Franz Schubert").should("exist");
+
     });
 
     it("Custom indirect query with 1 variable", () => {
@@ -83,7 +152,7 @@ SELECT ?name ?sameAs_url WHERE {
                "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }"
           ]
      }
-}`, {parseSpecialCharSequences: false} )
+}`, { parseSpecialCharSequences: false })
         cy.get('button[type="submit"]').click();
 
 
@@ -133,7 +202,7 @@ SELECT ?name WHERE {
               "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }"
          ]
     }
-}`, {parseSpecialCharSequences: false} )
+}`, { parseSpecialCharSequences: false })
         cy.get('button[type="submit"]').click();
 
         // Run some testcases now
@@ -154,7 +223,7 @@ SELECT ?name WHERE {
 
 
         cy.contains("Finished in:");
-        cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("exist");;
+        cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("exist");
 
         cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
         cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("not.exist");
@@ -177,8 +246,7 @@ SELECT ?name WHERE {
         cy.get('button[type="submit"]').click();
 
         cy.get('span').contains("The result list is empty.").should("exist");
-        cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
-        cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("not.exist");;
+
 
 
         // Change variables and make another existing combination
@@ -207,6 +275,95 @@ SELECT ?name WHERE {
 
     });
 
+    it("Make a custom indirect query with 1 variable and edit into a query with 2 variables", () => {
+
+
+        // Create a custom query with one variable
+        cy.visit("/#/customQuery");
+
+        cy.get('input[name="name"]').type("custom indirect template");
+        cy.get('textarea[name="description"]').type("description for an indirect templated query");
+        cy.get('textarea[name="queryString"]').clear();
+        cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+SELECT ?name ?sameAs_url WHERE {
+  ?list schema:name ?listTitle;
+    schema:name ?name;
+    schema:genre $genre;
+    schema:sameAs ?sameAs_url;
+}`);
+        cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
+        cy.get('input[name="templatedQueryCheck"]').click()
+
+        cy.get('textarea[name="templateOptions"]').clear()
+        cy.get('textarea[name="templateOptions"]').type(`{
+     "indirectVariables": {
+          "queryStrings": [
+               "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }"
+          ]
+     }
+}`, { parseSpecialCharSequences: false })
+        cy.get('button[type="submit"]').click();
+
+
+        // Check if the query works
+        cy.get('form').within(() => {
+            cy.get('#genre').click();
+        });
+        cy.get('li').contains('Baroque').click();
+
+        cy.get('button[type="submit"]').click();
+
+        cy.get('.column-name').find('span').contains("Antonio Caldara").should('exist');
+        cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
+
+
+        // Now edit the query into one with 2 variables
+
+        cy.get('button').contains("Edit Query").click();
+
+        // Check if the values are correctly filled in
+        cy.get('input[name="name"]').should('have.value', 'custom indirect template');
+
+        // Now change the query
+        cy.get('textarea[name="queryString"]').clear();
+        cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+SELECT ?name WHERE {
+  ?list schema:name ?listTitle;
+    schema:name ?name;
+    schema:genre $genre;
+    schema:sameAs $sameAsUrl;
+}`
+        );
+        cy.get('textarea[name="templateOptions"]').clear()
+        cy.get('textarea[name="templateOptions"]').type(`{ "indirectVariables": {
+         "queryStrings": [
+              "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }",
+              "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }"
+         ]
+    }
+}`, { parseSpecialCharSequences: false })
+
+        // The changes are done, now submit it
+        cy.get('button[type="submit"]').click();
+
+        // Try an existing combination
+        cy.get('form').within(() => {
+            cy.get('#genre').click();
+        });
+        cy.get('li').contains('Classical').click();
+
+        cy.get('form').within(() => {
+            cy.get('#sameAsUrl').click();
+        });
+        cy.get('li').contains('Beethoven').click();
+
+        cy.get('button[type="submit"]').click();
+
+        cy.contains("Finished in:");
+        cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("exist");
+        cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("not.exist");
+
+    });
 
 });
 
