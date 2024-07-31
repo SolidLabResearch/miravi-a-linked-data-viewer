@@ -157,32 +157,50 @@ async function getIndirectVariables(query) {
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
         { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
       await new Promise((resolve, reject) => {
-
         bindingsStream.on('data', (bindings) => {
-          bindings.forEach((value, key) => {
-            if (!variables[key.value]) {
-              variables[key.value] = [];
+          // see https://comunica.dev/docs/query/advanced/bindings/
+          for (const [variable, term] of bindings) {
+            const name = variable.value;
+            if (!variables[name]) {
+              variables[name] = [];
             }
-
-            let termValue;
-            let val = value.value
-
-            if (val.includes('"')) {
-              val = val.replace(/"/g, '\\"');
+            let variableValue;
+            switch (term.termType) {
+              case "Literal":
+                // escape double quotes
+                // example: This is a string containing some \"double quotes\"
+                variableValue = `${term.value.replace(/"/g, '\\"')}`;
+                // test whether there is a type specifier ^^...
+                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
+                if (/\"\^\^/.test(term.id)) {
+                  // do not surround with double quotes
+                  // example: 1
+                } else {
+                  // surround with double quotes
+                  // example: "This is a string containing some \"double quotes\""
+                  variableValue = `"${variableValue}"`;
+                }
+                // test whether there is a language tag @...
+                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
+                const lt = /\@(.*)$/.exec(term.id);
+                if (lt) {
+                  // append language tag
+                  // example: "This is a string in English"@en
+                  variableValue = `${variableValue}@${lt[1]}`;
+                }
+                break;
+              case "NamedNode":
+                // surround with triangle brackets
+                // example: <https://www.example.com/data/o1>
+                variableValue = `<${term.value}>`;
+                break;
+              default:
+                break;
             }
-
-            // If it's an url, it must be surrounded with <> , if its not then with " "
-            try {
-              new URL(val);
-              termValue = `<${val}>`;
-            } catch (e) {
-              termValue = `"${val}"`;
+            if (variableValue && !variables[name].includes(variableValue)) {
+              variables[name].push(variableValue);
             }
-
-            if (!variables[key.value].includes(termValue)) {
-              variables[key.value].push(termValue)
-            }
-          })
+          }
         });
         bindingsStream.on('end', resolve);
         bindingsStream.on('error', reject);
