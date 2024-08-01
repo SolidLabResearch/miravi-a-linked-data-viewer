@@ -123,6 +123,71 @@ describe("Indirect variable query", () => {
 
     });
 
+
+    it("Indirect with 1 variable and sources from indexfile", () => {
+
+        cy.visit("/");
+        cy.contains("Project related examples").click();
+        cy.contains("Component and materials - 1 variable (indirect source & indirect variables)").click();
+
+        // Fill in the form
+        cy.get('form').within(() => {
+            cy.get('#componentName').click();
+        });
+        cy.get('li').contains('Component 1').click();
+
+        // Comfirm query
+        cy.get('button[type="submit"]').click();
+
+        // Check that it is correctly loaded with and only the correct data appears
+        cy.contains("Finished in:");
+
+        cy.get('.column-componentName').find('span').contains("Component 1").should("exist");
+        cy.get('.column-materialName').find('span').contains("Material 2").should("exist");
+        cy.get('.column-materialName').find('span').contains("Material 1").should("exist");
+
+        cy.get('.column-componentName').find('span').contains("Component 2").should("not.exist");
+        cy.get('.column-componentName').find('span').contains("Component 3").should("not.exist");
+        cy.get('.column-materialName').find('span').contains("Material 6").should("not.exist");
+
+
+
+    });
+
+    it("Indirect with 2 variables and sources from indexfile", () => {
+        cy.visit("/");
+        cy.contains("Project related examples").click();
+        cy.contains("Component and materials - 2 variables (indirect source & indirect variables)").click();
+
+        // Fill in the form
+        cy.get('form').within(() => {
+            cy.get('#componentName').click();
+        });
+        cy.get('li').contains('Component 1').click();
+
+        cy.get('form').within(() => {
+            cy.get('#materialName').click();
+        });
+        cy.get('li').contains('Material 2').click();
+
+        // Comfirm query
+        cy.get('button[type="submit"]').click();
+
+        // Check that it is correctly loaded with and only the correct data appears
+        cy.contains("Finished in:");
+
+        cy.get('.column-componentName').find('span').contains("Component 1").should("exist");
+        cy.get('.column-materialName').find('span').contains("Material 2").should("exist");
+        
+        cy.get('.column-materialName').find('span').contains("Material 1").should("not.exist");
+        cy.get('.column-componentName').find('span').contains("Component 2").should("not.exist");
+        cy.get('.column-componentName').find('span').contains("Component 3").should("not.exist");
+        cy.get('.column-materialName').find('span').contains("Material 6").should("not.exist");
+
+
+    });
+
+
     it("Custom indirect query with 1 variable", () => {
 
         // Create the indirect variable

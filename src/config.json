@@ -309,6 +309,40 @@
       }
     },
     {
+      "id": "2015",
+      "queryGroupId": "b-prj",
+      "queryLocation": "component_material_one_variable.rq",
+      "name": "Component and materials - 1 variable (indirect source & indirect variables)",
+      "description": "Query components (including details about materials) with the sources obtained from index files and variables from the sources",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq"
+        ]
+      },
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only",
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+
+    {
+      "id": "2016",
+      "queryGroupId": "b-prj",
+      "queryLocation": "component_material_variables.rq",
+      "name": "Component and materials - 2 variables (indirect source & indirect variables)",
+      "description": "Query components (including details about materials) with the sources obtained from index files and variables from the sources",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq",
+          "variableQueries/materials_name_variable.rq"
+        ]
+      },
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only",
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+    {
       "id": "9000",
       "queryGroupId": "c-tst",
       "queryLocation": "books.rq",
