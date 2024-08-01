@@ -57,6 +57,19 @@ describe("Sources from index file", () => {
         cy.contains("Material 1");
     });
 
+
+
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        
+        // Ignore the error message related to UnauthorizedHttpError
+        if (err.message.includes('UnauthorizedHttpError')) {
+          return false;
+        }
+        // Let other errors fail the test
+        return true;
+      });
+
+
     it("Sources from an unauthorized source. Before and after log in.", () => {
         cy.visit("/");
 
