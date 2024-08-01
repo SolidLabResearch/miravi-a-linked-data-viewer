@@ -309,7 +309,7 @@ async function getIndirectVariables(query) {
 
 
   let variables;
-  let queryStingList = [];
+  let queryStringList = [];
 
   if (query.variables) {
     variables = query.variables
@@ -331,19 +331,19 @@ async function getIndirectVariables(query) {
         if (queryStr === null || queryStr === '') {
           throw new Error("Empty variable query text. Check the query and locations for indirectVariables.")
         }
-        queryStingList.push(queryStr);
+        queryStringList.push(queryStr);
       }
     }
-    else if (query.indirectVariables.queryStrings) {
-      queryStingList = query.indirectVariables.queryStrings
+    if (query.indirectVariables.queryStrings) {
+      queryStringList = [...queryStringList, ...query.indirectVariables.queryStrings];
     }
-    else {
+    if (queryStringList.length == 0) {
       throw new Error("No indirectVariable queries were given...")
     }
   }
 
   try {
-    for (const queryString of queryStingList) {
+    for (const queryString of queryStringList) {
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
         { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
       await new Promise((resolve, reject) => {

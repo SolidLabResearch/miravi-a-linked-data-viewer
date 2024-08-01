@@ -127,7 +127,7 @@ describe("Indirect variable query", () => {
     it("Indirect with 1 variable and sources from indexfile", () => {
 
         cy.visit("/");
-        cy.contains("Project related examples").click();
+        cy.contains("For testing only").click();
         cy.contains("Component and materials - 1 variable (indirect source & indirect variables)").click();
 
         // Fill in the form
@@ -156,7 +156,7 @@ describe("Indirect variable query", () => {
 
     it("Indirect with 2 variables and sources from indexfile", () => {
         cy.visit("/");
-        cy.contains("Project related examples").click();
+        cy.contains("For testing only").click();
         cy.contains("Component and materials - 2 variables (indirect source & indirect variables)").click();
 
         // Fill in the form

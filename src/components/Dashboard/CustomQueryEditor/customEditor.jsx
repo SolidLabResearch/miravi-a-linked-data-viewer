@@ -45,7 +45,24 @@ WHERE {
 }`;
   const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
   const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
-  const defaultTemplateOptions = JSON.stringify({ "variables": { "variableOne": ["option1", "option2", "option3"], "variableTwo": ["option1", "option2", "option3"] } }, null, 5)
+  const defaultTemplateOptions = JSON.stringify(
+    {
+      "variables": {
+        "variableOne": [
+          "option1",
+          "(etc...)"],
+        "(etc...)": [
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": [
+          "Path to the location, relative to 'queryFolder' of a file containing a SPARQL query yielding some template variable values",
+          "(etc...)"],
+        "queryStrings": [
+          "a SPARQL query written here as an inline string, yielding some template variable values",
+          "(etc...)"]
+      }
+    }, null, 5)
 
   const [editError, setEditError] = useState(false)
 
@@ -282,7 +299,7 @@ WHERE {
               id="outlined-required"
               label="Data source(s)"
               placeholder="http://example.com/source1; http://example.com/source2"
-              helperText="Give the source URL(s) for the query. Separate URLs with with '; '."
+              helperText="Give the source URL(s) for the query. Separate URLs with '; '."
               variant="outlined"
               value={!!formData.source ? formData.source : ''}
               onChange={handleChange}
