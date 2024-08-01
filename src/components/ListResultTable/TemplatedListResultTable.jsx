@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {useResourceContext} from "react-admin";
-import {useLocation, useNavigate} from 'react-router-dom';
-import {Component} from "react";
+import { useResourceContext, Loading, useDataProvider } from "react-admin";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Component } from "react";
 import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
 import ListResultTable from "./ListResultTable.jsx";
 
 import configManager from '../../configManager/configManager.js';
-import comunicaEngineWrapper from '../../comunicaEngineWrapper/comunicaEngineWrapper.js';
 
 /**
  * A wrapper component around ListResultTable, to support templated queries
@@ -14,54 +13,64 @@ import comunicaEngineWrapper from '../../comunicaEngineWrapper/comunicaEngineWra
  * @returns {Component} the wrapper component
  */
 const TemplatedListResultTable = (props) => {
-  
+
+  const dataProvider = useDataProvider();
   const resource = useResourceContext();
+  const query = configManager.getQueryWorkingCopyById(resource);
+
   const location = useLocation();
   const navigate = useNavigate();
-  const [variables, setVariables] = useState({});
+  const [submittedVariables, setSubmittedVariables] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [searchPar, setSearchPar] = useState({});
-  const [query, setQuery] = useState(configManager.getQueryWorkingCopyById(resource));
- // const query = configManager.getQueryWorkingCopyById(resource);
+  const [loading, setLoading] = useState(true);
+  const [queryVariables, setQueryVariables] = useState(query.variables);
+
+
   useEffect(() => {
 
     const fetchQuery = async () => {
-     // const query = configManager.getQueryWorkingCopyById(resource);
 
-      if (query.indirectVariables) {
-        const vars = await getIndirectVariables(query);
-      //  query.variables = vars;
-        setQuery({...query, variables : vars });
+      if (query.variables || query.indirectVariables){
+        // Handles the query variables (defined and indirect ones)
+        const vars = await dataProvider.indirectVariables(query);
+        setQueryVariables(vars);
       }
+     
+      setLoading(false);
     };
 
     fetchQuery();
   }, [resource]);
 
-  const isTemplatedQuery = query.variables !== undefined;
-  let tableEnabled = !isTemplatedQuery;
+  const areQueryVariablesLoaded = queryVariables !== undefined;
+  let tableEnabled = !areQueryVariablesLoaded;
 
 
-  
-  if (isTemplatedQuery) {
+  //HERE THE CODE MUST WAIT UNTIL THE  query.variables ARE LOADED CORRECTLY
+  if (loading) {
+    return <Loading loadingSecondary={"The page is loading. Just a moment please."} />;
+  }
+
+  if (areQueryVariablesLoaded) {
     // Update variables from query parameters
     const queryParams = new URLSearchParams(location.search);
-    const queryVariables = {};
-    for (const variableName of Object.keys(query.variables)) {
+    const urlVariables = {};
+    for (const variableName of Object.keys(queryVariables)) {
       if (queryParams.has(variableName)) {
-        queryVariables[variableName] = queryParams.get(variableName);
+        urlVariables[variableName] = queryParams.get(variableName);
       }
     }
-    if (!equalSimpleObjects(variables, queryVariables)) {
-      setVariables(queryVariables);
+    if (!equalSimpleObjects(submittedVariables, urlVariables)) {
+      setSubmittedVariables(urlVariables);
     } else {
-      tableEnabled = (Object.keys(variables).length === Object.keys(query.variables).length);
+      tableEnabled = (Object.keys(submittedVariables).length === Object.keys(queryVariables).length);
     }
   }
 
-  const onSubmit = (formVariables) => {  
+  const onSubmit = (formVariables) => {
 
-    if (!submitted){
+    if (!submitted) {
       setSearchPar(formVariables);
     }
     // Update query parameters from the TemplatedQueryForm fields
@@ -72,9 +81,9 @@ const TemplatedListResultTable = (props) => {
       }
     }
 
-    const queryString= queryParams.toString();
+    const queryString = queryParams.toString();
     if (queryString.length > 0) {
-      if(!submitted) setSubmitted(true);
+      if (!submitted) setSubmitted(true);
 
       navigate(`?${queryString}`);
     }
@@ -87,15 +96,15 @@ const TemplatedListResultTable = (props) => {
 
   return (
     <>
-      {isTemplatedQuery && !tableEnabled && 
-        <TemplatedQueryForm 
-          variableOptions={query.variables} 
-          onSubmit={onSubmit} 
-          submitted={submitted} 
-          searchPar={searchPar} 
+      {areQueryVariablesLoaded && !tableEnabled &&
+        <TemplatedQueryForm
+          variableOptions={queryVariables}
+          onSubmit={onSubmit}
+          submitted={submitted}
+          searchPar={searchPar}
         />
       }
-      {tableEnabled && <ListResultTable {...props} resource={resource} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
+      {tableEnabled && <ListResultTable {...props} resource={resource} variables={submittedVariables} changeVariables={changeVariables} submitted={submitted} />}
     </>
   )
 }
@@ -116,105 +125,6 @@ function equalSimpleObjects(obj1, obj2) {
     }
   }
   return true;
-}
-
-async function getIndirectVariables(query) {
-  const config = configManager.getConfig()
-  let variables;
-  let queryStingList = [];
-
-  if (query.variables) {
-    variables = query.variables
-  } else {
-    variables = {}
-  }
-
-  if (query.indirectVariables.queryLocations) {
-
-    for (const location of query.indirectVariables.queryLocations) {
-      // Checks for a valid queryLocation
-      if (!location.endsWith('.rq')) {
-        throw new Error("Wrong filetype for the indirectVariables query.")
-      }
-      const result = await fetch(`${config.queryFolder}${location}`);
-      const queryStr = await result.text();
-
-      if (queryStr === null || queryStr === '') {
-        throw new Error("Empty variable query text. Check the query and locations for indirectVariables.")
-      }
-      queryStingList.push(queryStr);
-    }
-  }
-  else if (query.indirectVariables.queryStrings) {
-    queryStingList = query.indirectVariables.queryStrings
-  }
-  else {
-    throw new Error("No indirectVariable queries were given...")
-  }
-
-  try {
-    for (const queryString of queryStingList) {
-      const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
-        { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
-      await new Promise((resolve, reject) => {
-        bindingsStream.on('data', (bindings) => {
-          // see https://comunica.dev/docs/query/advanced/bindings/
-          for (const [variable, term] of bindings) {
-            const name = variable.value;
-            if (!variables[name]) {
-              variables[name] = [];
-            }
-            let variableValue;
-            switch (term.termType) {
-              case "Literal":
-                // escape double quotes
-                // example: This is a string containing some \"double quotes\"
-                variableValue = `${term.value.replace(/"/g, '\\"')}`;
-                // test whether there is a type specifier ^^...
-                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
-                if (/\"\^\^/.test(term.id)) {
-                  // do not surround with double quotes
-                  // example: 1
-                } else {
-                  // surround with double quotes
-                  // example: "This is a string containing some \"double quotes\""
-                  variableValue = `"${variableValue}"`;
-                }
-                // test whether there is a language tag @...
-                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
-                const lt = /\@(.*)$/.exec(term.id);
-                if (lt) {
-                  // append language tag
-                  // example: "This is a string in English"@en
-                  variableValue = `${variableValue}@${lt[1]}`;
-                }
-                break;
-              case "NamedNode":
-                // surround with triangle brackets
-                // example: <https://www.example.com/data/o1>
-                variableValue = `<${term.value}>`;
-                break;
-              default:
-                break;
-            }
-            if (variableValue && !variables[name].includes(variableValue)) {
-              variables[name].push(variableValue);
-            }
-          }
-        });
-        bindingsStream.on('end', resolve);
-        bindingsStream.on('error', reject);
-      });
-    }
-  }
-  catch (error) {
-    throw new Error(`Error adding indirect variables: ${error.message}`);
-  }
-
-  if (variables == {}) {
-    throw new Error(`The variables are empty`);
-  }
-  return variables;
 }
 
 
