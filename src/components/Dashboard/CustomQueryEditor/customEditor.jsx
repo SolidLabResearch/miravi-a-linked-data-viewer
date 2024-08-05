@@ -11,7 +11,6 @@ import configManager from '../../../configManager/configManager';
 import IconProvider from '../../../IconProvider/IconProvider';
 
 
-
 export default function CustomEditor(props) {
 
   const location = useLocation();
@@ -27,16 +26,16 @@ export default function CustomEditor(props) {
     askQueryCheck: false,
     directVariablesCheck: false,
     indirectVariablesCheck: false,
-
   });
 
   const [showError, setShowError] = useState(false);
-
+  const [editError, setEditError] = useState(false)
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
 
-  const defaultIndirectVariableQuery = "PREFIX schema: <http://schema.org/> \n\nSELECT DISTINCT ?obj WHERE \n{ \n\t?list \n\tschema:obj ?obj; \n}"
+  // Default placeholders for the forms
+  const defaultIndirectVariableQuery = "PREFIX schema: <http://schema.org/> \n\nSELECT DISTINCT ?genre WHERE \n{ \n\t?list \n\tschema:genre ?genre; \n}\nORDER BY ?genre"
   const [indirectVariableSourceList, setIndirectVariableSourceList] = useState([defaultIndirectVariableQuery]);
 
   const defaultSparqlQuery = `SELECT ?s ?p ?o
@@ -52,16 +51,13 @@ WHERE {
   const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
   const defaultTemplateOptions = JSON.stringify(
     {
-      "variables": {
-        "variableOne": [
-          "option1",
-          "(etc...)"],
-        "(etc...)": [
-        ]
-      }
+      "variableOne": [
+        "option1",
+        "(etc...)"
+      ],
+      "(etc...)": []
     }, null, 5)
 
-  const [editError, setEditError] = useState(false)
 
   useEffect(() => {
     try {
@@ -77,10 +73,9 @@ WHERE {
         obj[key] = value
       })
 
-      if (obj.indirectQueries){
+      if (obj.indirectQueries) {
         setIndirectVariableSourceList(JSON.parse(obj.indirectQueries))
       }
-
       setFormData(obj)
 
     } catch (error) {
@@ -88,6 +83,8 @@ WHERE {
     }
   }, [location.search]);
 
+
+  // This function handles the submission of the form. Both for editting as for creation. This distinction is made by the `props.newQuery`.
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -95,8 +92,8 @@ WHERE {
       setShowError(false)
       const formData = new FormData(event.currentTarget);
       const jsonData = Object.fromEntries(formData.entries());
-      
-      if (jsonData.indirectVariablesCheck){
+
+      if (jsonData.indirectVariablesCheck) {
         jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList)
       }
 
@@ -118,7 +115,7 @@ WHERE {
     }
   };
 
-  // These functions handle the changes of the user input in the input fields
+  // These functions handle the entry changes from the user's input in the form
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -151,7 +148,7 @@ WHERE {
     }));
   };
 
-  // These functions serve for a correct parsing of JSON content
+  // These functions serve for a correct parsing of JSON objects, lists, etc. right before submitting
   const ensureBoolean = (value) => value === 'on' || value === true;
 
   const parseAllObjectsToJSON = (dataWithStrings) => {
@@ -182,27 +179,15 @@ WHERE {
     }
 
     if (ensureBoolean(dataWithStrings.directVariablesCheck)) {
-
-      const options = JSON.parse(dataWithStrings.templateOptions);
-
-      if (options.variables) {
-        parsedObject.variables = options.variables;
-      }
-
-      // This will serve for the extention of customizable query variables
-      if (options.indirectVariables) {
-        parsedObject.indirectVariables = options.indirectVariables;
-      }
-
-
+      parsedObject.variables = JSON.parse(dataWithStrings.variables);
     }
+
     if (ensureBoolean(dataWithStrings.indirectVariablesCheck)) {
-     // console.log(dataWithStrings)
-      parsedObject.indirectVariables = {queryStrings : JSON.parse(dataWithStrings.indirectQueries) }
+      parsedObject.indirectVariables = { queryStrings: JSON.parse(dataWithStrings.indirectQueries) }
     }
+
     return parsedObject;
   }
-
 
   // These are the functions for the addition and removal of indirect variable input fields
   const handleIndirectSource = () => {
@@ -213,8 +198,6 @@ WHERE {
     newList.splice(index, 1);
     setIndirectVariableSourceList(newList)
   }
-
-
 
   // These Functions are the submit functions for whether the creation or edit of a custom query
   const addQuery = (formData) => {
@@ -243,8 +226,6 @@ WHERE {
     navigate(`/${customQuery.id}`)
   };
 
-
-
   return (
     <React.Fragment>
       <Card
@@ -264,7 +245,6 @@ WHERE {
                 required
                 fullWidth
                 name="name"
-                //  id="outlined-required"
                 label="Query name"
                 placeholder="Custom query name"
                 helperText="Give this custom query a name."
@@ -276,7 +256,6 @@ WHERE {
 
               <TextField
                 required
-                // id="outlined-multiline-flexible"
                 label="Description"
                 name="description"
                 multiline
@@ -292,7 +271,6 @@ WHERE {
 
               <TextField
                 required
-                //  id="outlined-multiline-flexible"
                 label="SPARQL query"
                 name="queryString"
                 multiline
@@ -333,7 +311,6 @@ WHERE {
               required={!formData.sourceIndexCheck}
               fullWidth
               name="source"
-              //   id="outlined-required"
               label="Data source(s)"
               placeholder="http://example.com/source1; http://example.com/source2"
               helperText="Give the source URL(s) for the query. Separate URLs with '; '."
@@ -348,7 +325,6 @@ WHERE {
               <div>
                 <TextField
                   required={ensureBoolean(formData.comunicaContextCheck)}
-                  //  id="outlined-multiline-flexible"
                   label="Comunica context configuration"
                   name="comunicaContext"
                   multiline
@@ -365,6 +341,103 @@ WHERE {
                 />
               </div>
             }
+          </Card>
+
+          <Card sx={{ py: '10px', px: '20px', my: 2 }}>
+            <Typography variant="h5" sx={{ mt: 2 }}> Templated Query</Typography>
+            <div>
+              <FormControlLabel
+                control={<Checkbox
+                  name='directVariablesCheck'
+                  checked={!!formData.directVariablesCheck}
+                  onChange={
+                    () => {
+                      setParsingErrorTemplate(false);
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        'directVariablesCheck': !formData.directVariablesCheck,
+                      }))
+                    }
+                  }
+                />} label="Direct Variables" />
+
+              {formData.directVariablesCheck &&
+                <div>
+                  <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
+                  <TextField
+                    required={ensureBoolean(formData.directVariablesCheck)}
+                    label="Templated query variables"
+                    name="variables"
+                    error={parsingErrorTemplate}
+                    multiline
+                    fullWidth
+                    minRows={5}
+                    variant="outlined"
+                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
+                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables, null, 5) : formData.variables : formData.variables === '' ? '' : defaultTemplateOptions}
+                    placeholder={defaultTemplateOptions}
+                    onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
+                    onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
+                    sx={{ marginBottom: '16px' }}
+                  />
+                </div>
+              }
+
+              <FormControlLabel
+                control={<Checkbox
+                  name='indirectVariablesCheck'
+                  checked={!!formData.indirectVariablesCheck}
+                  onChange={
+                    () => {
+                      setParsingErrorTemplate(false);
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        'indirectVariablesCheck': !formData.indirectVariablesCheck,
+                      }))
+                    }
+                  }
+                />} label="Indirect Variables" />
+
+              {formData.indirectVariablesCheck &&
+                <div>
+                  <div style={{ marginBottom: '20px' }}>
+                    <Typography variant="base" sx={{ color: '#777' }}> Give one or more queries to retrieve the variable(s) from the source(s).</Typography>
+                  </div>
+                  {
+                    indirectVariableSourceList.map((sourceString, index) => (
+                      <div key={index} style={{ position: 'relative' }}>
+                        <TextField
+                          required={ensureBoolean(formData.indirectVariablesCheck)}
+                          label={`Query ${index + 1} for Indirect Variable`}
+                          name="indirectQueries"
+                          multiline
+                          fullWidth
+                          minRows={5}
+                          variant="outlined"
+                          helperText={`Enter the ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
+                          value={sourceString}
+                          placeholder={defaultIndirectVariableQuery}
+                          onChange={(e) => handleIndirectVariablesChange(e, index)}
+                          sx={{ marginBottom: '16px' }}
+                        />
+
+                        <Button
+                          variant="outlined"
+                          color='error' onClick={() => handleIndirectSourceRemove(index)}
+                          type="button" disabled={indirectVariableSourceList.length <= 1}
+                          style={{ position: 'absolute', top: '15px', right: '8px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        >
+                          <IconProvider.DeleteIcon />
+                        </Button>
+                      </div>
+                    ))
+                  }
+                  <Button variant="outlined" onClick={handleIndirectSource} type="button" startIcon={<IconProvider.AddIcon />}>
+                    Add another query
+                  </Button>
+                </div>
+              }
+            </div>
           </Card>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
@@ -390,7 +463,6 @@ WHERE {
                     required={ensureBoolean(formData.sourceIndexCheck)}
                     fullWidth
                     name="indexSourceUrl"
-                    //  id="outlined-required"
                     label="Index file URL"
                     placeholder="http://example.com/index"
                     helperText="Give the URL of the index file."
@@ -402,7 +474,6 @@ WHERE {
 
                   <TextField
                     required={ensureBoolean(formData.sourceIndexCheck)}
-                    // id="outlined-multiline-flexible"
                     label="SPARQL query"
                     name="indexSourceQuery"
                     multiline
@@ -437,7 +508,6 @@ WHERE {
                 <div>
                   <TextField
                     required={ensureBoolean(formData.askQueryCheck)}
-                    //  id="outlined-multiline-flexible"
                     label="Creating an ask query"
                     name="askQuery"
                     error={parsingErrorAsk}
@@ -454,118 +524,32 @@ WHERE {
                   />
                 </div>
               }
-              <FormControlLabel
-                control={<Checkbox
-                  name='directVariablesCheck'
-                  checked={!!formData.directVariablesCheck}
-                  onChange={
-                    () => {
-                      setParsingErrorTemplate(false);
-                      setFormData((prevFormData) => ({
-                        ...prevFormData,
-                        'directVariablesCheck': !formData.directVariablesCheck,
-                      }))
-                    }
-                  }
-                />} label="Direct Variables" />
-
-              {formData.directVariablesCheck &&
-                <div>
-                  <TextField
-                    required={ensureBoolean(formData.directVariablesCheck)}
-                    // id="outlined-multiline-flexible"
-                    label="Templated query options"
-                    name="templateOptions"
-                    error={parsingErrorTemplate}
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    variant="outlined"
-                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.templateOptions ? typeof formData.templateOptions === 'object' ? JSON.stringify(formData.templateOptions, null, 5) : formData.templateOptions : formData.templateOptions === '' ? '' : defaultTemplateOptions}
-                    placeholder={defaultTemplateOptions}
-                    onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
-                    onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
-                    sx={{ marginBottom: '16px' }}
-                  />
-                </div>
-              }
-
-              <FormControlLabel
-                control={<Checkbox
-                  name='indirectVariablesCheck'
-                  checked={!!formData.indirectVariablesCheck}
-                  onChange={
-                    () => {
-                      setParsingErrorTemplate(false);
-                      setFormData((prevFormData) => ({
-                        ...prevFormData,
-                        'indirectVariablesCheck': !formData.indirectVariablesCheck,
-                      }))
-                    }
-                  }
-                />} label="Indirect Variables" />
-
-              {formData.indirectVariablesCheck &&
-                <div>
-
-                 
-                  {indirectVariableSourceList.map((sourceString, index) => (
-
-                    <div key={index} style={{ position: 'relative'}}>
-
-                    <TextField
-                      required={ensureBoolean(formData.indirectVariablesCheck)}
-                      // id="outlined-multiline-flexible"
-                      label={`Query ${index + 1} for Indirect Variable`}
-                      name="indirectQueries"
-                      //error={parsingErrorTemplate}
-                      multiline
-                      fullWidth
-                      minRows={5}
-                      variant="outlined"
-                      helperText={`Enter the ${index === 0 ? "1st" : index === 1 ? "2nd" : index+1+"th" } SPARQL query to retrieve the variables.`}
-                      value={sourceString}
-                      placeholder={defaultIndirectVariableQuery}
-                      onChange={(e) => handleIndirectVariablesChange(e, index)}
-                      sx={{ marginBottom: '16px' }}
-                      />
-                    
-                    <Button variant="outlined" color='error' onClick={() => handleIndirectSourceRemove(index)} type="button" disabled={indirectVariableSourceList.length <= 1}
-                      style={{ 
-                        position: 'absolute', 
-                        top: '15px', 
-                        right: '8px', 
-                        padding: '8px', 
-                        minWidth: 'auto', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center' 
-                      }}
-
-                      > <IconProvider.DeleteIcon /> </Button>
-
-                   
-
-                      </div>
-
-                  ))}
-                   <Button variant="outlined" onClick={handleIndirectSource} type="button" startIcon={<IconProvider.AddIcon />}>Add another query</Button>
-                </div>}
 
             </div>
           </Card>
+
         </CardContent>
+
         {showError && (
           <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
             Invalid Query. Check the JSON-Syntax
           </Typography>
         )}
-        <CardActions>
-          <Button variant="contained" type="submit" startIcon={props.newQuery ? <IconProvider.AddIcon /> : <IconProvider.SaveAsIcon />}>{props.newQuery ? 'Create Query' : 'Save Changes'}</Button>
-          {props.newQuery ? null : <Button variant="outlined" color='error' onClick={() => { navigate(`/${props.id}/`) }} startIcon={<IconProvider.CloseIcon />}>{'Cancel'}</Button>}
 
+        <CardActions>
+
+          <Button variant="contained" type="submit" startIcon={props.newQuery ? <IconProvider.AddIcon /> : <IconProvider.SaveAsIcon />}>
+            {props.newQuery ? 'Create Query' : 'Save Changes'}
+          </Button>
+
+          {
+            props.newQuery ? null :
+              <Button variant="outlined" color='error' onClick={() => { navigate(`/${props.id}/`) }} startIcon={<IconProvider.CloseIcon />}>
+                {'Cancel'}
+              </Button>
+          }
         </CardActions>
+
       </Card>
 
     </React.Fragment>
