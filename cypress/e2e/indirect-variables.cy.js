@@ -178,7 +178,7 @@ describe("Indirect variable query", () => {
 
         cy.get('.column-componentName').find('span').contains("Component 1").should("exist");
         cy.get('.column-materialName').find('span').contains("Material 2").should("exist");
-        
+
         cy.get('.column-materialName').find('span').contains("Material 1").should("not.exist");
         cy.get('.column-componentName').find('span').contains("Component 2").should("not.exist");
         cy.get('.column-componentName').find('span').contains("Component 3").should("not.exist");
@@ -208,16 +208,10 @@ SELECT ?name ?sameAs_url WHERE {
         );
 
         cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
-        cy.get('input[name="templatedQueryCheck"]').click()
+        cy.get('input[name="indirectVariablesCheck"]').click()
 
-        cy.get('textarea[name="templateOptions"]').clear()
-        cy.get('textarea[name="templateOptions"]').type(`{
-     "indirectVariables": {
-          "queryStrings": [
-               "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }"
-          ]
-     }
-}`, { parseSpecialCharSequences: false })
+        cy.get('textarea[name="indirectQuery1"]').clear()
+        cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
         cy.get('button[type="submit"]').click();
 
 
@@ -258,18 +252,15 @@ SELECT ?name WHERE {
         );
 
         cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
-        cy.get('input[name="templatedQueryCheck"]').click()
+        cy.get('input[name="indirectVariablesCheck"]').click()
 
-        cy.get('textarea[name="templateOptions"]').clear()
-        cy.get('textarea[name="templateOptions"]').type(`{ "indirectVariables": {
-         "queryStrings": [
-              "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }",
-              "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }"
-         ]
-    }
-}`, { parseSpecialCharSequences: false })
+        cy.get('textarea[name="indirectQuery1"]').clear()
+        cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
+        cy.get('button').contains("Add another query").click();
+        cy.get('textarea[name="indirectQuery2"]').clear()
+        cy.get('textarea[name="indirectQuery2"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
+
         cy.get('button[type="submit"]').click();
-
         // Run some testcases now
 
 
@@ -357,16 +348,10 @@ SELECT ?name ?sameAs_url WHERE {
     schema:sameAs ?sameAs_url;
 }`);
         cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
-        cy.get('input[name="templatedQueryCheck"]').click()
+        cy.get('input[name="indirectVariablesCheck"]').click()
 
-        cy.get('textarea[name="templateOptions"]').clear()
-        cy.get('textarea[name="templateOptions"]').type(`{
-     "indirectVariables": {
-          "queryStrings": [
-               "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }"
-          ]
-     }
-}`, { parseSpecialCharSequences: false })
+        cy.get('textarea[name="indirectQuery1"]').clear()
+        cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
         cy.get('button[type="submit"]').click();
 
 
@@ -399,14 +384,11 @@ SELECT ?name WHERE {
     schema:sameAs $sameAsUrl;
 }`
         );
-        cy.get('textarea[name="templateOptions"]').clear()
-        cy.get('textarea[name="templateOptions"]').type(`{ "indirectVariables": {
-         "queryStrings": [
-              "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }",
-              "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }"
-         ]
-    }
-}`, { parseSpecialCharSequences: false })
+        // add source for the second variable
+        cy.get('button').contains("Add another query").click();
+        cy.get('textarea[name="indirectQuery2"]').clear()
+        cy.get('textarea[name="indirectQuery2"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
+
 
         // The changes are done, now submit it
         cy.get('button[type="submit"]').click();

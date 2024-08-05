@@ -409,7 +409,7 @@ WHERE {
                         <TextField
                           required={ensureBoolean(formData.indirectVariablesCheck)}
                           label={`Query ${index + 1} for Indirect Variable`}
-                          name="indirectQueries"
+                          name={`indirectQuery${index + 1}`}
                           multiline
                           fullWidth
                           minRows={5}
