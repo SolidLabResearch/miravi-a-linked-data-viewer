@@ -35,9 +35,6 @@ export default function CustomEditor(props) {
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
 
   // Default placeholders for the forms
-  const defaultIndirectVariableQuery = "PREFIX schema: <http://schema.org/> \n\nSELECT DISTINCT ?genre WHERE \n{ \n\t?list \n\tschema:genre ?genre; \n}\nORDER BY ?genre"
-  const [indirectVariableSourceList, setIndirectVariableSourceList] = useState([defaultIndirectVariableQuery]);
-
   const defaultSparqlQuery = `SELECT ?s ?p ?o
 WHERE {
   ?s ?p ?o
@@ -47,6 +44,15 @@ SELECT ?source
 WHERE {
   ?s rdfs:seeAlso ?source
 }`;
+  const defaultSparqlQueryIndirectVariables = `PREFIX schema: <http://schema.org/>
+  
+SELECT DISTINCT ?genre
+WHERE {
+  ?list schema:genre ?genre
+}
+ORDER BY ?genre"`;
+  const [indirectVariableSourceList, setIndirectVariableSourceList] = useState([defaultSparqlQueryIndirectVariables]);
+
   const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
   const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
   const defaultTemplateOptions = JSON.stringify(
@@ -416,7 +422,7 @@ WHERE {
                           variant="outlined"
                           helperText={`Enter the ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
                           value={sourceString}
-                          placeholder={defaultIndirectVariableQuery}
+                          placeholder={defaultSparqlQueryIndirectVariables}
                           onChange={(e) => handleIndirectVariablesChange(e, index)}
                           sx={{ marginBottom: '16px' }}
                         />
