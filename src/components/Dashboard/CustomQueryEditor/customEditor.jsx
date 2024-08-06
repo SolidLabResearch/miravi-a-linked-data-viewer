@@ -40,6 +40,7 @@ WHERE {
   ?s ?p ?o
 }`;
   const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
 SELECT ?source
 WHERE {
   ?s rdfs:seeAlso ?source
@@ -196,10 +197,10 @@ ORDER BY ?genre"`;
   }
 
   // These are the functions for the addition and removal of indirect variable input fields
-  const handleIndirectSource = () => {
+  const handleIndirectVariableSource = () => {
     setIndirectVariableSourceList([...indirectVariableSourceList, ""])
   }
-  const handleIndirectSourceRemove = (index) => {
+  const handleIndirectVariableSourceRemove = (index) => {
     const newList = [...indirectVariableSourceList];
     newList.splice(index, 1);
     setIndirectVariableSourceList(newList)
@@ -210,14 +211,13 @@ ORDER BY ?genre"`;
     const creationID = Date.now().toString();
     formData = parseAllObjectsToJSON(formData);
 
-    console.log(formData)
     configManager.addQuery({
       ...formData,
       id: creationID,
       queryGroupId: "cstm",
       icon: "AutoAwesomeIcon",
     });
-    navigate(`/${creationID}`)
+      navigate(`/${creationID}`)
   };
 
   const updateQuery = (formData, customQuery) => {
@@ -294,7 +294,7 @@ ORDER BY ?genre"`;
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
 
-            <Typography variant="h5" sx={{ mt: 2 }}> Comunica Context</Typography>
+            <Typography variant="h5" sx={{ mt: 2 }}> Comunica Context &amp; Sources </Typography>
             <div>
               <FormControlLabel
                 control={<Checkbox
@@ -317,9 +317,9 @@ ORDER BY ?genre"`;
               required={!formData.sourceIndexCheck}
               fullWidth
               name="source"
-              label="Data source(s)"
+              label="Fixed data source(s)"
               placeholder="http://example.com/source1; http://example.com/source2"
-              helperText="Give the source URL(s) for the query. Separate URLs with '; '."
+              helperText="Give the source URL(s) for the query. Separate URLs with '; '.  (These are the comunica context sources)"
               variant="outlined"
               value={!!formData.source ? formData.source : ''}
               onChange={handleChange}
@@ -347,6 +347,53 @@ ORDER BY ?genre"`;
                 />
               </div>
             }
+
+            <FormControlLabel
+              control={<Checkbox
+                name='sourceIndexCheck'
+                checked={!!formData.sourceIndexCheck}
+                onChange={
+                  () => {
+                    setFormData((prevFormData) => ({
+                      ...prevFormData,
+                      'sourceIndexCheck': !formData.sourceIndexCheck,
+                    }))
+                  }
+                }
+              />} label="Indirect sources" />
+
+            {formData.sourceIndexCheck &&
+              <div>
+                <TextField
+                  required={ensureBoolean(formData.sourceIndexCheck)}
+                  fullWidth
+                  name="indexSourceUrl"
+                  label="Index file URL"
+                  placeholder="http://example.com/index"
+                  helperText="Give the URL of the index file."
+                  variant="outlined"
+                  value={!!formData.indexSourceUrl ? formData.indexSourceUrl : ''}
+                  onChange={handleChange}
+                  sx={{ marginBottom: '16px' }}
+                />
+
+                <TextField
+                  required={ensureBoolean(formData.sourceIndexCheck)}
+                  label="SPARQL query"
+                  name="indexSourceQuery"
+                  multiline
+                  fullWidth
+                  minRows={5}
+                  variant="outlined"
+                  helperText="Give the SPARQL query to get the sources from the index file."
+                  placeholder={defaultSparqlQueryIndexSources}
+                  value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
+                  onChange={handleChange}
+                  sx={{ marginBottom: '16px' }}
+                />
+              </div>
+            }
+
           </Card>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
@@ -365,7 +412,7 @@ ORDER BY ?genre"`;
                       }))
                     }
                   }
-                />} label="Direct Variables" />
+                />} label="Fixed Variables" />
 
               {formData.directVariablesCheck &&
                 <div>
@@ -414,7 +461,7 @@ ORDER BY ?genre"`;
                       <div key={index} style={{ position: 'relative' }}>
                         <TextField
                           required={ensureBoolean(formData.indirectVariablesCheck)}
-                          label={`Query ${index + 1} for Indirect Variable`}
+                          label={`Query ${index + 1} for indirect variable(s)`}
                           name={`indirectQuery${index + 1}`}
                           multiline
                           fullWidth
@@ -429,7 +476,7 @@ ORDER BY ?genre"`;
 
                         <Button
                           variant="outlined"
-                          color='error' onClick={() => handleIndirectSourceRemove(index)}
+                          color='error' onClick={() => handleIndirectVariableSourceRemove(index)}
                           type="button" disabled={indirectVariableSourceList.length <= 1}
                           style={{ position: 'absolute', top: '15px', right: '8px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
@@ -438,7 +485,7 @@ ORDER BY ?genre"`;
                       </div>
                     ))
                   }
-                  <Button variant="outlined" onClick={handleIndirectSource} type="button" startIcon={<IconProvider.AddIcon />}>
+                  <Button variant="outlined" onClick={handleIndirectVariableSource} type="button" startIcon={<IconProvider.AddIcon />}>
                     Add another query
                   </Button>
                 </div>
@@ -449,51 +496,7 @@ ORDER BY ?genre"`;
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
             <Typography variant="h5" sx={{ mt: 2 }}> Extra Options</Typography>
             <div>
-              <FormControlLabel
-                control={<Checkbox
-                  name='sourceIndexCheck'
-                  checked={!!formData.sourceIndexCheck}
-                  onChange={
-                    () => {
-                      setFormData((prevFormData) => ({
-                        ...prevFormData,
-                        'sourceIndexCheck': !formData.sourceIndexCheck,
-                      }))
-                    }
-                  }
-                />} label="Sources from index file" />
 
-              {formData.sourceIndexCheck &&
-                <div>
-                  <TextField
-                    required={ensureBoolean(formData.sourceIndexCheck)}
-                    fullWidth
-                    name="indexSourceUrl"
-                    label="Index file URL"
-                    placeholder="http://example.com/index"
-                    helperText="Give the URL of the index file."
-                    variant="outlined"
-                    value={!!formData.indexSourceUrl ? formData.indexSourceUrl : ''}
-                    onChange={handleChange}
-                    sx={{ marginBottom: '16px' }}
-                  />
-
-                  <TextField
-                    required={ensureBoolean(formData.sourceIndexCheck)}
-                    label="SPARQL query"
-                    name="indexSourceQuery"
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    variant="outlined"
-                    helperText="Give the SPARQL query to get the sources from the index file."
-                    placeholder={defaultSparqlQueryIndexSources}
-                    value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
-                    onChange={handleChange}
-                    sx={{ marginBottom: '16px' }}
-                  />
-                </div>
-              }
 
               <FormControlLabel
                 control={<Checkbox
