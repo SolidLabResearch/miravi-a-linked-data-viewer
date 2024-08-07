@@ -463,7 +463,7 @@
       "description": "Gives at most 50 triples with a given object in the indicated datasources",
       "indirectVariables": {
         "queryLocations": [
-          "example_o.rq"
+          "variableQueries/example_o.rq"
         ]
       },
       "comunicaContext": {
@@ -506,7 +506,7 @@
     {
       "id": "10002",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_s.rq",
+      "queryLocation": "variableQueries/example_s.rq",
       "name": "Subjects",
       "description": "Gives at most 50 subjects in the indicated datasources",
       "comunicaContext": {
@@ -521,7 +521,7 @@
     {
       "id": "10003",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_p.rq",
+      "queryLocation": "variableQueries/example_p.rq",
       "name": "Predicates",
       "description": "Gives at most 50 predicates in the indicated datasources",
       "comunicaContext": {
@@ -536,7 +536,7 @@
     {
       "id": "10004",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_o.rq",
+      "queryLocation": "variableQueries/example_o.rq",
       "name": "Objects",
       "description": "Gives at most 50 objects in the indicated datasources",
       "comunicaContext": {
@@ -556,7 +556,7 @@
       "description": "Gives at most 50 triples with a given subject in the indicated datasources",
       "indirectVariables": {
         "queryLocations": [
-          "example_s.rq"
+          "variableQueries/example_s.rq"
         ]
       },
       "comunicaContext": {
@@ -576,7 +576,7 @@
       "description": "Gives at most 50 triples with a given predicate in the indicated datasources",
       "indirectVariables": {
         "queryLocations": [
-          "example_p.rq"
+          "variableQueries/example_p.rq"
         ]
       },
       "comunicaContext": {
@@ -596,7 +596,7 @@
       "description": "Gives at most 50 triples with a given object in the indicated datasources",
       "indirectVariables": {
         "queryLocations": [
-          "example_o.rq"
+          "variableQueries/example_o.rq"
         ]
       },
       "comunicaContext": {
@@ -616,7 +616,7 @@
       "description": "Gives at most 50 terms of a given rdf:type in the indicated datasources",
       "indirectVariables": {
         "queryLocations": [
-          "example_types.rq"
+          "variableQueries/example_types.rq"
         ]
       },
       "comunicaContext": {
