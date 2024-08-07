@@ -9,18 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- The possibility to add templated queries with indirect variables (#78).
-- The possibility to make custom templated queries with indirect variables (#78).
+- Templated queries can now have values for variables as a result of a query ("Indirect variables") (#78).
 
 ### Changed
 
 - Refactoring: isolated the Comunica engine with accompanying operations into a wrapper class (#152).
-- Updated the README.md with documentation for the indirect variables (#78).
-- Updated the Custom Editor's UI for a better user experience (e.g. for adding indirect sources and variables) (#78). 
 
 ### Fixed
 
-- Correct error display when the queryLocation is a non existing file or faultive (#147).
+- Correct error display when the queryLocation is a non existing file or faulty (#147).
 - Fixed a bug where editing a custom query did not correctly remove unchecked options (#150).
 
 ## [1.2.3] - 2024-07-11
