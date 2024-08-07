@@ -9,5 +9,6 @@ WHERE {
 		o:name ?componentName ;
 	  o:recycled-content-percentage ?recycledContentPercentage ;
 		.
+	FILTER(?componentName = $componentName) 	
 }
 ORDER BY ?componentName

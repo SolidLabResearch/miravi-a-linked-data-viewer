@@ -1,7 +1,7 @@
-import {useState} from 'react';
-import {useResourceContext} from "react-admin";
-import {useLocation, useNavigate} from 'react-router-dom';
-import {Component} from "react";
+import React, { useState, useEffect } from 'react';
+import { useResourceContext, Loading, useDataProvider } from "react-admin";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Component } from "react";
 import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
 import ListResultTable from "./ListResultTable.jsx";
 
@@ -13,37 +13,64 @@ import configManager from '../../configManager/configManager.js';
  * @returns {Component} the wrapper component
  */
 const TemplatedListResultTable = (props) => {
-  
+
+  const dataProvider = useDataProvider();
   const resource = useResourceContext();
+  const query = configManager.getQueryWorkingCopyById(resource);
+
   const location = useLocation();
   const navigate = useNavigate();
-  const [variables, setVariables] = useState({});
+  const [submittedVariables, setSubmittedVariables] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [searchPar, setSearchPar] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [queryVariables, setQueryVariables] = useState(query.variables);
 
-  const query = configManager.getQueryWorkingCopyById(resource);
-  const isTemplatedQuery = query.variables !== undefined;
-  let tableEnabled = !isTemplatedQuery;
-  
-  if (isTemplatedQuery) {
+
+  useEffect(() => {
+
+    const fetchQuery = async () => {
+
+      if (query.variables || query.indirectVariables){
+        // Handles the query variables (defined and indirect ones)
+        const vars = await dataProvider.indirectVariables(query);
+        setQueryVariables(vars);
+      }
+     
+      setLoading(false);
+    };
+
+    fetchQuery();
+  }, [resource]);
+
+  const areQueryVariablesLoaded = queryVariables !== undefined;
+  let tableEnabled = !areQueryVariablesLoaded;
+
+
+  //HERE THE CODE MUST WAIT UNTIL THE  `query.variables` ARE LOADED CORRECTLY
+  if (loading) {
+    return <Loading loadingSecondary={"The page is loading. Just a moment please."} />;
+  }
+
+  if (areQueryVariablesLoaded) {
     // Update variables from query parameters
     const queryParams = new URLSearchParams(location.search);
-    const queryVariables = {};
-    for (const variableName of Object.keys(query.variables)) {
+    const urlVariables = {};
+    for (const variableName of Object.keys(queryVariables)) {
       if (queryParams.has(variableName)) {
-        queryVariables[variableName] = queryParams.get(variableName);
+        urlVariables[variableName] = queryParams.get(variableName);
       }
     }
-    if (!equalSimpleObjects(variables, queryVariables)) {
-      setVariables(queryVariables);
+    if (!equalSimpleObjects(submittedVariables, urlVariables)) {
+      setSubmittedVariables(urlVariables);
     } else {
-      tableEnabled = (Object.keys(variables).length === Object.keys(query.variables).length);
+      tableEnabled = (Object.keys(submittedVariables).length === Object.keys(queryVariables).length);
     }
   }
 
-  const onSubmit = (formVariables) => {  
+  const onSubmit = (formVariables) => {
 
-    if (!submitted){
+    if (!submitted) {
       setSearchPar(formVariables);
     }
     // Update query parameters from the TemplatedQueryForm fields
@@ -54,9 +81,9 @@ const TemplatedListResultTable = (props) => {
       }
     }
 
-    const queryString= queryParams.toString();
+    const queryString = queryParams.toString();
     if (queryString.length > 0) {
-      if(!submitted) setSubmitted(true);
+      if (!submitted) setSubmitted(true);
 
       navigate(`?${queryString}`);
     }
@@ -69,15 +96,15 @@ const TemplatedListResultTable = (props) => {
 
   return (
     <>
-      {isTemplatedQuery && !tableEnabled && 
-        <TemplatedQueryForm 
-          variableOptions={query.variables} 
-          onSubmit={onSubmit} 
-          submitted={submitted} 
-          searchPar={searchPar} 
+      {areQueryVariablesLoaded && !tableEnabled &&
+        <TemplatedQueryForm
+          variableOptions={queryVariables}
+          onSubmit={onSubmit}
+          submitted={submitted}
+          searchPar={searchPar}
         />
       }
-      {tableEnabled && <ListResultTable {...props} resource={resource} variables={variables} changeVariables={changeVariables} submitted={submitted}/>}
+      {tableEnabled && <ListResultTable {...props} resource={resource} variables={submittedVariables} changeVariables={changeVariables} submitted={submitted} />}
     </>
   )
 }
@@ -99,5 +126,6 @@ function equalSimpleObjects(obj1, obj2) {
   }
   return true;
 }
+
 
 export default TemplatedListResultTable;

@@ -9,13 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Templated queries can now have values for variables as a result of a query ("Indirect variables") (#78).
+
 ### Changed
 
 - Refactoring: isolated the Comunica engine with accompanying operations into a wrapper class (#152).
 
 ### Fixed
 
-- Correct error display when the queryLocation is a non existing file or faultive (#147).
+- Correct error display when the queryLocation is a non existing file or faulty (#147).
 - Fixed a bug where editing a custom query did not correctly remove unchecked options (#150).
 
 ## [1.2.3] - 2024-07-11

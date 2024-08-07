@@ -11,6 +11,8 @@ Table of contents:
   * [Specifying sources](#specifying-sources)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
+    * [Templated queries with fixed values for the template variables](#templated-queries-with-fixed-values-for-the-template-variables)
+    * [Templated queries with values for the template variables to be derived from the data](#templated-queries-with-values-for-the-template-variables-to-be-derived-from-the-data)
   * [Query icons](#query-icons)
 * [Custom queries](#custom-queries)
 * [Representation Mapper](#representation-mapper)
@@ -120,8 +122,16 @@ The configuration file follows a simple structure.
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
-        "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"]
+        "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"],
+        "variableExampleInteger": ["1", "2"]
       },
+      "indirectVariables": {
+        "queryLocations": [
+          "Path to the location, relative to 'queryFolder' of a query yielding some template variable values",
+          ...
+        ]
+      },
+
       "askQuery": {
         "trueText": "The text that is to be shown when the query result is true (in ASK queries).",
         "falseText": "The text that is to be shown when the query result is false (in ASK queries)."
@@ -159,17 +169,50 @@ The underscore `_` here is crucial to make a clear distinction between name and 
 
 ### Templated queries
 
-This application supports queries whose contents are not completely fixed upfront: they contain variables whose value can be set interactively.
+This application supports templated queries: queries whose contents are not completely fixed upfront.
+They can contain *template variables*.
+A template variable is an identifier preceded by a `$` sign, e.g. `$genre`.
+Before submitting the SPARQL query, each template variable will be replaced by the actual value assigned to it interactively.
 
-To change a query into a templated query:
-- replace the fixed portion(s) of the query with (a) variable(s); a variable is an identifier preceded by a `$` sign, e.g. `$genre`
-- add a `variables` object in the query's entry in the configuration file
-- in the `variables` object, for each variable, add a property with name equal to the variable's identifier
-- set each such property's value to an array of possible values for the corresponding variable
+#### Templated queries with fixed values for the template variables
 
-Note that variables' values are not restricted to strings: URIs for example are alo possible.
+If all possible values for the template variables are fixed and hence can be written in the config file, proceed as follows.
+
+- Replace the fixed portion(s) of the original query with (a) template variable(s).
+- In the config file:
+  - Add a `variables` object in the query's entry in the configuration file.
+  - In the `variables` object, for each template variable, add a property with name equal to the template variable's identifier.
+  - Set each such property's value to an array strings, where each string is a possible value for the corresponding template variable.
+
+Note that template variables' values are not restricted to strings: URIs for example are also possible.
 As a consequence, for strings the surround double quotes `"` must be added to the values in the list.
+For URIs you must add surrounding angle brackets `<>`.
+Other literals (integers for example) don't have to be surrounded with extra delimiters.
 This is shown in the configuration structure above.
+
+#### Templated queries with values for the template variables to be derived from the data
+
+In most cases, the values for the template variables are not fixed, but depend on *the data to query*.
+For those cases, these values can be specified indirectly, by referring to one or more auxiliary queries.
+Proceed as follows.
+
+- Write one or more auxiliary queries that yield the values of the template variable(s).
+  The variable names in the SELECT statement must match the template variable names (e.g `?genre` for template variable `$genre`).
+- Replace the fixed portion(s) of the original query with (a) template variable(s).
+- In the config file:
+  - Add an `indirectVariables` object in the query's entry in the configuration file.
+  - In the `indirectVariables` object, add a property `queryLocations`: this must be an *array*,
+    listing the location(s) of the one or more auxiliary queries that you wrote.
+
+An example auxiliary query for the variable `$genre`, as used in one of the provided example templated queries:
+
+```text
+PREFIX schema: <http://schema.org/> 
+
+SELECT DISTINCT ?genre WHERE {
+  ?list schema:genre ?genre;
+} 
+```
 
 ### Query icons
 

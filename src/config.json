@@ -12,7 +12,7 @@
   "defaultIDP": "http://localhost:8080",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
-  "queryGroups" : [
+  "queryGroups": [
     {
       "id": "a-ex",
       "name": "General examples"
@@ -41,7 +41,9 @@
       "name": "My idols",
       "description": "Demonstrates a simple query, using a proxy",
       "comunicaContext": {
-        "sources": ["http://localhost:8001/example/idols"],
+        "sources": [
+          "http://localhost:8001/example/idols"
+        ],
         "useProxy": true
       }
     },
@@ -53,7 +55,9 @@
       "description": "Demonstrates how to show images in a query result",
       "icon": "PhotoIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/cute-cats"]
+        "sources": [
+          "http://localhost:8080/example/cute-cats"
+        ]
       }
     },
     {
@@ -64,7 +68,9 @@
       "description": "Demonstrates an ASK query",
       "icon": "BrushIcon",
       "comunicaContext": {
-        "sources": ["https://fragments.dbpedia.org/2016-04/en"]
+        "sources": [
+          "https://fragments.dbpedia.org/2016-04/en"
+        ]
       },
       "askQuery": {
         "trueText": "There is an artist who is inspired by Picasso!",
@@ -79,7 +85,9 @@
       "description": "Demonstrates a CONSTRUCT query",
       "icon": "BrushIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/artists"]
+        "sources": [
+          "http://localhost:8080/example/artists"
+        ]
       }
     },
     {
@@ -129,7 +137,9 @@
       "description": "Demonstrates a query whose source requires authentication",
       "icon": "MenuBookIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/favourite-books"]
+        "sources": [
+          "http://localhost:8080/example/favourite-books"
+        ]
       }
     },
     {
@@ -140,7 +150,9 @@
       "description": "Demonstrates a query whose source does not require authentication",
       "icon": "MenuBookIcon",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/wish-list"]
+        "sources": [
+          "http://localhost:8080/example/wish-list"
+        ]
       }
     },
     {
@@ -173,7 +185,27 @@
         ]
       },
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/favourite-musicians"]
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
+      "id": "1085",
+      "queryGroupId": "a-ex",
+      "queryLocation": "musicians_variables.rq",
+      "name": "A templated query about musicians (indirect variables)",
+      "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values",
+      "icon": "MusicNoteIcon",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
       }
     },
     {
@@ -212,13 +244,29 @@
         "queryLocation": "/sourceQueries/index_example_texon_only_source_AUTH.rq"
       }
     },
-
     {
       "id": "2000",
       "queryGroupId": "b-prj",
       "queryLocation": "components.rq",
       "name": "Components",
       "description": "Query components",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components"
+        ]
+      }
+    },
+    {
+      "id": "2001",
+      "queryGroupId": "b-prj",
+      "queryLocation": "components_variable.rq",
+      "name": "Components (select one)",
+      "description": "Query one component; select it by name",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq"
+        ]
+      },
       "comunicaContext": {
         "sources": [
           "http://localhost:8080/example/components"
@@ -238,6 +286,26 @@
           "http://localhost:8080/example/materials"
         ],
         "lenient": true
+      }
+    },
+    {
+      "id": "2011",
+      "queryGroupId": "b-prj",
+      "queryLocation": "component_material_variables.rq",
+      "name": "Component (select one) and percentage of a material (select one)",
+      "description": "Select a component by its name and a material by its name to see by what percentage the material is used in that component (empty result of not used)",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq",
+          "variableQueries/materials_name_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ]
       }
     },
     {
@@ -282,6 +350,25 @@
       }
     },
     {
+      "id": "9011",
+      "queryGroupId": "c-tst",
+      "queryLocation": "musicians_variables2.rq",
+      "name": "A templated query about musicians, two variables (indirect variables)",
+      "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values and with two variables",
+      "icon": "MusicNoteIcon",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq",
+          "variableQueries/musicians_sameAs_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
       "id": "9020",
       "queryGroupId": "c-tst",
       "queryLocation": "components_materials.rq",
@@ -303,7 +390,40 @@
           "http://localhost:8080/example/favourite-books",
           "http://localhost:8080/example/components"
         ],
-        "lenient" : true
+        "lenient": true
+      },
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only",
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+    {
+      "id": "9031",
+      "queryGroupId": "c-tst",
+      "queryLocation": "component_material_one_variable.rq",
+      "name": "Component and materials - 1 variable (indirect source & indirect variables)",
+      "description": "Query components (including details about materials) with the sources obtained from index files and variables from the sources",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq"
+        ]
+      },
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only",
+        "queryLocation": "/sourceQueries/index_example_texon_only_source.rq"
+      }
+    },
+    {
+      "id": "9032",
+      "queryGroupId": "c-tst",
+      "queryLocation": "component_material_variables.rq",
+      "name": "Component and materials - 2 variables (indirect source & indirect variables)",
+      "description": "Query components (including details about materials) with the sources obtained from index files and variables from the sources",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq",
+          "variableQueries/materials_name_variable.rq"
+        ]
       },
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only",
@@ -330,7 +450,27 @@
       "name": "A test on counting the total number results",
       "description": "Query a source containing ?s ?p1 ?o and ?s ?p2 ?o with p1 != p2 and request only ?s ?o",
       "comunicaContext": {
-        "sources": ["http://localhost:8080/example/dup1"]
+        "sources": [
+          "http://localhost:8080/example/dup1"
+        ]
+      }
+    },
+    {
+      "id": "9070",
+      "queryGroupId": "c-tst",
+      "queryLocation": "example_spox.rq",
+      "name": "Triples with object, objects of different types",
+      "description": "Gives at most 50 triples with a given object in the indicated datasources",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_o.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/test-objects"
+        ],
+        "lenient": true
       }
     },
     {
@@ -366,7 +506,7 @@
     {
       "id": "10002",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_s.rq",
+      "queryLocation": "variableQueries/example_s.rq",
       "name": "Subjects",
       "description": "Gives at most 50 subjects in the indicated datasources",
       "comunicaContext": {
@@ -381,7 +521,7 @@
     {
       "id": "10003",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_p.rq",
+      "queryLocation": "variableQueries/example_p.rq",
       "name": "Predicates",
       "description": "Gives at most 50 predicates in the indicated datasources",
       "comunicaContext": {
@@ -396,7 +536,7 @@
     {
       "id": "10004",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_o.rq",
+      "queryLocation": "variableQueries/example_o.rq",
       "name": "Objects",
       "description": "Gives at most 50 objects in the indicated datasources",
       "comunicaContext": {
@@ -414,12 +554,9 @@
       "queryLocation": "example_sxpo.rq",
       "name": "Triples with subject",
       "description": "Gives at most 50 triples with a given subject in the indicated datasources",
-      "variables": {
-        "subject": [
-          "<https://www.example.com/data/component-bom-b01>",
-          "<https://www.example.com/data/component-c01>",
-          "<https://www.example.com/data/component-material-assoc-b01-m01>",
-          "<https://www.example.com/data/material-m01>"
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_s.rq"
         ]
       },
       "comunicaContext": {
@@ -437,14 +574,9 @@
       "queryLocation": "example_spxo.rq",
       "name": "Triples with predicate",
       "description": "Gives at most 50 triples with a given predicate in the indicated datasources",
-      "variables": {
-        "predicate": [
-          "<https://www.example.com/ont/has-component-bom>",
-          "<https://www.example.com/ont/has-component-material-assoc>",
-          "<https://www.example.com/ont/has-material>",
-          "<https://www.example.com/ont/name>",
-          "<https://www.example.com/ont/percentage>",
-          "<https://www.example.com/ont/recycled-content-percentage>"
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_p.rq"
         ]
       },
       "comunicaContext": {
@@ -462,19 +594,9 @@
       "queryLocation": "example_spox.rq",
       "name": "Triples with object",
       "description": "Gives at most 50 triples with a given object in the indicated datasources",
-      "variables": {
-        "object": [
-          "<https://www.example.com/data/component-bom-b01>",
-          "<https://www.example.com/data/component-material-assoc-b01-m01>",
-          "<https://www.example.com/data/material-m01>",
-          "<https://www.example.com/ont/Component>",
-          "<https://www.example.com/ont/component-bom>",
-          "<https://www.example.com/ont/component-material-assoc>",
-          "0",
-          "20",
-          "80",
-          "\"Component 1\"",
-          "\"Material 1\""
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_o.rq"
         ]
       },
       "comunicaContext": {
@@ -489,14 +611,12 @@
     {
       "id": "10008",
       "queryGroupId": "d-gqx",
-      "queryLocation": "example_type.rq",
+      "queryLocation": "example_terms_of_type.rq",
       "name": "Terms of type",
       "description": "Gives at most 50 terms of a given rdf:type in the indicated datasources",
-      "variables": {
-        "type": [
-          "<https://www.example.com/ont/component-bom>",
-          "<https://www.example.com/ont/Component>",
-          "<https://www.example.com/ont/component-material-assoc>"
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_types.rq"
         ]
       },
       "comunicaContext": {
