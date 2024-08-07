@@ -51,7 +51,7 @@ SELECT DISTINCT ?genre
 WHERE {
   ?list schema:genre ?genre
 }
-ORDER BY ?genre"`;
+ORDER BY ?genre`;
   const [indirectVariableSourceList, setIndirectVariableSourceList] = useState([defaultSparqlQueryIndirectVariables]);
 
   const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
