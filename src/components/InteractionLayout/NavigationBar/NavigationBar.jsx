@@ -13,7 +13,6 @@ import comunicaEngineWrapper from "../../../comunicaEngineWrapper/comunicaEngine
 function InvalidateButton() {
   const refresh = useRefresh();
   const handleClick = () => {
-    //SparqlDataProvider.queryEngine.invalidateHttpCache();
     comunicaEngineWrapper.reset();
     setTimeout(refresh, 2000);
   }
