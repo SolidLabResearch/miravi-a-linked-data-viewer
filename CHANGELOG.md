@@ -10,11 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - The possibility to add templated queries with indirect variables (#78).
+- The possibility to make custom templated queries with indirect variables (#78).
 
 ### Changed
 
 - Refactoring: isolated the Comunica engine with accompanying operations into a wrapper class (#152).
 - Updated the README.md with documentation for the indirect variables (#78).
+- Updated the Custom Editor's UI for a better user experience (e.g. for adding indirect sources and variables) (#78). 
 
 ### Fixed
 

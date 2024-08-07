@@ -147,6 +147,7 @@ class ConfigManager extends EventEmitter {
     if (query.queryString) {
 
       // WEIRD: figured that the queryString was too fast or something? so this simulates a promise like the fetchQuery
+          // => 1 milisecond does not impact the flow at all, at the contrary it fixes a weird issue... 
       await new Promise(resolve => setTimeout(resolve, 1));
       return query.queryString;
     }

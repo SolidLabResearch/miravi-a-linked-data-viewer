@@ -47,7 +47,7 @@ const TemplatedListResultTable = (props) => {
   let tableEnabled = !areQueryVariablesLoaded;
 
 
-  //HERE THE CODE MUST WAIT UNTIL THE  query.variables ARE LOADED CORRECTLY
+  //HERE THE CODE MUST WAIT UNTIL THE  `query.variables` ARE LOADED CORRECTLY
   if (loading) {
     return <Loading loadingSecondary={"The page is loading. Just a moment please."} />;
   }

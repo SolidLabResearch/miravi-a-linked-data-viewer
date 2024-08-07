@@ -217,7 +217,7 @@ ORDER BY ?genre"`;
       queryGroupId: "cstm",
       icon: "AutoAwesomeIcon",
     });
-      navigate(`/${creationID}`)
+    navigate(`/${creationID}`)
   };
 
   const updateQuery = (formData, customQuery) => {
@@ -496,7 +496,6 @@ ORDER BY ?genre"`;
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
             <Typography variant="h5" sx={{ mt: 2 }}> Extra Options</Typography>
             <div>
-
 
               <FormControlLabel
                 control={<Checkbox
