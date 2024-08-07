@@ -122,7 +122,8 @@ The configuration file follows a simple structure.
       },
       "variables": {
         "variableExampleString": ["\"String1\"", "\"String2\""],
-        "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"]
+        "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"],
+        "variableExampleInteger": ["1", "2"]
       },
       "indirectVariables": {
         "queryLocations": [
@@ -181,11 +182,12 @@ If all possible values for the template variables are fixed and hence can be wri
 - In the config file:
   - Add a `variables` object in the query's entry in the configuration file.
   - In the `variables` object, for each template variable, add a property with name equal to the template variable's identifier.
-  - Set each such property's value to an array of possible values for the corresponding template variable.
+  - Set each such property's value to an array strings, where each string is a possible value for the corresponding template variable.
 
 Note that template variables' values are not restricted to strings: URIs for example are also possible.
 As a consequence, for strings the surround double quotes `"` must be added to the values in the list.
 For URIs you must add surrounding angle brackets `<>`.
+Other literals (integers for example) don't have to be surrounded with extra delimiters.
 This is shown in the configuration structure above.
 
 #### Templated queries with values for the template variables to be derived from the data
