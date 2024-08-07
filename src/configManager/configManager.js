@@ -143,6 +143,8 @@ class ConfigManager extends EventEmitter {
       const fetchResult = await fetch(`${this.config.queryFolder}${query.queryLocation}`);
       return await fetchResult.text();
     }
+
+    // weird that i got to await this to work
     return await query.queryString;
   }
 

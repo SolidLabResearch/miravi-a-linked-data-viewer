@@ -8,11 +8,13 @@ import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
 
 import configManager from "../../../configManager/configManager";
+import comunicaEngineWrapper from "../../../comunicaEngineWrapper/comunicaEngineWrapper";
 
 function InvalidateButton() {
   const refresh = useRefresh();
   const handleClick = () => {
-    SparqlDataProvider.queryEngine.invalidateHttpCache();
+    //SparqlDataProvider.queryEngine.invalidateHttpCache();
+    comunicaEngineWrapper.reset();
     setTimeout(refresh, 2000);
   }
   return (
