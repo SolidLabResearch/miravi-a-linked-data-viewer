@@ -144,10 +144,16 @@ class ConfigManager extends EventEmitter {
       return await fetchResult.text();
     }
 
-    // weird that i got to await this to work
-    return await query.queryString;
-  }
+    if (query.queryString) {
 
+      // WEIRD: figured that the queryString was too fast or something? so this simulates a promise like the fetchQuery
+      await new Promise(resolve => setTimeout(resolve, 1));
+      return query.queryString;
+    }
+
+    return undefined;
+
+  }
 }
 
 const configManager = new ConfigManager();
