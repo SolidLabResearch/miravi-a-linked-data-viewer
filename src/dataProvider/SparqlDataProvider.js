@@ -215,7 +215,7 @@ async function executeQuery(query) {
       results.push(newResult);
     };
     await comunicaEngineWrapper.query(query.queryText,
-      // !!! we need to make a copy of the context here (a shallow copy is fine); reason: concurrent calls
+       // WEIRD: we need to make a copy of the context here (a shallow copy is fine); concurrent calls ???
       { ...query.comunicaContext },
       { "variables": callbackVariables, "bindings": callbackBindings, "quads": callbackQuads });
     return results;
