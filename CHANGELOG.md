@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2024-08-07
+
 ### Added
 
 - Templated queries can now have values for variables as a result of a query ("Indirect variables") (#78).
@@ -166,4 +168,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.2.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.1
 [1.2.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.2
 [1.2.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.3
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.2.3...HEAD
+[1.3.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.0
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.3.0...HEAD
