@@ -8,9 +8,10 @@ import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import { SvgIcon, Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import CustomQueryEditButton from "../../Dashboard/CustomQueryEditor/customQueryEditButton";
+import CustomQueryEditButton from "../../CustomQueryEditor/customQueryEditButton";
 import IconProvider from "../../../IconProvider/IconProvider";
 import configManager from "../../../configManager/configManager";
+import CustomConversionButton from "../../CustomQueryEditor/customConversionButton";
 
 /**
  * @param {object} props - the props passed down to the component
@@ -39,7 +40,7 @@ function QueryResultList(props) {
       <Title title={config.title} />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         {submitted && <Aside changeVariables={changeVariables} />}
-        {resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name} submitted={submitted} />}
+        {resourceDef.options.queryGroupId === 'cstm' ? <CustomQueryEditButton queryID={resourceDef.name} submitted={submitted} /> : <CustomConversionButton query={query} id={resourceDef.name}/>}
       </div>
       <Typography fontSize={"2rem"} mt={2} > {queryTitle} </Typography>
       {values ? (

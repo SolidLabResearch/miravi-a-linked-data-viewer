@@ -21,6 +21,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 
 export default {
   BrushIcon,
@@ -45,5 +46,6 @@ export default {
   TuneIcon,
   SaveAsIcon,
   InfoIcon,
-  CloseIcon
+  CloseIcon,
+  SettingsSuggestIcon
 };
