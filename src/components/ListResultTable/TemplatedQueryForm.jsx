@@ -2,7 +2,7 @@ import {Toolbar, SaveButton, SelectInput, SimpleForm, required, useResourceDefin
 import DoneIcon from '@mui/icons-material/Done';
 import {Component, useEffect} from "react";
 import PropTypes from "prop-types";
-import CustomQueryEditButton from "../Dashboard/CustomQueryEditor/customQueryEditButton";
+import CustomQueryEditButton from "../CustomQueryEditor/customQueryEditButton";
 
 const MyToolbar = () => (
   <Toolbar>

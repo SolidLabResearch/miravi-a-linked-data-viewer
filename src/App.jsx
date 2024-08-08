@@ -15,7 +15,7 @@ import InteractionLayout from "./components/InteractionLayout/InteractionLayout"
 import TemplatedListResultTable from "./components/ListResultTable/TemplatedListResultTable.jsx";
 
 import { Route } from "react-router-dom";
-import CustomEditor from "./components/Dashboard/CustomQueryEditor/customEditor.jsx";
+import CustomEditor from "./components/CustomQueryEditor/customEditor.jsx";
 
 import configManager from "./configManager/configManager.js";
 

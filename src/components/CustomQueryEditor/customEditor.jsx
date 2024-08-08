@@ -7,8 +7,8 @@ import { CardActions, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import configManager from '../../../configManager/configManager';
-import IconProvider from '../../../IconProvider/IconProvider';
+import configManager from '../../configManager/configManager';
+import IconProvider from '../../IconProvider/IconProvider';
 
 
 export default function CustomEditor(props) {

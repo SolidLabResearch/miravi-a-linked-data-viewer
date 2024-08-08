@@ -7,8 +7,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
-import IconProvider from '../../../IconProvider/IconProvider';
-import configManager from '../../../configManager/configManager';
+import IconProvider from '../../IconProvider/IconProvider';
+import configManager from '../../configManager/configManager';
 
 import TextField from '@mui/material/TextField';
 
