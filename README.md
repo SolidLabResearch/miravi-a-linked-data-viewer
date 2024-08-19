@@ -224,16 +224,25 @@ Nevertheless, you can use any React component you want, just make sure it's a fu
 
 ## Custom queries
 
-Besides the prepared queries in the configuration file, a user can edit custom queries:
+Besides the prepared queries in the configuration file, a user can create and edit custom queries, either from scratch or based on an existing query.
 
-- To create a custom query, open "Custom Query Editor" from the menu on the left.
-- Complete the custom query editor form and click the "CREATE QUERY" button when ready.
-- Your new query is added to the "Custom queries" group and you are redirected to the query's result view.
-- If not satisfied with the query result, you can click "EDIT QUERY" to further edit your query.
-  When saving changes, the result is recalculated.
-- Because the custom query only lives as long as your browser remembers it, a "SAVE QUERY LINK" button is provided.
-  Use it to generate a unique URL for this custom query. Copy that URL to your clipboard and save it.
-  You can then visit that URL any time later, to recreate this query.
+- To create a new custom query from scratch:
+  - Open "Custom Query Editor" from the menu on the left.
+  - Complete the custom query editor form and click the "CREATE QUERY" button when ready.
+  - Your new query is added to the "Custom queries" group and you are redirected to the query's result view.
+  - If not satisfied with the query result, you can click "EDIT QUERY" to further edit your query.
+    When saving changes, the result is recalculated.
+
+- To create a new custom query based on an existing query:
+  - Open the existing query.
+  - Click "CLONE AS CUSTOM QUERY" (in a normal query) or "CLONE" (in a custom query).
+  - Make the desired changes in the form and click the "CREATE QUERY" button when ready. The new custom query behaves as if it were created from scratch.
+
+- To reproduce a custom query later, a "SAVE QUERY LINK" button is provided.
+  Use it to generate a unique URL for this custom query.
+  Visiting that URL any time later, recreates a custom query with the same specifications.
+  This may be useful to forward a custom query to another user.
+
 - To clean up an unwanted custom query, there is always a button "DELETE QUERY"...  
 
 ## Representation Mapper
