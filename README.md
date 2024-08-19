@@ -224,7 +224,8 @@ Nevertheless, you can use any React component you want, just make sure it's a fu
 
 ## Custom queries
 
-Besides the prepared queries in the configuration file, a user can create and edit custom queries, either from scratch or based on an existing query.
+The configuration file contains prepared, fixed queries.
+In addition, a user can create and edit custom queries, either from scratch or based on an existing query.
 
 - To create a new custom query from scratch:
   - Open "Custom Query Editor" from the menu on the left.
