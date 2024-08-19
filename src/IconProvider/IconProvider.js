@@ -23,6 +23,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import FilterNoneIcon from '@mui/icons-material/FilterNone';
 
 export default {
   BrushIcon,
@@ -49,5 +50,6 @@ export default {
   InfoIcon,
   CloseIcon,
   SettingsSuggestIcon,
-  ChevronLeftIcon
+  ChevronLeftIcon,
+  FilterNoneIcon
 };

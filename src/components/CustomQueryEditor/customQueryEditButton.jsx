@@ -12,7 +12,7 @@ import configManager from '../../configManager/configManager';
 
 import TextField from '@mui/material/TextField';
 
-export default function CustomQueryEditButton({ queryID, submitted=false }) {
+export default function CustomQueryEditButton({ queryID, submitted = false }) {
 
     const customQuery = configManager.getQueryById(queryID);
     const navigate = useNavigate();
@@ -43,6 +43,16 @@ export default function CustomQueryEditButton({ queryID, submitted=false }) {
         setCopyUrl(savedUrl);
     }
 
+    const handleDuplication = () => {
+        
+        const parameterDuplicate = new URLSearchParams(customQuery.searchParams); 
+
+        const newName = "(Cloned) " + parameterDuplicate.get('name')
+        parameterDuplicate.set('name', newName)
+
+        navigate(`/customQuery?${parameterDuplicate.toString()}`)
+    }
+
     const handleSaveClose = () => {
         setSaveOpen(false)
         setFeedback('')
@@ -61,32 +71,45 @@ export default function CustomQueryEditButton({ queryID, submitted=false }) {
     return (
         <React.Fragment>
             <Box display="flex" justifyContent="flex-end" width={submitted ? '80%' : '100%'} >
-                
-                    <Button variant="outlined" startIcon={<IconProvider.ModeEditIcon />} onClick={
-                        () => {
-                            handleEditClick()
-                        }}
-                        sx={{ margin: '10px' }}>
-                        Edit Query
-                    </Button>
-                
-                    <Button variant="outlined" color="success" startIcon={<IconProvider.SaveIcon />} onClick={
-                        () => {
-                            handleSave()
-                            setSaveOpen(true)
-                        }}
-                        sx={{ margin: '10px' }}>
-                        Save Query Link
-                    </Button>
 
-                    <Button variant="outlined" color="error" startIcon={<IconProvider.DeleteIcon />} onClick={
-                        () => {
-                            setDeleteOpen(true)
-                        }}
-                        sx={{ margin: '10px' }}>
-                        Delete Query
-                    </Button>
-                
+                <Button variant="outlined" startIcon={<IconProvider.ModeEditIcon />} onClick={
+                    () => {
+                        handleEditClick()
+                    }}
+                    sx={{ margin: '10px' }}>
+                    Edit Query
+                </Button>
+
+                <Button variant="outlined" color="success" startIcon={<IconProvider.SaveIcon />} onClick={
+                    () => {
+                        handleSave()
+                        setSaveOpen(true)
+                    }}
+                    sx={{ margin: '10px' }}>
+                    Save Query Link
+                </Button>
+
+                <Button
+                    variant="outlined"
+                    color="warning"
+                    onClick={
+                       () => { handleDuplication() }
+                    }
+                    type="button"
+                    startIcon={<IconProvider.FilterNoneIcon />}
+                    sx={{ margin: '10px'}}
+                >
+                    Clone
+                </Button>
+
+                <Button variant="outlined" color="error" startIcon={<IconProvider.DeleteIcon />} onClick={
+                    () => {
+                        setDeleteOpen(true)
+                    }}
+                    sx={{ margin: '10px' }}>
+                    Delete Query
+                </Button>
+
             </Box>
 
             <Dialog

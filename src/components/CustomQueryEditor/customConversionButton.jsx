@@ -30,7 +30,7 @@ export default function CustomConversionButton({ id }) {
         // The id and group have to be deleted because a new custom query is going to be made. Name is modified.
         delete convertedQuery.id
         delete convertedQuery.queryGroupId
-        convertedQuery.name = `(Derived from) ${convertedQuery.name}`
+        convertedQuery.name = `(Cloned from) ${convertedQuery.name}`
 
         // Generate the search parameters so that we can create a custom query.
         const searchParams = handleSearchParams(convertedQuery)
@@ -146,7 +146,7 @@ export default function CustomConversionButton({ id }) {
                 startIcon={<IconProvider.SettingsSuggestIcon />}
                 sx={{ marginTop: '10px' , marginBottom: '10px'}}
             >
-                Customize
+                Clone as custom query
             </Button>
         </Box>
     )
