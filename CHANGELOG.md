@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The possibility to create a custom query from an existing query and to clone a custom query (#141).
+
+### Changed
+
+### Fixed
+
+
 ## [1.3.0] - 2024-08-07
 
 ### Added
