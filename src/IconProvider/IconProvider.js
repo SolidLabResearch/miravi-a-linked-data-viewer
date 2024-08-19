@@ -22,6 +22,7 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 export default {
   BrushIcon,
@@ -47,5 +48,6 @@ export default {
   SaveAsIcon,
   InfoIcon,
   CloseIcon,
-  SettingsSuggestIcon
+  SettingsSuggestIcon,
+  ChevronLeftIcon
 };

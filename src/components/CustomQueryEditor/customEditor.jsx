@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { CardActions, Typography } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -545,17 +546,35 @@ ORDER BY ?genre`;
         )}
 
         <CardActions>
+          <Box display="flex" justifyContent="space-between" width="100%" sx={{ marginX: '10px' }}>
+            <Button variant="contained" type="submit" startIcon={props.newQuery ? <IconProvider.AddIcon /> : <IconProvider.SaveAsIcon />}>
+              {props.newQuery ? 'Create Query' : 'Save Changes'}
+            </Button>
 
-          <Button variant="contained" type="submit" startIcon={props.newQuery ? <IconProvider.AddIcon /> : <IconProvider.SaveAsIcon />}>
-            {props.newQuery ? 'Create Query' : 'Save Changes'}
-          </Button>
+            {
+              props.newQuery ?
 
-          {
-            props.newQuery ? null :
-              <Button variant="outlined" color='error' onClick={() => { navigate(`/${props.id}/`) }} startIcon={<IconProvider.CloseIcon />}>
-                {'Cancel'}
-              </Button>
-          }
+                <Button
+                  variant="outlined"
+                  onClick={() => { navigate(-1) }}
+                  startIcon={<IconProvider.ChevronLeftIcon />}
+                >
+                  Go Back
+                </Button>
+
+                :
+                
+                <Button
+                  variant="outlined"
+                  color='error'
+                  onClick={() => { navigate(`/${props.id}/`) }}
+                  startIcon={<IconProvider.CloseIcon />}
+                >
+                  Cancel
+                </Button>
+            }
+
+          </Box>
         </CardActions>
 
       </Card>
