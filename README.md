@@ -24,51 +24,53 @@ Table of contents:
 
 ## Preface
 
-This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `aux`.
-
-All commands shown in this README are preceded by a prompt, indicating the expected working directory for the command.
+This repository defines a Web application in the directory **main** and some auxiliary tools for testing and supporting a demo in the directory **aux**.
 
 ## Getting Started
+
+Go to directory **main**.
 
 To install the application:
 
 ```bash
-main$ npm install
-```
-
-To install the auxiliary tools:
-
-```bash
-aux$ npm install
+npm install
 ```
 
 To run the Web application in development mode:
 
 ```bash
-main$ npm run dev
+npm run dev
 ```
 
 Now you can browse the displayed URL.
 
-To see the queries provided in the example configuration `main/src/config.json` at work,
-you also need to activate the supporting resources:
+The queries provided in the example configuration `main/src/config.json` access data located in pods at localhost.
+To have these up and running, you need to install the auxiliary tools first.
+
+Go to directory **aux** and execute:
+
+```bash
+npm install
+```
+
+Next, also in directory **aux**,  activate the supporting resources:
 
 1. In a new terminal window, prepare and start the local pods:
 
    ```bash
-   aux$ npm run reset:pods && npm run start:pods
+   npm run reset:pods && npm run start:pods
    ```
 
 2. In a new terminal window, start the http proxy:
 
    ```bash
-   aux$ npm run start:proxy
+   npm run start:proxy
    ```
 
 3. In a new terminal window, start a server which denies all CORS headers:
 
    ```bash
-   aux$ npm run start:badCors
+   npm run start:badCors
    ```
 
 Some queries require a log in.
@@ -76,10 +78,12 @@ Log in with the IDP `http://localhost:8080` and the credentials for the user own
 
 ## Static, production build
 
-To make a standalone version of the result of this project, you can make a static build and serve it using any webserver. Execute:
+To make a standalone version of the result of this project, you can make a static build and serve it using any webserver.
+
+In directory **main**, execute:
 
 ```bash
-main$ npm run build
+npm run build
 ```
 
 The static build appears in the `dist` folder.
@@ -300,7 +304,7 @@ You can make use of these for your own tests. Follow these steps:
 
 * Add your data and `.acl` files in the `aux/initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
-* Prepare the pods by executing `aux$ npm run reset:pods`.
+* Prepare the pods by executing `npm run reset:pods` in directory **aux**.
 
 ## Testing
 
@@ -314,42 +318,53 @@ The development version might be tested repeatedly during development.
 
 1. Build the production version of the Web application and serve it:
 
+   In directory **main**:
+
    ```bash
    # make really, really sure to build from scratch
-   main$ rm -rf node_modules/
-   main$ rm -rf dist/
-   main$ npm install
+   rm -rf node_modules/
+   rm -rf dist/
+   npm install
    # build
-   main$ npm run build
-   # serve
-   aux npx http-server -p 5173 ../main/dist
+   npm run build
    ```
 
-2. In a new terminal window, prepare and start the local pods:
+   In directory **aux**:
 
    ```bash
-   aux$ npm run reset:pods && npm run start:pods
+   npx http-server -p 5173 ../main/dist
    ```
 
-3. In a new terminal window, start the http proxy:
+2. In a new terminal window, in directory **aux**, prepare and start the local pods:
 
    ```bash
-   aux$ npm run start:proxy
+   npm run reset:pods && npm run start:pods
    ```
 
-4. In a new terminal window, start a server which denies all CORS headers:
+3. In a new terminal window, in directory **aux**,  start the http proxy:
 
    ```bash
-   aux$ npm run start:badCors
+   npm run start:proxy
    ```
 
-5. Finally, in a new terminal window, you can execute the tests by running:
+4. In a new terminal window, in directory **aux**,  start a server which denies all CORS headers:
 
    ```bash
-   ## for normal test execution:
-   aux$ npm run test
-   ## for interactive testing:
-   aux$ npm run test:interactive
+   npm run start:badCors
+   ```
+
+5. Finally, in a new terminal window, in directory **aux**, you can execute the tests by running:
+
+   For normal test execution:
+
+   ```bash
+   npm run test
+   ```
+
+   For interactive testing:
+
+   ```bash
+   npm run test:interactive
    ```
 
 ### Testing the development version
@@ -358,6 +373,8 @@ The procedure is the same as for testing the production version, except for step
 
 1. Start the Web application in development mode:
 
+   In directory **main**:
+
    ```bash
-   main$ npm run dev
+   npm run dev
    ```
