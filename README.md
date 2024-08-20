@@ -4,6 +4,7 @@ This Web app allows users to easily execute queries over multiple data sources (
 inspect the corresponding results.
 
 Table of contents:
+* [Preface](#preface)
 * [Getting Started](#getting-started)
 * [Static, production build](#static-production-build)
 * [Logging in](#logging-in)
@@ -21,7 +22,13 @@ Table of contents:
   * [Testing the production version](#testing-the-production-version)
   * [Testing the development version](#testing-the-development-version)
 
+## Preface
+
+This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `aux`.
+
 ## Getting Started
+
+Go to directory `main`.
 
 To install the application:
 
@@ -37,8 +44,16 @@ npm run dev
 
 Now you can browse the displayed URL.
 
-To see the queries provided in the example configuration `src/config.json` at work,
-you also need to activate the supporting resources:
+The queries provided in the example configuration `main/src/config.json` access data located in pods at localhost.
+To have these up and running, you need to install the auxiliary tools first.
+
+Go to directory `aux` and execute:
+
+```bash
+npm install
+```
+
+Next, also in directory `aux`,  activate the supporting resources:
 
 1. In a new terminal window, prepare and start the local pods:
 
@@ -59,11 +74,13 @@ you also need to activate the supporting resources:
    ```
 
 Some queries require a log in.
-Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `seeded-pod-config.json`.
+Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `aux/seeded-pod-config.json`.
 
 ## Static, production build
 
-To make a standalone version of the result of this project, you can make a static build and serve it using any webserver. Execute:
+To make a standalone version of the result of this project, you can make a static build and serve it using any webserver.
+
+In directory `main`, execute:
 
 ```bash
 npm run build
@@ -80,7 +97,7 @@ If you provide a WebID, the first Identity Provider found in the given WebID is 
 
 ## Configuration file
 
-The configuration file follows a simple structure.
+The configuration file `main/src/config.json` follows a simple structure.
 
 ```json
 {
@@ -146,8 +163,8 @@ The configuration file follows a simple structure.
 
 The set of sources over which a query will be executed is derived from two *optional* inputs in a query entry:
 
-- `comunicaContext.sources`: an array of sources, known at the time of writing the config file;
-- `sourceIndex`: describes an external RDF resource, from which sources are derived at execution time.
+* `comunicaContext.sources`: an array of sources, known at the time of writing the config file;
+* `sourceIndex`: describes an external RDF resource, from which sources are derived at execution time.
 
 If both inputs are present, the query will be executed over the superset of sources.
 
@@ -178,11 +195,11 @@ Before submitting the SPARQL query, each template variable will be replaced by t
 
 If all possible values for the template variables are fixed and hence can be written in the config file, proceed as follows.
 
-- Replace the fixed portion(s) of the original query with (a) template variable(s).
-- In the config file:
-  - Add a `variables` object in the query's entry in the configuration file.
-  - In the `variables` object, for each template variable, add a property with name equal to the template variable's identifier.
-  - Set each such property's value to an array strings, where each string is a possible value for the corresponding template variable.
+* Replace the fixed portion(s) of the original query with (a) template variable(s).
+* In the config file:
+  * Add a `variables` object in the query's entry in the configuration file.
+  * In the `variables` object, for each template variable, add a property with name equal to the template variable's identifier.
+  * Set each such property's value to an array strings, where each string is a possible value for the corresponding template variable.
 
 Note that template variables' values are not restricted to strings: URIs for example are also possible.
 As a consequence, for strings the surround double quotes `"` must be added to the values in the list.
@@ -196,12 +213,12 @@ In most cases, the values for the template variables are not fixed, but depend o
 For those cases, these values can be specified indirectly, by referring to one or more auxiliary queries.
 Proceed as follows.
 
-- Write one or more auxiliary queries that yield the values of the template variable(s).
+* Write one or more auxiliary queries that yield the values of the template variable(s).
   The variable names in the SELECT statement must match the template variable names (e.g `?genre` for template variable `$genre`).
-- Replace the fixed portion(s) of the original query with (a) template variable(s).
-- In the config file:
-  - Add an `indirectVariables` object in the query's entry in the configuration file.
-  - In the `indirectVariables` object, add a property `queryLocations`: this must be an *array*,
+* Replace the fixed portion(s) of the original query with (a) template variable(s).
+* In the config file:
+  * Add an `indirectVariables` object in the query's entry in the configuration file.
+  * In the `indirectVariables` object, add a property `queryLocations`: this must be an *array*,
     listing the location(s) of the one or more auxiliary queries that you wrote.
 
 An example auxiliary query for the variable `$genre`, as used in one of the provided example templated queries:
@@ -218,7 +235,7 @@ SELECT DISTINCT ?genre WHERE {
 
 In the selection menu the name of the query is proceeded by an icon.
 You configure this icon per query in the configuration file.  
-For this to work you need to add the icon to the exports in [IconProvider.js](./src/IconProvider/IconProvider.js).
+For this to work you need to add the icon to the exports in [IconProvider.js](./main/src/IconProvider/IconProvider.js).
 We advise to use the [Material UI icons](https://material-ui.com/components/material-icons/) as this is what's used internally in `react-admin` and it is also included in the dependencies.
 Nevertheless, you can use any React component you want, just make sure it's a functional component.
 
@@ -227,29 +244,29 @@ Nevertheless, you can use any React component you want, just make sure it's a fu
 The configuration file contains prepared, fixed queries.
 In addition, a user can create and edit custom queries, either from scratch or based on an existing query.
 
-- To create a new custom query from scratch:
-  - Open "Custom Query Editor" from the menu on the left.
-  - Complete the custom query editor form and click the "CREATE QUERY" button when ready.
-  - Your new query is added to the "Custom queries" group and you are redirected to the query's result view.
-  - If not satisfied with the query result, you can click "EDIT QUERY" to further edit your query.
+* To create a new custom query from scratch:
+  * Open "Custom Query Editor" from the menu on the left.
+  * Complete the custom query editor form and click the "CREATE QUERY" button when ready.
+  * Your new query is added to the "Custom queries" group and you are redirected to the query's result view.
+  * If not satisfied with the query result, you can click "EDIT QUERY" to further edit your query.
     When saving changes, the result is recalculated.
 
-- To create a new custom query based on an existing query:
-  - Open the existing query.
-  - Click "CLONE AS CUSTOM QUERY" (in a normal query) or "CLONE" (in a custom query).
-  - Make the desired changes in the form and click the "CREATE QUERY" button when ready. The new custom query behaves as if it were created from scratch.
+* To create a new custom query based on an existing query:
+  * Open the existing query.
+  * Click "CLONE AS CUSTOM QUERY" (in a normal query) or "CLONE" (in a custom query).
+  * Make the desired changes in the form and click the "CREATE QUERY" button when ready. The new custom query behaves as if it were created from scratch.
 
-- To reproduce a custom query later, a "SAVE QUERY LINK" button is provided.
+* To reproduce a custom query later, a "SAVE QUERY LINK" button is provided.
   Use it to generate a unique URL for this custom query.
   Visiting that URL any time later, recreates a custom query with the same specifications.
   This may be useful to forward a custom query to another user.
 
-- To clean up an unwanted custom query, there is always a button "DELETE QUERY"...  
+* To clean up an unwanted custom query, there is always a button "DELETE QUERY"...  
 
 ## Representation Mapper
 
 If you want to add your own type representations
-you can do this by adding your representation to the [representationProvider.js](./src/representationProvider/representationProvider.js) file.
+you can do this by adding your representation to the [representationProvider.js](./main/src/representationProvider/representationProvider.js) file.
 This can be useful for example when querying images.
 The result of the query is a reference to the image.
 By mapping a representation we can show the actual image instead of the reference.
@@ -267,12 +284,12 @@ With `typeName` being the name of the variable as defined in the `query`
 which is defined in [the configuration file](#configuration-file).
 The function `mapperComponent` takes the query result for the corresponding variable and
 returns either a [React](https://react.dev/) component (see below).
-Examples of how you can do this can already be found in the [representationProvider components folder](./src/representationProvider/components/).
+Examples of how you can do this can already be found in the [representationProvider components folder](./main/src/representationProvider/components/).
 
 The components get the following props:
 
-- `record` (the query result), an object of `RDF/JS` objects.
-- `variable` the variable name and key of `record`, a string.
+* `record` (the query result), an object of `RDF/JS` objects.
+* `variable` the variable name and key of `record`, a string.
 
 `Hint` use the [Field components](https://marmelab.com/react-admin/doc/3.19/Fields.html#basic-fields)
 from `react-admin` to display the result.
@@ -282,12 +299,12 @@ They've already got styling matching that of `react-admin` and are easy to use.
 
 ## Using the local pods
 
-To support the provided example configuration `src/config.json` and the tests, this repo integrates some local pods.
+To support the provided example configuration `main/src/config.json` and the tests, this repo integrates some local pods.
 You can make use of these for your own tests. Follow these steps:
 
-- Add your data and `.acl` files in the `initial-pod-data` folder.
+* Add your data and `.acl` files in the `aux/initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
-- Prepare the pods by executing `npm run reset:pods`.
+* Prepare the pods by executing `npm run reset:pods` in directory `aux`.
 
 ## Testing
 
@@ -301,6 +318,8 @@ The development version might be tested repeatedly during development.
 
 1. Build the production version of the Web application and serve it:
 
+   In directory `main`:
+
    ```bash
    # make really, really sure to build from scratch
    rm -rf node_modules/
@@ -308,34 +327,43 @@ The development version might be tested repeatedly during development.
    npm install
    # build
    npm run build
-   # serve
-   npx http-server -p 5173 ./dist
    ```
 
-2. In a new terminal window, prepare and start the local pods:
+   In directory `aux`:
+
+   ```bash
+   npx http-server -p 5173 ../main/dist
+   ```
+
+2. In a new terminal window, in directory `aux`, prepare and start the local pods:
 
    ```bash
    npm run reset:pods && npm run start:pods
    ```
 
-3. In a new terminal window, start the http proxy:
+3. In a new terminal window, in directory `aux`,  start the http proxy:
 
    ```bash
    npm run start:proxy
    ```
 
-4. In a new terminal window, start a server which denies all CORS headers:
+4. In a new terminal window, in directory `aux`,  start a server which denies all CORS headers:
 
    ```bash
    npm run start:badCors
    ```
 
-5. Finally, in a new terminal window, you can execute the tests by running:
+5. Finally, in a new terminal window, in directory `aux`, you can execute the tests by running:
+
+   For normal test execution:
 
    ```bash
-   ## for normal test execution:
    npm run test
-   ## for interactive testing:
+   ```
+
+   For interactive testing:
+
+   ```bash
    npm run test:interactive
    ```
 
@@ -344,6 +372,8 @@ The development version might be tested repeatedly during development.
 The procedure is the same as for testing the production version, except for step 1, which is now:
 
 1. Start the Web application in development mode:
+
+   In directory `main`:
 
    ```bash
    npm run dev

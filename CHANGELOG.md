@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Split directories to isolate the site code (main) from the test and development tools (aux) (#157).
+
 ### Fixed
 
 

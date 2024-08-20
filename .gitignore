@@ -27,5 +27,5 @@ pods*
 
 lintPush.sh
 
-cypress/screenshots
-cypress/downloads
+aux/cypress/screenshots
+aux/cypress/downloads
