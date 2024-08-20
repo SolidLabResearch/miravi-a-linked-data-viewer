@@ -24,11 +24,11 @@ Table of contents:
 
 ## Preface
 
-This repository defines a Web application in the directory **main** and some auxiliary tools for testing and supporting a demo in the directory **aux**.
+This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `aux`.
 
 ## Getting Started
 
-Go to directory **main**.
+Go to directory `main`.
 
 To install the application:
 
@@ -47,13 +47,13 @@ Now you can browse the displayed URL.
 The queries provided in the example configuration `main/src/config.json` access data located in pods at localhost.
 To have these up and running, you need to install the auxiliary tools first.
 
-Go to directory **aux** and execute:
+Go to directory `aux` and execute:
 
 ```bash
 npm install
 ```
 
-Next, also in directory **aux**,  activate the supporting resources:
+Next, also in directory `aux`,  activate the supporting resources:
 
 1. In a new terminal window, prepare and start the local pods:
 
@@ -80,7 +80,7 @@ Log in with the IDP `http://localhost:8080` and the credentials for the user own
 
 To make a standalone version of the result of this project, you can make a static build and serve it using any webserver.
 
-In directory **main**, execute:
+In directory `main`, execute:
 
 ```bash
 npm run build
@@ -304,7 +304,7 @@ You can make use of these for your own tests. Follow these steps:
 
 * Add your data and `.acl` files in the `aux/initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
-* Prepare the pods by executing `npm run reset:pods` in directory **aux**.
+* Prepare the pods by executing `npm run reset:pods` in directory `aux`.
 
 ## Testing
 
@@ -318,7 +318,7 @@ The development version might be tested repeatedly during development.
 
 1. Build the production version of the Web application and serve it:
 
-   In directory **main**:
+   In directory `main`:
 
    ```bash
    # make really, really sure to build from scratch
@@ -329,31 +329,31 @@ The development version might be tested repeatedly during development.
    npm run build
    ```
 
-   In directory **aux**:
+   In directory `aux`:
 
    ```bash
    npx http-server -p 5173 ../main/dist
    ```
 
-2. In a new terminal window, in directory **aux**, prepare and start the local pods:
+2. In a new terminal window, in directory `aux`, prepare and start the local pods:
 
    ```bash
    npm run reset:pods && npm run start:pods
    ```
 
-3. In a new terminal window, in directory **aux**,  start the http proxy:
+3. In a new terminal window, in directory `aux`,  start the http proxy:
 
    ```bash
    npm run start:proxy
    ```
 
-4. In a new terminal window, in directory **aux**,  start a server which denies all CORS headers:
+4. In a new terminal window, in directory `aux`,  start a server which denies all CORS headers:
 
    ```bash
    npm run start:badCors
    ```
 
-5. Finally, in a new terminal window, in directory **aux**, you can execute the tests by running:
+5. Finally, in a new terminal window, in directory `aux`, you can execute the tests by running:
 
    For normal test execution:
 
@@ -373,7 +373,7 @@ The procedure is the same as for testing the production version, except for step
 
 1. Start the Web application in development mode:
 
-   In directory **main**:
+   In directory `main`:
 
    ```bash
    npm run dev
