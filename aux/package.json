@@ -1,0 +1,27 @@
+{
+  "name": "tools-for-generic-data-viewer-admin",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "cypress run -b chrome",
+    "test:interactive": "cypress open -b chrome --e2e",
+    "prepare:pods": "npm run prepare:pods:accounts && npm run prepare:pods:data",
+    "prepare:pods:accounts": "node scripts/add-pod-account.mjs",
+    "prepare:pods:data": "bash scripts/configure-pods.sh",
+    "start:pods": "npx @solid/community-server -c @css:config/file-no-setup.json -f pods -p 8080",
+    "reset:pods": "rimraf pods && npm run prepare:pods",
+    "start:proxy": "node scripts/local-proxy.mjs",
+    "start:badCors": "node scripts/start-bad-cors-server.mjs"
+  },
+  "dependencies": {
+    "@solid/community-server": "^6.0.1",
+    "copyfiles": "^2.4.1",
+    "cors": "^2.8.5",
+    "cors-anywhere": "^0.4.4",
+    "cypress": "^13.8.0",
+    "express": "^4.18.2",
+    "rimraf": "^5.0.1",
+    "http-server": "^14.1.1"
+  }
+}
