@@ -60,9 +60,6 @@ describe("Sources from index file", () => {
 
     it("Sources from an unauthorized source. Before and after log in.", () => {
 
-        // To prevent error handling returning an UnauthorizedHttpError failing the test... because we expect that to happen
-        Cypress.on('uncaught:exception', handleUncaughtException ); 
-
         cy.visit("/");
 
         cy.intercept('GET', 'http://localhost:8080/example/index-example-texon-only-AUTH').as('getRequest');
@@ -107,18 +104,6 @@ describe("Sources from index file", () => {
         cy.contains("https://www.example.com/data/component-c01").should("not.exist");
         cy.contains("Component 1").should("exist");
         cy.contains("Material 1").should("exist");
-
-        // remove listener on the tests
-        Cypress.off('uncaught:exception', handleUncaughtException );
     })
-
-    function handleUncaughtException(err, runnable) {
-        // Ignore the specific UnauthorizedHttpError
-        if (err.message.includes('UnauthorizedHttpError')) {
-          return false;
-        }
-        // Let other errors fail the test
-        return true;
-      }
 
 });

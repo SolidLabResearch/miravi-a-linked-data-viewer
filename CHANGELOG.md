@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The test that failed on the production build after change #157, passes again (#159).
+
 
 ## [1.3.0] - 2024-08-07
 
