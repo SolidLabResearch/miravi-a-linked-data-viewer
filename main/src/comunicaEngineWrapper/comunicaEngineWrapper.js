@@ -1,31 +1,35 @@
 import { QueryEngine } from "@comunica/query-sparql";
+import { QueryEngine as QueryEngineLinkTraversal } from "query-sparql-link-traversal-solid-no-default-predicates";
 import {
   getDefaultSession,
   fetch as authFetch,
 } from "@inrupt/solid-client-authn-browser";
 
 /**
- * A class wrapping a Comunica engine, used for all but login actions.
+ * A class wrapping the Comunica engines we need, used for all but login actions.
  */
 class ComunicaEngineWrapper {
 
   _engine;
+  _engineLinkTraversal;
   _fetchSuccess;
   _fetchStatusNumber;
   _underlyingFetchFunction;
 
   constructor() {
     this._engine = new QueryEngine();
+    this._engineLinkTraversal = new QueryEngineLinkTraversal();
     this._fetchSuccess = {};
     this._fetchStatusNumber = {};
     this._underlyingFetchFunction = undefined;
   }
 
   /**
-   * Resets the engine and all we maintained here about executed queries
+   * Resets the engines and all we maintained here about executed queries
    */
   reset() {
     this._engine.invalidateHttpCache();
+    this._engineLinkTraversal.invalidateHttpCache();
     this._fetchSuccess = {};
     this._fetchStatusNumber = {};
     this._underlyingFetchFunction = undefined;
@@ -44,9 +48,9 @@ class ComunicaEngineWrapper {
   }
 
   /**
-  * Executes one generic SPARQL query with the Comunica engine
+  * Executes one generic SPARQL query with the default Comunica engine
   * 
-  * Support the following callback functions. Forward only the ones you need.
+  * Supports the following callback functions. Forward only the ones you need.
   * - "variables": will be called once with an array of variable names, in case of a SELECT query
   * - "bindings": will be called for every bindings combo, in case of a SELECT query
   * - "quads": will be called for every quad, in case of a CONSTRUCT query
@@ -109,16 +113,35 @@ class ComunicaEngineWrapper {
   }
 
   /**
-  * Executes one SPARQL SELECT query with the Comunica engine
+  * Executes one SPARQL SELECT query with a Comunica engine
+  * 
+  * Supports the following options.
+  * - engine: 
+  *   - "default": use the default Comunica engine (this is the default anyway)
+  *   - "datasources": use a Comunica query engine configured to discover datasources recursively
   * 
   * @param {string} queryText - the SPARQL SELECT query text
   * @param {object} context - the context to provide to the Comunica engine
-  * @returns {Promise <BindingsStream>} Promis to the bindings stream
+  * @param {string} options.engine - "default": use the default Comunica engine (this is the default anyway)
+  *                                - "link-traversal": use a Comunica query engine with link-traversal feature
+  * @returns {Promise <BindingsStream>} Promise to the bindings stream
   */
-  async queryBindings(queryText, context) {
+  async queryBindings(queryText, context, options = {}) {
+    let engine;
+    switch (options.engine) {
+      case "default":
+      case undefined:  
+        engine = this._engine;
+        break;
+      case "link-traversal":
+        engine = this._engineLinkTraversal;
+        break;
+      default:
+        throw new Error("Unsupported engine requested");
+    }
     try {
       this._prepareQuery(context);
-      return this._engine.queryBindings(queryText, context);
+      return engine.queryBindings(queryText, context);
     } catch (error) {
       this.reset();
       throw error;

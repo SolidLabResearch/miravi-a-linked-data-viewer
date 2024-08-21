@@ -243,7 +243,7 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
     }
 
     const bindingsStream = await comunicaEngineWrapper.queryBindings(queryStringIndexSource,
-      { sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) });
+      { lenient: true, sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) }, { engine: "link-traversal" });
     await new Promise((resolve, reject) => {
       bindingsStream.on('data', (bindings) => {
         for (const term of bindings.values()) {  // check for 1st value
