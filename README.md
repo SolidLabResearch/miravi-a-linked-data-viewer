@@ -332,7 +332,7 @@ The development version might be tested repeatedly during development.
    In directory `aux`:
 
    ```bash
-   npx http-server -p 5173 ../main/dist
+   npm run serve
    ```
 
 2. In a new terminal window, in directory `aux`, prepare and start the local pods:
