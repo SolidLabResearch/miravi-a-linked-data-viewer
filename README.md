@@ -4,6 +4,7 @@ This Web app allows users to easily execute queries over multiple data sources (
 inspect the corresponding results.
 
 Table of contents:
+
 * [Preface](#preface)
 * [Getting Started](#getting-started)
 * [Static, production build](#static-production-build)

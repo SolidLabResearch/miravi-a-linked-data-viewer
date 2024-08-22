@@ -10,8 +10,8 @@ describe("Sources from index file", () => {
         // Check that it finished
         cy.contains("Finished in:");
 
-        // Check that it indeed had 3 sources
-        cy.get('.information-box').contains('Sources: 3');
+        // Check that it has the expected number of sources
+        cy.get('.information-box').contains('Sources: 4');
 
         // Check if correct data is displayed
         cy.contains("https://www.example.com/data/component-c01");
@@ -29,8 +29,8 @@ describe("Sources from index file", () => {
         // Check that the query finished
         cy.contains("Finished in:");
 
-        // Check that all 4 sources were used
-        cy.get('.information-box').contains('Sources: 4');
+        // Check that it has the expected number of sources
+        cy.get('.information-box').contains('Sources: 5');
 
         // Check if correct data is still displayed even if one source was unauthorized
         cy.contains("https://www.example.com/data/component-c01");
@@ -48,8 +48,8 @@ describe("Sources from index file", () => {
         // Check that the query finished
         cy.contains("Finished in:");
 
-        // Check that the 4 sources were successfully merged
-        cy.get('.information-box').contains('Sources: 4');
+        // Check that it has the expected number of sources
+        cy.get('.information-box').contains('Sources: 5');
 
         // Check if correct data is still displayed even if one source was unauthorized and different sources were merged
         cy.contains("https://www.example.com/data/component-c01");
@@ -62,7 +62,7 @@ describe("Sources from index file", () => {
 
         cy.visit("/");
 
-        cy.intercept('GET', 'http://localhost:8080/example/index-example-texon-only-AUTH').as('getRequest');
+        cy.intercept('GET', 'http://localhost:8080/example/index-example-texon-only-lt-AUTH').as('getRequest');
 
         // Navigate to correct query
         cy.contains("For testing only").click();
