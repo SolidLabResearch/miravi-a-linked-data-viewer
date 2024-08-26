@@ -14,11 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Split directories to isolate the site code (main) from the test and development tools (test) (#157).
-
-### Fixed
-
-- The test that failed on the production build after change #157, passes again (#159).
-
+- Sources from index file(s) (aka indirect sources) now works recursively, using the Comunica link-traversal feature (#79).
 
 ## [1.3.0] - 2024-08-07
 
