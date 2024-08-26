@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "serve": "http-server -p 5173 ../main/dist",
     "test": "cypress run -b chrome",
     "test:interactive": "cypress open -b chrome --e2e",
     "prepare:pods": "npm run prepare:pods:accounts && npm run prepare:pods:data",

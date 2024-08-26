@@ -149,14 +149,11 @@ WHERE {
 ORDER BY ?componentName
 `);
 
-    cy.get('input[name="indexSourceUrl"]').should('have.value', `http://localhost:8080/example/index-example-texon-only`)
-    cy.get('textarea[name="indexSourceQuery"]').should('have.value', `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
+    cy.get('input[name="indexSourceUrl"]').should('have.value', `http://localhost:8080/example/index-example-texon-only-lt`)
+    cy.get('textarea[name="indexSourceQuery"]').should('have.value', `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?object
-WHERE {
-  example:index-example rdfs:seeAlso ?object .
+SELECT DISTINCT ?source WHERE {
+  ?s rdfs:seeAlso ?source.
 }
 `)
 

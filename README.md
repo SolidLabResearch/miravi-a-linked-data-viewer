@@ -4,6 +4,7 @@ This Web app allows users to easily execute queries over multiple data sources (
 inspect the corresponding results.
 
 Table of contents:
+
 * [Preface](#preface)
 * [Getting Started](#getting-started)
 * [Static, production build](#static-production-build)
@@ -24,7 +25,7 @@ Table of contents:
 
 ## Preface
 
-This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `aux`.
+This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `test`.
 
 ## Getting Started
 
@@ -47,13 +48,13 @@ Now you can browse the displayed URL.
 The queries provided in the example configuration `main/src/config.json` access data located in pods at localhost.
 To have these up and running, you need to install the auxiliary tools first.
 
-Go to directory `aux` and execute:
+Go to directory `test` and execute:
 
 ```bash
 npm install
 ```
 
-Next, also in directory `aux`,  activate the supporting resources:
+Next, also in directory `test`,  activate the supporting resources:
 
 1. In a new terminal window, prepare and start the local pods:
 
@@ -74,7 +75,7 @@ Next, also in directory `aux`,  activate the supporting resources:
    ```
 
 Some queries require a log in.
-Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `aux/seeded-pod-config.json`.
+Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `test/seeded-pod-config.json`.
 
 ## Static, production build
 
@@ -302,9 +303,9 @@ They've already got styling matching that of `react-admin` and are easy to use.
 To support the provided example configuration `main/src/config.json` and the tests, this repo integrates some local pods.
 You can make use of these for your own tests. Follow these steps:
 
-* Add your data and `.acl` files in the `aux/initial-pod-data` folder.
+* Add your data and `.acl` files in the `test/initial-pod-data` folder.
   These files will be available in the pod relative to `http://localhost:8080/example/`.
-* Prepare the pods by executing `npm run reset:pods` in directory `aux`.
+* Prepare the pods by executing `npm run reset:pods` in directory `test`.
 
 ## Testing
 
@@ -329,31 +330,31 @@ The development version might be tested repeatedly during development.
    npm run build
    ```
 
-   In directory `aux`:
+   In directory `test`:
 
    ```bash
-   npx http-server -p 5173 ../main/dist
+   npm run serve
    ```
 
-2. In a new terminal window, in directory `aux`, prepare and start the local pods:
+2. In a new terminal window, in directory `test`, prepare and start the local pods:
 
    ```bash
    npm run reset:pods && npm run start:pods
    ```
 
-3. In a new terminal window, in directory `aux`,  start the http proxy:
+3. In a new terminal window, in directory `test`,  start the http proxy:
 
    ```bash
    npm run start:proxy
    ```
 
-4. In a new terminal window, in directory `aux`,  start a server which denies all CORS headers:
+4. In a new terminal window, in directory `test`,  start a server which denies all CORS headers:
 
    ```bash
    npm run start:badCors
    ```
 
-5. Finally, in a new terminal window, in directory `aux`, you can execute the tests by running:
+5. Finally, in a new terminal window, in directory `test`, you can execute the tests by running:
 
    For normal test execution:
 
