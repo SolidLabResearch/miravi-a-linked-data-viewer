@@ -6,7 +6,8 @@ inspect the corresponding results.
 Table of contents:
 
 * [Preface](#preface)
-* [Getting Started](#getting-started)
+* [Getting started](#getting-started)
+* [The supporting resources](#the-supporting-resources)
 * [Static, production build](#static-production-build)
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
@@ -27,9 +28,10 @@ Table of contents:
 
 This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `test`.
 
-## Getting Started
+## Getting started
 
-Go to directory `main`.
+The application is located in directory `main`.
+Go to that directory.
 
 To install the application:
 
@@ -45,30 +47,35 @@ npm run dev
 
 Now you can browse the displayed URL.
 
-The queries provided in the example configuration `main/src/config.json` access data located in pods at localhost.
-To have these up and running, you need to install the auxiliary tools first.
+If you want to test the queries provided in the default configuration `main/src/config.json`,
+continue in section [The supporting resources](#the-supporting-resources).
 
-Go to directory `test` and execute:
+## The supporting resources
+
+The supporting resources, including a local pod containing example data, are located in directory `test`.
+
+To install, go to directory `test` and execute:
 
 ```bash
 npm install
 ```
 
-Next, also in directory `test`,  activate the supporting resources:
+Next, activate the supporting resources by executing each of the following steps
+in a new terminal window, also in directory `test`:
 
-1. In a new terminal window, prepare and start the local pods:
+1. Prepare and start the local pods:
 
    ```bash
    npm run reset:pods && npm run start:pods
    ```
 
-2. In a new terminal window, start the http proxy:
+2. Start the http proxy:
 
    ```bash
    npm run start:proxy
    ```
 
-3. In a new terminal window, start a server which denies all CORS headers:
+3. Start a server which denies all CORS headers:
 
    ```bash
    npm run start:badCors
@@ -87,7 +94,7 @@ In directory `main`, execute:
 npm run build
 ```
 
-The static build appears in the `dist` folder.
+The static build appears in directory `main/dist`.
 
 ## Logging in
 
@@ -336,25 +343,9 @@ The development version might be tested repeatedly during development.
    npm run serve
    ```
 
-2. In a new terminal window, in directory `test`, prepare and start the local pods:
+2. Spin up all supporting resources, as explained in [The supporting resources](#the-supporting-resources).
 
-   ```bash
-   npm run reset:pods && npm run start:pods
-   ```
-
-3. In a new terminal window, in directory `test`,  start the http proxy:
-
-   ```bash
-   npm run start:proxy
-   ```
-
-4. In a new terminal window, in directory `test`,  start a server which denies all CORS headers:
-
-   ```bash
-   npm run start:badCors
-   ```
-
-5. Finally, in a new terminal window, in directory `test`, you can execute the tests by running:
+3. Finally, in a new terminal window, in directory `test`, you can execute the tests by running:
 
    For normal test execution:
 
