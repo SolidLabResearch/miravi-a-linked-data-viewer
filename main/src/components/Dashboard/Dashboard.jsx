@@ -3,6 +3,8 @@ import CardContent from '@mui/material/CardContent';
 import { Title } from 'react-admin';
 import './Dashboard.css';
 
+import SaveCustomToPod from './saveCustomQueriesToPod/saveCustomToPod';
+
 import configManager from '../../configManager/configManager';
 
 /**
@@ -20,6 +22,8 @@ function Dashboard() {
         <Title title={title} />
         <CardContent>{introductionText}</CardContent>
       </Card>
+
+      <SaveCustomToPod/>
     </div>
   );
 }

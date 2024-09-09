@@ -24,6 +24,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default {
   BrushIcon,
@@ -51,5 +53,7 @@ export default {
   CloseIcon,
   SettingsSuggestIcon,
   ChevronLeftIcon,
-  FilterNoneIcon
+  FilterNoneIcon,
+  CloudDownloadIcon,
+  CloudUploadIcon
 };

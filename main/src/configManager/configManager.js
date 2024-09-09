@@ -135,11 +135,11 @@ class ConfigManager extends EventEmitter {
   async getQueryText(query) {
 
     if (query.queryLocation) {
-      
-      if(!query.queryLocation.endsWith('.rq')){
+
+      if (!query.queryLocation.endsWith('.rq')) {
         return undefined
       }
-      
+
       const fetchResult = await fetch(`${this.config.queryFolder}${query.queryLocation}`);
       return await fetchResult.text();
     }
@@ -147,7 +147,7 @@ class ConfigManager extends EventEmitter {
     if (query.queryString) {
 
       // WEIRD: figured that the queryString was too fast or something? so this simulates a promise like the fetchQuery
-          // => 1 milisecond does not impact the flow at all, at the contrary it fixes a weird issue... 
+      // => 1 milisecond does not impact the flow at all, at the contrary it fixes a weird issue... 
       await new Promise(resolve => setTimeout(resolve, 1));
       return query.queryString;
     }
@@ -155,6 +155,17 @@ class ConfigManager extends EventEmitter {
     return undefined;
 
   }
+
+  getCustomQueries() {
+    return this.config.queries.filter(query => query.queryGroupId === "cstm")
+  }
+
+
+  addQueriesToQueryList(queriesToAdd) {
+    this.config.queries = [...this.config.queries, ...queriesToAdd];
+    this.emit('configChanged', this.config);
+  }
+
 }
 
 const configManager = new ConfigManager();
