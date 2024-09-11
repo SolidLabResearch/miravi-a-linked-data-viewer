@@ -26,6 +26,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 
 export default {
   BrushIcon,
@@ -55,5 +56,6 @@ export default {
   ChevronLeftIcon,
   FilterNoneIcon,
   CloudDownloadIcon,
-  CloudUploadIcon
+  CloudUploadIcon,
+  HourglassTopIcon
 };

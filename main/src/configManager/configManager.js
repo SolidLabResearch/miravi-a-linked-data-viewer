@@ -161,8 +161,17 @@ class ConfigManager extends EventEmitter {
   }
 
 
-  addQueriesToQueryList(queriesToAdd) {
-    this.config.queries = [...this.config.queries, ...queriesToAdd];
+  addCustomQueriesToQueryList(queriesToAdd) {
+    this.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+
+    // Make sure no duplicates are added
+    const existingQueries = this.config.queries;
+    const uniqueQueriesToAdd = queriesToAdd.filter(queryToAdd => {
+        return !existingQueries.some(existingQuery => 
+            existingQuery.id === queryToAdd.id
+        );
+    });
+    this.config.queries = [...existingQueries, ...uniqueQueriesToAdd];
     this.emit('configChanged', this.config);
   }
 
