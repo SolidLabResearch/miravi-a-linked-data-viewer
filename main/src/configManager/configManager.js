@@ -160,9 +160,17 @@ class ConfigManager extends EventEmitter {
     return this.config.queries.filter(query => query.queryGroupId === "cstm")
   }
 
+  deleteCustomQueries() {
+    this.config.queries = this.config.queries.filter(query => query.queryGroupId !== "cstm");
+  }
+
 
   addCustomQueriesToQueryList(queriesToAdd) {
+    // First make sure there is the custom query group
     this.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+
+    // Clear all previous custom queries (The load must be destructive.)
+    this.deleteCustomQueries();
 
     // Make sure no duplicates are added
     const existingQueries = this.config.queries;
@@ -171,8 +179,22 @@ class ConfigManager extends EventEmitter {
             existingQuery.id === queryToAdd.id
         );
     });
+    
     this.config.queries = [...existingQueries, ...uniqueQueriesToAdd];
     this.emit('configChanged', this.config);
+  }
+
+  // This is a simple rudimentary format validator 
+  // to check if the objects retrieved from the pod are in fact queries.
+  // It does not cover everything but covers most of the probabilities.
+  basicQueryFormatValidator(query){
+    const id = "id" in query
+    const name = "name" in query
+    const description = "description" in query
+    const queryString = "queryString" in query  
+    const searchParams = "searchParams" in query 
+
+    return id && name && description  && queryString  && searchParams
   }
 
 }

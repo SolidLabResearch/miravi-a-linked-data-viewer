@@ -1,4 +1,5 @@
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+import configManager from "../../../configManager/configManager";
 
 export async function addResource(url, contentType, data) {
   const session = getDefaultSession();
@@ -47,10 +48,38 @@ export async function getResource(url) {
       throw new Error(`Trying to retrieve the wrong type. Must be a JSON containing the queries.`);
     }
 
-    return content;
+    try {
+      for (let query of content) {
+        
+        // Check if all the retrieved objects are valid queries
+        if(!configManager.basicQueryFormatValidator(query)){
+          throw new Error;
+        }
+        // The searchparams must be made to enable sharing and editting
+        query.searchParams = handleSearchParams(query)
+      }
+
+      return content;
+
+    } catch (e) {
+      throw new Error("These are no valid custom queries.")
+    }
+
 
   } catch (error) {
     throw new Error(`${error.message}`);
   }
+}
+
+function handleSearchParams(queryToHandle) {
+
+  const copyObject = JSON.parse(JSON.stringify(queryToHandle));
+
+  for (let content in copyObject) {
+    if (typeof copyObject[content] === 'object') {
+      copyObject[content] = JSON.stringify(copyObject[content])
+    }
+  }
+  return new URLSearchParams(copyObject);
 }
 
