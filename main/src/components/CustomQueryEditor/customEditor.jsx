@@ -11,8 +11,12 @@ import Checkbox from '@mui/material/Checkbox';
 import configManager from '../../configManager/configManager';
 import IconProvider from '../../IconProvider/IconProvider';
 
+import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+
 
 export default function CustomEditor(props) {
+  const session = getDefaultSession();
+  const loggedIn = session.info.isLoggedIn;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -235,6 +239,13 @@ ORDER BY ?genre`;
 
   return (
     <React.Fragment>
+      {!loggedIn &&
+        <Card sx={{ backgroundColor: "#edaa15", padding: '16px', width: '100%' }}>
+          <b>Warning!</b>  You are not logged in, so any custom queries you create cannot be saved.
+          However, you can still copy the share link or log in before making new queries to save them to a pod.
+        </Card>
+      }
+
       <Card
         component="form"
         onSubmit={handleSubmit}
@@ -563,7 +574,7 @@ ORDER BY ?genre`;
                 </Button>
 
                 :
-                
+
                 <Button
                   variant="outlined"
                   color='error'
