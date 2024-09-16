@@ -10,10 +10,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 import configManager from '../../../configManager/configManager';
 import { addResource, getResource } from './podStorageManager';
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+
+import { flushSync } from 'react-dom';
 
 export default function SaveCustomToPod() {
     const session = getDefaultSession();
@@ -30,6 +34,8 @@ export default function SaveCustomToPod() {
     const placeholderString = session.info.isLoggedIn ? "" : "Log in to connect to a pod."
 
     const [confirmDialog, setConfirmDialog] = useState(false)
+
+    const [overwriteLoad, setOverwriteLoad] = useState(false)
 
     // Place holders for the textfields
     if (session.info.isLoggedIn) {
@@ -69,7 +75,7 @@ export default function SaveCustomToPod() {
 
             try {
                 const queries = await getResource(podUriLoad)
-                configManager.addCustomQueriesToQueryList(queries)
+                configManager.addCustomQueriesToQueryList(queries, overwriteLoad)
                 setLoadErrorMessage('')
                 setLoadSuccesMessage("Successfully loaded the queries from the pod!")
             } catch (e) {
@@ -125,9 +131,12 @@ export default function SaveCustomToPod() {
                         disabled={!session.info.isLoggedIn || isDisabled}
                         variant="outlined"
                         color="warning"
-                        //  type="submit"
-                        type="button"
-                        onClick={() => { setConfirmDialog(true) }}
+                        type={configManager.localCustomQueriesPresent() ? "button" : "submit"}
+                        onClick={() => {
+                            if (configManager.localCustomQueriesPresent()) {
+                                setConfirmDialog(true)
+                            }
+                        }}
                         startIcon={isDisabled ? <IconProvider.HourglassTopIcon /> : <IconProvider.CloudDownloadIcon />}
                         sx={{ margin: '10px' }}
                     >
@@ -158,34 +167,64 @@ export default function SaveCustomToPod() {
                     <DialogTitle color={"darkorange"} sx={{ textAlign: 'center', fontWeight: 'bold', mt: '15px' }}>
                         WARNING: Loading queries from a pod
                     </DialogTitle>
+
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => { setConfirmDialog(false) }}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: "gray",
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+
+
                     <DialogContent sx={{ mx: '15px' }}>
                         <DialogContentText >
-                        This action will delete all your local custom queries and replace them. 
-                        If you want to keep any of them, make sure to save them to a different file on the pod before proceeding.
+                            You have two options: you can either <b> add the new queries alongside your existing ones</b>, or <b> overwrite them completely </b>. <br /><br />
+
+                            If you choose to overwrite, <b> all of your local custom queries will be deleted and replaced </b> with the new ones.
+                            To avoid losing any important data, make sure to save your current queries to a separate file on the pod before proceeding.
                         </DialogContentText>
                     </DialogContent>
-                    <DialogActions sx={{ mb: '15px', mx: '15px' }}>
-                        <Button
-                            variant="text"
-                            style={{ color: '#000' }}
-                            onClick={() => { setConfirmDialog(false) }}
-                        >
-                            Cancel
-                        </Button>
+                    <DialogActions sx={{ mb: '15px', mx: '15px', justifyContent: 'center', gap: '25px' }}>
 
                         <Button
                             variant="contained"
                             color="warning"
                             type='submit'
+                            startIcon={<IconProvider.CreateNewFolderIcon />}
                             onClick={() => {
                                 if (formRef.current) {
-                                    setConfirmDialog(false)
-                                    formRef.current.requestSubmit();  // Properly trigger onSubmit from the card form
+                                    // Using flushSync to be sure the state gets updated before submitting the choice.
+                                    flushSync(() => setOverwriteLoad(false));
+                                    setConfirmDialog(false);
+                                    formRef.current.requestSubmit();
                                 }
                             }}
                             autoFocus
                         >
-                            Load queries
+                            Add new queries
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            type='submit'
+                            startIcon={<IconProvider.FolderOffIcon />}
+                            onClick={() => {
+                                if (formRef.current) {
+                                    // Using flushSync to be sure the state gets updated before submitting the choice.
+                                    flushSync(() => setOverwriteLoad(true));
+                                    setConfirmDialog(false);
+                                    formRef.current.requestSubmit();
+                                }
+                            }}
+                            autoFocus
+                        >
+                            Overwrite existing
                         </Button>
                     </DialogActions>
                 </Dialog>

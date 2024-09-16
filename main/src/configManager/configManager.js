@@ -164,13 +164,21 @@ class ConfigManager extends EventEmitter {
     this.config.queries = this.config.queries.filter(query => query.queryGroupId !== "cstm");
   }
 
+  // returns a boolean whether or not there are custom queries
+  localCustomQueriesPresent () {
+    //customQueries.length === 0
+    return this.getCustomQueries().length !== 0
+  }
 
-  addCustomQueriesToQueryList(queriesToAdd) {
+
+  addCustomQueriesToQueryList(queriesToAdd , overwriteLoad) {
     // First make sure there is the custom query group
     this.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
 
-    // Clear all previous custom queries (The load must be destructive.)
-    this.deleteCustomQueries();
+    if (overwriteLoad){
+      // Clear all previous custom queries to overwrite
+      this.deleteCustomQueries();
+    }
 
     // Make sure no duplicates are added
     const existingQueries = this.config.queries;

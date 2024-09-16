@@ -27,6 +27,8 @@ import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
 
 export default {
   BrushIcon,
@@ -57,5 +59,7 @@ export default {
   FilterNoneIcon,
   CloudDownloadIcon,
   CloudUploadIcon,
-  HourglassTopIcon
+  HourglassTopIcon,
+  CreateNewFolderIcon,
+  FolderOffIcon
 };
