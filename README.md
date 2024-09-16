@@ -271,9 +271,9 @@ In addition, a user can create and edit custom queries, either from scratch or b
 
 * To clean up an unwanted custom query, there is always a button "DELETE QUERY"...
 
-**Warning**: custom queries are remembered by your browser and will disappear if the browser page is refreshed or when switching logins.
+**Warning**: custom queries are stored in your browser's memory and will disappear if the browser page is refreshed or when switching logins.
 
-Logged in users however have the possibility to save/load their custom queries to/from a location in their Solid pod, via the buttons in the Dashboard.
+Logged in users however have the possibility to save/load their custom queries to/from a selectable location in their Solid pod, via the buttons in the Dashboard.
 
 ## Representation Mapper
 
