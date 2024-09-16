@@ -160,7 +160,7 @@ SELECT * WHERE {
     cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
     cy.get('button[type="submit"]').click();
 
-    cy.get('button').contains("Save Query").click();
+    cy.get('button').contains("Share Query").click();
 
     cy.get('textarea[name="queryURL"]').invoke('val').then((val) => {
       expect(val).to.include('?name=new+query&description=new+description&queryString=PREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E+%0ASELECT+*+WHERE+%7B%0A++++%3Flist+schema%3Aname+%3FlistTitle%3B%0A++++++schema%3AitemListElement+%5B%0A++++++schema%3Aname+%3FbookTitle%3B%0A++++++schema%3Acreator+%5B%0A++++++++schema%3Aname+%3FauthorName%0A++++++%5D%0A++++%5D.%0A%7D&source=http%3A%2F%2Flocalhost%3A8080%2Fexample%2Fwish-list');
