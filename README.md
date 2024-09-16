@@ -374,3 +374,18 @@ The procedure is the same as for testing the production version, except for step
    ```bash
    npm run dev
    ```
+
+## Advanced Usage
+
+You can build your applications using custom queries created interactively with the query editor. To do this, you will need access to a pod, the viewer, and the `config.json` file. Follow these steps to get started:
+
+1. **Log in to the viewer** with an account that has access to a pod.
+2. **Create custom queries** using the data viewer. You can refine and edit them until they meet your needs. Feel free to create as many queries as necessary.
+3. Once you're satisfied, **save the queries** by navigating to the dashboard and saving them as a file on the pod.
+4. Next, access the saved file on the pod using a Solid pod viewer, such as [Penny](https://penny.vincenttunru.com/).
+5. **Copy the content** of the file, which should contain a list of query objects.
+6. Open the `config.json` file and **add the query objects** to the list of existing queries.
+7. If necessary, update the `queryGroupId` property to assign the queries to a different group. Ensure the group exists in the `queryGroups` list, or create the group if it doesn’t exist.
+8. **Save the `config.json` file** to finalize your changes.
+
+With these steps completed, your queries are ready to use in your application.
