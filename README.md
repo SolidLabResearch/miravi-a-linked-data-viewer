@@ -20,6 +20,9 @@ Table of contents:
 * [Custom queries](#custom-queries)
 * [Representation Mapper](#representation-mapper)
 * [Using the local pods](#using-the-local-pods)
+* [Advanced topics](#advanced-topics)
+  * [Adapting this project to your needs](#adapting-this-project-to-your-needs)
+  * [Converting custom queries into common queries](#converting-custom-queries-into-common-queries)
 * [Testing](#testing)
   * [Testing the production version](#testing-the-production-version)
   * [Testing the development version](#testing-the-development-version)
@@ -137,7 +140,7 @@ The configuration file `main/src/config.json` follows a simple structure.
       "description": "Description of the query",
       "icon": "The key to the icon for the query. This is optional and a default menu icon will be used when left empty.",
       "comunicaContext": {
-        "sources": "Initial list of sources over which the query should be executed",
+        "sources": "Initial array of sources over which the query should be executed",
         "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
         ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
@@ -207,10 +210,10 @@ If all possible values for the template variables are fixed and hence can be wri
 * In the config file:
   * Add a `variables` object in the query's entry in the configuration file.
   * In the `variables` object, for each template variable, add a property with name equal to the template variable's identifier.
-  * Set each such property's value to an array strings, where each string is a possible value for the corresponding template variable.
+  * Set each such property's value to an array of strings, where each string is a possible value for the corresponding template variable.
 
 Note that template variables' values are not restricted to strings: URIs for example are also possible.
-As a consequence, for strings the surround double quotes `"` must be added to the values in the list.
+As a consequence, for strings the surround double quotes `"` must be added to the values in the array.
 For URIs you must add surrounding angle brackets `<>`.
 Other literals (integers for example) don't have to be surrounded with extra delimiters.
 This is shown in the configuration structure above.
@@ -318,9 +321,39 @@ You can make use of these for your own tests. Follow these steps:
   These files will be available in the pod relative to `http://localhost:8080/example/`.
 * Prepare the pods by executing `npm run reset:pods` in directory `test`.
 
+## Advanced topics
+
+### Adapting this project to your needs
+
+The easiest way to adapt this project to your needs is:
+
+1. Make your own fork on github.
+2. Concentrate on the files in the `main` subdirectory.
+3. Add your own queries in the `main/public/queries` directory and in general, your own resources in the `main/public` directory.
+4. Write your own `main/src/config.json` file, following the [configuration file documentation above](#configuration-file).
+5. Run or build as documented above.
+
+### Converting custom queries into common queries
+
+Once you have your basic configuration working, you may extend it with custom queries interactively with the query editor
+and save these to a file in a pod.
+You can convert such custom queries into common queries, by adding them to `main/src/config.json`.
+Follow these steps to get started:
+
+1. **Open and view the file with custom queries** using a tool, such as [Penny](https://penny.vincenttunru.com/). The file has JSON syntax and contains an array of query objects.
+2. **Copy the query objects of interest** to the `"queries"` array in `main/src/config.json`.
+   Note that the various queries that were documented in the [configuration file documentation above](#configuration-file) in `"queryLocation"` properties,
+   appear here as `"queryString"` variants, with inline contents rather than references to query files (`*.rq`).
+   Leave as is or convert to query files as you like.
+   Inline queries may be hard to read due to the difficult newline coding in JSON syntax.
+3. **Update the `"queryGroupId"` property** in all these queries, to separate them from the custom queries. Ensure the group exists in the `"queryGroups"` array, or create a new group if you prefer.
+4. **Update the `"id"` property**, to avoid conflicts with remaining custom queries: the id must be unique and it also defines the position in the query group.
+5. **Adapt any other properties** according to your preferences.
+6. **Save `main/src/config.json`**, rerun or rebuild and refresh your browser to test.
+
 ## Testing
 
-For testing we use [Cypress](https://www.cypress.io/).
+For testing with the provided configuration file, we use [Cypress](https://www.cypress.io/).
 
 > It is important to test the production version at least at the end of a development cycle.
 
@@ -374,18 +407,3 @@ The procedure is the same as for testing the production version, except for step
    ```bash
    npm run dev
    ```
-
-## Advanced Usage
-
-You can build your applications using custom queries created interactively with the query editor. To do this, you will need access to a pod, the viewer, and the `config.json` file. Follow these steps to get started:
-
-1. **Log in to the viewer** with an account that has access to a pod.
-2. **Create custom queries** using the data viewer. You can refine and edit them until they meet your needs. Feel free to create as many queries as necessary.
-3. Once you're satisfied, **save the queries** by navigating to the dashboard and saving them as a file on the pod.
-4. Next, access the saved file on the pod using a Solid pod viewer, such as [Penny](https://penny.vincenttunru.com/).
-5. **Copy the content** of the file, which should contain a list of query objects.
-6. Open the `config.json` file and **add the query objects** to the list of existing queries.
-7. If necessary, update the `queryGroupId` property to assign the queries to a different group. Ensure the group exists in the `queryGroups` list, or create the group if it doesn’t exist.
-8. **Save the `config.json` file** to finalize your changes.
-
-With these steps completed, your queries are ready to use in your application.
