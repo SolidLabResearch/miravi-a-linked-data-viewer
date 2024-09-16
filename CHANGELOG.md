@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- The possibility to save and load custom queries to and from a pod (#140).
+
+### Changed
+
+### Fixed
+
+
 ## [1.3.1] - 2024-08-27
 
 ### Added
