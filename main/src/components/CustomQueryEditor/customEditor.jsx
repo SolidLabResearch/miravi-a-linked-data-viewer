@@ -34,7 +34,7 @@ export default function CustomEditor(props) {
   });
 
   const [showError, setShowError] = useState(false);
-  const [editError, setEditError] = useState(false)
+  const [editError, setEditError] = useState(false);
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
@@ -68,12 +68,12 @@ ORDER BY ?genre`;
         "(etc...)"
       ],
       "(etc...)": []
-    }, null, 5)
+    }, null, 5);
 
 
   useEffect(() => {
     try {
-      let searchParams
+      let searchParams;
       if (props.newQuery) {
         searchParams = new URLSearchParams(location.search);
       } else {
@@ -82,16 +82,16 @@ ORDER BY ?genre`;
       }
       const obj = {}
       searchParams.forEach((value, key) => {
-        obj[key] = value
+        obj[key] = value;
       })
 
       if (obj.indirectQueries) {
-        setIndirectVariableSourceList(JSON.parse(obj.indirectQueries))
+        setIndirectVariableSourceList(JSON.parse(obj.indirectQueries));
       }
-      setFormData(obj)
+      setFormData(obj);
 
     } catch (error) {
-      setEditError(true)
+      setEditError(true);
     }
   }, [location.search]);
 
@@ -101,12 +101,12 @@ ORDER BY ?genre`;
     event.preventDefault();
 
     if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorTemplate) {
-      setShowError(false)
+      setShowError(false);
       const formData = new FormData(event.currentTarget);
       const jsonData = Object.fromEntries(formData.entries());
 
       if (jsonData.indirectVariablesCheck) {
-        jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList)
+        jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
       }
 
       const searchParams = new URLSearchParams(jsonData);
@@ -123,7 +123,7 @@ ORDER BY ?genre`;
         updateQuery(jsonData, customQuery);
       }
     } else {
-      setShowError(true)
+      setShowError(true);
     }
   };
 
@@ -137,20 +137,20 @@ ORDER BY ?genre`;
   };
 
   const handleIndirectVariablesChange = (event, index) => {
-    const newList = [...indirectVariableSourceList]
-    newList[index] = event.target.value
-    setIndirectVariableSourceList(newList)
+    const newList = [...indirectVariableSourceList];
+    newList[index] = event.target.value;
+    setIndirectVariableSourceList(newList);
   }
 
   const handleJSONparsing = (event, errorSetter) => {
     const { name, value } = event.target;
-    errorSetter(false)
+    errorSetter(false);
 
     let parsedValue;
     try {
       parsedValue = JSON.parse(value);
     } catch (error) {
-      errorSetter(true)
+      errorSetter(true);
       parsedValue = value;
     }
 
@@ -195,7 +195,7 @@ ORDER BY ?genre`;
     }
 
     if (ensureBoolean(dataWithStrings.indirectVariablesCheck)) {
-      parsedObject.indirectVariables = { queryStrings: JSON.parse(dataWithStrings.indirectQueries) }
+      parsedObject.indirectVariables = { queryStrings: JSON.parse(dataWithStrings.indirectQueries) };
     }
 
     return parsedObject;
@@ -203,12 +203,12 @@ ORDER BY ?genre`;
 
   // These are the functions for the addition and removal of indirect variable input fields
   const handleIndirectVariableSource = () => {
-    setIndirectVariableSourceList([...indirectVariableSourceList, ""])
+    setIndirectVariableSourceList([...indirectVariableSourceList, ""]);
   }
   const handleIndirectVariableSourceRemove = (index) => {
     const newList = [...indirectVariableSourceList];
     newList.splice(index, 1);
-    setIndirectVariableSourceList(newList)
+    setIndirectVariableSourceList(newList);
   }
 
   // These Functions are the submit functions for whether the creation or edit of a custom query
@@ -222,7 +222,7 @@ ORDER BY ?genre`;
       queryGroupId: "cstm",
       icon: "AutoAwesomeIcon",
     });
-    navigate(`/${creationID}`)
+    navigate(`/${creationID}`);
   };
 
   const updateQuery = (formData, customQuery) => {
@@ -234,15 +234,15 @@ ORDER BY ?genre`;
       icon: customQuery.icon
     });
 
-    navigate(`/${customQuery.id}`)
+    navigate(`/${customQuery.id}`);
   };
 
   return (
     <React.Fragment>
       {!loggedIn &&
         <Card sx={{ backgroundColor: "#edaa15", padding: '16px', width: '100%' }}>
-          <b>Warning!</b>  You are not logged in, so any custom queries you create cannot be saved.
-          However, you can still copy the share link or log in before making new queries to save them to a pod.
+          <b>Warning!</b>  You are not logged in, so custom queries cannot be saved to a pod.
+          The SHARE QUERY button is a solution to save a custom query (as a link).
         </Card>
       }
 
@@ -318,7 +318,7 @@ ORDER BY ?genre`;
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'comunicaContextCheck': !formData.comunicaContextCheck,
-                      }))
+                      }));
                     }
                   }
 
@@ -369,7 +369,7 @@ ORDER BY ?genre`;
                     setFormData((prevFormData) => ({
                       ...prevFormData,
                       'sourceIndexCheck': !formData.sourceIndexCheck,
-                    }))
+                    }));
                   }
                 }
               />} label="Indirect sources" />
@@ -421,7 +421,7 @@ ORDER BY ?genre`;
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'directVariablesCheck': !formData.directVariablesCheck,
-                      }))
+                      }));
                     }
                   }
                 />} label="Fixed Variables" />
@@ -458,7 +458,7 @@ ORDER BY ?genre`;
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'indirectVariablesCheck': !formData.indirectVariablesCheck,
-                      }))
+                      }));
                     }
                   }
                 />} label="Indirect Variables" />
@@ -519,7 +519,7 @@ ORDER BY ?genre`;
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'askQueryCheck': !formData.askQueryCheck,
-                      }))
+                      }));
                     }
                   }
                 />} label="ASK query" />

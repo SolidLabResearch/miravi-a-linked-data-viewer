@@ -1,6 +1,14 @@
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 import configManager from "../../../configManager/configManager";
 
+/**
+ * this function puts data on the pod
+ * 
+ * @param {string} url - url of the pod
+ * @param {string} contentType - the type of the content given with data
+ * @param {any} data - the data you want to put on the pod
+ * @returns a response
+ */
 export async function addResource(url, contentType, data) {
   const session = getDefaultSession();
 
@@ -15,14 +23,19 @@ export async function addResource(url, contentType, data) {
     if (!response.ok) {
       throw new Error(`Could not fetch the resource${response.status === 401 ? ': Unauthorized' : response.status === 404 ? ': Not Found' : response.statusText}.`);
     }
-    return response
+    return response;
 
   } catch (error) {
     throw new Error(`${error.message}`);
   }
 }
 
-
+/**
+ * this function retrieves data from a pod. This one is finetuned to only let a list of custom queries pass.
+ * 
+ * @param {string} url - the url of the data you want to retrieve
+ * @returns the requested data
+ */
 export async function getResource(url) {
   const session = getDefaultSession();
 
@@ -56,13 +69,13 @@ export async function getResource(url) {
           throw new Error;
         }
         // The searchparams must be made to enable sharing and editting
-        query.searchParams = handleSearchParams(query)
+        query.searchParams = handleSearchParams(query);
       }
 
       return content;
 
     } catch (e) {
-      throw new Error("These are no valid custom queries.")
+      throw new Error("These are no valid custom queries.");
     }
 
 
@@ -71,13 +84,19 @@ export async function getResource(url) {
   }
 }
 
+/**
+ * Generates the correct searchparams for the given query. This is required for editting and sharing custom queries
+ * 
+ * @param {object} queryToHandle - the query that has to be checked 
+ * @returns the query with correct 'searchparam' parameter
+ */
 function handleSearchParams(queryToHandle) {
 
   const copyObject = JSON.parse(JSON.stringify(queryToHandle));
 
   for (let content in copyObject) {
     if (typeof copyObject[content] === 'object') {
-      copyObject[content] = JSON.stringify(copyObject[content])
+      copyObject[content] = JSON.stringify(copyObject[content]);
     }
   }
   return new URLSearchParams(copyObject);

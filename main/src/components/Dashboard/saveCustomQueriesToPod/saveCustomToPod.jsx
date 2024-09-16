@@ -24,32 +24,32 @@ export default function SaveCustomToPod() {
     const formRef = useRef(null);
 
     const [saveErrorMessage, setSaveErrorMessage] = useState("");
-    const [loadErrorMessage, setLoadErrorMessage] = useState("")
-    const [saveSuccesMessage, setSaveSuccesMessage] = useState("")
-    const [loadSuccesMessage, setLoadSuccesMessage] = useState("")
-    const [defaultPodRoot, setDefaultPodRoot] = useState(false)
-    const [loadPodUri, setLoadPodUri] = useState("")
-    const [savePodUri, setSavePodUri] = useState("")
+    const [loadErrorMessage, setLoadErrorMessage] = useState("");
+    const [saveSuccesMessage, setSaveSuccesMessage] = useState("");
+    const [loadSuccesMessage, setLoadSuccesMessage] = useState("");
+    const [defaultPodRoot, setDefaultPodRoot] = useState(false);
+    const [loadPodUri, setLoadPodUri] = useState("");
+    const [savePodUri, setSavePodUri] = useState("");
 
-    const placeholderString = session.info.isLoggedIn ? "" : "Log in to connect to a pod."
+    const placeholderString = session.info.isLoggedIn ? "" : "Log in to connect to a pod.";
 
-    const [confirmDialog, setConfirmDialog] = useState(false)
+    const [confirmDialog, setConfirmDialog] = useState(false);
 
-    const [overwriteLoad, setOverwriteLoad] = useState(false)
+    const [overwriteLoad, setOverwriteLoad] = useState(false);
 
     // Place holders for the textfields
     if (session.info.isLoggedIn) {
         if (!defaultPodRoot) {
-            let podRoot = session.info.webId.replace(/profile\/card#.*$/, 'customQueries/myQueries.json')
-            setDefaultPodRoot(true)
-            setLoadPodUri(podRoot)
-            setSavePodUri(podRoot)
+            let podRoot = session.info.webId.replace(/profile\/card#.*$/, 'customQueries/myQueries.json');
+            setDefaultPodRoot(true);
+            setLoadPodUri(podRoot);
+            setSavePodUri(podRoot);
         }
     } else {
         if (defaultPodRoot) {
-            setDefaultPodRoot(false)
-            setLoadPodUri("")
-            setSavePodUri("")
+            setDefaultPodRoot(false);
+            setLoadPodUri("");
+            setSavePodUri("");
         }
     }
 
@@ -71,16 +71,16 @@ export default function SaveCustomToPod() {
         if (session.info.isLoggedIn) {
             const eventData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(eventData.entries());
-            const podUriLoad = jsonData.loadFrom
+            const podUriLoad = jsonData.loadFrom;
 
             try {
-                const queries = await getResource(podUriLoad)
-                configManager.addCustomQueriesToQueryList(queries, overwriteLoad)
-                setLoadErrorMessage('')
-                setLoadSuccesMessage("Successfully loaded the queries from the pod!")
+                const queries = await getResource(podUriLoad);
+                configManager.addCustomQueriesToQueryList(queries, overwriteLoad);
+                setLoadErrorMessage('');
+                setLoadSuccesMessage("Successfully loaded the queries from the pod!");
             } catch (e) {
-                setLoadSuccesMessage("")
-                setLoadErrorMessage(e.message)
+                setLoadSuccesMessage("");
+                setLoadErrorMessage(e.message);
             }
         }
     }
@@ -92,20 +92,20 @@ export default function SaveCustomToPod() {
         if (session.info.isLoggedIn) {
             const eventData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(eventData.entries());
-            const podUriSave = jsonData.saveTo
+            const podUriSave = jsonData.saveTo;
             const customQueries = configManager.getCustomQueries();
 
             try {
                 if (customQueries.length === 0) {
                     setSaveSuccesMessage('');
-                    setSaveErrorMessage("You have no custom queries.")
+                    setSaveErrorMessage("You have no custom queries.");
                 }
                 else {
-                    setSaveErrorMessage("")
-                    const dataTotTransmit = JSON.stringify(customQueries)
+                    setSaveErrorMessage("");
+                    const dataTotTransmit = JSON.stringify(customQueries);
 
                     await addResource(podUriSave, "application/json", dataTotTransmit);
-                    setSaveSuccesMessage("Successfully saved you queries on the pod!")
+                    setSaveSuccesMessage("Successfully saved you queries on the pod!");
                 }
             } catch (e) {
                 setSaveSuccesMessage('');
@@ -118,7 +118,7 @@ export default function SaveCustomToPod() {
 
     return (
         <Card sx={{ marginTop: '16px', width: '100%' }}>
-            <Typography sx={{ padding: '20px' }}>Load or save your custom queries to a pod. Be careful, saving your queries to the pod will overwrite all the queries on the pod.</Typography>
+            <Typography sx={{ padding: '20px' }}>Load/save your custom queries from/to a file in a pod. Saving destroys previous file contents.</Typography>
             <Card
                 component="form"
                 ref={formRef}
@@ -134,7 +134,7 @@ export default function SaveCustomToPod() {
                         type={configManager.localCustomQueriesPresent() ? "button" : "submit"}
                         onClick={() => {
                             if (configManager.localCustomQueriesPresent()) {
-                                setConfirmDialog(true)
+                                setConfirmDialog(true);
                             }
                         }}
                         startIcon={isDisabled ? <IconProvider.HourglassTopIcon /> : <IconProvider.CloudDownloadIcon />}

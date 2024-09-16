@@ -156,26 +156,42 @@ class ConfigManager extends EventEmitter {
 
   }
 
+  /**
+   * 
+   * @returns a list of all existing customQueries
+   */
   getCustomQueries() {
-    return this.config.queries.filter(query => query.queryGroupId === "cstm")
+    return this.config.queries.filter(query => query.queryGroupId === "cstm");
   }
 
+
+  /**
+   * deletes all existing customQueries
+   */
   deleteCustomQueries() {
     this.config.queries = this.config.queries.filter(query => query.queryGroupId !== "cstm");
   }
 
-  // returns a boolean whether or not there are custom queries
-  localCustomQueriesPresent () {
-    //customQueries.length === 0
-    return this.getCustomQueries().length !== 0
+  /**
+   * 
+   * @returns a boolean whether or not there are custom queries
+   */
+  localCustomQueriesPresent() {
+    return this.getCustomQueries().length !== 0;
   }
 
 
-  addCustomQueriesToQueryList(queriesToAdd , overwriteLoad) {
+  /**
+   * adds the custom queries from the pod to the local custom queries.
+   * 2 possibilieties:  append or overwrite
+   * @param {list} queriesToAdd - the list of queries retrieved from the pod
+   * @param {boolean} overwriteLoad - whether or not the existing queries must be overwritten
+   */
+  addCustomQueriesToQueryList(queriesToAdd, overwriteLoad) {
     // First make sure there is the custom query group
     this.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
 
-    if (overwriteLoad){
+    if (overwriteLoad) {
       // Clear all previous custom queries to overwrite
       this.deleteCustomQueries();
     }
@@ -183,26 +199,32 @@ class ConfigManager extends EventEmitter {
     // Make sure no duplicates are added
     const existingQueries = this.config.queries;
     const uniqueQueriesToAdd = queriesToAdd.filter(queryToAdd => {
-        return !existingQueries.some(existingQuery => 
-            existingQuery.id === queryToAdd.id
-        );
+      return !existingQueries.some(existingQuery =>
+        existingQuery.id === queryToAdd.id
+      );
     });
-    
+
     this.config.queries = [...existingQueries, ...uniqueQueriesToAdd];
     this.emit('configChanged', this.config);
   }
 
-  // This is a simple rudimentary format validator 
-  // to check if the objects retrieved from the pod are in fact queries.
-  // It does not cover everything but covers most of the probabilities.
-  basicQueryFormatValidator(query){
-    const id = "id" in query
-    const name = "name" in query
-    const description = "description" in query
-    const queryString = "queryString" in query  
-    const searchParams = "searchParams" in query 
 
-    return id && name && description  && queryString  && searchParams
+
+  /**
+   * This is a simple rudimentary format validator 
+   * to check if the objects retrieved from the pod are in fact queries.
+   * It does not cover everything but covers most of the probabilities.
+   * @param {object} query - the query that has to be checked
+   * @returns 
+   */
+  basicQueryFormatValidator(query) {
+    const id = "id" in query;
+    const name = "name" in query;
+    const description = "description" in query;
+    const queryString = "queryString" in query;
+    const searchParams = "searchParams" in query;
+
+    return id && name && description && queryString && searchParams;
   }
 
 }
