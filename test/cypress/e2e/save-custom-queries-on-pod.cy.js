@@ -89,7 +89,7 @@ describe("Saving custom queries on pods - logged in", () => {
 
 
         cy.get('button').contains("Load All").click();
-        cy.get('button[type="submit"]').contains("Load queries").click();
+       // cy.get('button[type="submit"]').contains("Load queries").click();
 
         cy.contains("new query").should("exist");
         cy.contains("new query").click();
