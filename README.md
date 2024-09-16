@@ -264,12 +264,16 @@ In addition, a user can create and edit custom queries, either from scratch or b
   * Click "CLONE AS CUSTOM QUERY" (in a normal query) or "CLONE" (in a custom query).
   * Make the desired changes in the form and click the "CREATE QUERY" button when ready. The new custom query behaves as if it were created from scratch.
 
-* To reproduce a custom query later, a "SAVE QUERY LINK" button is provided.
+* To share a custom query, a "SHARE QUERY" button is provided.
   Use it to generate a unique URL for this custom query.
   Visiting that URL any time later, recreates a custom query with the same specifications.
-  This may be useful to forward a custom query to another user.
+  This may be useful to share a custom query to another user or to save it for yourself.
 
-* To clean up an unwanted custom query, there is always a button "DELETE QUERY"...  
+* To clean up an unwanted custom query, there is always a button "DELETE QUERY"...
+
+**Warning**: custom queries are stored in your browser's memory and will disappear if the browser page is refreshed or when switching logins.
+
+Logged in users however have the possibility to save/load their custom queries to/from a selectable location in their Solid pod, via the buttons in the Dashboard.
 
 ## Representation Mapper
 
