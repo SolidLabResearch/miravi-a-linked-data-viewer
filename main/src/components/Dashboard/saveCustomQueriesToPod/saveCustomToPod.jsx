@@ -165,7 +165,7 @@ export default function SaveCustomToPod() {
                     onClose={() => { setConfirmDialog(false) }}
                 >
                     <DialogTitle color={"darkorange"} sx={{ textAlign: 'center', fontWeight: 'bold', mt: '15px' }}>
-                        WARNING: Loading queries from a pod
+                        WARNING: Loading custom queries from a pod
                     </DialogTitle>
 
                     <IconButton
@@ -184,10 +184,14 @@ export default function SaveCustomToPod() {
 
                     <DialogContent sx={{ mx: '15px' }}>
                         <DialogContentText >
-                            You have two options: you can either <b> add the new queries alongside your existing ones</b>, or <b> overwrite them completely </b>. <br /><br />
+                            You have two options: you can either <b> add new queries</b>, or <b> overwrite existing queries</b>. <br /><br />
 
-                            If you choose to overwrite, <b> all of your local custom queries will be deleted and replaced </b> with the new ones.
-                            To avoid losing any important data, make sure to save your current queries to a separate file on the pod before proceeding.
+                            If you choose to add, <b> new custom queries will be added</b> alongside the existing local custom queries.
+                            Local custom queries with matching "id" properties will not be overwritten.<br /><br />
+
+                            If you choose to overwrite, <b> all of your local custom queries will be deleted</b> and replaced with the new ones.<br /><br />
+
+                            To save your current combination of local custom queries as is, you may want to save them to a separate file on the pod before proceeding.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions sx={{ mb: '15px', mx: '15px', justifyContent: 'center', gap: '25px' }}>
