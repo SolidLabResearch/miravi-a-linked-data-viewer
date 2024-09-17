@@ -24,6 +24,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import FolderOffIcon from '@mui/icons-material/FolderOff';
 
 export default {
   BrushIcon,
@@ -51,5 +56,10 @@ export default {
   CloseIcon,
   SettingsSuggestIcon,
   ChevronLeftIcon,
-  FilterNoneIcon
+  FilterNoneIcon,
+  CloudDownloadIcon,
+  CloudUploadIcon,
+  HourglassTopIcon,
+  CreateNewFolderIcon,
+  FolderOffIcon
 };

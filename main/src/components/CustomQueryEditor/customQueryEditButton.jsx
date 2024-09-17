@@ -86,7 +86,7 @@ export default function CustomQueryEditButton({ queryID, submitted = false }) {
                         setSaveOpen(true)
                     }}
                     sx={{ margin: '10px' }}>
-                    Save Query Link
+                    Share Query
                 </Button>
 
                 <Button

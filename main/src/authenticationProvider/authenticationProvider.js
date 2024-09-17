@@ -46,6 +46,7 @@ export default {
     await queryEngine.invalidateHttpCache();
     const session = getDefaultSession();
     await session.logout();
+    window.location.reload();  
     return false;
   },
   checkAuth: async function checkAuth() {
