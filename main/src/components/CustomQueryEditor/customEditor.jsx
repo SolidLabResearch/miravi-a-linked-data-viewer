@@ -13,6 +13,8 @@ import IconProvider from '../../IconProvider/IconProvider';
 
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
+import YasqeField from './yasque';
+
 
 export default function CustomEditor(props) {
   const session = getDefaultSession();
@@ -129,6 +131,7 @@ ORDER BY ?genre`;
 
   // These functions handle the entry changes from the user's input in the form
   const handleChange = (event) => {
+    console.log(event)
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -287,6 +290,7 @@ ORDER BY ?genre`;
                 sx={{ marginBottom: '16px' }}
               />
 
+
               <TextField
                 required
                 label="SPARQL query"
@@ -299,8 +303,11 @@ ORDER BY ?genre`;
                 placeholder={defaultSparqlQuery}
                 value={!!formData.queryString ? formData.queryString : formData.queryString === '' ? '' : defaultSparqlQuery}
                 onChange={handleChange}
-                sx={{ marginBottom: '16px' }}
+                sx={{ marginBottom: '16px' , display: 'none' }}
               />
+
+              <YasqeField name={'queryString'} onChange={handleChange}/>
+              
             </div>
           </Card>
 
