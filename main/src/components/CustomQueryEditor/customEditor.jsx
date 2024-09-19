@@ -13,7 +13,7 @@ import IconProvider from '../../IconProvider/IconProvider';
 
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
-import YasqeField from './yasque';
+import YasqeField from './yasqe';
 
 
 export default function CustomEditor(props) {
