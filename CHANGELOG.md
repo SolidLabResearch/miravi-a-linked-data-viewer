@@ -7,14 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2024-10-02
+
 ### Added
 
 - The possibility to save and load custom queries to and from a pod (#140).
-
-### Changed
-
-### Fixed
-
 
 ## [1.3.1] - 2024-08-27
 
@@ -190,4 +187,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.2.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.3
 [1.3.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.0
 [1.3.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.1
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.3.1...HEAD
+[1.4.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.0
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.4.0...HEAD
