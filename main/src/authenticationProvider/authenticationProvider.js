@@ -34,7 +34,8 @@ export default {
     try {
       await session.login({
         oidcIssuer: idp,
-        redirectUrl: new URL("/", window.location.href).toString(),
+        // leading dot needed to run from any path
+        redirectUrl: new URL('.', window.location.href).toString(),
         clientName: "Generic Data Viewer",
       });
     } catch (error) {

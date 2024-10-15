@@ -9,4 +9,6 @@ export default defineConfig({
     // necessary for crypto lib to work
     global: 'globalThis'
   },
+  // leading dot needed to run from any path
+  base: './'
 })

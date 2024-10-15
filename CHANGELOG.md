@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Works when served from any base URL including a path (e.g. `https://www.example.com/your/preferred/path`) (#165).
+
 ## [1.4.0] - 2024-10-02
 
 ### Added
