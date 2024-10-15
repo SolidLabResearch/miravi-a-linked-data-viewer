@@ -95,7 +95,7 @@ describe("Sources from index file", () => {
             cy.contains("button", "Authorize").click();
         });
         
-        cy.url().should("eq", "http://localhost:5173/");
+        cy.url().should("eq", Cypress.config('baseUrl') + "/");
 
         //now try again
         cy.contains("For testing only").click();

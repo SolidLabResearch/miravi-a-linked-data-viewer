@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0 --fix",
     "lint:markdown": "markdownlint-cli2",
     "lint:markdown:fix": "markdownlint-cli2-fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev-with-path": "vite --base /random/path"
   },
   "dependencies": {
     "@comunica/query-sparql": "^3.2.3",

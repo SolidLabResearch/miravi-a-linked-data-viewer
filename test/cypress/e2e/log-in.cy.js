@@ -48,7 +48,7 @@ describe("Log in", () => {
       cy.contains("button", "Authorize").click();
     });
 
-    cy.url().should("eq", "http://localhost:5173/");
+    cy.url().should("eq", Cypress.config('baseUrl') + "/");
   });
 
   it("Log in with an invalid IDP issuer", () => {
@@ -83,7 +83,7 @@ describe("Log in", () => {
       cy.contains("button", "Authorize").click();
     });
     
-    cy.url().should("eq", "http://localhost:5173/");
+    cy.url().should("eq", Cypress.config('baseUrl') + "/");
 
     cy.contains("General examples").click();
     cy.contains("A secret list of my favorite books").click();

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Works when served from any base URL including a path (e.g. https://example.com/a-non-empty-path) (#165).
+- Works when served from any base URL including a path (e.g. `https://www.example.com/your/preferred/path`) (#165).
 
 ## [1.4.0] - 2024-10-02
 

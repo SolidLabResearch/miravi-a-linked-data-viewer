@@ -99,6 +99,8 @@ npm run build
 
 The static build appears in directory `main/dist`.
 
+This static build can be served on a webserver without modifications from the host's root path (e.g. `https://www.example.com`), or from any other path (e.g. `https://www.example.com/your/preferred/path`).
+
 ## Logging in
 
 Some queries access data sources that are only readable by authenticated users. This requires you to log in.
@@ -359,6 +361,8 @@ For testing with the provided configuration file, we use [Cypress](https://www.c
 
 The development version might be tested repeatedly during development.
 
+Both the production version and the development version are tested from a non-empty path in the base URL.
+
 ### Testing the production version
 
 1. Build the production version of the Web application and serve it:
@@ -400,10 +404,10 @@ The development version might be tested repeatedly during development.
 
 The procedure is the same as for testing the production version, except for step 1, which is now:
 
-1. Start the Web application in development mode:
+1. Start the Web application in development mode, using a non-empty path in the base URL:
 
    In directory `main`:
 
    ```bash
-   npm run dev
+   npm run dev-with-path
    ```
