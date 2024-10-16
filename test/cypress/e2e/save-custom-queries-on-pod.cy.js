@@ -31,7 +31,7 @@ describe("Saving custom queries on pods - logged in", () => {
             cy.contains("button", "Authorize").click();
         });
 
-        cy.url().should("eq", Cypress.config('baseUrl') + "/");
+        cy.url().should("eq", Cypress.config('baseUrl'));
 
         cy.visit("/#");
     });

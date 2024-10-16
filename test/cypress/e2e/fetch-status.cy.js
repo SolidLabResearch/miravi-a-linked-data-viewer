@@ -49,7 +49,7 @@ describe("Fetch Status", () => {
             cy.contains("button", "Authorize").click();
         });    
 
-        cy.url().should("eq", Cypress.config('baseUrl') + "/");
+        cy.url().should("eq", Cypress.config('baseUrl'));
 
         // Go to the mixed book query
         cy.contains("For testing only").click();

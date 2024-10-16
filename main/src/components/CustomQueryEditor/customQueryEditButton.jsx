@@ -36,10 +36,7 @@ export default function CustomQueryEditButton({ queryID, submitted = false }) {
 
     const handleSave = () => {
 
-        const url = new URL(window.location.href);
-        const serverURL = `${url.protocol}//${url.hostname}${url.port ? ':' + url.port : ''}`;
-
-        const savedUrl = `${serverURL}/#/customQuery?${customQuery.searchParams.toString()}`;
+        const savedUrl = `${window.location.href.split('/#/')[0]}/#/customQuery?${customQuery.searchParams.toString()}`;
         setCopyUrl(savedUrl);
     }
 

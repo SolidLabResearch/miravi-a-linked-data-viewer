@@ -63,7 +63,7 @@ describe("Sources info", () => {
       cy.contains("button", "Authorize").click();
     });
 
-    cy.url().should("eq", Cypress.config('baseUrl') + "/");
+    cy.url().should("eq", Cypress.config('baseUrl'));
 
     cy.contains("General examples").click();
     cy.contains("A secret list of my favorite books").click();

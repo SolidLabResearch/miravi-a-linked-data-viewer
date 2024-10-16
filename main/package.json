@@ -11,7 +11,7 @@
     "lint:markdown": "markdownlint-cli2",
     "lint:markdown:fix": "markdownlint-cli2-fix",
     "preview": "vite preview",
-    "dev-with-path": "vite --base /random/path"
+    "dev-with-path": "vite --base /random/path/"
   },
   "dependencies": {
     "@comunica/query-sparql": "^3.2.3",
