@@ -369,6 +369,26 @@
       }
     },
     {
+      "id": "9012",
+      "queryGroupId": "c-tst",
+      "queryLocation": "musicians_variables_double.rq",
+      "name": "A templated query about musicians (double results)",
+      "description": "This query tests whether a template variable is expanded more than once. If it works, this query will return all results twice.",
+      "icon": "MusicNoteIcon",
+      "variables": {
+        "genre": [
+          "\"Romantic\"",
+          "\"Baroque\"",
+          "\"Classical\""
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
       "id": "9020",
       "queryGroupId": "c-tst",
       "queryLocation": "components_materials.rq",

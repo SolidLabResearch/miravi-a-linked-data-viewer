@@ -149,7 +149,7 @@ async function buildQueryText(query) {
 function replaceVariables(rawText, variables) {
   for (const [variableName, variableValue] of Object.entries(variables)) {
     // do not surround with double quotes here; add double quotes in the input if needed!
-    rawText = rawText.replace("$" + variableName, variableValue);
+    rawText = rawText.replaceAll("$" + variableName, variableValue);
   }
 
   return rawText;

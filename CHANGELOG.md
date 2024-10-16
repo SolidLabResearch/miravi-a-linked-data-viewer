@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Templated queries now also work for queries containing multiple occurrences of a template variable (#164).
 - Works when served from any base URL including a path (e.g. `https://www.example.com/your/preferred/path`) (#165).
 
 ## [1.4.0] - 2024-10-02
