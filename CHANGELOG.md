@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2024-10-16
+
 ### Fixed
 
 - Templated queries now also work for queries containing multiple occurrences of a template variable (#164).
@@ -194,4 +196,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.3.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.0
 [1.3.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.1
 [1.4.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.0
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.4.0...HEAD
+[1.4.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.1
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.4.1...HEAD
