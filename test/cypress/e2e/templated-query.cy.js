@@ -39,6 +39,21 @@ describe("Templated query", () => {
           // cy.get('button').contains('Query').should("not.exist");  -> useless if we add a 'new query' button
   });
 
+  it("With 1 variables, double expansion", () => {
+    cy.visit("/");
+    cy.contains("For testing only").click();
+    cy.contains("A templated query about musicians (double results)").click();
+
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Romantic').click();
+
+    cy.get('button').contains('Query').click();
+    cy.contains("Finished in:");
+    cy.get('.column-name').find('span').should("have.length", 2);
+  });
+
   it("With 2 variables", () => {
     cy.visit("/");
     cy.contains("For testing only").click();
