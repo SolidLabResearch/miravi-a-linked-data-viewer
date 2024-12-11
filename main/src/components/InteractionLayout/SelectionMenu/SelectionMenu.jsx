@@ -28,7 +28,7 @@ const SelectionMenu = () => {
   useEffect(() => {
     const handleGroupChange = (newConfig) => {
       setConfig(newConfig);
-      
+
       // Open the cstm group when a new custom query is created
       if(newConfig.queryGroups.find(group => group.id === 'cstm')){
         setOpenGroups(prevOpenGroups => ({
