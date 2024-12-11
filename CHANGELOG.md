@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Templated query variable filter (#172).
+- Templated queries variables selection made easier with filters (#172).
 
 ## [1.4.1] - 2024-10-16
 
