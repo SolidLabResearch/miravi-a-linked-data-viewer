@@ -1,4 +1,4 @@
-import {Toolbar, SaveButton, SelectInput, SimpleForm, required, useResourceDefinition} from "react-admin";
+import {AutocompleteInput, required, SaveButton, SimpleForm, Toolbar, useResourceDefinition} from "react-admin";
 import DoneIcon from '@mui/icons-material/Done';
 import {Component, useEffect} from "react";
 import PropTypes from "prop-types";
@@ -6,7 +6,7 @@ import CustomQueryEditButton from "../CustomQueryEditor/customQueryEditButton";
 
 const MyToolbar = () => (
   <Toolbar>
-    <SaveButton icon={<DoneIcon />} label="Query"/>
+    <SaveButton icon={<DoneIcon/>} label="Query"/>
   </Toolbar>
 );
 
@@ -26,21 +26,29 @@ const TemplatedQueryForm = (props) => {
   const resourceDef = useResourceDefinition();
 
   useEffect(() => {
-    if (submitted){
+    if (submitted) {
       onSubmit(searchPar);
     }
   }, [submitted])
-  
+
   return (
-    <SimpleForm toolbar={<MyToolbar />} onSubmit={onSubmit}>
-       {!!resourceDef.options && resourceDef.options.queryGroupId === 'cstm' && <CustomQueryEditButton queryID={resourceDef.name}/>}
+    <SimpleForm toolbar={<MyToolbar/>} onSubmit={onSubmit}>
+      {!!resourceDef.options && resourceDef.options.queryGroupId === 'cstm' &&
+        <CustomQueryEditButton queryID={resourceDef.name}/>}
       {Object.entries(variableOptions).map(([name, options]) => (
-        <SelectInput key={name} source={name} name={name} label={name} validate={required()} choices={
-          options.map((option) => ({
-            id: option,
-            name: option
-          }))
-        }/>
+        <AutocompleteInput
+          key={name}
+          source={name}
+          name={name}
+          label={name}
+          validate={required()}
+          fullWidth={true}
+          choices={
+            options.map((option) => ({
+              id: option,
+              name: option
+            }))}
+        />
       ))}
     </SimpleForm>
   );
