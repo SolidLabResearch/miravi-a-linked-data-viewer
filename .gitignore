@@ -30,3 +30,6 @@ lintPush.sh
 test/cypress/screenshots
 test/cypress/downloads
 test/serve-this
+
+# Next file is now a copy, see main/package.json scripts
+main/src/config.json
