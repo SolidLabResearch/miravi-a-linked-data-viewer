@@ -6,7 +6,7 @@ describe("Templated query", () => {
   it("With 1 variable", () => {
 
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A templated query about musicians").click();
 
     // Fill in the query, select Baroque (7 existant artists -> perfect for this test)
@@ -56,8 +56,8 @@ describe("Templated query", () => {
 
   it("With 2 variables", () => {
     cy.visit("/");
-    cy.contains("For testing only").click();
-    cy.contains("A templated query about musicians, two variables").click();
+    cy.contains("Example queries").click();
+    cy.contains("A templated query about musicians (two variables)").click();
 
     cy.get('form').within(() => {
       cy.get('#genre').click();
@@ -75,7 +75,7 @@ describe("Templated query", () => {
 
   it("Able to change variables after making a templated query", () => {
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A templated query about musicians").click();
 
     // Fill in the query
@@ -103,8 +103,8 @@ describe("Templated query", () => {
 
   it("Correct message displayed when no resulting data", () => {
     cy.visit("/");
-    cy.contains("For testing only").click();
-    cy.contains("A templated query about musicians, two variables").click();
+    cy.contains("Example queries").click();
+    cy.contains("A templated query about musicians (two variables)").click();
 
     // Chose a genre
     cy.get('form').within(() => {
@@ -127,8 +127,8 @@ describe("Templated query", () => {
 
   it("Able to change variables after having no results", () => {
     cy.visit("/");
-    cy.contains("For testing only").click();
-    cy.contains("A templated query about musicians, two variables").click();
+    cy.contains("Example queries").click();
+    cy.contains("A templated query about musicians (two variables)").click();
 
     // Chose a genre
     cy.get('form').within(() => {

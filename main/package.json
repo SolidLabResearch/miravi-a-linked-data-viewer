@@ -4,17 +4,14 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test-copy": "copyfiles -f config/test/* src",
-    "test-dev": "npm run test-copy && vite --base /random/path/",
-    "test-build": "npm run test-copy && vite build",
-    "demo-copy": "copyfiles -f config/demo/* src",
-    "demo-dev": "npm run demo-copy && vite",
-    "demo-build": "npm run demo-copy && vite build",
+    "dev:test": "copyfiles -f config/test/* src && vite --base /random/path/",
+    "build:test": "copyfiles -f config/test/* src && vite build",
+    "dev:demo": "copyfiles -f config/demo/* src && vite",
+    "build:demo": "copyfiles -f config/demo/* src && vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0 --fix",
     "lint:markdown": "markdownlint-cli2",
-    "lint:markdown:fix": "markdownlint-cli2-fix",
-    "dev-with-path": "vite --base /random/path/"
+    "lint:markdown:fix": "markdownlint-cli2-fix"
   },
   "dependencies": {
     "@comunica/query-sparql": "^3.2.3",

@@ -14,29 +14,19 @@
   "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
   "queryGroups": [
     {
-      "id": "a-ex",
-      "name": "General examples"
+      "id": "gr-xmpl",
+      "name": "Example queries"
     },
     {
-      "id": "b-prj",
-      "name": "Project related examples",
-      "icon": "FactoryIcon"
-    },
-    {
-      "id": "c-tst",
-      "name": "For testing only",
-      "icon": "BugReportIcon"
-    },
-    {
-      "id": "d-gqx",
-      "name": "Generic query examples",
+      "id": "gr-gnrc",
+      "name": "Generic queries",
       "icon": "InfoIcon"
     }
   ],
   "queries": [
     {
       "id": "1000",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "idols.rq",
       "name": "My idols",
       "description": "Demonstrates a simple query, using a proxy.",
@@ -49,7 +39,7 @@
     },
     {
       "id": "1010",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "images_test.rq",
       "name": "Some images",
       "description": "Demonstrates how to show images in a query result.",
@@ -62,7 +52,7 @@
     },
     {
       "id": "1020",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "ask_picasso.rq",
       "name": "Is there an artist influenced by Picasso?",
       "description": "Demonstrates an ASK query.",
@@ -79,7 +69,7 @@
     },
     {
       "id": "1030",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "construct_picasso.rq",
       "name": "A graph of artists influenced by Picasso",
       "description": "Demonstrates a CONSTRUCT query.",
@@ -92,7 +82,7 @@
     },
     {
       "id": "1040",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "average.rq",
       "name": "Average value",
       "description": "Demonstrates a query calculating some average.",
@@ -104,34 +94,8 @@
       }
     },
     {
-      "id": "1045",
-      "queryGroupId": "c-tst",
-      "queryLocation": "average",
-      "name": "Average value - queryLocation without rq",
-      "description": "Should demonstrates a query calculating some average, but the queryLocation is faultive.",
-      "icon": "FunctionsIcon",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/values"
-        ]
-      }
-    },
-    {
-      "id": "1046",
-      "queryGroupId": "c-tst",
-      "queryLocation": "averagefefefefe.rq",
-      "name": "Average value - unexisting queryLocation (ends in .rq)",
-      "description": "Should demonstrates a query calculating some average, but the queryLocation is faultive.",
-      "icon": "FunctionsIcon",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/values"
-        ]
-      }
-    },
-    {
       "id": "1050",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "books.rq",
       "name": "A secret list of my favorite books",
       "description": "Demonstrates a query whose source requires authentication.",
@@ -144,7 +108,7 @@
     },
     {
       "id": "1060",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "books.rq",
       "name": "A public list of books I'd love to own",
       "description": "Demonstrates a query whose source does not require authentication.",
@@ -157,7 +121,7 @@
     },
     {
       "id": "1070",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "musicians.rq",
       "name": "A query about musicians",
       "description": "Demonstrates what happens if one of the sources is not available (fetch failure).",
@@ -172,7 +136,7 @@
     },
     {
       "id": "1080",
-      "queryGroupId": "a-ex",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "musicians_variables.rq",
       "name": "A templated query about musicians",
       "description": "Demonstrates the usage of templated queries.",
@@ -191,8 +155,8 @@
       }
     },
     {
-      "id": "1085",
-      "queryGroupId": "a-ex",
+      "id": "1090",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "musicians_variables.rq",
       "name": "A templated query about musicians (indirect variables)",
       "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values.",
@@ -209,125 +173,10 @@
       }
     },
     {
-      "id": "1090",
-      "queryGroupId": "a-ex",
-      "queryLocation": "components.rq",
-      "name": "Source verification",
-      "description": "Demonstrates source verification. Query components from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/verifiable-example/components-vc",
-          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
-          "http://localhost:8080/example/components"
-        ]
-      }
-    },
-    {
       "id": "1100",
-      "queryGroupId": "a-ex",
-      "queryLocation": "components_materials.rq",
-      "name": "Sources from an index file",
-      "description": "Query components (including details about materials) with the sources obtained from index files.",
-      "sourcesIndex": {
-        "url": "http://localhost:8080/example/index-example-texon-only-lt",
-        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
-      }
-    },
-    {
-      "id": "1500",
-      "queryGroupId": "c-tst",
-      "queryLocation": "components_materials.rq",
-      "name": "Sources from an index file (requiring authentication)",
-      "description": "Query components (including details about materials) with the sources obtained from index files that require authentication to retrieve said sources.",
-      "sourcesIndex": {
-        "url": "http://localhost:8080/example/index-example-texon-only-lt-AUTH",
-        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
-      }
-    },
-    {
-      "id": "2000",
-      "queryGroupId": "b-prj",
-      "queryLocation": "components.rq",
-      "name": "Components",
-      "description": "Query components.",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/components"
-        ]
-      }
-    },
-    {
-      "id": "2001",
-      "queryGroupId": "b-prj",
-      "queryLocation": "components_variable.rq",
-      "name": "Components (select one)",
-      "description": "Query one component; select it by name.",
-      "indirectVariables": {
-        "queryLocations": [
-          "variableQueries/components_name_variable.rq"
-        ]
-      },
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/components"
-        ]
-      }
-    },
-    {
-      "id": "2010",
-      "queryGroupId": "b-prj",
-      "queryLocation": "components_materials.rq",
-      "name": "Components and their materials",
-      "description": "Query components (including details about materials).",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/components",
-          "http://localhost:8080/example/boms",
-          "http://localhost:8080/example/materials"
-        ],
-        "lenient": true
-      }
-    },
-    {
-      "id": "2011",
-      "queryGroupId": "b-prj",
-      "queryLocation": "component_material_variables.rq",
-      "name": "Component (select one) and percentage of a material (select one)",
-      "description": "Select a component by its name and a material by its name to see by what percentage the material is used in that component (empty result of not used).",
-      "indirectVariables": {
-        "queryLocations": [
-          "variableQueries/components_name_variable.rq",
-          "variableQueries/materials_name_variable.rq"
-        ]
-      },
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/components",
-          "http://localhost:8080/example/boms",
-          "http://localhost:8080/example/materials"
-        ]
-      }
-    },
-    {
-      "id": "9000",
-      "queryGroupId": "c-tst",
-      "queryLocation": "books.rq",
-      "name": "A query on a secret and a public list of books",
-      "description": "Demonstrates a query on a source requiring authentication and a source not requiring authentication.",
-      "icon": "MenuBookIcon",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/favourite-books",
-          "http://localhost:8080/example/wish-list"
-        ],
-        "lenient": true
-      }
-    },
-    {
-      "id": "9010",
-      "queryGroupId": "c-tst",
+      "queryGroupId": "gr-xmpl",
       "queryLocation": "musicians_variables2.rq",
-      "name": "A templated query about musicians, two variables",
+      "name": "A templated query about musicians (two variables)",
       "description": "Demonstrates the usage of templated queries, here with two variables.",
       "icon": "MusicNoteIcon",
       "variables": {
@@ -350,152 +199,33 @@
       }
     },
     {
-      "id": "9011",
-      "queryGroupId": "c-tst",
-      "queryLocation": "musicians_variables2.rq",
-      "name": "A templated query about musicians, two variables (indirect variables)",
-      "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values and with two variables.",
-      "icon": "MusicNoteIcon",
-      "indirectVariables": {
-        "queryLocations": [
-          "variableQueries/musicians_genre_variable.rq",
-          "variableQueries/musicians_sameAs_variable.rq"
-        ]
-      },
+      "id": "1110",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "components.rq",
+      "name": "Source verification",
+      "description": "Demonstrates source verification. Query components from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
       "comunicaContext": {
         "sources": [
-          "http://localhost:8080/example/favourite-musicians"
-        ]
-      }
-    },
-    {
-      "id": "9012",
-      "queryGroupId": "c-tst",
-      "queryLocation": "musicians_variables_double.rq",
-      "name": "A templated query about musicians (double results)",
-      "description": "This query tests whether a template variable is expanded more than once. If it works, this query will return all results twice.",
-      "icon": "MusicNoteIcon",
-      "variables": {
-        "genre": [
-          "\"Romantic\"",
-          "\"Baroque\"",
-          "\"Classical\""
-        ]
-      },
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/favourite-musicians"
-        ]
-      }
-    },
-    {
-      "id": "9020",
-      "queryGroupId": "c-tst",
-      "queryLocation": "components_materials.rq",
-      "name": "Components and their materials, with sources from index file also containing an unauthorized source",
-      "description": "Query components (including details about materials) with the sources obtained from index files, including an unauthorized source of favourite books, to check lenient.",
-      "sourcesIndex": {
-        "url": "http://localhost:8080/example/index-example-with-unauthorized-source-lt",
-        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
-      }
-    },
-    {
-      "id": "9030",
-      "queryGroupId": "c-tst",
-      "queryLocation": "components_materials.rq",
-      "name": "Components and their materials, with mixed sources from comunicaContext and index file",
-      "description": "Query components (including details about materials) with sources obtained from both comunicaContext.sources and index files.",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/favourite-books",
+          "http://localhost:8080/verifiable-example/components-vc",
+          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
           "http://localhost:8080/example/components"
-        ],
-        "lenient": true
-      },
+        ]
+      }
+    },
+    {
+      "id": "1120",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "components_materials.rq",
+      "name": "Sources from an index file",
+      "description": "Query components (including details about materials) with the sources obtained from index files.",
       "sourcesIndex": {
         "url": "http://localhost:8080/example/index-example-texon-only-lt",
         "queryLocation": "/sourceQueries/index_example_common_lt.rq"
       }
     },
     {
-      "id": "9031",
-      "queryGroupId": "c-tst",
-      "queryLocation": "component_material_one_variable.rq",
-      "name": "Component and materials - 1 variable (indirect source & indirect variables)",
-      "description": "Query components (including details about materials) with the sources obtained from index files and variables from the sources.",
-      "indirectVariables": {
-        "queryLocations": [
-          "variableQueries/components_name_variable.rq"
-        ]
-      },
-      "sourcesIndex": {
-        "url": "http://localhost:8080/example/index-example-texon-only-lt",
-        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
-      }
-    },
-    {
-      "id": "9032",
-      "queryGroupId": "c-tst",
-      "queryLocation": "component_material_variables.rq",
-      "name": "Component and materials - 2 variables (indirect source & indirect variables)",
-      "description": "Query components (including details about materials) with the sources obtained from index files and variables from the sources.",
-      "indirectVariables": {
-        "queryLocations": [
-          "variableQueries/components_name_variable.rq",
-          "variableQueries/materials_name_variable.rq"
-        ]
-      },
-      "sourcesIndex": {
-        "url": "http://localhost:8080/example/index-example-texon-only-lt",
-        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
-      }
-    },
-    {
-      "id": "9040",
-      "queryGroupId": "c-tst",
-      "queryLocation": "spo_distinct_offset_limit.rq",
-      "name": "A test on DISTINCT LIMIT OFFSET",
-      "description": "Query two sources containing duplicated triples. The query uses DISTINCT, LIMIT and OFFSET.",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/dup1",
-          "http://localhost:8080/example/dup2"
-        ]
-      }
-    },
-    {
-      "id": "9050",
-      "queryGroupId": "c-tst",
-      "queryLocation": "so_distinct.rq",
-      "name": "A test on counting the total number results",
-      "description": "Query a source containing ?s ?p1 ?o and ?s ?p2 ?o with p1 != p2 and request only ?s ?o.",
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/dup1"
-        ]
-      }
-    },
-    {
-      "id": "9070",
-      "queryGroupId": "c-tst",
-      "queryLocation": "example_spox.rq",
-      "name": "Triples with object, objects of different types",
-      "description": "Gives at most 50 triples with a given object in the indicated datasources.",
-      "indirectVariables": {
-        "queryLocations": [
-          "variableQueries/example_o.rq"
-        ]
-      },
-      "comunicaContext": {
-        "sources": [
-          "http://localhost:8080/example/test-objects"
-        ],
-        "lenient": true
-      }
-    },
-    {
-      "id": "10000",
-      "queryGroupId": "d-gqx",
+      "id": "2000",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "example_count_spo.rq",
       "name": "Count",
       "description": "Gives the count of triples in the indicated datasources.",
@@ -509,8 +239,8 @@
       }
     },
     {
-      "id": "10001",
-      "queryGroupId": "d-gqx",
+      "id": "2010",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "example_spo.rq",
       "name": "Triples",
       "description": "Gives at most 50 triples in the indicated datasources.",
@@ -524,8 +254,8 @@
       }
     },
     {
-      "id": "10002",
-      "queryGroupId": "d-gqx",
+      "id": "2020",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "variableQueries/example_s.rq",
       "name": "Subjects",
       "description": "Gives at most 50 subjects in the indicated datasources.",
@@ -539,8 +269,8 @@
       }
     },
     {
-      "id": "10003",
-      "queryGroupId": "d-gqx",
+      "id": "2030",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "variableQueries/example_p.rq",
       "name": "Predicates",
       "description": "Gives at most 50 predicates in the indicated datasources.",
@@ -554,8 +284,8 @@
       }
     },
     {
-      "id": "10004",
-      "queryGroupId": "d-gqx",
+      "id": "2040",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "variableQueries/example_o.rq",
       "name": "Objects",
       "description": "Gives at most 50 objects in the indicated datasources.",
@@ -569,8 +299,8 @@
       }
     },
     {
-      "id": "10005",
-      "queryGroupId": "d-gqx",
+      "id": "2050",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "example_sxpo.rq",
       "name": "Triples with subject",
       "description": "Gives at most 50 triples with a given subject in the indicated datasources.",
@@ -589,8 +319,8 @@
       }
     },
     {
-      "id": "10006",
-      "queryGroupId": "d-gqx",
+      "id": "2060",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "example_spxo.rq",
       "name": "Triples with predicate",
       "description": "Gives at most 50 triples with a given predicate in the indicated datasources.",
@@ -609,8 +339,8 @@
       }
     },
     {
-      "id": "10007",
-      "queryGroupId": "d-gqx",
+      "id": "2070",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "example_spox.rq",
       "name": "Triples with object",
       "description": "Gives at most 50 triples with a given object in the indicated datasources.",
@@ -629,8 +359,8 @@
       }
     },
     {
-      "id": "10008",
-      "queryGroupId": "d-gqx",
+      "id": "2080",
+      "queryGroupId": "gr-gnrc",
       "queryLocation": "example_terms_of_type.rq",
       "name": "Terms of type",
       "description": "Gives at most 50 terms of a given rdf:type in the indicated datasources.",

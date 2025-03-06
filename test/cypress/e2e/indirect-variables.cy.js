@@ -3,7 +3,7 @@ describe("Indirect variable query", () => {
     it("Indirect with 1 variable", () => {
 
         cy.visit("/");
-        cy.contains("General examples").click();
+        cy.contains("Example queries").click();
         cy.contains("A templated query about musicians (indirect variables)").click();
 
         // Fill in the form

@@ -4,7 +4,7 @@ describe("Sources from index file", () => {
         cy.visit("/");
 
         // Navigate to correct query
-        cy.contains("General examples").click();
+        cy.contains("Example queries").click();
         cy.contains("Sources from an index file").click();
 
         // Check that it finished
