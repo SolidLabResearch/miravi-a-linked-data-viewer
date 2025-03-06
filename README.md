@@ -20,17 +20,26 @@ Table of contents:
   * [Query icons](#query-icons)
 * [Custom queries](#custom-queries)
 * [Representation Mapper](#representation-mapper)
-* [Using the local pods](#using-the-local-pods)
 * [Advanced topics](#advanced-topics)
-  * [Adapting this project to your needs](#adapting-this-project-to-your-needs)
   * [Converting custom queries into common queries](#converting-custom-queries-into-common-queries)
-* [Testing](#testing)
-  * [Testing the production version](#testing-the-production-version)
-  * [Testing the development version](#testing-the-development-version)
+* [For developers](#for-developers)
+  * [Adding your own configuration](#adding-your-own-configuration)
+  * [Testing](#testing)
+    * [Testing the production version](#testing-the-production-version)
+    * [Testing the development version](#testing-the-development-version)
 
 ## Preface
 
-This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `test`.
+This repository defines a Web application in the directory `main` and some supporting resources in the directory `test`.
+
+The Web application is configured by the following configuration resources:
+
+* file `main/src/config.json`;
+* directory `main/public`.
+
+In order to be able to maintain several different configurations (or *flavours*) in this repository, these configuration resources are *git-ignored*.
+Before launching or building the application, their contents need to be copied from the appropriate subdirectory of `main/flavours`.
+The instructions below explain when and how to use the `set-flavour.cjs` script for this purpose.
 
 ## Prerequistes
 
@@ -38,13 +47,19 @@ This repository defines a Web application in the directory `main` and some auxil
 
 ## Getting started
 
-The application is located in directory `main`.
+The Web application is located in directory `main`.
 Go to that directory.
 
-To install the application:
+To install:
 
 ```bash
 npm install
+```
+
+To select the appropriate configuration (here shown for `demo`):
+
+```bash
+node set-flavour.cjs demo
 ```
 
 To run the Web application in development mode:
@@ -55,12 +70,20 @@ npm run dev
 
 Now you can browse the displayed URL.
 
-If you want to test the queries provided in the default configuration `main/src/config.json`,
-continue in section [The supporting resources](#the-supporting-resources).
+In case of the `demo` flavour:
+
+* you'll need to spin up the supporting resources as explained in section [The supporting resources](#the-supporting-resources);
+* some queries require you to be logged in; log in at IDP `http://localhost:8080` as user `hello@example.com` with password `abc123`.
 
 ## The supporting resources
 
-The supporting resources, including a local pod containing example data, are located in directory `test`.
+The supporting resources are located in directory `test`.
+
+These include:
+
+* a local pod containing data used in the `demo` and `test` flavours;
+* proxies used int the `demo` and `test` flavours;
+* scripts to support automated testing.
 
 To install, go to directory `test` and execute:
 
@@ -89,14 +112,19 @@ in a new terminal window, also in directory `test`:
    npm run start:badCors
    ```
 
-Some queries require a log in.
-Log in with the IDP `http://localhost:8080` and the credentials for the user owning the pod named `example` in the file `test/seeded-pod-config.json`.
-
 ## Static, production build
 
 To make a standalone version of the result of this project, you can make a static build and serve it using any webserver.
 
-In directory `main`, execute:
+Go to directory `main`.
+
+To select the appropriate configuration (here shown for `demo`):
+
+```bash
+node set-flavour.cjs demo
+```
+
+To build:
 
 ```bash
 npm run build
@@ -115,7 +143,7 @@ If you provide a WebID, the first Identity Provider found in the given WebID is 
 
 ## Configuration file
 
-The configuration file `main/src/config.json` follows a simple structure.
+The configuration file `main/flavours/<your-flavour>/config.json` follows a simple structure.
 
 ```json
 {
@@ -319,36 +347,17 @@ They've already got styling matching that of `react-admin` and are easy to use.
 
 `Warning` if you change the record object, the changed will still be present in the next render.
 
-## Using the local pods
-
-To support the provided example configuration `main/src/config.json` and the tests, this repo integrates some local pods.
-You can make use of these for your own tests. Follow these steps:
-
-* Add your data and `.acl` files in the `test/initial-pod-data` folder.
-  These files will be available in the pod relative to `http://localhost:8080/example/`.
-* Prepare the pods by executing `npm run reset:pods` in directory `test`.
-
 ## Advanced topics
-
-### Adapting this project to your needs
-
-The easiest way to adapt this project to your needs is:
-
-1. Make your own fork on github.
-2. Concentrate on the files in the `main` subdirectory.
-3. Add your own queries in the `main/public/queries` directory and in general, your own resources in the `main/public` directory.
-4. Write your own `main/src/config.json` file, following the [configuration file documentation above](#configuration-file).
-5. Run or build as documented above.
 
 ### Converting custom queries into common queries
 
 Once you have your basic configuration working, you may extend it with custom queries interactively with the query editor
 and save these to a file in a pod.
-You can convert such custom queries into common queries, by adding them to `main/src/config.json`.
+You can convert such custom queries into common queries, by adding them to `main/flavours/<your-flavour>/config.json`.
 Follow these steps to get started:
 
 1. **Open and view the file with custom queries** using a tool, such as [Penny](https://penny.vincenttunru.com/). The file has JSON syntax and contains an array of query objects.
-2. **Copy the query objects of interest** to the `"queries"` array in `main/src/config.json`.
+2. **Copy the query objects of interest** to the `"queries"` array in `main/flavours/<your-flavour>/config.json`.
    Note that the various queries that were documented in the [configuration file documentation above](#configuration-file) in `"queryLocation"` properties,
    appear here as `"queryString"` variants, with inline contents rather than references to query files (`*.rq`).
    Leave as is or convert to query files as you like.
@@ -356,9 +365,22 @@ Follow these steps to get started:
 3. **Update the `"queryGroupId"` property** in all these queries, to separate them from the custom queries. Ensure the group exists in the `"queryGroups"` array, or create a new group if you prefer.
 4. **Update the `"id"` property**, to avoid conflicts with remaining custom queries: the id must be unique and it also defines the position in the query group.
 5. **Adapt any other properties** according to your preferences.
-6. **Save `main/src/config.json`**, rerun or rebuild and refresh your browser to test.
+6. **Save `main/flavours/<your-flavour>/config.json`**, rerun or rebuild and refresh your browser to test.
 
-## Testing
+## For developers
+
+### Adding your own configuration
+
+The easiest way to add your own configuration is:
+
+1. Get inspired by the configuration in `main/flavours/demo`.
+2. Choose your `<your-flavour>`: a string obeying regex `[a-z0-9-]+`; directory `main/flavours/<your-flavour>` should not yet be in use.
+3. Add your own queries in the `main/flavours/<your-flavour>/public/queries` directory and in general, your own resources in the `main/flavours/<your-flavour>/public` directory.
+4. Write your own `main/flavours/<your-flavour>/config.json` file, following the [configuration file documentation above](#configuration-file).
+5. Run or build as documented above for the `demo` configuration, of course now using `<your-flavour>`.
+6. Consider a pull request to add your configuration to this repo.
+
+### Testing
 
 For testing with the provided configuration file, we use [Cypress](https://www.cypress.io/).
 
@@ -368,7 +390,7 @@ The development version might be tested repeatedly during development.
 
 Both the production version and the development version are tested from a non-empty path in the base URL.
 
-### Testing the production version
+#### Testing the production version
 
 1. Build the production version of the Web application and serve it:
 
@@ -379,6 +401,8 @@ Both the production version and the development version are tested from a non-em
    rm -rf node_modules/
    rm -rf dist/
    npm install
+   # select the test configuration
+   node set-flavour.cjs test
    # build
    npm run build
    ```
@@ -405,7 +429,7 @@ Both the production version and the development version are tested from a non-em
    npm run test:interactive
    ```
 
-### Testing the development version
+#### Testing the development version
 
 The procedure is the same as for testing the production version, except for step 1, which is now:
 
