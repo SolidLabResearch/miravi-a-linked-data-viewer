@@ -6,6 +6,7 @@ inspect the corresponding results.
 Table of contents:
 
 * [Preface](#preface)
+* [Prerequistes](#prerequistes)
 * [Getting started](#getting-started)
 * [The supporting resources](#the-supporting-resources)
 * [Static, production build](#static-production-build)
@@ -30,6 +31,10 @@ Table of contents:
 ## Preface
 
 This repository defines a Web application in the directory `main` and some auxiliary tools for testing and supporting a demo in the directory `test`.
+
+## Prerequistes
+
+* Node >= 18 with npm
 
 ## Getting started
 
