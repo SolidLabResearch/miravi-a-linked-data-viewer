@@ -1,0 +1,9 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ceon-product: <http://w3id.org/CEON/ontology/product/>
+
+SELECT DISTINCT ?ProductLabel
+WHERE {
+  ?Product a ceon-product:Product ;
+    rdfs:label ?ProductLabel
+}
+ORDER BY ?ProductLabel

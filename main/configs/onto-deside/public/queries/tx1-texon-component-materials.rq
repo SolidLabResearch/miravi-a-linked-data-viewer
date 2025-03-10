@@ -1,0 +1,24 @@
+# Query Texon's components and their materials
+
+PREFIX oo: <http://purl.org/openorg/>
+PREFIX ao: <http://purl.org/ontology/ao/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX d: <https://www.example.com/textile-data/>
+PREFIX o: <https://www.example.com/textile-ont/>
+
+SELECT ?component ?componentName ?material ?materialName ?percentage
+WHERE {
+  ?component
+    a o:Component ;
+    o:name ?componentName ;
+    o:has-component-bom [
+      o:has-component-material-assoc [
+        o:percentage ?percentage ;
+        o:has-material ?material ;
+      ];
+    ];
+  .
+  ?material o:name ?materialName ;
+}
+ORDER BY ?componentName

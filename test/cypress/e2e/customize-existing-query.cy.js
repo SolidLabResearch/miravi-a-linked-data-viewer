@@ -2,7 +2,7 @@ describe("Customize existing query", () => {
 
   it("simple query", () => {
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A public list of books I'd love to own").click();
 
     cy.get('button').contains("Clone as custom query").click();
@@ -29,7 +29,7 @@ SELECT * WHERE {
 
   it("templated query - fixed variables", () => {
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A templated query about musicians").click();
 
     cy.get('form').within(() => {
@@ -119,7 +119,7 @@ ORDER BY ?sameAsUrl
 
   it("index file", () => {
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("Sources from an index file").click();
 
     cy.get('button').contains("Clone as custom query").click({ force: true }); // Button is out of FoV so we gotta force the click
@@ -166,7 +166,7 @@ describe("Clone and customize existing query, clone the custom after", () => {
 
   it("clone simple query", () => {
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A public list of books I'd love to own").click();
 
     cy.get('button').contains("Clone as custom query").click();

@@ -85,7 +85,7 @@ describe("Log in", () => {
     
     cy.url().should("eq", Cypress.config('baseUrl'));
 
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A secret list of my favorite books").click();
     cy.contains("It Ends With Us");
 
@@ -97,14 +97,14 @@ describe("Log in", () => {
 
   it("Do not log in and query on private data unauthenticated", () => {
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A secret list of my favorite books").click();
     cy.contains("It Ends With Us").should("not.exist");
   });
 
   it("Do not log in and query public data", () => {
     cy.visit("/");
-    cy.contains("General examples").click();
+    cy.contains("Example queries").click();
     cy.contains("A public list of books I'd love to own").click();
     cy.contains("Too Late");
   });

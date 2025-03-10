@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for multiple configurations (#69, #49).
+- Collections of known configurations are gathered in subdirectories of main/configs (#175).
+
 ## [1.5.0] - 2025-01-02
 
 ### Added

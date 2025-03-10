@@ -1,0 +1,382 @@
+{
+  "title": "Generic Data Viewer",
+  "logoLocation": "images/IDLab-logo.png",
+  "logoRedirectURL": "https://idlab.technology/",
+  "mainAppColor": "lightgray",
+  "backgroundColor": "#fff",
+  "titleColor": "black",
+  "textColor": "#1976D2",
+  "queryFolder": "queries",
+  "httpProxy": "http://localhost:8000/",
+  "showMilliseconds": false,
+  "defaultIDP": "http://localhost:8080",
+  "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
+  "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
+  "queryGroups": [
+    {
+      "id": "gr-xmpl",
+      "name": "Example queries"
+    },
+    {
+      "id": "gr-gnrc",
+      "name": "Generic queries",
+      "icon": "InfoIcon"
+    }
+  ],
+  "queries": [
+    {
+      "id": "1000",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "idols.rq",
+      "name": "My idols",
+      "description": "Demonstrates a simple query, using a proxy.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8001/example/idols"
+        ],
+        "useProxy": true
+      }
+    },
+    {
+      "id": "1010",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "images_test.rq",
+      "name": "Some images",
+      "description": "Demonstrates how to show images in a query result.",
+      "icon": "PhotoIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/cute-cats"
+        ]
+      }
+    },
+    {
+      "id": "1020",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "ask_picasso.rq",
+      "name": "Is there an artist influenced by Picasso?",
+      "description": "Demonstrates an ASK query.",
+      "icon": "BrushIcon",
+      "comunicaContext": {
+        "sources": [
+          "https://fragments.dbpedia.org/2016-04/en"
+        ]
+      },
+      "askQuery": {
+        "trueText": "There is an artist who is inspired by Picasso!",
+        "falseText": "There is no artist who is inspired by Picasso."
+      }
+    },
+    {
+      "id": "1030",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "construct_picasso.rq",
+      "name": "A graph of artists influenced by Picasso",
+      "description": "Demonstrates a CONSTRUCT query.",
+      "icon": "BrushIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/artists"
+        ]
+      }
+    },
+    {
+      "id": "1040",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "average.rq",
+      "name": "Average value",
+      "description": "Demonstrates a query calculating some average.",
+      "icon": "FunctionsIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/values"
+        ]
+      }
+    },
+    {
+      "id": "1050",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "books.rq",
+      "name": "A secret list of my favorite books",
+      "description": "Demonstrates a query whose source requires authentication.",
+      "icon": "MenuBookIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-books"
+        ]
+      }
+    },
+    {
+      "id": "1060",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "books.rq",
+      "name": "A public list of books I'd love to own",
+      "description": "Demonstrates a query whose source does not require authentication.",
+      "icon": "MenuBookIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/wish-list"
+        ]
+      }
+    },
+    {
+      "id": "1070",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "musicians.rq",
+      "name": "A query about musicians",
+      "description": "Demonstrates what happens if one of the sources is not available (fetch failure).",
+      "icon": "MusicNoteIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians",
+          "http://www.example.com/fetch-failure-but-query-success"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "1080",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "musicians_variables.rq",
+      "name": "A templated query about musicians",
+      "description": "Demonstrates the usage of templated queries.",
+      "icon": "MusicNoteIcon",
+      "variables": {
+        "genre": [
+          "\"Romantic\"",
+          "\"Baroque\"",
+          "\"Classical\""
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
+      "id": "1090",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "musicians_variables.rq",
+      "name": "A templated query about musicians (indirect variables)",
+      "description": "Demonstrates the usage of templated queries, here with indirectly loaded variable values.",
+      "icon": "MusicNoteIcon",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
+      "id": "1100",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "musicians_variables2.rq",
+      "name": "A templated query about musicians (two variables)",
+      "description": "Demonstrates the usage of templated queries, here with two variables.",
+      "icon": "MusicNoteIcon",
+      "variables": {
+        "genre": [
+          "\"Romantic\"",
+          "\"Baroque\"",
+          "\"Classical\""
+        ],
+        "sameAsUrl": [
+          "<https://en.wikipedia.org/wiki/Ludwig_van_Beethoven>",
+          "<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>",
+          "<https://en.wikipedia.org/wiki/Johann_Sebastian_Bach>",
+          "<https://en.wikipedia.org/wiki/Franz_Schubert>"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians"
+        ]
+      }
+    },
+    {
+      "id": "1110",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "components.rq",
+      "name": "Source verification",
+      "description": "Demonstrates source verification. Query components from three kinds of sources: a non-verifiable source, a successfully verifiable source, and a verifiable source with an incorrect proof.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/verifiable-example/components-vc",
+          "http://localhost:8080/verifiable-example/components-vc-incorrect-proof",
+          "http://localhost:8080/example/components"
+        ]
+      }
+    },
+    {
+      "id": "1120",
+      "queryGroupId": "gr-xmpl",
+      "queryLocation": "components_materials.rq",
+      "name": "Sources from an index file",
+      "description": "Query components (including details about materials) with the sources obtained from index files.",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only-lt",
+        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
+      }
+    },
+    {
+      "id": "2000",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "example_count_spo.rq",
+      "name": "Count",
+      "description": "Gives the count of triples in the indicated datasources.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2010",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "example_spo.rq",
+      "name": "Triples",
+      "description": "Gives at most 50 triples in the indicated datasources.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2020",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "variableQueries/example_s.rq",
+      "name": "Subjects",
+      "description": "Gives at most 50 subjects in the indicated datasources.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2030",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "variableQueries/example_p.rq",
+      "name": "Predicates",
+      "description": "Gives at most 50 predicates in the indicated datasources.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2040",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "variableQueries/example_o.rq",
+      "name": "Objects",
+      "description": "Gives at most 50 objects in the indicated datasources.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2050",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "example_sxpo.rq",
+      "name": "Triples with subject",
+      "description": "Gives at most 50 triples with a given subject in the indicated datasources.",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_s.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2060",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "example_spxo.rq",
+      "name": "Triples with predicate",
+      "description": "Gives at most 50 triples with a given predicate in the indicated datasources.",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_p.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2070",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "example_spox.rq",
+      "name": "Triples with object",
+      "description": "Gives at most 50 triples with a given object in the indicated datasources.",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_o.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2080",
+      "queryGroupId": "gr-gnrc",
+      "queryLocation": "example_terms_of_type.rq",
+      "name": "Terms of type",
+      "description": "Gives at most 50 terms of a given rdf:type in the indicated datasources.",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/example_types.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/components",
+          "http://localhost:8080/example/boms",
+          "http://localhost:8080/example/materials"
+        ],
+        "lenient": true
+      }
+    }
+  ]
+}

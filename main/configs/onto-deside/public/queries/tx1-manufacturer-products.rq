@@ -1,0 +1,17 @@
+# Query Manufacturer's products
+
+PREFIX oo: <http://purl.org/openorg/>
+PREFIX ao: <http://purl.org/ontology/ao/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX d: <https://www.example.com/textile-data/>
+PREFIX o: <https://www.example.com/textile-ont/>
+
+SELECT ?product ?productName
+WHERE {
+	?product
+		a o:Product ;
+		o:name ?productName ;
+		.
+}
+ORDER BY ?productName

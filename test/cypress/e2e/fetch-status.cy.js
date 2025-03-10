@@ -79,7 +79,7 @@ describe("Fetch Status", () => {
         cy.visit("/");
 
         // Go immediately to query
-        cy.contains("General examples").click();
+        cy.contains("Example queries").click();
         cy.contains("A query about musicians").click();  
         
         // Check if the good and bad sources appear

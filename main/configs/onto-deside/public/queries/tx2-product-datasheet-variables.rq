@@ -1,0 +1,9 @@
+PREFIX textile: <http://w3id.org/CEON/ontology/textile/>
+PREFIX voc: <http://example.com/voc/>
+
+SELECT ?ProductDataSheet_url ?Property_url ?Value WHERE {
+  ?ProductDataSheet_url a textile:TextileDataSheet;
+     <http://w3id.org/CEON/ontology/resourceODP/isAbout> $product;
+     ?Property_url ?Value .
+}
+ORDER BY DESC(str(?Property_url))

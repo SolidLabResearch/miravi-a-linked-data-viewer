@@ -1,0 +1,9 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX elec: <http://w3id.org/CEON/demo/electronics/>
+
+SELECT DISTINCT ?ProductLabel
+WHERE {
+  ?Product a elec:ElectronicsProduct ;
+     rdfs:label ?ProductLabel
+}
+ORDER BY ?ProductLabel
