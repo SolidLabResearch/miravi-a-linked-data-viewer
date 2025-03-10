@@ -18,7 +18,7 @@ import CustomConversionButton from "../../CustomQueryEditor/customConversionButt
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
-  const { resource, changeVariables, submitted } = props;
+  const { resource, variables, changeVariables, submitted } = props;
   const resourceDef = useResourceDefinition();
 
   const queryTitle = resourceDef.options.label;
@@ -42,7 +42,14 @@ function QueryResultList(props) {
         {submitted && <Aside changeVariables={changeVariables} />}
         {resourceDef.options.queryGroupId === 'cstm' ? <CustomQueryEditButton queryID={resourceDef.name} submitted={submitted} /> : <CustomConversionButton query={query} id={resourceDef.name}/>}
       </div>
-      <Typography fontSize={"2rem"} mt={2} > {queryTitle} </Typography>
+      <Typography sx={{ fontSize: '2rem' }} > {queryTitle} </Typography>
+      {variables && <>
+        {Object.keys(variables).map((key) => {
+          return (<Typography sx={{ fontSize: '1.5rem', ml:5 }} >{key}: {variables[key]}</Typography>)
+        })
+        }
+      </>
+      }
       {values ? (
         <ListView title=" " actions={<ActionBar />} {...props} >
           <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>

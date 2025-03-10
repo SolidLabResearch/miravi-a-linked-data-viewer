@@ -47,7 +47,7 @@ function ListResultTable(props) {
       sort={sort}
     >
       {isLoading && <Loading loadingSecondary={"The page is loading. Just a moment please."} />}
-      {!isLoading && <QueryResultList resource={resource} { ...rest } />}
+      {!isLoading && <QueryResultList resource={resource} variables={variables} { ...rest } />}
     </ListBase>
   );
 }
