@@ -1,10 +1,10 @@
 const fse = require('fs-extra');
 const path = require('path');
 
-function main(flavour) {
-  const from = path.join('.', 'flavours', flavour);
+function main(config) {
+  const from = path.join('.', 'configs', config);
   const options = { overwrite: true, preserveTimestamps: true };
-  console.log(`Activating flavour from ${from}.`);
+  console.log(`Activating configuration from ${from}.`);
 
   const configSrc = path.join(from, 'config.json');
   const configDest = path.join('.', 'src', 'config.json');

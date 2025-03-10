@@ -38,8 +38,8 @@ The Web application is configured by the following configuration resources:
 * directory `main/public`.
 
 In order to be able to maintain several different configurations (or *flavours*) in this repository, these configuration resources are *git-ignored*.
-Before launching or building the application, their contents need to be copied from the appropriate subdirectory of `main/flavours`.
-The instructions below explain when and how to use the `set-flavour.cjs` script for this purpose.
+Before launching or building the application, their contents need to be copied from the appropriate subdirectory of `main/configs`.
+The instructions below explain when and how to use the `select-config.cjs` script for this purpose.
 
 ## Prerequistes
 
@@ -59,7 +59,7 @@ npm install
 To select the appropriate configuration (here shown for `demo`):
 
 ```bash
-node set-flavour.cjs demo
+node scripts/select-config.cjs demo
 ```
 
 To run the Web application in development mode:
@@ -70,7 +70,7 @@ npm run dev
 
 Now you can browse the displayed URL.
 
-In case of the `demo` flavour:
+In case of the `demo` configuration:
 
 * you'll need to spin up the supporting resources as explained in section [The supporting resources](#the-supporting-resources);
 * some queries require you to be logged in; log in at IDP `http://localhost:8080` as user `hello@example.com` with password `abc123`.
@@ -81,8 +81,8 @@ The supporting resources are located in directory `test`.
 
 These include:
 
-* a local pod containing data used in the `demo` and `test` flavours;
-* proxies used int the `demo` and `test` flavours;
+* a local pod containing data used in the `demo` and `test` configurations;
+* proxies used int the `demo` and `test` configurations;
 * scripts to support automated testing.
 
 To install, go to directory `test` and execute:
@@ -121,7 +121,7 @@ Go to directory `main`.
 To select the appropriate configuration (here shown for `demo`):
 
 ```bash
-node set-flavour.cjs demo
+node scripts/select-config.cjs demo
 ```
 
 To build:
@@ -143,7 +143,7 @@ If you provide a WebID, the first Identity Provider found in the given WebID is 
 
 ## Configuration file
 
-The configuration file `main/flavours/<your-flavour>/config.json` follows a simple structure.
+The configuration file must follow the structure shown below.
 
 ```json
 {
@@ -353,11 +353,11 @@ They've already got styling matching that of `react-admin` and are easy to use.
 
 Once you have your basic configuration working, you may extend it with custom queries interactively with the query editor
 and save these to a file in a pod.
-You can convert such custom queries into common queries, by adding them to `main/flavours/<your-flavour>/config.json`.
+You can convert such custom queries into common queries, by adding them to `main/configs/<your-config>/config.json`.
 Follow these steps to get started:
 
 1. **Open and view the file with custom queries** using a tool, such as [Penny](https://penny.vincenttunru.com/). The file has JSON syntax and contains an array of query objects.
-2. **Copy the query objects of interest** to the `"queries"` array in `main/flavours/<your-flavour>/config.json`.
+2. **Copy the query objects of interest** to the `"queries"` array in `main/configs/<your-config>/config.json`.
    Note that the various queries that were documented in the [configuration file documentation above](#configuration-file) in `"queryLocation"` properties,
    appear here as `"queryString"` variants, with inline contents rather than references to query files (`*.rq`).
    Leave as is or convert to query files as you like.
@@ -365,7 +365,7 @@ Follow these steps to get started:
 3. **Update the `"queryGroupId"` property** in all these queries, to separate them from the custom queries. Ensure the group exists in the `"queryGroups"` array, or create a new group if you prefer.
 4. **Update the `"id"` property**, to avoid conflicts with remaining custom queries: the id must be unique and it also defines the position in the query group.
 5. **Adapt any other properties** according to your preferences.
-6. **Save `main/flavours/<your-flavour>/config.json`**, rerun or rebuild and refresh your browser to test.
+6. **Save `main/configs/<your-config>/config.json`**, rerun or rebuild and refresh your browser to test.
 
 ## For developers
 
@@ -373,11 +373,11 @@ Follow these steps to get started:
 
 The easiest way to add your own configuration is:
 
-1. Get inspired by the configuration in `main/flavours/demo`.
-2. Choose your `<your-flavour>`: a string obeying regex `[a-z0-9-]+`; directory `main/flavours/<your-flavour>` should not yet be in use.
-3. Add your own queries in the `main/flavours/<your-flavour>/public/queries` directory and in general, your own resources in the `main/flavours/<your-flavour>/public` directory.
-4. Write your own `main/flavours/<your-flavour>/config.json` file, following the [configuration file documentation above](#configuration-file).
-5. Run or build as documented above for the `demo` configuration, of course now using `<your-flavour>`.
+1. Get inspired by the configuration in `main/configs/demo`.
+2. Choose your `<your-config>`: a string obeying regex `[a-z0-9-]+`; directory `main/configs/<your-config>` should not yet be in use.
+3. Add your own queries in the `main/configs/<your-config>/public/queries` directory and in general, your own resources in the `main/configs/<your-config>/public` directory.
+4. Write your own `main/configs/<your-config>/config.json` file, following the [configuration file documentation above](#configuration-file).
+5. Run or build as documented above for the `demo` configuration, of course now using `<your-config>`.
 6. Consider a pull request to add your configuration to this repo.
 
 ### Testing
@@ -402,7 +402,7 @@ Both the production version and the development version are tested from a non-em
    rm -rf dist/
    npm install
    # select the test configuration
-   node set-flavour.cjs test
+   node scripts/select-config.cjs test
    # build
    npm run build
    ```
