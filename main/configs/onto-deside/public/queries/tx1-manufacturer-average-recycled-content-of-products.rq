@@ -1,0 +1,28 @@
+# What is the average recycled content (weight percentage) of Manufacturer's products?
+
+PREFIX oo: <http://purl.org/openorg/>
+PREFIX ao: <http://purl.org/ontology/ao/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX d: <https://www.example.com/textile-data/>
+PREFIX o: <https://www.example.com/textile-ont/>
+
+SELECT (AVG(?productRecycledContentPercentage) as ?averageProductRecycledContentPercentage)
+WHERE
+{
+  SELECT (SUM(?partialRecycledContentPercentage) as ?productRecycledContentPercentage)
+  WHERE {
+    ?product
+      a o:Product;
+      o:has-product-bom [
+        o:has-product-component-assoc [
+          o:percentage ?percentage ;
+          o:has-component [
+            o:recycled-content-percentage ?recycledContentPercentage ;
+          ];
+        ];
+      ];
+    BIND (?percentage * ?recycledContentPercentage / 100 AS ?partialRecycledContentPercentage)
+  }
+  GROUP BY ?product
+}

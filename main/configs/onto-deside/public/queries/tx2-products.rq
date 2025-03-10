@@ -1,0 +1,8 @@
+PREFIX textile: <http://w3id.org/CEON/ontology/textile/>
+PREFIX voc: <http://example.com/voc/>
+
+SELECT ?product_url ?name ?brand WHERE {
+  ?product_url a textile:TextileProduct .
+  ?product_url voc:1100 ?name .
+  ?product_url voc:1101 ?brand .
+}

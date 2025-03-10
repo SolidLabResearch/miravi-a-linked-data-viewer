@@ -1,0 +1,28 @@
+# What is the recycled content (weight percentage) of product p01?
+
+PREFIX oo: <http://purl.org/openorg/>
+PREFIX ao: <http://purl.org/ontology/ao/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX d: <https://www.example.com/textile-data/>
+PREFIX o: <https://www.example.com/textile-ont/>
+
+SELECT ?product ?productName (SUM(?partialRecycledContentPercentage) as ?productRecycledContentPercentage)
+WHERE {
+  VALUES ?product {
+    $product
+  }
+  ?product
+    a o:Product;
+    o:name ?productName;
+    o:has-product-bom [
+      o:has-product-component-assoc [
+        o:percentage ?percentage ;
+        o:has-component [
+          o:recycled-content-percentage ?recycledContentPercentage ;
+        ];
+      ];
+    ];
+  BIND (?percentage * ?recycledContentPercentage / 100 AS ?partialRecycledContentPercentage)
+}
+GROUP BY ?product ?productName

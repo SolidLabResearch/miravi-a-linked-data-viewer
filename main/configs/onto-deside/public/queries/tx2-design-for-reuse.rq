@@ -1,0 +1,15 @@
+PREFIX textile: <http://w3id.org/CEON/ontology/textile/>
+PREFIX voc: <http://example.com/voc/>
+
+SELECT DISTINCT ?Product_url ?Property_url ?Value WHERE {
+  VALUES ?Property_url {
+    textile:designedForReuseWMinimalMod
+    textile:CEmark
+    textile:designedForRefurbishment
+    textile:designedForRemanufacturing
+  }
+  ?ProductDataSheet_url a textile:TextileDataSheet;
+    <http://w3id.org/CEON/ontology/resourceODP/isAbout> ?Product_url;
+    ?Property_url ?Value.
+}
+ORDER BY ASC(str(?Product_url))

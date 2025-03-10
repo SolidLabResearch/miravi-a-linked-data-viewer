@@ -1,0 +1,22 @@
+# Query Lindner Group's products details
+
+PREFIX oo: <http://purl.org/openorg/>
+PREFIX ao: <http://purl.org/ontology/ao/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX d: <https://www.example.com/data/>
+PREFIX o: <https://www.example.com/ont/>
+
+SELECT ?product ?bom ?materialName ?quantity
+WHERE {
+	?product
+		a o:Product ;
+		o:has-bom ?bom ;
+		.
+	?bom
+		o:has-bom-material-assoc [
+				o:quantity ?quantity;
+				o:has-material [ o:name ?materialName ; ];
+		];
+	  .
+}

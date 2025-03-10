@@ -1,0 +1,8 @@
+PREFIX textile: <http://w3id.org/CEON/ontology/textile/>
+PREFIX voc: <http://example.com/voc/>
+
+SELECT ?Product_url ?WaterProperty_url WHERE {
+  ?ProductDataSheet a textile:TextileDataSheet;
+    <http://w3id.org/CEON/ontology/resourceODP/isAbout> ?Product_url;
+    textile:hasWaterProperty ?WaterProperty_url .
+}
