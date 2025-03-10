@@ -1,0 +1,88 @@
+{
+  "title": "Search the OSLO vocabularia and application profiles",
+  "logoLocation": "images/IDLab-logo.png",
+  "logoRedirectURL": "https://idlab.technology/",
+  "mainAppColor": "lightgray",
+  "backgroundColor": "#fff",
+  "titleColor": "black",
+  "textColor": "#1976D2",
+  "queryFolder": "queries",
+  "showMilliseconds": false,
+  "defaultIDP": "",
+  "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
+  "introductionText": "Please select a query from the menu on the left.",
+  "queries": [
+    {
+      "id": "100",
+      "queryLocation": "get-all-used-classes.rq",
+      "name": "All used classes",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      }
+    },
+    {
+      "id": "101",
+      "queryLocation": "get-all-used-properties.rq",
+      "name": "All used properties",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      }
+    },
+    {
+      "id": "102",
+      "queryLocation": "outgoing-triples-per-superclass.rq",
+      "name": "Outgoing triples per (super)class",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/class.rq"]
+      }
+    },
+    {
+      "id": "103",
+      "queryLocation": "outgoing-triples-per-property.rq",
+      "name": "Outgoing triples per property",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/property.rq"]
+      }
+    },
+    {
+      "id": "104",
+      "queryLocation": "all-aps-that-use-a-specific-property.rq",
+      "name": "All application profiles that use a specific-property",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/property-in-ap.rq"]
+      }
+    },
+    {
+      "id": "105",
+      "queryLocation": "all-properties-used-by-a-specific-ap.rq",
+      "name": "All properties used by a specific application profile",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/ap.rq"]
+      }
+    }
+  ]
+}
