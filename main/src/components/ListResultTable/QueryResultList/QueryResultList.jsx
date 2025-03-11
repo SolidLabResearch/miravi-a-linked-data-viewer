@@ -45,7 +45,7 @@ function QueryResultList(props) {
       <Typography sx={{ fontSize: '2rem' }} > {queryTitle} </Typography>
       {variables && <>
         {Object.keys(variables).map((key) => {
-          return (<Typography sx={{ fontSize: '1.5rem', ml:5 }} >{key}: {variables[key]}</Typography>)
+          return (<Typography sx={{ fontSize: '1.5rem' }} > {key}: {variables[key]} </Typography>)
         })
         }
       </>
