@@ -6,7 +6,7 @@ inspect the corresponding results.
 Table of contents:
 
 * [Preface](#preface)
-* [Prerequistes](#prerequistes)
+* [Prerequisites](#prerequisites)
 * [Getting started](#getting-started)
 * [The supporting resources](#the-supporting-resources)
 * [Static, production build](#static-production-build)
@@ -25,6 +25,7 @@ Table of contents:
 * [For developers](#for-developers)
   * [Adding your own configuration](#adding-your-own-configuration)
   * [Testing](#testing)
+    * [Additional prerequisites](#additional-prerequisites)
     * [Testing the production version](#testing-the-production-version)
     * [Testing the development version](#testing-the-development-version)
 
@@ -41,9 +42,10 @@ In order to be able to maintain several different configurations (or *flavours*)
 Before launching or building the application, their contents need to be copied from the appropriate subdirectory of `main/configs`.
 The instructions below explain when and how to use the `select-config.cjs` script for this purpose.
 
-## Prerequistes
+## Prerequisites
 
 * Node >= 18 with npm
+* A Linux platform with a bash shell
 
 ## Getting started
 
@@ -382,13 +384,27 @@ The easiest way to add your own configuration is:
 
 ### Testing
 
-For testing with the provided configuration file, we use [Cypress](https://www.cypress.io/).
-
 > It is important to test the production version at least at the end of a development cycle.
 
 The development version might be tested repeatedly during development.
 
 Both the production version and the development version are tested from a non-empty path in the base URL.
+
+#### Additional prerequisites
+
+Testing uses [Cypress](https://docs.cypress.io/app/get-started/why-cypress).
+The app will be installed with `npm install` as documented below, but you need to do take care of additional [Linux prerequisites](https://docs.cypress.io/app/get-started/install-cypress#Linux-Prerequisites).
+
+We instruct Cypress to use the Chrome browser, so you'll need it on your system. Installation example:
+
+```bash
+sudo apt update
+sudo apt -y upgrade
+sudo apt -y autoremove
+cd ~
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt -y install ./google-chrome-stable_current_amd64.deb
+```
 
 #### Testing the production version
 
