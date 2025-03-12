@@ -18,6 +18,9 @@ describe("Templated query", () => {
     // Comfirm query
     cy.get('button').contains('Query').click();
 
+    // Check the display of the variable(s) and their value
+    cy.contains("genre: \"Baroque\"");
+
     // Check that the page loaded and that we can see the correct data
     cy.contains("Finished in:");
     cy.get('.column-name').find('span').contains("Johann Sebastian Bach");
@@ -69,6 +72,12 @@ describe("Templated query", () => {
     cy.get('li').contains('Mozart').click();
 
     cy.get('button').contains('Query').click();
+
+    // Check the display of the variable(s) and their value
+    cy.contains("genre: \"Classical\"");
+    cy.contains("sameAsUrl: <https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>");
+
+    // Check that the page loaded and that we can see the correct data
     cy.contains("Finished in:");
     cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart");
   });
