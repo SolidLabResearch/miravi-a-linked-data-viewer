@@ -6,7 +6,7 @@ import CustomQueryEditButton from "../CustomQueryEditor/customQueryEditButton";
 
 const MyToolbar = () => (
   <Toolbar>
-    <SaveButton icon={<DoneIcon/>} label="Query"/>
+    <SaveButton icon={<DoneIcon/>} label="Query" alwaysEnable />
   </Toolbar>
 );
 
@@ -43,6 +43,7 @@ const TemplatedQueryForm = (props) => {
           label={name}
           validate={required()}
           fullWidth={true}
+          defaultValue={searchPar[name]}
           choices={
             options.map((option) => ({
               id: option,
