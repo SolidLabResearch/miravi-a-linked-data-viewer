@@ -79,40 +79,26 @@ In case of the `demo` configuration:
 
 ## The supporting resources
 
-The supporting resources are located in directory `test`.
+The supporting resources are located in directory `test`, along with some scripts useful for testing.
 
-These include:
+Resources:
 
 * a local pod containing data used in the `demo` and `test` configurations;
-* proxies used int the `demo` and `test` configurations;
-* scripts to support automated testing.
+* proxies used in the `demo` and `test` configurations.
 
-To install, go to directory `test` and execute:
+Go to directory `test`.
+
+To install, execute:
 
 ```bash
 npm install
 ```
 
-Next, activate the supporting resources by executing each of the following steps
-in a new terminal window, also in directory `test`:
+Spin up resources:
 
-1. Prepare and start the local pods:
-
-   ```bash
-   npm run reset:pods && npm run start:pods
-   ```
-
-2. Start the http proxy:
-
-   ```bash
-   npm run start:proxy
-   ```
-
-3. Start a server which denies all CORS headers:
-
-   ```bash
-   npm run start:badCors
-   ```
+```bash
+npm run start:support
+```
 
 ## Static, production build
 

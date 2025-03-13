@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for multiple configurations (#69, #49).
 - Collections of known configurations are gathered in subdirectories of main/configs (#175).
-- For templated queries: variables shown in title of result table (#163).
+- Templated queries: variables shown in title of result table (#163).
+- Templated queries: changing variables dialogue is preloaded with previous values (#167).
 
 ## [1.5.0] - 2025-01-02
 
