@@ -1,12 +1,12 @@
 import { AppBar, TitlePortal, useRefresh } from "react-admin";
 import "./NavigationBar.css";
 import AuthenticationMenu from "../AuthenticationMenu/AuthenticationMenu";
-import { Component, useState } from "react";
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { IconButton } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
-import { IconButton, Tooltip } from "@mui/material";
 import AboutDialog from "./AboutDialog";
+import { useState } from "react";
 
 import configManager from "../../../configManager/configManager";
 import comunicaEngineWrapper from "../../../comunicaEngineWrapper/comunicaEngineWrapper";
