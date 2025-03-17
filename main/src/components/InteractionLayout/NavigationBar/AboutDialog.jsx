@@ -22,8 +22,11 @@ function AboutDialog(props) {
       </DialogTitle>
       <DialogContent>
         <p>Version: {version}</p>
-        <p><a href="https://github.com/SolidLabResearch/generic-data-viewer-react-admin" target="_blank">Repository</a></p>
-        <p>Powered by <a href="https://comunica.dev/" target="_blank">Comunica</a></p>
+        <p>Questions? Remarks?
+          Please create an issue at our <a href="https://github.com/SolidLabResearch/generic-data-viewer-react-admin" target="_blank">Repository</a><br />
+          or mail to <a href="mailto:ben.demeester@ugent.be" target="_blank">ben.demeester@ugent.be</a>.</p>
+        <p>Powered by <a href="https://comunica.dev/" target="_blank">Comunica</a> and <a href="https://marmelab.com/react-admin/" target="_blank">React-Admin</a>.</p>
+        <p>Initial development funded by <a href="https://ontodeside.eu/" target="_blank">Onto-DESIDE</a> and <a href="https://solidlab.be/" target="_blank">SolidLab</a>.</p>
       </DialogContent>
     </Dialog>
   );
