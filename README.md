@@ -28,7 +28,7 @@ Table of contents:
     * [Additional prerequisites](#additional-prerequisites)
     * [Testing the production version](#testing-the-production-version)
     * [Testing the development version](#testing-the-development-version)
-  * [Setting the version string](#setting-the-version-string)
+  * [Maintaining the version string](#maintaining-the-version-string)
 
 ## Preface
 
@@ -444,7 +444,6 @@ The procedure is the same as for testing the production version, except for step
    npm run dev-with-path
    ```
 
-### Setting the version string
+### Maintaining the version string
 
-Before every merge to the main branch and before every release, set the version string [here](./main/src/version.js)
-according to the rules in that file.
+Maintain the version string [here](./main/src/version.js) according to the rules in that file.
