@@ -1,7 +1,6 @@
-import "./AboutDialog.css";
 import { Component } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { IconButton, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogContentText } from "@mui/material";
 
 import version from "../../../version";
 
@@ -21,12 +20,14 @@ function AboutDialog(props) {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <p>Version: {version}</p>
-        <p>Questions? Remarks?
-          Please create an issue at our <a href="https://github.com/SolidLabResearch/generic-data-viewer-react-admin" target="_blank">Repository</a><br />
-          or mail to <a href="mailto:ben.demeester@ugent.be" target="_blank">ben.demeester@ugent.be</a>.</p>
-        <p>Powered by <a href="https://comunica.dev/" target="_blank">Comunica</a> and <a href="https://marmelab.com/react-admin/" target="_blank">React-Admin</a>.</p>
-        <p>Initial development funded by <a href="https://ontodeside.eu/" target="_blank">Onto-DESIDE</a> and <a href="https://solidlab.be/" target="_blank">SolidLab</a>.</p>
+        <DialogContentText>
+          <p>Version: {version}</p>
+          <p>Questions? Remarks?
+            Please create an issue at our <a href="https://github.com/SolidLabResearch/generic-data-viewer-react-admin" target="_blank">Repository</a><br />
+            or mail to <a href="mailto:ben.demeester@ugent.be" target="_blank">ben.demeester@ugent.be</a>.</p>
+          <p>Powered by <a href="https://comunica.dev/" target="_blank">Comunica</a> and <a href="https://marmelab.com/react-admin/" target="_blank">React-Admin</a>.</p>
+          <p>Initial development funded by <a href="https://ontodeside.eu/" target="_blank">Onto-DESIDE</a> and <a href="https://solidlab.be/" target="_blank">SolidLab</a>.</p>
+        </DialogContentText>
       </DialogContent>
     </Dialog>
   );
