@@ -1,15 +1,21 @@
-import {ListBase, Loading, useListController,} from "react-admin";
+import {ListBase, } from "react-admin";
 import PropTypes from "prop-types";
 import {Component} from "react";
 import QueryResultList from "./QueryResultList/QueryResultList";
 
 import configManager from "../../configManager/configManager";
 
+
+// LOG let listResultTableCounter = 0;
+
 /**
  * @param {object} props - the props passed down to the component
  * @returns {Component} custom List as defined by react-admin which either shows a loading indicator or the query results
  */
 function ListResultTable(props) {
+  // LOG console.log(`--- ListResultTable #${++listResultTableCounter}`);
+  // LOG console.log(`props: ${JSON.stringify(props, null, 2)}`);
+
   const {
     debounce,
     disableSyncWithLocation,
@@ -23,14 +29,7 @@ function ListResultTable(props) {
     ...rest
   } = props;
 
-  const {isLoading} = useListController({
-    queryOptions: {
-      meta: {
-        variables: variables
-      }
-    }
-  });
-
+  // TODO delete next unless we're going to use it
   const query = configManager.getQueryWorkingCopyById(resource);
 
   return (
@@ -42,12 +41,15 @@ function ListResultTable(props) {
       filter={filter}
       filterDefaultValues={filterDefaultValues}
       perPage={perPage}
-      queryOptions={{keepPreviousData: false}}
+      queryOptions={{
+        keepPreviousData: false,
+        meta: {
+          variables: variables
+        }}}
       resource={resource}
       sort={sort}
     >
-      {isLoading && <Loading loadingSecondary={"The page is loading. Just a moment please."} />}
-      {!isLoading && <QueryResultList resource={resource} variables={variables} { ...rest } />}
+      <QueryResultList resource={resource} variables={variables} { ...rest } />
     </ListBase>
   );
 }
@@ -60,7 +62,6 @@ ListResultTable.propTypes = {
   filter: PropTypes.object,
   filterDefaultValues: PropTypes.object,
   perPage: PropTypes.number,
-  queryOptions: PropTypes.object,
   resource: PropTypes.string.isRequired,
   sort: PropTypes.object,
   variables: PropTypes.object.isRequired

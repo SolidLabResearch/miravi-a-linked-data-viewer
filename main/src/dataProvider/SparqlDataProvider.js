@@ -27,8 +27,19 @@ const onConfigChanged = (newConfig) => {
 
 configManager.on('configChanged', onConfigChanged);
 
+// LOG let getListCounter = 0;
+// LOG let getIndirectVariablesCounter = 0;
+
 export default {
   getList: async function getList(resource, { pagination, sort, filter, meta }) {
+
+    // LOG console.log(`--- getList #${++getListCounter}`);
+    // LOG console.log(`resource: ${ resource }`);
+    // LOG console.log(`pagination: ${JSON.stringify(pagination, null, 2)}`);
+    // LOG console.log(`sort: ${ JSON.stringify(sort, null, 2) }`);
+    // LOG console.log(`filter: ${JSON.stringify(filter, null, 2)}`);
+    // LOG console.log(`meta: ${JSON.stringify(meta, null, 2)}`);
+    
     // make a working copy of the query object found in the configuration, to prevent changing the configuration
     // this copy is extended here
     // rendering should occur based on this working copy
@@ -91,9 +102,7 @@ export default {
   deleteMany: async function deleteMany() {
     throw new NotImplementedError();
   },
-  indirectVariables: async function indirectVariables(query) {
-    return await getIndirectVariables(query);
-  },
+  getIndirectVariables
 };
 
 /**
@@ -297,6 +306,7 @@ function handleComunicaContextCreation(query) {
 
 async function getIndirectVariables(query) {
 
+  // LOG console.log(`--- getIndirectVariables #${++getIndirectVariablesCounter}`);
 
   // This chunk of code is duplicated in order for the indirect queries having sources from a source index to work correctly.
   handleComunicaContextCreation(query);

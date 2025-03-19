@@ -1,5 +1,5 @@
-import { Component, useEffect, useState } from "react";
-import { Datagrid, ListView, Title, useListContext, useResourceDefinition } from "react-admin";
+import { Component, useMemo } from "react";
+import { Loading, Datagrid, ListView, Title, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import { Term } from "sparqljs";
@@ -13,6 +13,9 @@ import IconProvider from "../../../IconProvider/IconProvider";
 import configManager from "../../../configManager/configManager";
 import CustomConversionButton from "../../CustomQueryEditor/customConversionButton";
 
+
+// LOG let queryResultListCounter = 0;
+
 /**
  * @param {object} props - the props passed down to the component
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
@@ -20,22 +23,28 @@ import CustomConversionButton from "../../CustomQueryEditor/customConversionButt
 function QueryResultList(props) {
   const { resource, variables, changeVariables, submitted } = props;
   const resourceDef = useResourceDefinition();
-
-  const queryTitle = resourceDef.options.label;
-  const { data } = useListContext(props);
-  const [values, setValues] = useState(undefined);
-  useEffect(() => {
-    if (data && data.length > 0) {
-      const setData = reduceDataToObject(data);
-      delete setData.id;
-      setValues(setData);
+  const queryTitle = resourceDef?.options?.label;
+  const { data, isLoading } = useListContext(props);
+  const values = useMemo(() => {
+    if (!isLoading && data && data.length > 0) {
+      // TODO integrate reduceDataToObject code here
+      const newValues = reduceDataToObject(data);
+      delete newValues.id;
+      return newValues; 
+    } else {
+      return null;
     }
   }, [data]);
 
   const config = configManager.getConfig();
   const query = configManager.getQueryWorkingCopyById(resource);
 
+  // LOG console.log(`--- QueryResultList #${++queryResultListCounter}`);
+  // LOG console.log(`props: ${ JSON.stringify(props, null, 2) }`);
+  // LOG console.log(`isLoading: ${isLoading}`);
+
   return (
+    isLoading ? <Loading loadingSecondary={"The page is loading. Just a moment please."} /> :
     <div style={{ paddingLeft: '20px', paddingRight: '10px' }}>
       <Title title={config.title} />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -73,6 +82,7 @@ function QueryResultList(props) {
 
 QueryResultList.propTypes = {
   resource: PropTypes.string.isRequired,
+  variables: PropTypes.object.isRequired,
   changeVariables: PropTypes.func.isRequired,
   submitted: PropTypes.bool.isRequired
 };
