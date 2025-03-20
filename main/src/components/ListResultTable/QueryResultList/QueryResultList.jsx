@@ -1,4 +1,4 @@
-import { Component, useMemo } from "react";
+import { Component } from "react";
 import { Loading, Datagrid, ListView, Title, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
@@ -25,16 +25,18 @@ function QueryResultList(props) {
   const resourceDef = useResourceDefinition();
   const queryTitle = resourceDef?.options?.label;
   const { data, isLoading } = useListContext(props);
-  const values = useMemo(() => {
-    if (!isLoading && data && data.length > 0) {
-      // TODO integrate reduceDataToObject code here
-      const newValues = reduceDataToObject(data);
-      delete newValues.id;
-      return newValues; 
-    } else {
-      return null;
-    }
-  }, [data]);
+  let values = {};
+  if (!isLoading && data && data.length > 0) {
+    data.forEach((record) => {
+      Object.keys(record).forEach((variable) => {
+        if (!values[variable]) {
+          values[variable] = [];
+        }
+        values[variable] = values[variable].concat(record[variable]);
+      });
+    });
+    delete values.id;
+  }
 
   const config = configManager.getConfig();
   const query = configManager.getQueryWorkingCopyById(resource);
@@ -59,7 +61,7 @@ function QueryResultList(props) {
         }
       </>
       }
-      {values ? (
+      {Object.keys(values).length ? (
         <ListView title=" " actions={<ActionBar />} {...props} >
           <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>
             {Object.keys(values).map((key) => {
@@ -86,24 +88,6 @@ QueryResultList.propTypes = {
   changeVariables: PropTypes.func.isRequired,
   submitted: PropTypes.bool.isRequired
 };
-
-/**
- *
- * @param {Array<Term>} data - a list of data objects
- * @returns {Term} an object with the keys of the data and the values as an array of the values of the data
- */
-function reduceDataToObject(data) {
-  const dataObject = {};
-  data.forEach((record) => {
-    Object.keys(record).forEach((variable) => {
-      if (!dataObject[variable]) {
-        dataObject[variable] = [];
-      }
-      dataObject[variable] = dataObject[variable].concat(record[variable]);
-    });
-  });
-  return dataObject;
-}
 
 const Aside = (props) => {
   const { changeVariables } = props;

@@ -29,9 +29,6 @@ function ListResultTable(props) {
     ...rest
   } = props;
 
-  // TODO delete next unless we're going to use it
-  const query = configManager.getQueryWorkingCopyById(resource);
-
   return (
     <ListBase
       debounce={debounce}
