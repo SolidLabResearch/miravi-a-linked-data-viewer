@@ -18,16 +18,15 @@ const TemplatedListResultTable = (props) => {
   const resourceDef = useResourceDefinition();
   const dataProvider = useDataProvider();
   const resource = useResourceContext();
-  const query = configManager.getQueryWorkingCopyById(resource);
-
   const location = useLocation();
   const navigate = useNavigate();
-  const [submittedVariables, setSubmittedVariables] = useState({});
-  // TODO rename submitted to variablesSubmitted and check if this is not a derived state
-  const [submitted, setSubmitted] = useState(false);
-  const [searchPar, setSearchPar] = useState({});
-  const [loading, setLoading] = useState(!!(query.variables || query.indirectVariables));
+  const query = configManager.getQueryWorkingCopyById(resource);
   const [queryVariables, setQueryVariables] = useState(query.variables);
+  const [waitingForVariables, setWaitingForVariables] = useState(!!(query.variables || query.indirectVariables));
+  const [activeVariables, setActiveVariables] = useState({});
+  // TODO  check if this is not a derived state
+  const [variablesSubmitted, setVariablesSubmitted] = useState(false);
+  const [searchPar, setSearchPar] = useState({});
 
   useEffect(() => {
 
@@ -38,21 +37,21 @@ const TemplatedListResultTable = (props) => {
         // TODO modify getIndirectVariables so that it doesn't handle fixed variables; we already have these in query.variables
         const vars = await dataProvider.getIndirectVariables(query);
         setQueryVariables(vars);
-        setLoading(false);
+        setWaitingForVariables(false);
       }
     };
 
     fetchQuery();
   }, [resource]);
 
-  const areQueryVariablesLoaded = queryVariables !== undefined;
-  let tableEnabled = !areQueryVariablesLoaded;
+  const isTemplatedQuery = queryVariables !== undefined;
+  let tableEnabled = !isTemplatedQuery;
 
   // LOG console.log(`--- TemplatedListResultTable #${++templatedListResultTableCounter}`);
   // LOG console.log(`props: ${JSON.stringify(props, null, 2)}`);
   // LOG console.log(`resource: ${resource}`);
-  // LOG console.log(`loading: ${loading}`);
-  // LOG console.log(`areQueryVariablesLoaded: ${areQueryVariablesLoaded}`);
+  // LOG console.log(`waitingForVariables: ${waitingForVariables}`);
+  // LOG console.log(`isTemplatedQuery: ${isTemplatedQuery}`);
   // LOG console.log(`tableEnabled: ${tableEnabled}`);
 
   // Cover a transient state after creation of a new custom query. EventEmitter's event processing may still be in progress.
@@ -61,64 +60,62 @@ const TemplatedListResultTable = (props) => {
     return false;
   }
 
-  if (loading) {
-    // LOG console.log(`TemplatedListResultTable waiting for indirect variables`);
-    return <Loading loadingSecondary={"Loading indirect variables. Just a moment please."} />;
+  if (waitingForVariables) {
+    // LOG console.log(`TemplatedListResultTable waiting for variables lists`);
+    return <Loading loadingSecondary={"Loading variables. Just a moment please."} />;
   }
 
-  if (areQueryVariablesLoaded) {
-    // Update variables from query parameters
-    const queryParams = new URLSearchParams(location.search);
+  if (isTemplatedQuery) {
+    // Update active variables from url search parameters
+    const urlSearchParams = new URLSearchParams(location.search);
     const urlVariables = {};
     for (const variableName of Object.keys(queryVariables)) {
-      if (queryParams.has(variableName)) {
-        urlVariables[variableName] = queryParams.get(variableName);
+      if (urlSearchParams.has(variableName)) {
+        urlVariables[variableName] = urlSearchParams.get(variableName);
       }
     }
-    if (!equalSimpleObjects(submittedVariables, urlVariables)) {
-      setSubmittedVariables(urlVariables);
+    if (!equalSimpleObjects(activeVariables, urlVariables)) {
+      setActiveVariables(urlVariables);
     } else {
-      tableEnabled = (Object.keys(submittedVariables).length === Object.keys(queryVariables).length);
+      tableEnabled = (Object.keys(activeVariables).length === Object.keys(queryVariables).length);
     }
   }
 
-  const onSubmit = (formVariables) => {
-
-    if (!submitted) {
+  const submitVariables = (formVariables) => {
+    if (!variablesSubmitted) {
       setSearchPar(formVariables);
     }
-    // Update query parameters from the TemplatedQueryForm fields
-    const queryParams = new URLSearchParams(location.search);
+    // Update url search parameters from the TemplatedQueryForm fields
+    const urlSearchParams = new URLSearchParams(location.search);
     for (const [variableName, variableValue] of Object.entries(formVariables)) {
       if (variableValue) {
-        queryParams.set(variableName, variableValue);
+        urlSearchParams.set(variableName, variableValue);
       }
     }
 
-    const queryString = queryParams.toString();
-    if (queryString.length > 0) {
-      if (!submitted) setSubmitted(true);
-
-      navigate(`?${queryString}`);
+    const urlSearchString = urlSearchParams.toString();
+    if (urlSearchString.length > 0) {
+      setVariablesSubmitted(true);
+      navigate(`?${urlSearchString}`);
     }
   }
 
   const changeVariables = () => {
-    setSubmitted(false);
+    setVariablesSubmitted(false);
     navigate();
   }
 
   return (
     <>
-      {areQueryVariablesLoaded && !tableEnabled &&
+      {isTemplatedQuery && !tableEnabled &&
         <TemplatedQueryForm
           variableOptions={queryVariables}
-          onSubmit={onSubmit}
-          submitted={submitted}
+          onSubmit={submitVariables}
+          submitted={variablesSubmitted}
           searchPar={searchPar}
         />
       }
-      {tableEnabled && <ListResultTable {...props} resource={resource} variables={submittedVariables} changeVariables={changeVariables} submitted={submitted} />}
+      {tableEnabled && <ListResultTable {...props} resource={resource} variables={activeVariables} changeVariables={changeVariables} submitted={variablesSubmitted} />}
     </>
   )
 }
