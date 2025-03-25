@@ -7,7 +7,7 @@ import ListResultTable from "./ListResultTable.jsx";
 
 import configManager from '../../configManager/configManager.js';
 
-// LOG let templatedListResultTableCounter = 0;
+/* LOG */ let templatedListResultTableCounter = 0;
 
 /**
  * A wrapper component around ListResultTable, to support templated queries
@@ -21,122 +21,99 @@ const TemplatedListResultTable = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const query = configManager.getQueryWorkingCopyById(resource);
-  const [queryVariables, setQueryVariables] = useState(query.variables);
-  const [waitingForVariables, setWaitingForVariables] = useState(!!(query.variables || query.indirectVariables));
-  const [activeVariables, setActiveVariables] = useState({});
-  // TODO  check if this is not a derived state
+  const [waitingForVariableOptions, setWaitingForVariableOptions] = useState(!!(query.variables || query.indirectVariables));
+  const [variableOptions, setVariableOptions] = useState(query.variables);
   const [variablesSubmitted, setVariablesSubmitted] = useState(false);
-  const [searchPar, setSearchPar] = useState({});
+  const [acceptImposedVariables, setAcceptImposedVariables] = useState(true);
+  const isTemplatedQuery = !!(query.variables || query.indirectVariables);
+  const templatedQueryFormEnabled = isTemplatedQuery && !variablesSubmitted;
+
+  /* LOG */ console.log(`--- TemplatedListResultTable #${++templatedListResultTableCounter}`);
+  /* LOG */ console.log(`props: ${JSON.stringify(props, null, 2)}`);
+  /* LOG */ console.log(`resource: ${resource}`);
+  /* LOG */ console.log(`waitingForVariableOptions: ${waitingForVariableOptions}`);
+  /* LOG */ console.log(`variableOptions: ${JSON.stringify(variableOptions, null, 2)}`);
+  /* LOG */ console.log(`variablesSubmitted: ${variablesSubmitted}`);
+  /* LOG */ console.log(`acceptImposedVariables: ${acceptImposedVariables}`);
+  /* LOG */ console.log(`isTemplatedQuery: ${isTemplatedQuery}`);
+  /* LOG */ console.log(`templatedQueryFormEnabled: ${templatedQueryFormEnabled}`);
 
   useEffect(() => {
 
-    const fetchQuery = async () => {
+    const fetchQueryVariableOptions = async () => {
 
       if (query.variables || query.indirectVariables){
         // Handles the query variables (defined and indirect ones)
         // TODO modify getIndirectVariables so that it doesn't handle fixed variables; we already have these in query.variables
         const vars = await dataProvider.getIndirectVariables(query);
-        setQueryVariables(vars);
-        setWaitingForVariables(false);
+        setVariableOptions(vars);
+        setWaitingForVariableOptions(false);
       }
     };
 
-    fetchQuery();
+    fetchQueryVariableOptions();
   }, [resource]);
 
-  const isTemplatedQuery = queryVariables !== undefined;
-  let tableEnabled = !isTemplatedQuery;
-
-  // LOG console.log(`--- TemplatedListResultTable #${++templatedListResultTableCounter}`);
-  // LOG console.log(`props: ${JSON.stringify(props, null, 2)}`);
-  // LOG console.log(`resource: ${resource}`);
-  // LOG console.log(`waitingForVariables: ${waitingForVariables}`);
-  // LOG console.log(`isTemplatedQuery: ${isTemplatedQuery}`);
-  // LOG console.log(`tableEnabled: ${tableEnabled}`);
 
   // Cover a transient state after creation of a new custom query. EventEmitter's event processing may still be in progress.
   if (!resourceDef.options) {
-    // LOG console.log(`TemplatedListResultTable waiting for custom query creation to complete`);
+    /* LOG */ console.log(`TemplatedListResultTable waiting for custom query creation to complete`);
     return false;
   }
 
-  if (waitingForVariables) {
-    // LOG console.log(`TemplatedListResultTable waiting for variables lists`);
+  if (waitingForVariableOptions) {
     return <Loading loadingSecondary={"Loading variables. Just a moment please."} />;
   }
 
+  const variableValues = {};
   if (isTemplatedQuery) {
-    // Update active variables from url search parameters
+    // Update variable values from url search parameters
     const urlSearchParams = new URLSearchParams(location.search);
-    const urlVariables = {};
-    for (const variableName of Object.keys(queryVariables)) {
+    for (const variableName of Object.keys(variableOptions)) {
       if (urlSearchParams.has(variableName)) {
-        urlVariables[variableName] = urlSearchParams.get(variableName);
+        variableValues[variableName] = urlSearchParams.get(variableName);
       }
     }
-    if (!equalSimpleObjects(activeVariables, urlVariables)) {
-      setActiveVariables(urlVariables);
-    } else {
-      tableEnabled = (Object.keys(activeVariables).length === Object.keys(queryVariables).length);
+    if (acceptImposedVariables) {
+      if (Object.keys(variableValues).length == Object.keys(variableOptions).length) {
+        /* LOG */ console.log("handling visit with variable values imposed by the user; rerender pending");
+        setVariablesSubmitted(true);
+        setAcceptImposedVariables(false);
+        return false;
+      }
     }
   }
 
+  /* LOG */ console.log(`variableValues: ${JSON.stringify(variableValues, null, 2)}`);
+
   const submitVariables = (formVariables) => {
-    if (!variablesSubmitted) {
-      setSearchPar(formVariables);
-    }
-    // Update url search parameters from the TemplatedQueryForm fields
+    // Update url search parameters from new variable values received from the TemplatedQueryForm fields
     const urlSearchParams = new URLSearchParams(location.search);
     for (const [variableName, variableValue] of Object.entries(formVariables)) {
       if (variableValue) {
         urlSearchParams.set(variableName, variableValue);
       }
     }
-
-    const urlSearchString = urlSearchParams.toString();
-    if (urlSearchString.length > 0) {
-      setVariablesSubmitted(true);
-      navigate(`?${urlSearchString}`);
-    }
+    setVariablesSubmitted(true);
+    setAcceptImposedVariables(false);
+    // revisit with new search parameters
+    navigate(`?${urlSearchParams.toString()}`);
   }
 
   const changeVariables = () => {
     setVariablesSubmitted(false);
-    navigate();
+    // revisit with same search parameters
+    navigate(location.search);
   }
 
   return (
     <>
-      {isTemplatedQuery && !tableEnabled &&
-        <TemplatedQueryForm
-          variableOptions={queryVariables}
-          onSubmit={submitVariables}
-          submitted={variablesSubmitted}
-          searchPar={searchPar}
-        />
+      {templatedQueryFormEnabled
+       ? <TemplatedQueryForm variableOptions={variableOptions} defaultFormVariables={variableValues} onSubmit={submitVariables} />
+       : <ListResultTable {...props} resource={resource} variables={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
       }
-      {tableEnabled && <ListResultTable {...props} resource={resource} variables={activeVariables} changeVariables={changeVariables} submitted={variablesSubmitted} />}
     </>
   )
 }
-
-/**
- * Check if two objects have the same property values (of type a primitive value or a string)
- * @param {object} obj1 - the first object
- * @param {object} obj2 - the second object
- * @returns {boolean} true means equal
- */
-function equalSimpleObjects(obj1, obj2) {
-  if (Object.keys(obj1).length !== Object.keys(obj2).length) {
-    return false;
-  }
-  for (const key1 in obj1) {
-    if (obj1[key1] !== obj2[key1]) {
-      return false;
-    }
-  }
-  return true;
-}
-
 
 export default TemplatedListResultTable;
