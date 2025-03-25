@@ -25,7 +25,7 @@ function ListResultTable(props) {
     perPage,
     resource,
     sort,
-    variables,
+    variableValues,
     ...rest
   } = props;
 
@@ -41,12 +41,12 @@ function ListResultTable(props) {
       queryOptions={{
         keepPreviousData: false,
         meta: {
-          variables: variables
+          variableValues: variableValues
         }}}
       resource={resource}
       sort={sort}
     >
-      <QueryResultList resource={resource} variables={variables} { ...rest } />
+      <QueryResultList resource={resource} variableValues={variableValues} { ...rest } />
     </ListBase>
   );
 }
@@ -61,7 +61,7 @@ ListResultTable.propTypes = {
   perPage: PropTypes.number,
   resource: PropTypes.string.isRequired,
   sort: PropTypes.object,
-  variables: PropTypes.object.isRequired
+  variableValues: PropTypes.object.isRequired
 };
 
 export default ListResultTable;

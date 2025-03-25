@@ -21,7 +21,7 @@ import CustomConversionButton from "../../CustomQueryEditor/customConversionButt
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
-  const { resource, variables, changeVariables, submitted } = props;
+  const { resource, variableValues, changeVariables, submitted } = props;
   const resourceDef = useResourceDefinition();
   const queryTitle = resourceDef?.options?.label;
   const { data, isLoading } = useListContext(props);
@@ -54,9 +54,9 @@ function QueryResultList(props) {
         {resourceDef.options.queryGroupId === 'cstm' ? <CustomQueryEditButton queryID={resourceDef.name} submitted={submitted} /> : <CustomConversionButton query={query} id={resourceDef.name}/>}
       </div>
       <Typography sx={{ fontSize: '2rem' }} > {queryTitle} </Typography>
-      {variables && <>
-        {Object.keys(variables).map((key) => {
-          return (<Typography sx={{ fontSize: '1.5rem' }} > {key}: {variables[key]} </Typography>)
+      {variableValues && <>
+        {Object.keys(variableValues).map((key) => {
+          return (<Typography sx={{ fontSize: '1.5rem' }} > {key}: {variableValues[key]} </Typography>)
         })
         }
       </>
@@ -84,7 +84,7 @@ function QueryResultList(props) {
 
 QueryResultList.propTypes = {
   resource: PropTypes.string.isRequired,
-  variables: PropTypes.object.isRequired,
+  variableValues: PropTypes.object.isRequired,
   changeVariables: PropTypes.func.isRequired,
   submitted: PropTypes.bool.isRequired
 };

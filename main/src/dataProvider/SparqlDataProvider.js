@@ -28,7 +28,7 @@ const onConfigChanged = (newConfig) => {
 configManager.on('configChanged', onConfigChanged);
 
 // LOG let getListCounter = 0;
-// LOG let getIndirectVariablesCounter = 0;
+// LOG let getVariableOptionsCounter = 0;
 
 export default {
   getList: async function getList(resource, { pagination, sort, filter, meta }) {
@@ -55,8 +55,8 @@ export default {
       query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
     }
 
-    if (meta && meta.variables) {
-      query.variableValues = meta.variables;
+    if (meta && meta.variableValues) {
+      query.variableValues = meta.variableValues;
     }
 
     let results = await executeQuery(query);
@@ -102,7 +102,7 @@ export default {
   deleteMany: async function deleteMany() {
     throw new NotImplementedError();
   },
-  getIndirectVariables
+  getVariableOptions
 };
 
 /**
@@ -152,11 +152,11 @@ async function buildQueryText(query) {
  * Replace the variable placeholders in a query's raw text by the specified value.
  * 
  * @param {string} rawText - the raw text of a query.
- * @param {object} variables - an object containing the variable names and specified values (as strings).
- * @returns {string} the resulting raw text of the query after replacing the variables.
+ * @param {object} variableValues - an object containing the variable names and specified values (as strings).
+ * @returns {string} the resulting raw text of the query after replacing the variableValues.
  */
-function replaceVariables(rawText, variables) {
-  for (const [variableName, variableValue] of Object.entries(variables)) {
+function replaceVariables(rawText, variableValues) {
+  for (const [variableName, variableValue] of Object.entries(variableValues)) {
     // do not surround with double quotes here; add double quotes in the input if needed!
     rawText = rawText.replaceAll("$" + variableName, variableValue);
   }
@@ -304,27 +304,27 @@ function handleComunicaContextCreation(query) {
   }
 }
 
-async function getIndirectVariables(query) {
+async function getVariableOptions(query) {
 
-  // LOG console.log(`--- getIndirectVariables #${++getIndirectVariablesCounter}`);
+  // LOG console.log(`--- getVariableOptions #${++getVariableOptionsCounter}`);
 
-  // This chunk of code is duplicated in order for the indirect queries having sources from a source index to work correctly.
+  // BEGIN duplicated chunk of code (duplicated in order for templated queries with indirect queries having sources from a source index to work correctly)
   handleComunicaContextCreation(query);
 
   if (query.sourcesIndex) {
     const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.useProxy);
     query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
   }
-  // 
+  // END duplicated chunk of code
 
 
-  let variables;
+  let variableOptions;
   let queryStringList = [];
 
   if (query.variables) {
-    variables = query.variables
+    variableOptions = query.variables;
   } else {
-    variables = {}
+    variableOptions = {};
   }
 
   if (query.indirectVariables) {
@@ -361,8 +361,8 @@ async function getIndirectVariables(query) {
           // see https://comunica.dev/docs/query/advanced/bindings/
           for (const [variable, term] of bindings) {
             const name = variable.value;
-            if (!variables[name]) {
-              variables[name] = [];
+            if (!variableOptions[name]) {
+              variableOptions[name] = [];
             }
             let variableValue;
             switch (term.termType) {
@@ -397,8 +397,8 @@ async function getIndirectVariables(query) {
               default:
                 break;
             }
-            if (variableValue && !variables[name].includes(variableValue)) {
-              variables[name].push(variableValue);
+            if (variableValue && !variableOptions[name].includes(variableValue)) {
+              variableOptions[name].push(variableValue);
             }
           }
         });
@@ -408,11 +408,11 @@ async function getIndirectVariables(query) {
     }
   }
   catch (error) {
-    throw new Error(`Error adding indirect variables: ${error.message}`);
+    throw new Error(`Error getting variable options: ${error.message}`);
   }
 
-  if (variables == {}) {
-    throw new Error(`The variables are empty`);
+  if (variableOptions == {}) {
+    throw new Error(`The variable options are empty`);
   }
-  return variables;
+  return variableOptions;
 }
