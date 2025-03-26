@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import { useResourceContext, Loading, useDataProvider, useResourceDefinition } from "react-admin";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Component } from "react";
 import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
-import ListResultTable from "./ListResultTable.jsx";
+import { ListBase } from "react-admin";
+import QueryResultList from "./QueryResultList/QueryResultList";
 
 import configManager from '../../configManager/configManager.js';
 
@@ -23,8 +23,8 @@ const TemplatedListResultTable = (props) => {
   const query = configManager.getQueryWorkingCopyById(resource);
   const [waitingForVariableOptions, setWaitingForVariableOptions] = useState(!!(query.variables || query.indirectVariables));
   const [variableOptions, setVariableOptions] = useState({});
+  const [variableValuesBackup, setVariableValuesBackup] = useState({});
   const [variablesSubmitted, setVariablesSubmitted] = useState(false);
-  const [acceptImposedVariables, setAcceptImposedVariables] = useState(true);
   const isTemplatedQuery = !!(query.variables || query.indirectVariables);
   const templatedQueryFormEnabled = isTemplatedQuery && !variablesSubmitted;
 
@@ -33,8 +33,8 @@ const TemplatedListResultTable = (props) => {
   // LOG console.log(`resource: ${resource}`);
   // LOG console.log(`waitingForVariableOptions: ${waitingForVariableOptions}`);
   // LOG console.log(`variableOptions: ${JSON.stringify(variableOptions, null, 2)}`);
+  // LOG console.log(`variableValuesBackup: ${JSON.stringify(variableValuesBackup, null, 2)}`);
   // LOG console.log(`variablesSubmitted: ${variablesSubmitted}`);
-  // LOG console.log(`acceptImposedVariables: ${acceptImposedVariables}`);
   // LOG console.log(`isTemplatedQuery: ${isTemplatedQuery}`);
   // LOG console.log(`templatedQueryFormEnabled: ${templatedQueryFormEnabled}`);
 
@@ -50,45 +50,38 @@ const TemplatedListResultTable = (props) => {
 
   // Cover a transient state after creation of a new custom query. EventEmitter's event processing may still be in progress.
   if (!resourceDef.options) {
-    // LOG console.log(`TemplatedListResultTable waiting for custom query creation to complete`);
+    // LOG console.log('TemplatedListResultTable waiting for custom query creation to complete.');
     return false;
   }
 
   if (waitingForVariableOptions) {
+    // LOG console.log('TemplatedListResultTable waiting for variable options.');
     return <Loading loadingSecondary={"Loading variable options. Just a moment please."} />;
   }
 
-  const variableValues = {};
+  const variableValues = variableValuesBackup;
   if (isTemplatedQuery) {
-    // Update variable values from url search parameters
-    const urlSearchParams = new URLSearchParams(location.search);
-    for (const variableName of Object.keys(variableOptions)) {
-      if (urlSearchParams.has(variableName)) {
-        variableValues[variableName] = urlSearchParams.get(variableName);
-      }
-    }
-    if (acceptImposedVariables) {
-      if (Object.keys(variableValues).length == Object.keys(variableOptions).length) {
-        // LOG console.log("handling visit with variable values imposed by the user; rerender pending");
+    // Check if an update of variable values is needed from user supplied url search parameters
+    const possibleNewVariableValues = variableValuesFromUrlSearchParams(new URLSearchParams(location.search), variableOptions);
+    // Protect against incomplete or omitted variable values, as is the case when changing pagination,
+    // where ListBase revisits us but does not include variable values in url search parameters
+    if (Object.keys(possibleNewVariableValues).length == Object.keys(variableOptions).length) {
+      if (Object.keys(variableOptions).some((v) => variableValues[v] != possibleNewVariableValues[v])) {
+        // LOG console.log("Accepting new variable values from user supplied url search parameters.");
+        setVariableValuesBackup(possibleNewVariableValues);
         setVariablesSubmitted(true);
-        setAcceptImposedVariables(false);
         return false;
       }
     }
   }
-
   // LOG console.log(`variableValues: ${JSON.stringify(variableValues, null, 2)}`);
 
   const submitVariables = (formVariables) => {
-    // Update url search parameters from new variable values received from the TemplatedQueryForm fields
-    const urlSearchParams = new URLSearchParams(location.search);
-    for (const [variableName, variableValue] of Object.entries(formVariables)) {
-      if (variableValue) {
-        urlSearchParams.set(variableName, variableValue);
-      }
-    }
+    // Create url search parameters from new variable values received from the TemplatedQueryForm fields
+    // Note: possible previous url search parameters involving pagination are discarded here on purpose
+    const urlSearchParams = urlSearchParamsFromVariableValues(formVariables);
+    setVariableValuesBackup(formVariables);
     setVariablesSubmitted(true);
-    setAcceptImposedVariables(false);
     // revisit with new search parameters
     navigate(`?${urlSearchParams.toString()}`);
   }
@@ -103,10 +96,51 @@ const TemplatedListResultTable = (props) => {
     <>
       {templatedQueryFormEnabled
        ? <TemplatedQueryForm variableOptions={variableOptions} defaultFormVariables={variableValues} onSubmit={submitVariables} />
-       : <ListResultTable {...props} resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
+       : <ListBase
+           {...props}
+           disableAuthentication={true} // needed to overrule the default, which is to force logging in
+           queryOptions={{
+             keepPreviousData: false,
+             meta: {
+               variableValues: variableValues
+             }}}
+         >
+           <QueryResultList resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
+         </ListBase>
       }
     </>
   )
+}
+
+/**
+ * Make urlSearchParams from variableValues
+ * @param {Object} variableValues 
+ * @returns {UrlSearchParams} urlSearchParams
+ */
+function urlSearchParamsFromVariableValues(variableValues) {
+  const urlSearchParams = new URLSearchParams();
+  for (const [variableName, variableValue] of Object.entries(variableValues)) {
+    if (variableValue) {
+      urlSearchParams.set(variableName, variableValue);
+    }
+  }
+  return urlSearchParams;
+}
+
+/**
+ * Make variableValues from urlSearchParams
+ * @param {URLSearchParams} urlSearchParams 
+ * @param {Object} variableOptions used to filter
+ * @returns {Object} variableValues
+ */
+function variableValuesFromUrlSearchParams(urlSearchParams, variableOptions) {
+  const variableValues = {};
+  for (const variableName of Object.keys(variableOptions)) {
+    if (urlSearchParams.has(variableName)) {
+      variableValues[variableName] = urlSearchParams.get(variableName);
+    }
+  }
+  return variableValues;
 }
 
 export default TemplatedListResultTable;
