@@ -23,11 +23,12 @@ describe("Templated query", () => {
 
     // Check that the page loaded and that we can see the correct data
     cy.contains("Finished in:");
+    cy.contains("of 7");
     cy.get('.column-name').find('span').contains("Johann Sebastian Bach");
-    cy.get('.column-name').find('span').contains("Marc-Antoine Charpentier");
-    // Check that we don't see artists that don't belong here
-    cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
     cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("not.exist");
+
+    // check if the url is reflecting the new variable value
+    cy.url().should("have.string", "genre=%22Baroque%22");
 
     // Set the Rows per page to 5 so that we can go to the next page
     cy.get('.MuiInputBase-root').click();
@@ -35,14 +36,14 @@ describe("Templated query", () => {
     
     // Navigate to page 2, and see if it contains the 6th artist
     cy.get('button').contains('2').click();
+    cy.contains("6-7 of 7");
     cy.get('.column-name').find('span').contains("Antonio Caldara");
 
     // To be sure that the form is not appearing we test that the form submit button doesn't exist
     cy.get('form').should("not.exist");
-          // cy.get('button').contains('Query').should("not.exist");  -> useless if we add a 'new query' button
   });
 
-  it("With 1 variables, double expansion", () => {
+  it("With 1 variable, double expansion", () => {
     cy.visit("/");
     cy.contains("For testing only").click();
     cy.contains("A templated query about musicians (double results)").click();
@@ -54,6 +55,7 @@ describe("Templated query", () => {
 
     cy.get('button').contains('Query').click();
     cy.contains("Finished in:");
+    cy.contains("1-2 of 2");
     cy.get('.column-name').find('span').should("have.length", 2);
   });
 
@@ -79,10 +81,12 @@ describe("Templated query", () => {
 
     // Check that the page loaded and that we can see the correct data
     cy.contains("Finished in:");
+    cy.contains("1-1 of 1");
     cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("exist");;
-    cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
-    cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("not.exist");
-    cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
+
+    // check if the url is reflecting the variable values
+    cy.url().should("have.string", "genre=%22Classical%22");
+    cy.url().should("have.string", "sameAsUrl=%3Chttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FWolfgang_Amadeus_Mozart%3E");
 
     // Check if the button to make a new query exists and use it
     cy.get('button').contains("Change Variables").should("exist");
@@ -99,10 +103,12 @@ describe("Templated query", () => {
     cy.get('button[type="submit"]').click();
 
     cy.contains("Finished in:");
+    cy.contains("1-1 of 1");
     cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("exist");;
-    cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
-    cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("not.exist");
-    cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
+
+    // check if the url is reflecting the variable values
+    cy.url().should("have.string", "genre=%22Classical%22");
+    cy.url().should("have.string", "sameAsUrl=%3Chttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FWolfgang_Amadeus_Mozart%3E");
 
     // Change variables and make a nonexisting combination
     cy.get('button').contains("Change Variables").should("exist");
@@ -122,6 +128,10 @@ describe("Templated query", () => {
 
     cy.get('span').contains("The result list is empty.").should("exist");
 
+    // check if the url is reflecting the new variable values
+    cy.url().should("have.string", "genre=%22Baroque%22");
+    cy.url().should("have.string", "sameAsUrl=%3Chttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FLudwig_van_Beethoven%3E");
+
     // Change variables and make another existing combination
     cy.get('button').contains("Change Variables").should("exist");
     cy.get('button').contains("Change Variables").click();
@@ -139,11 +149,75 @@ describe("Templated query", () => {
     cy.get('button[type="submit"]').click();
 
     cy.get('span').contains("The result list is empty.").should("not.exist");
-    cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
-    cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("not.exist");
-    cy.get('.column-name').find('span').contains("Antonio Vivaldi").should("not.exist");
+    cy.contains("Finished in:");
+    cy.contains("1-1 of 1");
     cy.get('.column-name').find('span').contains("Franz Schubert").should("exist");
 
+    // check if the url is reflecting the new variable values
+    cy.url().should("have.string", "genre=%22Romantic%22");
+    cy.url().should("have.string", "sameAsUrl=%3Chttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFranz_Schubert%3E");
+
+  });
+
+  it("With 2 variables; visit with variable values given in url search parameters", () => {
+    // a first url
+    cy.visit("/#/1100?genre=%22Classical%22&sameAsUrl=%3Chttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FWolfgang_Amadeus_Mozart%3E");
+
+    // Check the display of the variable(s) and their value
+    cy.contains("genre: \"Classical\"");
+    cy.contains("sameAsUrl: <https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>");
+
+    // Check that the page loaded and that we can see the correct data
+    cy.contains("Finished in:");
+    cy.contains("1-1 of 1");
+    cy.get('.column-name').find('span').contains("Wolfgang Amadeus Mozart").should("exist");;
+
+    // Check if the button to make a new query exists and use it
+    cy.get('button').contains("Change Variables").should("exist");
+    cy.get('button').contains("Change Variables").click();
+
+    // Making sure we get the form to enter new variables
+    // and that the previously selected value(s) are still there
+    cy.get('form').within(() => {
+      cy.get('#genre').should('have.value', '"Classical"');
+      cy.get('#sameAsUrl').should('have.value', '<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>');
+    });
+
+    // Change variables and make another existing combination
+    cy.get('form').within(() => {
+      cy.get('#genre').click();
+    });
+    cy.get('li').contains('Baroque').click();
+
+    cy.get('form').within(() => {
+      cy.get('#sameAsUrl').click();
+    });
+    cy.get('li').contains('Bach').click();
+
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Finished in:");
+    cy.contains("1-1 of 1");
+    cy.get('.column-name').find('span').contains("Johann Sebastian Bach").should("exist");
+
+    // check if the url is reflecting the new variable values
+    cy.url().should("have.string", "genre=%22Baroque%22");
+    cy.url().should("have.string", "sameAsUrl=%3Chttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FJohann_Sebastian_Bach%3E");
+    
+    // a second url
+    cy.visit("/#/1100?genre=%22Romantic%22&sameAsUrl=%3Chttps%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFranz_Schubert%3E");
+
+    // Check the display of the variable(s) and their value
+    cy.contains("genre: \"Romantic\"");
+    cy.contains("sameAsUrl: <https://en.wikipedia.org/wiki/Franz_Schubert>");
+
+    // Check that the page loaded and that we can see the correct data
+    cy.contains("Finished in:");
+    cy.contains("1-1 of 1");
+    cy.get('.column-name').find('span').contains("Franz Schubert").should("exist");;
+
+    // Check if the button to make a new query exists
+    cy.get('button').contains("Change Variables").should("exist");
   });
 
   it("Correct message displayed when no resulting data", () => {
