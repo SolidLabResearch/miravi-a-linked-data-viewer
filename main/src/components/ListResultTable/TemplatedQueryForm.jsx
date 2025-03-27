@@ -49,8 +49,8 @@ const TemplatedQueryForm = (props) => {
 }
 
 TemplatedQueryForm.propTypes = {
-  variableOptions: PropTypes.object,
-  defaultFormVariables: PropTypes.object,
+  variableOptions: PropTypes.object.isRequired,
+  defaultFormVariables: PropTypes.object.isRequired,
   onSubmit: PropTypes.func,
 };
 
