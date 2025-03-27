@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Queries no longer executed twice (#176).
+- Templated queries: visiting with variable values in url search parameters now works as expected (#183).
+
 ## [1.6.0] - 2025-03-17
 
 ### Added
