@@ -15,6 +15,7 @@ import IconProvider from "../../../IconProvider/IconProvider";
 import configManager from '../../../configManager/configManager';
 
 
+// LOG let selectionMenuCounter = 0;
 
 const SelectionMenu = () => {
   const resources = useResourceDefinitions();
@@ -51,6 +52,11 @@ const SelectionMenu = () => {
       [groupId]: !prevOpenGroups[groupId],
     }));
   };
+
+  // LOG console.log(`--- SelectionMenu #${++selectionMenuCounter}`);
+  // LOG console.log(`queryGroups: ${ JSON.stringify(queryGroups, null, 2) }`);
+  // LOG console.log(`looseQueries: ${JSON.stringify(looseQueries, null, 2)}`);
+  // LOG console.log(`openGroups: ${ JSON.stringify(openGroups, null, 2) }`);
 
   return (
     <ThemeProvider theme={menuItemTheme}>

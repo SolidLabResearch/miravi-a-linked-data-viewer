@@ -1,6 +1,6 @@
-import {AutocompleteInput, required, SaveButton, SimpleForm, Toolbar, useResourceDefinition} from "react-admin";
+import { AutocompleteInput, required, SaveButton, SimpleForm, Toolbar, useResourceDefinition } from "react-admin";
 import DoneIcon from '@mui/icons-material/Done';
-import {Component, useEffect} from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import CustomQueryEditButton from "../CustomQueryEditor/customQueryEditButton";
 
@@ -18,18 +18,11 @@ const MyToolbar = () => (
 const TemplatedQueryForm = (props) => {
   const {
     variableOptions,
+    defaultFormVariables,
     onSubmit,
-    submitted,
-    searchPar,
   } = props;
 
   const resourceDef = useResourceDefinition();
-
-  useEffect(() => {
-    if (submitted) {
-      onSubmit(searchPar);
-    }
-  }, [submitted])
 
   return (
     <SimpleForm toolbar={<MyToolbar/>} onSubmit={onSubmit}>
@@ -43,7 +36,7 @@ const TemplatedQueryForm = (props) => {
           label={name}
           validate={required()}
           fullWidth={true}
-          defaultValue={searchPar[name]}
+          defaultValue={defaultFormVariables[name]}
           choices={
             options.map((option) => ({
               id: option,
@@ -56,7 +49,8 @@ const TemplatedQueryForm = (props) => {
 }
 
 TemplatedQueryForm.propTypes = {
-  variableOptions: PropTypes.object,
+  variableOptions: PropTypes.object.isRequired,
+  defaultFormVariables: PropTypes.object.isRequired,
   onSubmit: PropTypes.func,
 };
 
