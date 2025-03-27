@@ -2,7 +2,6 @@ import { Component } from "react";
 import { Loading, Datagrid, ListView, Title, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
-import { Term } from "sparqljs";
 import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
