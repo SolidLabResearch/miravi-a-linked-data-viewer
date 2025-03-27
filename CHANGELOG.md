@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Queries no longer executed twice (#176).
 - Templated queries: visiting with variable values in url search parameters now works as expected (#183).
+- Solved console warning when hovering over source verification question mark (#128).
 
 ## [1.6.0] - 2025-03-17
 

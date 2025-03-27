@@ -1,7 +1,6 @@
-import { CircularProgress, Tooltip } from "@mui/material";
+import { CircularProgress, Tooltip, IconButton } from "@mui/material";
 import { Component, useState } from "react";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-import { Button } from "react-admin";
 import PropTypes from "prop-types";
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import GppBadIcon from '@mui/icons-material/GppBad';
@@ -100,9 +99,9 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
   } else {
     return (
       <Tooltip title="Verify source">
-        <Button onClick={verify}>
-          <QuestionMarkIcon size="small" />
-        </Button>
+        <IconButton sx={{ color: "#1976D2", padding: "0", marginLeft: "0" }} onClick={verify}>
+          <QuestionMarkIcon fontSize="small" />
+        </IconButton>
       </Tooltip>
     );
   }
