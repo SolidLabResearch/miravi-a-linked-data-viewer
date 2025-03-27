@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import GppBadIcon from '@mui/icons-material/GppBad';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
-import myVerify from '../../../../src/vendor/verify';
+import { coreVerify } from '../../../vendor/vcCore';
 import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngineWrapper';
 
 const VERIFICATION_STATES = {
@@ -43,7 +43,7 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
     try {
       const response = await fetchFunction(source);
       const verifiableCredential = await response.json();
-      const { validationResult, verificationResult } = await myVerify(verifiableCredential);
+      const { validationResult, verificationResult } = await coreVerify(verifiableCredential);
       if (validationResult.valid) {
         if (verificationResult.verified) {
           return VERIFICATION_STATES.VERIFIED;
