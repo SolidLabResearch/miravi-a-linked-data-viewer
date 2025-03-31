@@ -64,12 +64,12 @@
       "icon": "BrushIcon",
       "comunicaContext": {
         "sources": [
-          "https://fragments.dbpedia.org/2016-04/en"
+          "http://localhost:8080/example/artists"
         ]
       },
       "askQuery": {
-        "trueText": "There is an artist who is inspired by Picasso!",
-        "falseText": "There is no artist who is inspired by Picasso."
+        "trueText": "Yes, there is at least one artist influenced by Picasso!",
+        "falseText": "No, there is not a single artist influenced by Picasso."
       }
     },
     {
@@ -290,6 +290,23 @@
           "http://localhost:8080/example/boms",
           "http://localhost:8080/example/materials"
         ]
+      }
+    },
+    {
+      "id": "8900",
+      "queryGroupId": "gr-test",
+      "queryLocation": "ask_picasso.rq",
+      "name": "Is there an artist influenced by Picasso (forced negative answer)?",
+      "description": "Demonstrates an ASK query, here with negative answer, forced by using an irrelevant data source.",
+      "icon": "BrushIcon",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/values"
+        ]
+      },
+      "askQuery": {
+        "trueText": "Yes, there is at least one artist influenced by Picasso!",
+        "falseText": "No, there is not a single artist influenced by Picasso (if you look at the wrong data)."
       }
     },
     {

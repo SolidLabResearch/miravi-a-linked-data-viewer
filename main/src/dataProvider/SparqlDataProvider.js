@@ -223,10 +223,22 @@ async function executeQuery(query) {
       }
       results.push(newResult);
     };
+    const callbackBoolean = (b) => {
+      const answer = b ? query?.askQuery?.trueText || "Yes" : query?.askQuery?.falseText || "No";
+      const newResult = {
+        Answer: {
+          termType: "Literal",
+          value: answer,
+          language: ""
+        },
+        id: index++
+      }
+      results.push(newResult);
+    };
     await comunicaEngineWrapper.query(query.queryText,
        // WEIRD: we need to make a copy of the context here (a shallow copy is fine); concurrent calls ???
       { ...query.comunicaContext },
-      { "variables": callbackVariables, "bindings": callbackBindings, "quads": callbackQuads });
+      { "variables": callbackVariables, "bindings": callbackBindings, "quads": callbackQuads, "boolean": callbackBoolean });
     return results;
   } catch (error) {
     throw new HttpError(error.message, 500);

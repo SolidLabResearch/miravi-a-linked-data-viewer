@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Using new verification library v0.2.0 (#184).
+- A favicon (#188).
 
 ### Fixed
 
 - Queries no longer executed twice (#176).
 - Templated queries: visiting with variable values in url search parameters now works as expected (#183).
 - Solved console warning when hovering over source verification question mark (#128).
+- ASK query is working now (#22).
 
 ## [1.6.0] - 2025-03-17
 
