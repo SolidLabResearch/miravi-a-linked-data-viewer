@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- A favicon (#188).
+
 ### Changed
 
 - Using new verification library v0.2.0 (#184).
-- A favicon (#188).
 
 ### Fixed
 
