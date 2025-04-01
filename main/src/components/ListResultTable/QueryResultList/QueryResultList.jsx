@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Loading, Datagrid, ListView, Title, useListContext, useResourceDefinition } from "react-admin";
+import { Loading, Datagrid, List, Title, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import TableHeader from "./TableHeader/TableHeader";
@@ -45,7 +45,6 @@ function QueryResultList(props) {
   // LOG console.log(`isLoading: ${isLoading}`);
 
   return (
-    isLoading ? <Loading loadingSecondary={"The page is loading. Just a moment please."} /> :
     <div style={{ paddingLeft: '20px', paddingRight: '10px' }}>
       <Title title={config.title} />
       <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -60,23 +59,29 @@ function QueryResultList(props) {
         }
       </>
       }
-      {Object.keys(values).length ? (
-        <ListView title=" " actions={<ActionBar />} {...props} >
-          <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>
-            {Object.keys(values).map((key) => {
-              return (
-                <GenericField
-                  key={key}
-                  source={key}
-                  label={key.split("_")[0]}
-                />
-              );
-            })}
-          </Datagrid>
-        </ListView>
-      ) :
-        <NoValuesDisplay />
-      }
+      <List
+        {...props}
+        disableAuthentication={true} // needed to overrule the default, which is to force logging in
+        title=" "
+        actions={ <ActionBar />}
+        empty={<NoValuesDisplay />}
+        queryOptions={{
+          keepPreviousData: false,
+          meta: {
+            variableValues: variableValues
+          }}}>
+        <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>
+          {Object.keys(values).map((key) => {
+            return (
+              <GenericField
+                key={key}
+                source={key}
+                label={key.split("_")[0]}
+              />
+            );
+          })}
+        </Datagrid>
+      </List>
     </div>
   );
 }

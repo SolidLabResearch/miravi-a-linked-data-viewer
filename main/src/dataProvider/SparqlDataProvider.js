@@ -1,5 +1,4 @@
 import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
-import { HttpError } from "react-admin";
 import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
 import { Term } from "sparqljs";
@@ -144,7 +143,7 @@ async function buildQueryText(query) {
     const generator = new Generator();
     return generator.stringify(parsedQuery);
   } catch (error) {
-    throw new HttpError(error.message, 500);
+    throw new Error(error.message);
   }
 }
 
@@ -241,7 +240,7 @@ async function executeQuery(query) {
       { "variables": callbackVariables, "bindings": callbackBindings, "quads": callbackQuads, "boolean": callbackBoolean });
     return results;
   } catch (error) {
-    throw new HttpError(error.message, 500);
+    throw new Error(`Error executing SPARQL query "${query.rawText || query.queryString}": ${error.message}`);
   }
 }
 

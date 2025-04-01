@@ -103,7 +103,7 @@ const TemplatedListResultTable = (props) => {
                variableValues: variableValues
              }}}
          >
-           <QueryResultList resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
+          <QueryResultList {...props} resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
          </ListBase>
       }
     </>
