@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Loading, Datagrid, List, Title, useListContext, useResourceDefinition } from "react-admin";
+import { Datagrid, List, Title, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import TableHeader from "./TableHeader/TableHeader";
@@ -23,20 +23,6 @@ function QueryResultList(props) {
   const { resource, variableValues, changeVariables, submitted } = props;
   const resourceDef = useResourceDefinition();
   const queryTitle = resourceDef?.options?.label;
-  const { data, isLoading } = useListContext(props);
-  let values = {};
-  if (!isLoading && data && data.length > 0) {
-    data.forEach((record) => {
-      Object.keys(record).forEach((variable) => {
-        if (!values[variable]) {
-          values[variable] = [];
-        }
-        values[variable] = values[variable].concat(record[variable]);
-      });
-    });
-    delete values.id;
-  }
-
   const config = configManager.getConfig();
   const query = configManager.getQueryWorkingCopyById(resource);
 
@@ -70,17 +56,7 @@ function QueryResultList(props) {
           meta: {
             variableValues: variableValues
           }}}>
-        <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>
-          {Object.keys(values).map((key) => {
-            return (
-              <GenericField
-                key={key}
-                source={key}
-                label={key.split("_")[0]}
-              />
-            );
-          })}
-        </Datagrid>
+        <MyDatagrid {...props} query={query} />
       </List>
     </div>
   );
@@ -97,22 +73,51 @@ const Aside = (props) => {
   const { changeVariables } = props;
   return (
     <Box>
-      <Button variant="contained" onClick={changeVariables} startIcon={<IconProvider.TuneIcon/>} sx={{ margin: '10px' }}>Change Variables</Button>
+      <Button variant="contained" onClick={changeVariables} startIcon={<IconProvider.TuneIcon />} sx={{ margin: '10px' }}>Change Variables</Button>
     </Box>
-    
-  )
+  );
 }
 
 const NoValuesDisplay = () => {
   return (
-<div>
-    <Box display="flex" alignItems="center" sx={{ m: 3 }}>
-      <SvgIcon component={SearchOffIcon} />
-      <span>The result list is empty.</span>
-    </Box>
+    <div>
+      <Box display="flex" alignItems="center" sx={{ m: 3 }}>
+        <SvgIcon component={SearchOffIcon} />
+        <span>The result list is empty.</span>
+      </Box>
     </div>
+  );
+}
 
-  )
+const MyDatagrid = (props) => {
+  const { query } = props;
+  const { data, isLoading } = useListContext(props);
+  let values = {};
+  if (!isLoading && data && data.length > 0) {
+    data.forEach((record) => {
+      Object.keys(record).forEach((variable) => {
+        if (!values[variable]) {
+          values[variable] = [];
+        }
+        values[variable] = values[variable].concat(record[variable]);
+      });
+    });
+    delete values.id;
+  }
+
+  return (
+    <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>
+      {Object.keys(values).map((key) => {
+        return (
+          <GenericField
+            key={key}
+            source={key}
+            label={key.split("_")[0]}
+          />
+        );
+      })}
+    </Datagrid>
+  );
 }
 
 export default QueryResultList;
