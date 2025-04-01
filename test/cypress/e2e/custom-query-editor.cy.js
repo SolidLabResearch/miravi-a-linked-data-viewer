@@ -106,7 +106,7 @@ ORDER BY ?componentName
     cy.contains("broken query").click();
 
     // Verify that there are no results
-    cy.contains("The result list is empty.").should('exist');
+    cy.contains("Something went wrong").should('exist');
 
     // Edit the query
     cy.get('button').contains("Edit Query").click();

@@ -2,7 +2,6 @@ import React, { useState, useEffect, Component } from 'react';
 import { useResourceContext, Loading, useDataProvider, useResourceDefinition } from "react-admin";
 import { useLocation, useNavigate } from 'react-router-dom';
 import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
-import { ListBase } from "react-admin";
 import QueryResultList from "./QueryResultList/QueryResultList";
 
 import configManager from '../../configManager/configManager.js';
@@ -63,7 +62,7 @@ const TemplatedListResultTable = (props) => {
     // Check if an update of variable values is needed from user supplied url search parameters
     const possibleNewVariableValues = variableValuesFromUrlSearchParams(new URLSearchParams(location.search), variableOptions);
     // Protect against incomplete or omitted variable values, as is the case when changing pagination,
-    // where ListBase revisits us but does not include variable values in url search parameters
+    // where List causes a revisit but does not include variable values in url search parameters
     if (Object.keys(possibleNewVariableValues).length == Object.keys(variableOptions).length) {
       if (Object.keys(variableOptions).some((v) => variableValues[v] != possibleNewVariableValues[v])) {
         // LOG console.log("Accepting new variable values from user supplied url search parameters.");
@@ -91,22 +90,9 @@ const TemplatedListResultTable = (props) => {
   }
 
   return (
-    <>
-      {templatedQueryFormEnabled
-       ? <TemplatedQueryForm variableOptions={variableOptions} defaultFormVariables={variableValues} onSubmit={submitVariables} />
-       : <ListBase
-           {...props}
-           disableAuthentication={true} // needed to overrule the default, which is to force logging in
-           queryOptions={{
-             keepPreviousData: false,
-             meta: {
-               variableValues: variableValues
-             }}}
-         >
-           <QueryResultList resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
-         </ListBase>
-      }
-    </>
+    templatedQueryFormEnabled
+    ? <TemplatedQueryForm variableOptions={variableOptions} defaultFormVariables={variableValues} onSubmit={submitVariables} />
+    : <QueryResultList {...props} resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
   )
 }
 
