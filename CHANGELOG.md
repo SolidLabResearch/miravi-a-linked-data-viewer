@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Solved console warning when hovering over source verification question mark (#128).
 - ASK query is working now (#22).
 - "Finished in" now shows effective query execution time (#130).
+- "Clean query cache" button's functionality works as expected now (#190).
 
 ## [1.6.0] - 2025-03-17
 

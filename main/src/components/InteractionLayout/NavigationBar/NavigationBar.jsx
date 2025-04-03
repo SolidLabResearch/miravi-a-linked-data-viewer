@@ -23,9 +23,9 @@ function AboutButton(props) {
 
 function InvalidateButton() {
   const refresh = useRefresh();
-  const handleClick = () => {
-    comunicaEngineWrapper.reset();
-    setTimeout(refresh, 2000);
+  const handleClick = async () => {
+    await comunicaEngineWrapper.reset();
+    refresh();
   }
   return (
     <Tooltip title="Clean Query Cache">

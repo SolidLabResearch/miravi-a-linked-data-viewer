@@ -27,9 +27,9 @@ class ComunicaEngineWrapper {
   /**
    * Resets the engines and all we maintained here about executed queries
    */
-  reset() {
-    this._engine.invalidateHttpCache();
-    this._engineLinkTraversal.invalidateHttpCache();
+  async reset() {
+    await this._engine.invalidateHttpCache();
+    await this._engineLinkTraversal.invalidateHttpCache();
     this._fetchSuccess = {};
     this._fetchStatusNumber = {};
     this._underlyingFetchFunction = undefined;
@@ -107,7 +107,7 @@ class ComunicaEngineWrapper {
           break;
       }
     } catch (error) {
-      this.reset();
+      await this.reset();
       throw error;
     }
   }
@@ -143,7 +143,7 @@ class ComunicaEngineWrapper {
       this._prepareQuery(context);
       return engine.queryBindings(queryText, context);
     } catch (error) {
-      this.reset();
+      await this.reset();
       throw error;
     }
   }
