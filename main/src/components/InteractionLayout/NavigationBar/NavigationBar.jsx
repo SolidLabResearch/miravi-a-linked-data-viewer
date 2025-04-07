@@ -11,6 +11,7 @@ import AboutDialog from "./AboutDialog";
 
 import configManager from "../../../configManager/configManager";
 import comunicaEngineWrapper from "../../../comunicaEngineWrapper/comunicaEngineWrapper";
+import SparqlDataProvider from "../../../dataProvider/SparqlDataProvider";
 
 function AboutButton(props) {
   return (
@@ -26,6 +27,7 @@ function InvalidateButton() {
   const navigate = useNavigate();
   const handleClick = async () => {
     await comunicaEngineWrapper.reset();
+    SparqlDataProvider.clearListCache();
     // navigate! (refresh is not enough to clear status in case of templated queries with indirect variables)
     navigate('/');
   }
