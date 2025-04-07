@@ -40,7 +40,9 @@ const TemplatedListResultTable = (props) => {
   useEffect(() => {
     (async () => {
       if (query.variables || query.indirectVariables) {
+        // LOG console.log('start waiting for variable options');
         setVariableOptions(await dataProvider.getVariableOptions(query));
+        // LOG console.log('done waiting for variable options');
         setWaitingForVariableOptions(false);
       }
     })();
