@@ -33,18 +33,18 @@ const listCache = {
   results: {}
 };
 
-/* LOG */ let getListCounter = 0;
-/* LOG */ let getVariableOptionsCounter = 0;
+// LOG let getListCounter = 0;
+// LOG let getVariableOptionsCounter = 0;
 
 export default {
   getList: async function getList(resource, { pagination, sort, filter, meta }) {
 
-    /* LOG */ console.log(`--- getList #${++getListCounter}`);
-    /* LOG */ console.log(`resource: ${ resource }`);
-    /* LOG */ console.log(`pagination: ${JSON.stringify(pagination, null, 2)}`);
-    /* LOG */ console.log(`sort: ${ JSON.stringify(sort, null, 2) }`);
-    /* LOG */ console.log(`filter: ${JSON.stringify(filter, null, 2)}`);
-    /* LOG */ console.log(`meta: ${JSON.stringify(meta, null, 2)}`);
+    // LOG console.log(`--- getList #${++getListCounter}`);
+    // LOG console.log(`resource: ${ resource }`);
+    // LOG console.log(`pagination: ${JSON.stringify(pagination, null, 2)}`);
+    // LOG console.log(`sort: ${ JSON.stringify(sort, null, 2) }`);
+    // LOG console.log(`filter: ${JSON.stringify(filter, null, 2)}`);
+    // LOG console.log(`meta: ${JSON.stringify(meta, null, 2)}`);
     
     // make a working copy of the query object found in the configuration, to prevent changing the configuration
     // this copy is extended here
@@ -67,15 +67,15 @@ export default {
 
     let results;
     const hash = JSON.stringify({ resource, variableValues: query.variableValues });
-    /* LOG */ console.log(`hash: ${hash}`);
+    // LOG console.log(`hash: ${hash}`);
     if (hash == listCache.hash) {
-      /* LOG */ console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+      // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
       results = listCache.results;
     } else {
       results = await executeQuery(query);
       listCache.hash = hash;
       listCache.results = results;
-      /* LOG */ console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+      // LOG console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
     }
 
     let totalItems = results.length;
@@ -337,7 +337,7 @@ function handleComunicaContextCreation(query) {
 
 async function getVariableOptions(query) {
 
-  /* LOG */ console.log(`--- getVariableOptions #${++getVariableOptionsCounter}`);
+  // LOG console.log(`--- getVariableOptions #${++getVariableOptionsCounter}`);
 
   // BEGIN duplicated chunk of code (duplicated in order for templated queries with indirect queries having sources from a source index to work correctly)
   handleComunicaContextCreation(query);
@@ -452,6 +452,7 @@ async function getVariableOptions(query) {
  * Clears the list cache
  */
 function clearListCache() {
+  // LOG console.log('Clearing listCache');
   listCache.hash = "";
 }
 
