@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - A favicon (#188).
+- A cache to remember the entire result table (useful when scrolling through pages of a lengthy result table) (#193).
 
 ### Changed
 
@@ -23,7 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Solved console warning when hovering over source verification question mark (#128).
 - ASK query is working now (#22).
 - "Finished in" now shows effective query execution time (#130).
-- "Clean query cache" button's functionality works as expected now (#190).
+- "Clean query cache" button's functionality works as expected now (also for templated queries with indirect variables) (#190).
+- "The page is loading." type of prompt is back (now "The list is loading." and "The options for the variables in this query are loading.") (#194).
 
 ## [1.6.0] - 2025-03-17
 

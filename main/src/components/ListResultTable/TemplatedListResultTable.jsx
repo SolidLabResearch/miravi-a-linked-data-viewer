@@ -40,7 +40,9 @@ const TemplatedListResultTable = (props) => {
   useEffect(() => {
     (async () => {
       if (query.variables || query.indirectVariables) {
+        // LOG console.log('start waiting for variable options');
         setVariableOptions(await dataProvider.getVariableOptions(query));
+        // LOG console.log('done waiting for variable options');
         setWaitingForVariableOptions(false);
       }
     })();
@@ -55,7 +57,7 @@ const TemplatedListResultTable = (props) => {
 
   if (waitingForVariableOptions) {
     // LOG console.log('TemplatedListResultTable waiting for variable options.');
-    return <Loading loadingSecondary={"Loading variable options. Just a moment please."} />;
+    return <Loading sx={{ height: "auto" }} loadingSecondary={"The options for the variables in this query are loading. Just a moment please."} />;
   }
 
   if (isTemplatedQuery) {

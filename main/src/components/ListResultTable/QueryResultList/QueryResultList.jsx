@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Datagrid, List, Title, useListContext, useResourceDefinition } from "react-admin";
+import { Datagrid, List, Title, Loading, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import TableHeader from "./TableHeader/TableHeader";
@@ -92,6 +92,11 @@ const NoValuesDisplay = () => {
 const MyDatagrid = (props) => {
   const { query } = props;
   const { data, isLoading } = useListContext(props);
+
+  if (isLoading) {
+    return <Loading loadingSecondary={"The list is loading. Just a moment please."} />;
+  }
+  
   let values = {};
   if (!isLoading && data && data.length > 0) {
     data.forEach((record) => {

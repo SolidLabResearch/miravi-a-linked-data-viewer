@@ -26,6 +26,13 @@ const onConfigChanged = (newConfig) => {
 
 configManager.on('configChanged', onConfigChanged);
 
+// simple cache to save time while scrolling through pages of a list
+// results = the result of executeQuery, totalItems
+const listCache = {
+  hash: "",
+  results: {}
+};
+
 // LOG let getListCounter = 0;
 // LOG let getVariableOptionsCounter = 0;
 
@@ -58,7 +65,19 @@ export default {
       query.variableValues = meta.variableValues;
     }
 
-    let results = await executeQuery(query);
+    let results;
+    const hash = JSON.stringify({ resource, variableValues: query.variableValues });
+    // LOG console.log(`hash: ${hash}`);
+    if (hash == listCache.hash) {
+      // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+      results = listCache.results;
+    } else {
+      results = await executeQuery(query);
+      listCache.hash = hash;
+      listCache.results = results;
+      // LOG console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+    }
+
     let totalItems = results.length;
     results = results.slice(offset, offset + limit);
 
@@ -101,7 +120,8 @@ export default {
   deleteMany: async function deleteMany() {
     throw new NotImplementedError();
   },
-  getVariableOptions
+  getVariableOptions,
+  clearListCache
 };
 
 /**
@@ -427,3 +447,12 @@ async function getVariableOptions(query) {
   }
   return variableOptions;
 }
+
+/**
+ * Clears the list cache
+ */
+function clearListCache() {
+  // LOG console.log('Clearing listCache');
+  listCache.hash = "";
+}
+

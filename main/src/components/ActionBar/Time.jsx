@@ -6,24 +6,15 @@ import { Component } from "react";
  * @returns {Component} a component that displays the time in seconds and milliseconds (if configured to do so)
  */
 function Time(props) {
-  const time = props.time;
-  const minutes =
-    Math.floor((time % 360000) / 6000) + 60 * Math.floor(time / 360000);
-  const seconds = Math.floor((time % 6000) / 100) + 60 * minutes;
-  const milliseconds = time % 100;
-
-  let display = seconds.toString();
   if (props.showMilliseconds) {
-    display = `${display}.${milliseconds}`;
+    return <>{`${(props.elapsedMilliseconds / 1000).toFixed(3)} s`}</>;
+  } else {
+    return <>{`${Math.round(props.elapsedMilliseconds / 1000)} s`}</>;
   }
-
-  display += "s";
-
-  return <>{display}</>;
 }
 
 Time.propTypes = {
-  time: PropTypes.number,
+  elapsedMilliseconds: PropTypes.number,
   showMilliseconds: PropTypes.bool,
 };
 
