@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Using new verification library v0.2.0 (#184).
 - Refactoring, avoiding the usage of an internal, undocumented react-admin component (#185).
+- Removed the loading indicator / refresh button in the appbar (#195).
 
 ### Fixed
 

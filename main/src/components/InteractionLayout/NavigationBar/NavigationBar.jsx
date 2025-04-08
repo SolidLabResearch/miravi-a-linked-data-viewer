@@ -55,7 +55,7 @@ function NavigationBar(props) {
 
   return (
     <>
-      <AppBar {...props} userMenu={<AuthenticationMenu />}>
+      <AppBar {...props} toolbar={<></>} userMenu={<AuthenticationMenu />}>
         <img
           id="app-logo"
           src={config.logoLocation}
