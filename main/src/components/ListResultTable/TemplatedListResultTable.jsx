@@ -57,7 +57,7 @@ const TemplatedListResultTable = (props) => {
 
   if (waitingForVariableOptions) {
     // LOG console.log('TemplatedListResultTable waiting for variable options.');
-    return <Loading loadingSecondary={"Loading variable options. Just a moment please."} />;
+    return <Loading sx={{ height: "auto" }} loadingSecondary={"The options for the variables in this query are loading. Just a moment please."} />;
   }
 
   if (isTemplatedQuery) {
