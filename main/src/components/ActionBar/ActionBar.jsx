@@ -27,22 +27,26 @@ import configManager from "../../configManager/configManager.js";
  */
 function ActionBar() {
   const { total, isLoading, resource } = useListContext();
-  const [time, setTime] = useState(0);
+  const now = Date.now();
+  const [timeStart, setTimeStart] = useState(now);
+  const [timeNow, setTimeNow] = useState(now);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
-      setTime(0);
+      const now = Date.now();
+      setTimeStart(now);
+      setTimeNow(now);
     }
   }, [isLoading]);
 
   useEffect(() => {
     let intervalId;
     if (isLoading) {
-      intervalId = setInterval(() => setTime(time + 1), 10);
+      intervalId = setInterval(() => setTimeNow(Date.now()), 100);
     }
     return () => clearInterval(intervalId);
-  }, [time, isLoading]);
+  }, [timeNow, isLoading]);
 
   const config = configManager.getConfig();
   const query = configManager.getQueryWorkingCopyById(resource);
@@ -58,7 +62,7 @@ function ActionBar() {
             <div className="information-box">
               {isLoading && <strong>Runtime: </strong>}
               {!isLoading && <strong>Finished in: </strong>}
-              <Time time={time} showMilliseconds={config.showMilliseconds} />
+              <Time elapsedMilliseconds={timeNow - timeStart} showMilliseconds={config.showMilliseconds} />
             </div>
             <div className="information-box">
               <strong>Sources: </strong>
