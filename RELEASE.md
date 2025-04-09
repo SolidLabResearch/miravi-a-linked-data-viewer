@@ -37,14 +37,15 @@ Squash and merge.
 
 Still in the github web interface...
 
-Create a new release, with the option to create a new git tag (our release tag, example: `v1.7.0`) on the main branch.
+Create a new release:
 
-In the release description, copy from [CHANGELOG.md](./CHANGELOG.md):
-
-* the new release section created above
-* the new release link created above
-
-Make sure to set the release as the latest release.
+* Choose a tag: create a new git tag (our release tag, example: `v1.7.0`).
+* Target: the main branch.
+* Release title, example: `Release v1.7.0`.
+* In the release description, copy from [CHANGELOG.md](./CHANGELOG.md):
+  * the new release section created above
+  * the new release link created above
+* Set as the latest release.
 
 ## Back on the development branch
 
