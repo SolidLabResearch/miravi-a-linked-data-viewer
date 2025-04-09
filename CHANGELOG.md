@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2025-04-09
+
+### Added
+
+- A favicon (#188).
+- A cache to remember the entire result table (useful when scrolling through pages of a lengthy result table) (#193).
+
+### Changed
+
+- Using new verification library v0.2.0 (#184).
+- Refactoring, avoiding the usage of an internal, undocumented react-admin component (#185).
+- Removed the loading indicator / refresh button in the appbar (#195).
+
+### Fixed
+
+- Queries no longer executed twice (#176).
+- Templated queries: visiting with variable values in url search parameters now works as expected (#183).
+- Solved console warning when hovering over source verification question mark (#128).
+- ASK query is working now (#22).
+- "Finished in" now shows effective query execution time (#130).
+- "Clean query cache" button's functionality works as expected now (also for templated queries with indirect variables) (#190).
+- "The page is loading." type of prompt is back (now "The list is loading." and "The options for the variables in this query are loading.") (#194).
+
 ## [1.6.0] - 2025-03-17
 
 ### Added
@@ -215,4 +238,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.4.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.1
 [1.5.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.5.0
 [1.6.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.6.0
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.6.0...HEAD
+[1.7.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.7.0

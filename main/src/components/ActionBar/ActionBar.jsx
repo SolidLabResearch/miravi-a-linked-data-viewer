@@ -27,27 +27,31 @@ import configManager from "../../configManager/configManager.js";
  */
 function ActionBar() {
   const { total, isLoading, resource } = useListContext();
-  const [time, setTime] = useState(0);
+  const now = Date.now();
+  const [timeStart, setTimeStart] = useState(now);
+  const [timeNow, setTimeNow] = useState(now);
   const [sourceInfoOpen, setSourceInfoOpen] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
-      setTime(0);
+      const now = Date.now();
+      setTimeStart(now);
+      setTimeNow(now);
     }
   }, [isLoading]);
 
   useEffect(() => {
     let intervalId;
     if (isLoading) {
-      intervalId = setInterval(() => setTime(time + 1), 10);
+      intervalId = setInterval(() => setTimeNow(Date.now()), 100);
     }
     return () => clearInterval(intervalId);
-  }, [time, isLoading]);
+  }, [timeNow, isLoading]);
 
   const config = configManager.getConfig();
   const query = configManager.getQueryWorkingCopyById(resource);
   const context = query.comunicaContext;
-  const sources = context.sources;
+  const sources = context?.sources || []; // in early calls, context might be undefined
 
   return (
     <Grid container direction="row" width={"100%"} rowSpacing={1}>
@@ -58,7 +62,7 @@ function ActionBar() {
             <div className="information-box">
               {isLoading && <strong>Runtime: </strong>}
               {!isLoading && <strong>Finished in: </strong>}
-              <Time time={time} showMilliseconds={config.showMilliseconds} />
+              <Time elapsedMilliseconds={timeNow - timeStart} showMilliseconds={config.showMilliseconds} />
             </div>
             <div className="information-box">
               <strong>Sources: </strong>
@@ -102,10 +106,10 @@ function ActionBar() {
                       <SourceAuthenticationIcon source={source} />
                     </TableCell>
                     <TableCell>
-                      <SourceFetchStatusIcon proxyUrl={config.httpProxy} context={context} source={source} />
+                      <SourceFetchStatusIcon proxyUrl={config.httpProxy || ""} context={context} source={source} />
                     </TableCell>
                     <TableCell>
-                      <SourceVerificationIcon proxyUrl={config.httpProxy} context={context} source={source} />
+                      <SourceVerificationIcon proxyUrl={config.httpProxy || ""} context={context} source={source} />
                     </TableCell>
                   </TableRow>
                 ))}

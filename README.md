@@ -28,7 +28,7 @@ Table of contents:
     * [Additional prerequisites](#additional-prerequisites)
     * [Testing the production version](#testing-the-production-version)
     * [Testing the development version](#testing-the-development-version)
-  * [Maintaining the version string](#maintaining-the-version-string)
+  * [Release activities](#release-activities)
 
 ## Preface
 
@@ -444,6 +444,6 @@ The procedure is the same as for testing the production version, except for step
    npm run dev-with-path
    ```
 
-### Maintaining the version string
+### Release activities
 
-Maintain the version string [here](./main/src/version.js) according to the rules in that file.
+See [RELEASE.md](./RELEASE.md).

@@ -59,12 +59,12 @@
       "icon": "BrushIcon",
       "comunicaContext": {
         "sources": [
-          "https://fragments.dbpedia.org/2016-04/en"
+          "http://localhost:8080/example/artists"
         ]
       },
       "askQuery": {
-        "trueText": "There is an artist who is inspired by Picasso!",
-        "falseText": "There is no artist who is inspired by Picasso."
+        "trueText": "Yes, there is at least one artist influenced by Picasso!",
+        "falseText": "No, there is not a single artist influenced by Picasso."
       }
     },
     {

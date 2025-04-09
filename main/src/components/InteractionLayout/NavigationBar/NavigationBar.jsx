@@ -1,7 +1,8 @@
-import { AppBar, TitlePortal, useRefresh } from "react-admin";
+import { AppBar, TitlePortal } from "react-admin";
 import "./NavigationBar.css";
 import AuthenticationMenu from "../AuthenticationMenu/AuthenticationMenu";
 import { Component, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { IconButton } from '@mui/material';
 import { Tooltip } from '@mui/material';
@@ -10,6 +11,7 @@ import AboutDialog from "./AboutDialog";
 
 import configManager from "../../../configManager/configManager";
 import comunicaEngineWrapper from "../../../comunicaEngineWrapper/comunicaEngineWrapper";
+import SparqlDataProvider from "../../../dataProvider/SparqlDataProvider";
 
 function AboutButton(props) {
   return (
@@ -22,10 +24,12 @@ function AboutButton(props) {
 }
 
 function InvalidateButton() {
-  const refresh = useRefresh();
-  const handleClick = () => {
-    comunicaEngineWrapper.reset();
-    setTimeout(refresh, 2000);
+  const navigate = useNavigate();
+  const handleClick = async () => {
+    await comunicaEngineWrapper.reset();
+    SparqlDataProvider.clearListCache();
+    // navigate! (refresh is not enough to clear status in case of templated queries with indirect variables)
+    navigate('/');
   }
   return (
     <Tooltip title="Clean Query Cache">
@@ -51,7 +55,7 @@ function NavigationBar(props) {
 
   return (
     <>
-      <AppBar {...props} userMenu={<AuthenticationMenu />}>
+      <AppBar {...props} toolbar={<></>} userMenu={<AuthenticationMenu />}>
         <img
           id="app-logo"
           src={config.logoLocation}
