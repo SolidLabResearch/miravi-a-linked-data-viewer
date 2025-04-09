@@ -10,7 +10,7 @@
 
 Define the release tag. Example: `v1.7.0`.
 
-> Dut do not create the tag in git yet.
+> Do not create the tag in git yet.
 
 ## Finalize work on the development branch
 
