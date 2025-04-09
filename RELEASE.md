@@ -31,7 +31,7 @@ Go to the github web interface.
 
 Create a new pull request (example: `Merging for v1.7.0`) to the main branch, from the development branch.
 
-Merge (squash).
+Squash and merge.
 
 ## Create a new release
 
