@@ -29,17 +29,15 @@ Enter the release tag in the version string in [/main/src/version.js](./main/src
 
 Go to the github web interface.
 
-Make a pull request (example: `Merging for v1.7.0`) from the development branch to the main branch.
+Create a new pull request (example: `Merging for v1.7.0`) to the main branch, from the development branch.
 
-Merge, without squashing (!).
+Merge (squash).
 
 ## Create a new release
 
 Still in the github web interface...
 
-Create the new release from the main branch.
-
-Enter the to be created new git tag here.
+Create a new release, with the option to create a new git tag (our release tag, example: `v1.7.0`) on the main branch.
 
 In the release description, copy from [CHANGELOG.md](./CHANGELOG.md):
 
