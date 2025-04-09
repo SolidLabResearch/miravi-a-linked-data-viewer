@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2025-04-09
+
 ### Added
 
 - A favicon (#188).
@@ -236,4 +238,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.4.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.1
 [1.5.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.5.0
 [1.6.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.6.0
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.6.0...HEAD
+[1.7.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.7.0
+[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.7.0...HEAD
