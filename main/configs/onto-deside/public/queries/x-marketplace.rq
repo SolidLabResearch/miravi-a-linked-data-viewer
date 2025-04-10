@@ -1,0 +1,74 @@
+PREFIX schema: <http://schemaorg/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex: <http://example.com/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX ceon-actorODP: <http://w3id.org/CEON/ontology/actorODP/>
+PREFIX ceon-resourceODP: <http://w3id.org/CEON/ontology/resourceODP/>
+PREFIX ceon-product: <http://w3id.org/CEON/ontology/product/>
+PREFIX ceon-provenance: <http://w3id.org/CEON/ontology/provenance/>
+PREFIX ceon-material: <http://w3id.org/CEON/ontology/material/>
+PREFIX ceon-processODP: <http://w3id.org/CEON/ontology/processODP/>
+PREFIX ceon-process:  <http://w3id.org/CEON/ontology/process/>
+PREFIX textile:  <http://w3id.org/CEON/demo/textile/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX qudt-unit: <http://qudt.org/vocab/unit/>
+PREFIX ceon-quantity: <http://w3id.org/CEON/ontology/quantity/>
+PREFIX ceon-actor: <http://w3id.org/CEON/ontology/actor/>
+PREFIX qudt-quantitykind: <http://qudt.org/vocab/quantitykind/>
+PREFIX construction: <http://w3id.org/CEON/demo/construction/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX bot: <https://w3id.org/bot#>
+SELECT DISTINCT ?BatchLabel ?BatchSize ?availabilityDate ?CustomizedPriceEuro ?Condition ?RecycledContentPercentage ?Volume ?Weight
+?ProductModelLabel ?ModelHeight ?ModelHeightUnit ?ModelWidth  ?ModelWidthUnit ?ModelThickness ?ModelThicknessUnit
+WHERE {
+  ?Batch a ceon-resourceODP:BatchOfObjects.
+  ?Batch rdfs:label ?BatchLabel.
+  ?Batch ceon-product:batchOfProduct ?ProductModelId .
+  ?ProductModelId rdfs:label ?ProductModelLabel.
+  OPTIONAL {?Batch ceon-resourceODP:batchSize ?BatchSize.}
+  OPTIONAL {?Batch ceon-resourceODP:hasResourceCondition ?Condition_url.}
+  BIND (REPLACE(STR(?Condition_url), "^.*/([^/]*)$", "$1") as ?Condition)
+  OPTIONAL {
+    ?Batch ceon-product:batchOfProduct ?ProductModelId .
+    ?ProductModelId rdfs:label ?ProductModelLabel.
+    OPTIONAL {
+      ?Composition a ceon-product:MatterComposition;
+      ceon-product:compositionOf ?ProductModelId;
+      ceon-product:associatedWithMatter ?MatterUrl;
+      qudt:numericValue ?MassFraction.
+      BIND (REPLACE(STR(?MatterUrl), "^.*/([^/]*)$", "$1") as ?Matter)
+    }
+    OPTIONAL {
+      ?ProductModelId ceon-quantity:hasHeight ?HeightDimension.
+      ?HeightDimension qudt:numericValue ?ModelHeight.
+      ?HeightDimension qudt:hasUnit ?ModelHeightUnit.
+    }
+    OPTIONAL {
+      ?ProductModelId ceon-quantity:hasWidth ?WidthDimension.
+      ?WidthDimension qudt:numericValue ?ModelWidth.
+      ?WidthDimension qudt:hasUnit ?ModelWidthUnit.
+    }
+    OPTIONAL {
+      ?ProductModelId ceon-quantity:hasThickness ?ThicknessDimension.
+      ?ThicknessDimension qudt:numericValue ?ModelThickness.
+      ?ThicknessDimension qudt:hasUnit ?ModelThicknessUnit.
+    }
+  }
+  OPTIONAL {
+    ?Batch ceon-quantity:hasWeight ?WeightDimension.
+    ?WeightDimension qudt:numericValue ?Weight.
+    ?WeightDimension qudt:numericValue ?WeightUnit.
+  }
+  OPTIONAL {
+    ?Batch ceon-quantity:hasVolume ?VolumeDimension.
+    ?VolumeDimension qudt:numericValue ?Volume.
+    ?VolumeDimension qudt:numericValue ?VolumeUnit.
+  }
+  OPTIONAL {
+    ?Batch textile:hasRecycledContentValue ?RecycledContentValue.
+    ?RecycledContentValue qudt:numericValue ?RecycledContentPercentage.
+    ?RecycledContentValue qudt:hasUnit qudt-unit:PERCENT.
+  }
+  ?SupplyingResource ceon-actorODP:participatingResource ?Batch;
+  ceon-actorODP:participationStartTime ?availabilityDate.
+}

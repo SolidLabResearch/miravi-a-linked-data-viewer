@@ -1,5 +1,5 @@
 {
-  "title": "Query the Open Circularity Platform",
+  "title": "Query the Open Circularity Platform (Onto-DESIDE demo: all data is dummy data)",
   "logoLocation": "images/IDLab-logo.png",
   "logoRedirectURL": "https://idlab.technology/",
   "mainAppColor": "lightgray",
@@ -8,7 +8,7 @@
   "textColor": "#1976D2",
   "queryFolder": "queries",
   "showMilliseconds": false,
-  "defaultIDP": "https://onto-deside.ilabt.imec.be/css11/",
+  "defaultIDP": "https://onto-deside.ilabt.imec.be/css12/",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and select a query from the menu on the left.",
   "queryGroups": [
@@ -45,6 +45,11 @@
     {
       "id": "evaluation-textile",
       "name": "Evaluation June 2024 - Textile",
+      "icon": "CheckroomIcon"
+    },
+    {
+      "id": "cross-domain-evaluation",
+      "name": "Cross-domain evaluation 2025",
       "icon": "CheckroomIcon"
     }
   ],
@@ -725,6 +730,213 @@
           "https://onto-deside.ilabt.imec.be/css5/texon/data/dt/out/materials.ttl"
         ],
         "lenient": true
+      }
+    },
+    {
+      "id": "700",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "spo.rq",
+      "name": "All accessible data",
+      "description": "This query shows all data accessible for the logged in user. This includes also PCDS data and data from the Circularise and the Concular platform.",
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "701",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-details-per-product.rq",
+      "name": "Product details",
+      "description": "Select a product to see all accessible data about this product and its direct relation to other data points.",
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/x-product_labels.rq"]
+      },
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "703",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-product_composition.rq",
+      "name": "Product Components",
+      "description": "Select a product to see the components of that product and their mass fraction in the selected product.",
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/x-product_with_component_labels.rq"]
+      },
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "704",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-product_matter_composition.rq",
+      "name": "Product Matter Composition",
+      "description": "Select a product to see the matter composition of that product.",
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/x-product_with_matter_labels.rq"]
+      },
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "705",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-product_with_matter.rq",
+      "name": "Products Filtered by Matter",
+      "description": "Select a matter to see all products containing this matter.",
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/x-matter.rq"]
+      },
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "706" ,
+      "queryGroupId": "cross-domain-evaluation" ,
+      "queryLocation": "x-product_disassembly.rq" ,
+      "name": "Product Disassembly" ,
+      "description": "Select a product to find its disassembly method and the original input products." ,
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/x-product_with_disassembly_method_labels.rq"
+        ]
+      } ,
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index" ,
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "707",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-marketplace.rq",
+      "name": "Marketplace: Batches for Sale",
+      "description": "This query retrieves a selection of data about all batches with an availability date.",
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "708",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-details-per-batch.rq",
+      "name": "Batch Details",
+      "description": "Select a batch to see all accessible data about this batch and its direct relation to other data points.",
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/x-batch_labels.rq"]
+      },
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "709",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-marketplace-matter.rq",
+      "name": "Batch Matter Composition",
+      "description": "This queries retrieve the matter composition of all batches with an availability date.",
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "710",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-marketplace-filtered.rq",
+      "name": "Batches Filtered by Matter",
+      "description": "Select a matter to see all batches with this matter in their composition.",
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/x-matter.rq"]
+      },
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "711",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-marketplace-offers.rq",
+      "name": "Batch Price Offers",
+      "description": "This query retrieves all batch price offers accessible for the logged in user.",
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "712" ,
+      "queryGroupId": "cross-domain-evaluation" ,
+      "queryLocation": "x-construction_end_of_life.rq" ,
+      "name": "End of Life Scenarios" ,
+      "description": "Select a building to see selected information relevant for decision concerning the end-of-life of products in the selected building." ,
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/x-construction_building_labels.rq"
+        ]
+      } ,
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index" ,
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "713",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-electronics_products.rq",
+      "name": "Overview of Electronics Products",
+      "description": "This queries retrieves selected data points for the electronics products. This data is directly integrated from the Circularise platform.",
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/circularise/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "714",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-electronics_products-coc.rq",
+      "name": "Chain of Custody",
+      "description": "Select a product to see the products used as input for its production.This data is directly integrated from the Circularise platform.",
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/x-product_labels.rq"]
+      },
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/circularise/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "715" ,
+      "queryGroupId": "cross-domain-evaluation" ,
+      "queryLocation": "x-construction_end_of_life_costs.rq" ,
+      "name": "End of Life Scenarios: Costs and Benefits" ,
+      "description": "This query retrieves selected costs and benefits related to end-of-life scenarios for products. Only the costs and benefits accessible to the logged in user are shown." ,
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index" ,
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "716",
+      "queryGroupId": "cross-domain-evaluation",
+      "queryLocation": "x-marketplace-images.rq",
+      "name": "Batches with Images",
+      "description": "This query retrieves all batches with published images. This data is directly integrated from the Concular platform.",
+      "sourcesIndex": {
+        "url": "https://onto-deside.ilabt.imec.be/css12/ceonadmin/ceon/index",
+        "queryLocation": "sourceQueries/seeAlso.rq"
       }
     }
   ]
