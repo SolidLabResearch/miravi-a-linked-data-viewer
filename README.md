@@ -214,7 +214,7 @@ This makes sure that the (main) query can succeed if not all obtained sources ar
 Configuration setting `httpProxy` can be used to solve CORS issues in case CORS headers are not set (correctly) on a queried source.
 We support static proxies such as [cors-anywhere](https://www.npmjs.com/package/cors-anywhere) that take the URL from the path.
 
-We simply prepend the `httpProxy` before the URL of each source in a query that has `comunicaContext.useProxy` set to `true`.
+We simply prepend the `httpProxy` value before the URL of each source in a query that has `comunicaContext.useProxy` set to `true`.
 
 Example: if `httpProxy` is set to `http://myproxy.org/`, source `http://www.example.com/source-xyz`
 will be accessed as `http://myproxy.org/http://www.example.com/source-xyz`.
