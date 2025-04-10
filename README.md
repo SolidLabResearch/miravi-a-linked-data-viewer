@@ -13,6 +13,7 @@ Table of contents:
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
   * [Specifying sources](#specifying-sources)
+  * [About httpProxy](#about-httpproxy)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
     * [Templated queries with fixed values for the template variables](#templated-queries-with-fixed-values-for-the-template-variables)
@@ -145,8 +146,8 @@ The configuration file must follow the structure shown below.
   "textColor": "The color of all the text in teh app body, this means all text except header and footer.",
   "footer": "HTML components or text that will function as the footer (will be placed in the footer div.)",
   "defaultIDP": "The default value used for IDP when logging in, this IDP can be manually changed in the Web app as well. ",
-  "queryFolder": "The base location of the queries, all query locations will start from this folder (relative to public folder.)",
-  "httpProxy": "The http proxy through which the requests will be rerouted. When left empty, the Comunica query engine will handle it. This is useful when CORS headers are not set (correctly) on the queried source.",
+  "queryFolder": "The base location of the queries, all query locations will start from this folder (relative to public folder).",
+  "httpProxy": "Optional http proxy through which the requests will be rerouted - see documentation below.",
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
   "queryGroups" : [
     {
@@ -165,7 +166,7 @@ The configuration file must follow the structure shown below.
       "icon": "The key to the icon for the query. This is optional and a default menu icon will be used when left empty.",
       "comunicaContext": {
         "sources": "Initial array of sources over which the query should be executed",
-        "useProxy": "True or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
+        "useProxy": "true or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
         ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
       "sourcesIndex": {
@@ -207,6 +208,16 @@ The (auxiliary) query provided in `sourceIndex.queryLocation` is executed on `so
 
 If `sourceIndex` is used and there is no `comunicaContext.lenient` property found, one will be created with value `true`.
 This makes sure that the (main) query can succeed if not all obtained sources are accessible.
+
+### About httpProxy
+
+Configuration setting `httpProxy` can be used to solve CORS issues in case CORS headers are not set (correctly) on a queried source.
+We support static proxies such as [cors-anywhere](https://www.npmjs.com/package/cors-anywhere) that take the URL from the path.
+
+We simply prepend the `httpProxy` before the URL of each source in a query that has `comunicaContext.useProxy` set to `true`.
+
+Example: if `httpProxy` is set to `http://myproxy.org/`, source `http://www.example.com/source-xyz`
+will be accessed as `http://myproxy.org/http://www.example.com/source-xyz`.
 
 ### Adding variable type
 
