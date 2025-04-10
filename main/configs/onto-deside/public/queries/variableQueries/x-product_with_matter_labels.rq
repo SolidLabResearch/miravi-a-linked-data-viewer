@@ -1,0 +1,14 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX textile:  <http://w3id.org/CEON/demo/textile/>
+PREFIX elec: <http://w3id.org/CEON/demo/electronics/>
+PREFIX ceon-product: <http://w3id.org/CEON/ontology/product/>
+
+SELECT DISTINCT ?ProductLabel
+WHERE {
+  VALUES ?o { textile:TextileProduct elec:ElectronicsProduct ceon-product:Product }
+  ?Product a ?o ;
+  rdfs:label ?ProductLabel.
+  ?Composition a ceon-product:MatterComposition;
+  ceon-product:compositionOf ?Product.
+}
+ORDER BY ?ProductLabel

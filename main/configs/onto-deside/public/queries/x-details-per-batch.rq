@@ -1,0 +1,32 @@
+PREFIX schema: <http://schemaorg/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex: <http://example.com/>
+PREFIX qudt: <http://qudt.org/schema/qudt/>
+PREFIX ceon-actorODP: <http://w3id.org/CEON/ontology/actorODP/>
+PREFIX ceon-resourceODP: <http://w3id.org/CEON/ontology/resourceODP/>
+PREFIX ceon-Batch: <http://w3id.org/CEON/ontology/Batch/>
+PREFIX ceon-statement: <http://w3id.org/CEON/ontology/statement/>
+PREFIX ceon-material: <http://w3id.org/CEON/ontology/material/>
+PREFIX ceon-processODP: <http://w3id.org/CEON/ontology/processODP/>
+PREFIX ceon-process:  <http://w3id.org/CEON/ontology/process/>
+PREFIX textile:  <http://w3id.org/CEON/demo/textile/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT DISTINCT ?subject_url ?property_url  ?valueOfProperty ?property2_url ?valueOfProperty2
+WHERE {
+    ?Batch rdfs:label $BatchLabel.
+    {
+        ?Batch ?property_url ?valueOfProperty.
+        Optional {?valueOfProperty ?property2_url ?valueOfProperty2}
+        BIND (?Batch as ?subject_url)
+    }
+    UNION
+    {
+        ?subject_url ?property_url ?Batch.
+        BIND (?Batch as ?valueOfProperty)
+    }
+
+    #BIND (REPLACE(STR(?DyeMethod_url), "^.*[/|#]([^/][^#]*)$", "$1") as ?propertyCleaned)
+    # this regex ^.*[\/|#]([^\/][^#]*)$ is correct but not working in SPARQL
+}
+ORDER By ?subject_url ?property_url ?valueOfProperty ?property2_url ?valueOfProperty2

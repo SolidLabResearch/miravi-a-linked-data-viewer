@@ -1,0 +1,9 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX textile:  <http://w3id.org/CEON/demo/textile/>
+
+SELECT DISTINCT ?ProductLabel
+WHERE {
+  ?Product a textile:TextileProduct ;
+    rdfs:label ?ProductLabel
+}    
+ORDER BY ?ProductLabel
