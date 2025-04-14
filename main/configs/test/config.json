@@ -7,7 +7,6 @@
   "titleColor": "black",
   "textColor": "#1976D2",
   "queryFolder": "queries",
-  "httpProxy": "http://localhost:8000/",
   "showMilliseconds": false,
   "defaultIDP": "http://localhost:8080",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
@@ -38,9 +37,14 @@
       "comunicaContext": {
         "sources": [
           "http://localhost:8001/example/idols"
-        ],
-        "useProxy": true
-      }
+        ]
+      },
+      "httpProxies": [
+        {
+          "urlStart": "http://localhost:8001",
+          "httpProxy": "http://localhost:8000/"
+        }
+      ]
     },
     {
       "id": "1010",

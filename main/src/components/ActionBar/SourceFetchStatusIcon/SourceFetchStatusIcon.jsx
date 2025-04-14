@@ -8,19 +8,13 @@ import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngine
 
 /**
  * @param {object} props - the props passed to the component
- * @param {object} props.context - the query context
  * @param {string} props.source - the source to check
- * @param {string} props.proxyUrl - the proxy url to use if the resource is accessed through a proxy
  * @returns {Component} an icon indicating whether the query was executed succesfully or not
  */
-function SourceFetchStatusIcon({ context, source, proxyUrl }) {
-  let actualSource = source;
-  if (context.useProxy) {
-    actualSource = `${proxyUrl}${source}`;
-  }
-  const status = comunicaEngineWrapper.getFetchStatusNumber(actualSource);
+function SourceFetchStatusIcon({ source }) {
+  const status = comunicaEngineWrapper.getFetchStatusNumber(source);
 
-  if (comunicaEngineWrapper.getFetchSuccess(actualSource)) {
+  if (comunicaEngineWrapper.getFetchSuccess(source)) {
     return (
       <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />
@@ -44,9 +38,7 @@ function SourceFetchStatusIcon({ context, source, proxyUrl }) {
 }
 
 SourceFetchStatusIcon.propTypes = {
-  context: PropTypes.object.isRequired,
-  source: PropTypes.string.isRequired,
-  proxyUrl: PropTypes.string.isRequired,
+  source: PropTypes.string.isRequired
 };
 
 export default SourceFetchStatusIcon;

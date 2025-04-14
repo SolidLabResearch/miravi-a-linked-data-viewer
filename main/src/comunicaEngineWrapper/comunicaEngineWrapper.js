@@ -4,6 +4,7 @@ import {
   getDefaultSession,
   fetch as authFetch,
 } from "@inrupt/solid-client-authn-browser";
+import { translateUrlToProxiedUrl } from '../lib/utils';
 
 /**
  * A class wrapping the Comunica engines we need, used for all but login actions.
@@ -58,12 +59,13 @@ class ComunicaEngineWrapper {
   * 
   * @param {string} queryText - the SPARQL query text
   * @param {object} context - the context to provide to the Comunica engine
-  * @param {object} callbacks - an object contains the callback functions you specify
+  * @param {array} httpProxies - array of httpProxy definitions
+  * @param {object} callbacks - an object containing the callback functions you specify
   * @returns {void} when the query has finished
   */
-  async query(queryText, context, callbacks) {
+  async query(queryText, context, httpProxies, callbacks) {
     try {
-      this._prepareQuery(context);
+      this._prepareQuery(context, httpProxies);
       let result = await this._engine.query(queryText, context);
       switch (result.resultType) {
         case 'bindings':
@@ -118,15 +120,16 @@ class ComunicaEngineWrapper {
   * Supports the following options.
   * - engine: 
   *   - "default": use the default Comunica engine (this is the default anyway)
-  *   - "datasources": use a Comunica query engine configured to discover datasources recursively
+  *   - "link-traversal": use a Comunica query engine configured to discover datasources recursively
   * 
   * @param {string} queryText - the SPARQL SELECT query text
   * @param {object} context - the context to provide to the Comunica engine
+  * @param {array} httpProxies - array of httpProxy definitions
   * @param {string} options.engine - "default": use the default Comunica engine (this is the default anyway)
   *                                - "link-traversal": use a Comunica query engine with link-traversal feature
   * @returns {Promise <BindingsStream>} Promise to the bindings stream
   */
-  async queryBindings(queryText, context, options = {}) {
+  async queryBindings(queryText, context, httpProxies, options = {}) {
     let engine;
     switch (options.engine) {
       case "default":
@@ -140,7 +143,7 @@ class ComunicaEngineWrapper {
         throw new Error("Unsupported engine requested");
     }
     try {
-      this._prepareQuery(context);
+      this._prepareQuery(context, httpProxies);
       return engine.queryBindings(queryText, context);
     } catch (error) {
       await this.reset();
@@ -152,8 +155,9 @@ class ComunicaEngineWrapper {
    * Prepares a call to any engine's query function
    *
    * @param {object} context - the context that will be used
+   * @param {array} httpProxies - array of httpProxy definitions
    */
-  _prepareQuery(context) {
+  _prepareQuery(context, httpProxies) {
     // avoid faulty fetch status for sources cached in Comunica
     for (const source of context.sources) {
       this._fetchSuccess[source] = true;
@@ -162,20 +166,22 @@ class ComunicaEngineWrapper {
     if (getDefaultSession().info.isLoggedIn) {
       this._underlyingFetchFunction = authFetch;
     }
-    context.fetch = ComunicaEngineWrapper._getWrappedFetchFunction(this._underlyingFetchFunction, this);
+    context.fetch = ComunicaEngineWrapper._getWrappedFetchFunction(this._underlyingFetchFunction, httpProxies, this);
   }
 
   /**
    * Returns a function that wraps the underlying fetch function and sets the fetch success information in member variables of _this.
    * 
-   * @param underlyingFetchFunction - the underlying fetch functin
+   * @param underlyingFetchFunction - the underlying fetch function
+   * @param {array} httpProxies - array of httpProxy definitions
    * @param {ComunicaEngineWrapper} _this - the calling ComunicaEngineWrapper object
    * @returns {Function} that function.
    */
-  static _getWrappedFetchFunction(underlyingFetchFunction, _this) {
+  static _getWrappedFetchFunction(underlyingFetchFunction, httpProxies, _this) {
     const wrappedFetchFunction = async (arg) => {
       try {
-        const response = await underlyingFetchFunction(arg, {
+        let actualUrl = translateUrlToProxiedUrl(arg, httpProxies);
+        const response = await underlyingFetchFunction(actualUrl, {
           headers: {
             Accept: "application/n-quads,application/trig;q=0.9,text/turtle;q=0.8,application/n-triples;q=0.7,*/*;q=0.1"
           }
