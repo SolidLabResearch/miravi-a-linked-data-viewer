@@ -29,6 +29,7 @@ export default function CustomEditor(props) {
     comunicaContextCheck: false,
     sourceIndexCheck: false,
     askQueryCheck: false,
+    httpProxiesCheck: false,
     directVariablesCheck: false,
     indirectVariablesCheck: false,
   });
@@ -37,6 +38,7 @@ export default function CustomEditor(props) {
   const [editError, setEditError] = useState(false);
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
+  const [parsingErrorHttpProxies, setParsingErrorHttpProxies] = useState(false);
   const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
 
   // Default placeholders for the forms
@@ -61,6 +63,7 @@ ORDER BY ?genre`;
 
   const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
   const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
+  const defaultHttpProxiesDetails = JSON.stringify([{ "urlStart": "http://www.example.com/path-xyz", "httpProxy": "http://myproxy.org/" }], null, 2);
   const defaultTemplateOptions = JSON.stringify(
     {
       "variableOne": [
@@ -100,7 +103,7 @@ ORDER BY ?genre`;
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorTemplate) {
+    if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorHttpProxies && !parsingErrorTemplate) {
       setShowError(false);
       const formData = new FormData(event.currentTarget);
       const jsonData = Object.fromEntries(formData.entries());
@@ -188,6 +191,10 @@ ORDER BY ?genre`;
 
     if (ensureBoolean(dataWithStrings.askQueryCheck)) {
       parsedObject.askQuery = JSON.parse(dataWithStrings.askQuery);
+    }
+
+    if (ensureBoolean(dataWithStrings.httpProxiesCheck)) {
+      parsedObject.httpProxies = JSON.parse(dataWithStrings.httpProxies);
     }
 
     if (ensureBoolean(dataWithStrings.directVariablesCheck)) {
@@ -540,6 +547,42 @@ ORDER BY ?genre`;
                     placeholder={defaultAskQueryDetails}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
+                    sx={{ marginBottom: '16px' }}
+                  />
+                </div>
+              }
+
+              <FormControlLabel
+                control={<Checkbox
+                  name='httpProxiesCheck'
+                  checked={!!formData.httpProxiesCheck}
+                  onChange={
+                    () => {
+                      setParsingErrorHttpProxies(false);
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        'httpProxiesCheck': !formData.httpProxiesCheck,
+                      }));
+                    }
+                  }
+                />} label="Http proxies" />
+
+              {formData.httpProxiesCheck &&
+                <div>
+                  <TextField
+                    required={ensureBoolean(formData.httpProxiesCheck)}
+                    label="Specifying http proxies"
+                    name="httpProxies"
+                    error={parsingErrorHttpProxies}
+                    multiline
+                    fullWidth
+                    minRows={5}
+                    variant="outlined"
+                    helperText={`Write http proxies in JSON-format${parsingErrorHttpProxies ? ' (Invalid Syntax)' : '.'}`}
+                    value={!!formData.httpProxies ? typeof formData.httpProxies === 'object' ? JSON.stringify(formData.httpProxies, null, 2) : formData.httpProxies : formData.httpProxies === '' ? '' : defaultHttpProxiesDetails}
+                    placeholder={defaultHttpProxiesDetails}
+                    onClick={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}
+                    onChange={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}
                     sx={{ marginBottom: '16px' }}
                   />
                 </div>

@@ -159,6 +159,29 @@ SELECT DISTINCT ?source WHERE {
 
   })
 
+  it("ASK query", () => {
+    cy.visit("/");
+    cy.contains("Example queries").click();
+    cy.contains("Is there an artist influenced by Picasso?").click();
+
+    cy.get('button').contains("Clone as custom query").click({ force: true }); // Button is out of FoV so we gotta force the click
+
+    cy.url().should('include', 'customQuery');
+
+    cy.get('textarea[name="askQuery"]').should('have.value', `{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}`);
+  })
+
+  it("http proxies", () => {
+    cy.visit("/");
+    cy.contains("Example queries").click();
+    cy.contains("My idols").click();
+
+    cy.get('button').contains("Clone as custom query").click({ force: true }); // Button is out of FoV so we gotta force the click
+
+    cy.url().should('include', 'customQuery');
+
+    cy.get('textarea[name="httpProxies"]').should('have.value', `[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}]`);
+  })
 
 })
 

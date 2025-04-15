@@ -226,9 +226,9 @@ Each element of such array contains a property `httpProxies` and a property `url
 We simply prepend the `httpProxy` value before the URL of each source whose URL starts with the string in the corresponding `urlStart` value.
 
 Example: if
-`httpProxies[i].urlStart` is set to `http://www.example.com/` and
+`httpProxies[i].urlStart` is set to `http://www.example.com/path-xyz` and
 `httpProxies[i].httpProxy` is set to `http://myproxy.org/`,
-source `http://www.example.com/source-xyz` will be accessed as `http://myproxy.org/http://www.example.com/source-xyz`.
+source `http://www.example.com/path-xyz-source-xyz` will be accessed as `http://myproxy.org/http://www.example.com/path-xyz-source-xyz`.
 
 ### Adding variable type
 
