@@ -6,6 +6,8 @@ import {
 } from "@inrupt/solid-client-authn-browser";
 import { translateUrlToProxiedUrl } from '../lib/utils';
 
+// LOG let wrappedFetchFunctionCounter = 0;
+
 /**
  * A class wrapping the Comunica engines we need, used for all but login actions.
  */
@@ -188,9 +190,15 @@ class ComunicaEngineWrapper {
         });
         _this._fetchSuccess[arg] = response.ok;
         _this._fetchStatusNumber[arg] = response.status;
+        // LOG console.log(`--- wrappedFetchFunction #${++wrappedFetchFunctionCounter}`);
+        // LOG console.log(`arg: ${arg}`);
+        // LOG console.log(`actualUrl: ${actualUrl}`);
+        // LOG console.log(`response status: ${response.status}`);
         return response;
       }
       catch (error) {
+        // LOG console.log(`--- wrappedFetchFunction #${++wrappedFetchFunctionCounter}`);
+        // LOG console.log(error);
         _this._fetchSuccess[arg] = false;
         throw error;
       }

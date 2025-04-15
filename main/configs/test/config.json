@@ -508,6 +508,23 @@
         ],
         "lenient": true
       }
+    },
+    {
+      "id": "9130",
+      "queryGroupId": "gr-test",
+      "queryLocation": "components.rq",
+      "name": "Http proxy test combined with indirect sources and source verification",
+      "description": "Contents same as those for the 'Source verification' query, but now through http proxy in a worse case test.",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-for-proxy-test-only",
+        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
+      },
+      "httpProxies": [
+        {
+          "urlStart": "http://localhost:8080",
+          "httpProxy": "http://localhost:8000/"
+        }
+      ]
     }
   ]
 }

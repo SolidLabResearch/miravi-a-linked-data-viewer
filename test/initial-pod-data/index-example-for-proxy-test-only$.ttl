@@ -1,0 +1,7 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<#index-example> rdfs:seeAlso
+  <http://localhost:8080/verifiable-example/components-vc>,
+  <http://localhost:8080/verifiable-example/components-vc-incorrect-proof>,
+  <http://localhost:8080/example/components>
+.
