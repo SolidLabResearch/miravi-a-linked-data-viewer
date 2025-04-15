@@ -106,10 +106,10 @@ function ActionBar() {
                       <SourceAuthenticationIcon source={source} />
                     </TableCell>
                     <TableCell>
-                      <SourceFetchStatusIcon proxyUrl={config.httpProxy || ""} context={context} source={source} />
+                      <SourceFetchStatusIcon source={source} />
                     </TableCell>
                     <TableCell>
-                      <SourceVerificationIcon proxyUrl={config.httpProxy || ""} context={context} source={source} />
+                      <SourceVerificationIcon httpProxies={query.httpProxies} source={source} />
                     </TableCell>
                   </TableRow>
                 ))}

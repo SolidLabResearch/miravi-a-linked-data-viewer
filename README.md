@@ -13,7 +13,7 @@ Table of contents:
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
   * [Specifying sources](#specifying-sources)
-  * [About httpProxy](#about-httpproxy)
+  * [About httpProxies](#about-httpproxies)
   * [Adding variable type](#adding-variable-type)
   * [Templated queries](#templated-queries)
     * [Templated queries with fixed values for the template variables](#templated-queries-with-fixed-values-for-the-template-variables)
@@ -147,7 +147,6 @@ The configuration file must follow the structure shown below.
   "footer": "HTML components or text that will function as the footer (will be placed in the footer div.)",
   "defaultIDP": "The default value used for IDP when logging in, this IDP can be manually changed in the Web app as well. ",
   "queryFolder": "The base location of the queries, all query locations will start from this folder (relative to public folder).",
-  "httpProxy": "Optional http proxy through which the requests will be rerouted - see documentation below.",
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
   "queryGroups" : [
     {
@@ -166,7 +165,6 @@ The configuration file must follow the structure shown below.
       "icon": "The key to the icon for the query. This is optional and a default menu icon will be used when left empty.",
       "comunicaContext": {
         "sources": "Initial array of sources over which the query should be executed",
-        "useProxy": "true or false, whether the query should be executed through the proxy or not. This field is optional and defaults to false.",
         ... any other field that can be used in the Comunica query engine https://comunica.dev/docs/query/advanced/context/
       },
       "sourcesIndex": {
@@ -184,7 +182,13 @@ The configuration file must follow the structure shown below.
           ...
         ]
       },
-
+      "httpProxies": [
+        {
+          "urlStart": "all sources whose url start with this string will be rerouted",
+          "httpProxy": "http proxy through which these sources will be rerouted - see also documentation 'About httpProxies' below."
+        }
+        ...
+      ],
       "askQuery": {
         "trueText": "The text that is to be shown when the query result is true (in ASK queries).",
         "falseText": "The text that is to be shown when the query result is false (in ASK queries)."
@@ -209,15 +213,22 @@ The (auxiliary) query provided in `sourceIndex.queryLocation` is executed on `so
 If `sourceIndex` is used and there is no `comunicaContext.lenient` property found, one will be created with value `true`.
 This makes sure that the (main) query can succeed if not all obtained sources are accessible.
 
-### About httpProxy
+### About httpProxies
 
-Configuration setting `httpProxy` can be used to solve CORS issues in case CORS headers are not set (correctly) on a queried source.
+Per query, an optional array of `httpProxies` can be specified.
+An http proxy can be used to solve CORS issues in case CORS headers are not set (correctly) on some queried sources.
+Note that the involved sources can include those specified in `comunicaContext.sources` as well as those described in and found through `sourceIndex`.
+
 We support static proxies such as [cors-anywhere](https://www.npmjs.com/package/cors-anywhere) that take the URL from the path.
 
-We simply prepend the `httpProxy` value before the URL of each source in a query that has `comunicaContext.useProxy` set to `true`.
+Each element of such array contains a property `httpProxies` and a property `urlStart`.
 
-Example: if `httpProxy` is set to `http://myproxy.org/`, source `http://www.example.com/source-xyz`
-will be accessed as `http://myproxy.org/http://www.example.com/source-xyz`.
+We simply prepend the `httpProxy` value before the URL of each source whose URL starts with the string in the corresponding `urlStart` value.
+
+Example: if
+`httpProxies[i].urlStart` is set to `http://www.example.com/path-xyz` and
+`httpProxies[i].httpProxy` is set to `http://myproxy.org/`,
+source `http://www.example.com/path-xyz-source-xyz` will be accessed as `http://myproxy.org/http://www.example.com/path-xyz-source-xyz`.
 
 ### Adding variable type
 

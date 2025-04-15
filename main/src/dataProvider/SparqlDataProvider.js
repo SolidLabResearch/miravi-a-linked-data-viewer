@@ -1,4 +1,3 @@
-import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
 import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
 import { Term } from "sparqljs";
@@ -7,24 +6,6 @@ import configManager from "../configManager/configManager";
 import comunicaEngineWrapper from "../comunicaEngineWrapper/comunicaEngineWrapper";
 
 let config = configManager.getConfig();
-
-let proxyHandler;
-
-const setProxyHandler = () => {
-  if (config.httpProxy) {
-    proxyHandler = new ProxyHandlerStatic(config.httpProxy);
-  } else {
-    proxyHandler = undefined;
-  }
-};
-setProxyHandler();
-
-const onConfigChanged = (newConfig) => {
-  config = newConfig;
-  setProxyHandler();
-};
-
-configManager.on('configChanged', onConfigChanged);
 
 // simple cache to save time while scrolling through pages of a list
 // results = the result of executeQuery, totalItems
@@ -57,7 +38,7 @@ export default {
     handleComunicaContextCreation(query);
 
     if (query.sourcesIndex) {
-      const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.useProxy);
+      const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.httpProxies);
       query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
     }
 
@@ -257,6 +238,7 @@ async function executeQuery(query) {
     await comunicaEngineWrapper.query(query.queryText,
        // WEIRD: we need to make a copy of the context here (a shallow copy is fine); concurrent calls ???
       { ...query.comunicaContext },
+      query.httpProxies && [ ...query.httpProxies ],
       { "variables": callbackVariables, "bindings": callbackBindings, "quads": callbackQuads, "boolean": callbackBoolean });
     return results;
   } catch (error) {
@@ -268,10 +250,10 @@ async function executeQuery(query) {
  * Gets sources from a sources index
  * 
  * @param {object} sourcesIndex - the sourcesIndex object as found in the configuration
- * @param {boolean} useProxy - true if the main query needs a proxy (in which case we implicitly use it to access the sources index too)
+ * @param {array} httpProxies - array of httpProxy definitions
  * @returns {array} array of sources found
  */
-async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
+async function getSourcesFromSourcesIndex(sourcesIndex, httpProxies) {
   const sourcesList = [];
   try {
     let queryStringIndexSource;
@@ -283,7 +265,7 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
     }
 
     const bindingsStream = await comunicaEngineWrapper.queryBindings(queryStringIndexSource,
-      { lenient: true, sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) }, { engine: "link-traversal" });
+      { lenient: true, sources: [sourcesIndex.url] }, httpProxies, { engine: "link-traversal" });
     await new Promise((resolve, reject) => {
       bindingsStream.on('data', (bindings) => {
         for (const term of bindings.values()) {  // check for 1st value
@@ -329,9 +311,6 @@ function handleComunicaContextCreation(query) {
     if (!query.comunicaContext.sources) {
       query.comunicaContext.sources = [];
     }
-    if (query.comunicaContext.useProxy) {
-      query.comunicaContext.httpProxyHandler = proxyHandler;
-    }
   }
 }
 
@@ -343,7 +322,7 @@ async function getVariableOptions(query) {
   handleComunicaContextCreation(query);
 
   if (query.sourcesIndex) {
-    const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.useProxy);
+    const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.httpProxies);
     query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
   }
   // END duplicated chunk of code
@@ -386,7 +365,7 @@ async function getVariableOptions(query) {
   try {
     for (const queryString of queryStringList) {
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
-        { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
+        { sources: query.comunicaContext.sources }, query.httpProxies);
       await new Promise((resolve, reject) => {
         bindingsStream.on('data', (bindings) => {
           // see https://comunica.dev/docs/query/advanced/bindings/

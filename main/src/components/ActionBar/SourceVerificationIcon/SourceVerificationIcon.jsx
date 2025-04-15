@@ -7,6 +7,7 @@ import GppBadIcon from '@mui/icons-material/GppBad';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import { coreVerify } from '../../../vendor/vcCore';
 import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngineWrapper';
+import { translateUrlToProxiedUrl } from '../../../lib/utils';
 
 const VERIFICATION_STATES = {
   VERIFIED: 'VERIFIED',
@@ -17,16 +18,12 @@ const VERIFICATION_STATES = {
 
 /**
  * @param {object} props - the props passed to the component
- * @param {object} props.context - the query context
  * @param {string} props.source - the source to check
- * @param {string} props.proxyUrl - the proxy url to use if the resource is accessed through a proxy
+ * @param {array} props.httpProxies - array of httpProxy definitions
  * @returns {Component} an icon indicating whether the source was verified or not
  */
-function SourceVerificationIcon({ context, source, proxyUrl }) {
-  let sourceUrl = source;
-  if (context.useProxy) {
-    sourceUrl = `${proxyUrl}${source}`;
-  }
+function SourceVerificationIcon({ source, httpProxies }) {
+  let sourceUrl = translateUrlToProxiedUrl(source, httpProxies);
 
   const [isLoading, setIsLoading] = useState(true);
   const [verificationState, setVerificationState] = useState(undefined);
@@ -108,9 +105,8 @@ function SourceVerificationIcon({ context, source, proxyUrl }) {
 }
 
 SourceVerificationIcon.propTypes = {
-  context: PropTypes.object.isRequired,
   source: PropTypes.string.isRequired,
-  proxyUrl: PropTypes.string.isRequired,
+  httpProxies: PropTypes.array.isRequired,
 }
 
 export default SourceVerificationIcon;

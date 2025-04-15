@@ -63,11 +63,85 @@ ORDER BY ?componentName
     cy.contains("https://www.example.com/data/component-c01").should('exist');
   });
 
+  it("Create a new query, here an ASK query", () => {
+
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("Is there an artist etc...");
+    cy.get('textarea[name="description"]').type("Test an ASK query");
+
+    cy.get('textarea[name="queryString"]').clear();
+    cy.get('textarea[name="queryString"]').type(`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/resource/>
+ASK WHERE {
+  ?person a dbo:Artist.
+  ?person foaf:name ?name.
+  ?person dbo:influencedBy dbp:Pablo_Picasso.
+}`);
+    cy.get('input[name="source"]').type("http://localhost:8080/example/artists");
+
+    cy.get('input[name="askQueryCheck"]').click()
+
+    cy.get('textarea[name="askQuery"]').clear()
+    cy.get('textarea[name="askQuery"]').type('"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}', { parseSpecialCharSequences: false })
+
+    cy.get('button[type="submit"]').click();
+
+    // Check faulty input error
+    cy.contains("Invalid Query. Check the JSON-Syntax");
+
+    cy.get('textarea[name="askQuery"]').clear()
+    cy.get('textarea[name="askQuery"]').type('{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}', { parseSpecialCharSequences: false })
+
+    cy.get('button[type="submit"]').click();
+
+    // Check if the query works
+    cy.contains("Yes, there is at least one artist influenced by Picasso!")
+  });
+
+  it("Create a new query, here with http proxies", () => {
+
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("My idols custom...");
+    cy.get('textarea[name="description"]').type("Test a query wit http proxies");
+
+    cy.get('textarea[name="queryString"]').clear();
+    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
+SELECT ?name ?birthDate_int WHERE {
+    ?list schema:name ?listTitle;
+      schema:itemListElement [
+      schema:name ?name;
+      schema:birthDate ?birthDate_int;
+    ].
+}`);
+    cy.get('input[name="source"]').type("http://localhost:8001/example/idols");
+
+    cy.get('input[name="httpProxiesCheck"]').click()
+
+    cy.get('textarea[name="httpProxies"]').clear()
+    cy.get('textarea[name="httpProxies"]').type('{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
+
+    cy.get('button[type="submit"]').click();
+
+    // Check faulty input error
+    cy.contains("Invalid Query. Check the JSON-Syntax");
+
+    cy.get('textarea[name="httpProxies"]').clear()
+    cy.get('textarea[name="httpProxies"]').type('[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
+
+    cy.get('button[type="submit"]').click();
+
+    // Check if the query works
+    cy.contains("1-2 of 2");
+  });
+
   it("Check if all possible parameters are filled in with parameterized URL", () => {
 
     //templatedQueryCheck
     // Navigate to the URL of a saved query with completely filled-in form
-    cy.visit("/#/customQuery?name=Query+Name&description=Query+Description&queryString=Sparql+query+text&comunicaContextCheck=on&source=The+Comunica+Source&comunicaContext=%7B%22Advanced+Comunica+Context%22%3Atrue%7D&sourceIndexCheck=on&indexSourceUrl=Index+Source&indexSourceQuery=Index+Query+&askQueryCheck=on&askQuery=%7B%22trueText%22%3A%22+filled+in%22%2C%22falseText%22%3A%22not+filled+in%22%7D&directVariablesCheck=on&variables=%7B%22firstvariables%22%3A%5B%22only+one%22%5D%7D")
+    cy.visit("/#/customQuery?name=Query+Name&description=Query+Description&queryString=Sparql+query+text&comunicaContextCheck=on&source=The+Comunica+Source&comunicaContext=%7B%22Advanced+Comunica+Context%22%3Atrue%7D&sourceIndexCheck=on&indexSourceUrl=Index+Source&indexSourceQuery=Index+Query+&askQueryCheck=on&askQuery=%7B%22trueText%22%3A%22+filled+in%22%2C%22falseText%22%3A%22not+filled+in%22%7D&directVariablesCheck=on&variables=%7B%22firstvariables%22%3A%5B%22only+one%22%5D%7D&httpProxiesCheck=on&httpProxies=%5B%7B%22urlStart%22%3A%22http%3A%2F%2Flocalhost%3A8001%22%2C%22httpProxy%22%3A%22http%3A%2F%2Flocalhost%3A8000%2F%22%7D%5D")
 
     // Verify that every field is correctly filled-in
     cy.get('input[name="name"]').should('have.value', 'Query Name');
@@ -81,6 +155,8 @@ ORDER BY ?componentName
     cy.get('textarea[name="indexSourceQuery"]').should('have.value', "Index Query ");
 
     cy.get('textarea[name="askQuery"]').should('have.value', `{"trueText":" filled in","falseText":"not filled in"}`);
+
+    cy.get('textarea[name="httpProxies"]').should('have.value', `[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}]`);
 
     cy.get('textarea[name="variables"]').should('have.value', `{"firstvariables":["only one"]}`);
 
