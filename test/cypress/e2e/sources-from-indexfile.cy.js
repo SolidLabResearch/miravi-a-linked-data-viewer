@@ -106,4 +106,16 @@ describe("Sources from index file", () => {
         cy.contains("Material 1").should("exist");
     })
 
+    it("Sources obtained only from sourcesIndex, but no sources found", () => {
+        cy.visit("/");
+
+        // Navigate to correct query
+        cy.contains("For testing only").click();
+        cy.contains("Sources from an index file - no sources").click();
+
+        // Check for the expected message
+        cy.get('span').contains("The result list is empty (no sources found).").should("exist");
+
+    });
+
 });

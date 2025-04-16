@@ -525,6 +525,17 @@
           "httpProxy": "http://localhost:8000/"
         }
       ]
+    },
+    {
+      "id": "9140",
+      "queryGroupId": "gr-test",
+      "queryLocation": "components_materials.rq",
+      "name": "Sources from an index file - no sources",
+      "description": "Test what happens if the sourceIndex query results in 0 sources.",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-file-does-not-exist",
+        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
+      }
     }
   ]
 }

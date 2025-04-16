@@ -50,7 +50,7 @@ function QueryResultList(props) {
         disableAuthentication={true} // needed to overrule the default, which is to force logging in
         title=" "
         actions={ <ActionBar />}
-        empty={<NoValuesDisplay />}
+        empty={<NoValuesDisplay query={query} />}
         queryOptions={{
           keepPreviousData: false,
           meta: {
@@ -78,12 +78,13 @@ const Aside = (props) => {
   );
 }
 
-const NoValuesDisplay = () => {
+const NoValuesDisplay = (props) => {
+  const msg = props?.query?.comunicaContext?.sources?.length ? "The result list is empty." : "The result list is empty (no sources found).";
   return (
     <div>
       <Box display="flex" alignItems="center" sx={{ m: 3 }}>
         <SvgIcon component={SearchOffIcon} />
-        <span>The result list is empty.</span>
+        <span>{msg}</span>
       </Box>
     </div>
   );
@@ -96,7 +97,7 @@ const MyDatagrid = (props) => {
   if (isLoading) {
     return <Loading loadingSecondary={"The list is loading. Just a moment please."} />;
   }
-  
+
   let values = {};
   if (!isLoading && data && data.length > 0) {
     data.forEach((record) => {
