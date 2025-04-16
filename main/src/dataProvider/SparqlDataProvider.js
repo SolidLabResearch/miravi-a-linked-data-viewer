@@ -53,7 +53,11 @@ export default {
       // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
       results = listCache.results;
     } else {
-      results = await executeQuery(query);
+      if (query.comunicaContext?.sources?.length) {
+        results = await executeQuery(query);
+      } else {
+        results = [];
+      }
       listCache.hash = hash;
       listCache.results = results;
       // LOG console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
@@ -283,10 +287,6 @@ async function getSourcesFromSourcesIndex(sourcesIndex, httpProxies) {
   }
   catch (error) {
     throw new Error(`Error adding sources from index: ${error.message}`);
-  }
-
-  if (sourcesList.length == 0) {
-    throw new Error(`The resulting list of sources is empty`);
   }
 
   return sourcesList;
