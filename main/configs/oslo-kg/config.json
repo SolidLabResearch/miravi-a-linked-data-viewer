@@ -61,7 +61,7 @@
     {
       "id": "104",
       "queryLocation": "all-aps-that-use-a-specific-property.rq",
-      "name": "All application profiles that use a specific-property",
+      "name": "All application profiles that use a specific property",
       "comunicaContext": {
         "sources": [
           "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
@@ -75,6 +75,32 @@
       "id": "105",
       "queryLocation": "all-properties-used-by-a-specific-ap.rq",
       "name": "All properties used by a specific application profile",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/ap.rq"]
+      }
+    },
+    {
+      "id": "106",
+      "queryLocation": "all-aps-that-use-a-specific-class.rq",
+      "name": "All application profiles that use a specific class",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/class-in-ap.rq"]
+      }
+    },
+    {
+      "id": "107",
+      "queryLocation": "all-classes-used-by-a-specific-ap.rq",
+      "name": "All classes used by a specific application profile",
       "comunicaContext": {
         "sources": [
           "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
