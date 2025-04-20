@@ -14,6 +14,7 @@ import CustomConversionButton from "../../CustomQueryEditor/customConversionButt
 
 
 // LOG let queryResultListCounter = 0;
+// LOG let myDatagridCounter = 0;
 
 /**
  * @param {object} props - the props passed down to the component
@@ -28,7 +29,6 @@ function QueryResultList(props) {
 
   // LOG console.log(`--- QueryResultList #${++queryResultListCounter}`);
   // LOG console.log(`props: ${ JSON.stringify(props, null, 2) }`);
-  // LOG console.log(`isLoading: ${isLoading}`);
 
   return (
     <div style={{ paddingLeft: '20px', paddingRight: '10px' }}>
@@ -92,8 +92,12 @@ const NoValuesDisplay = (props) => {
 
 const MyDatagrid = (props) => {
   const { query } = props;
-  const { data, isLoading } = useListContext(props);
+  const { data, isLoading } = useListContext();
 
+  // LOG console.log(`--- MyDatagrid #${++myDatagridCounter}`);
+  // LOG console.log(`props: ${ JSON.stringify(props, null, 2) }`);
+  // LOG console.log(`isLoading: ${isLoading}`);
+ 
   if (isLoading) {
     return <Loading loadingSecondary={"The list is loading. Just a moment please."} />;
   }

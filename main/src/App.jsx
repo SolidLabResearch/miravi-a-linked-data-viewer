@@ -9,7 +9,7 @@ import {
 import IconProvider from "./IconProvider/IconProvider";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
-import { QueryClient } from "react-query";
+import { QueryClient } from '@tanstack/react-query';
 import Dashboard from "./components/Dashboard/Dashboard";
 import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
 import TemplatedListResultTable from "./components/ListResultTable/TemplatedListResultTable.jsx";
@@ -19,6 +19,7 @@ import CustomEditor from "./components/CustomQueryEditor/customEditor.jsx";
 
 import configManager from "./configManager/configManager.js";
 
+// LOG let appCounter = 0;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,7 +36,10 @@ function App() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
   const [config, setConfig] = useState(configManager.getConfig());
-  const [configChangeTrigger, setConfigChangeTrigger] = useState(config.queries.length)
+  const [configChangeTrigger, setConfigChangeTrigger] = useState(0);
+
+  // LOG console.log(`--- App #${++appCounter}`);
+  // LOG console.log(`configChangeTrigger: ${configChangeTrigger}`);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -45,7 +49,7 @@ function App() {
   useEffect(() => {
     const handleConfigChange = (newConfig) => {
       setConfig(newConfig);
-      setConfigChangeTrigger(Date.now().toString())
+      setConfigChangeTrigger(x => x + 1);
     };
 
     // Listen for config changes
@@ -74,8 +78,12 @@ function App() {
     });
   });
 
+  // LOG console.log(`configChangeTrigger: ${configChangeTrigger}`);
   return (
     <Admin
+      // a changing key property is needed as of react-admin v5; the changing key trick is known for react
+      // (see for example https://coreui.io/blog/how-to-force-a-react-component-to-re-render/#2-changing-the-key-prop)
+      key={configChangeTrigger} 
       queryClient={queryClient}
       dataProvider={SparqlDataProvider}
       layout={InteractionLayout}
@@ -84,7 +92,7 @@ function App() {
       requireAuth={false}
       dashboard={Dashboard}
     >
-      {configChangeTrigger && config.queries.map((query) => {
+      {config.queries.map((query) => {
         return (
           <Resource
             key={query.id}
