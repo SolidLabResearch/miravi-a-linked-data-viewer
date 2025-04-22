@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A favicon (#188).
 - A cache to remember the entire result table (useful when scrolling through pages of a lengthy result table) (#193).
-- OSLO KG config: two class-related queries.
+- configs/oslo-kg: two class-related queries.
 
 ### Changed
 
