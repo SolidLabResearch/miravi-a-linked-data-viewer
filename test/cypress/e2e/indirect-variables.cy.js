@@ -7,9 +7,7 @@ describe("Indirect variable query", () => {
         cy.contains("A templated query about musicians (indirect variables)").click();
 
         // Fill in the form
-        cy.get('form').within(() => {
-            cy.get('#genre').click();
-        });
+        cy.get('.ra-input-genre').click();
         cy.get('li').contains('Baroque').click();
 
         // Comfirm query
@@ -32,14 +30,10 @@ describe("Indirect variable query", () => {
         cy.contains("A templated query about musicians, two variables (indirect variables)").click();
 
         // Fill in the form
-        cy.get('form').within(() => {
-            cy.get('#genre').click();
-        });
+        cy.get('.ra-input-genre').click();
         cy.get('li').contains('Classical').click();
 
-        cy.get('form').within(() => {
-            cy.get('#sameAsUrl').click();
-        });
+        cy.get('.ra-input-sameAsUrl').click();
         cy.get('li').contains('Mozart').click();
 
         cy.get('button').contains('Query').click();
@@ -62,9 +56,7 @@ describe("Indirect variable query", () => {
         cy.contains("Component and materials - 1 variable (indirect source & indirect variables)").click();
 
         // Fill in the form
-        cy.get('form').within(() => {
-            cy.get('#componentName').click();
-        });
+        cy.get('.ra-input-componentName').click();
         cy.get('li').contains('Component 1').click();
 
         // Comfirm query
@@ -91,14 +83,10 @@ describe("Indirect variable query", () => {
         cy.contains("Component and materials - 2 variables (indirect source & indirect variables)").click();
 
         // Fill in the form
-        cy.get('form').within(() => {
-            cy.get('#componentName').click();
-        });
+        cy.get('.ra-input-componentName').click();
         cy.get('li').contains('Component 1').click();
 
-        cy.get('form').within(() => {
-            cy.get('#materialName').click();
-        });
+        cy.get('.ra-input-materialName').click();
         cy.get('li').contains('Material 2').click();
 
         // Comfirm query
