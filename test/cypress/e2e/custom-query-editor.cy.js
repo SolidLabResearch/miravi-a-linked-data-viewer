@@ -182,7 +182,7 @@ SELECT ?name ?birthDate_int WHERE {
     cy.contains("broken query").click();
 
     // Verify that there are no results
-    cy.contains("Something went wrong").should('exist');
+    cy.contains("No broken query found").should('exist');
 
     // Edit the query
     cy.get('button').contains("Edit Query").click();
@@ -277,9 +277,7 @@ SELECT ?name ?sameAs_url WHERE {
     cy.get('button[type="submit"]').click();
 
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
     // Comfirm query
@@ -379,9 +377,7 @@ WHERE {
     cy.get('button[type="submit"]').click();
 
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
     // Comfirm query
@@ -471,9 +467,7 @@ WHERE {
     cy.get('button[type="submit"]').click();
 
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
     // Comfirm query
@@ -509,9 +503,7 @@ schema:sameAs ?sameAs_url;
     cy.get('button[type="submit"]').click();
 
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
     // Comfirm query
@@ -559,14 +551,10 @@ schema:sameAs $sameAsUrl;
 
 
     // Existing combination (only Mozart)
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Classical').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Mozart').click();
 
     cy.get('button[type="submit"]').click();
@@ -583,14 +571,10 @@ schema:sameAs $sameAsUrl;
     cy.get('button').contains("Change Variables").should("exist");
     cy.get('button').contains("Change Variables").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Beethoven').click();
 
     cy.get('button[type="submit"]').click();
@@ -604,14 +588,10 @@ schema:sameAs $sameAsUrl;
     cy.get('button').contains("Change Variables").should("exist");
     cy.get('button').contains("Change Variables").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Romantic').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Schubert').click();
 
     cy.get('button[type="submit"]').click();
@@ -650,9 +630,7 @@ schema:sameAs ?sameAs_url;
 
 
     // Check if the query works
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
     cy.get('button[type="submit"]').click();
@@ -688,14 +666,10 @@ schema:sameAs $sameAsUrl;
     cy.get('button[type="submit"]').click();
 
     // Try an existing combination
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Classical').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Beethoven').click();
 
     cy.get('button[type="submit"]').click();
@@ -773,9 +747,7 @@ ORDER BY ?componentName`)
 
     cy.get('button[type="submit"]').click();
 
-    cy.get('form').within(() => {
-      cy.get('#componentName').click();
-    });
+    cy.get('.ra-input-componentName').click();
     cy.get('li').contains('Component 1').click();
 
 
@@ -879,14 +851,10 @@ ORDER BY ?materialName`)
 
     cy.get('button[type="submit"]').click();
 
-    cy.get('form').within(() => {
-      cy.get('#componentName').click();
-    });
+    cy.get('.ra-input-componentName').click();
     cy.get('li').contains('Component 1').click();
 
-    cy.get('form').within(() => {
-      cy.get('#materialName').click();
-    });
+    cy.get('.ra-input-materialName').click();
     cy.get('li').contains('Material 2').click();
 
     // Comfirm query

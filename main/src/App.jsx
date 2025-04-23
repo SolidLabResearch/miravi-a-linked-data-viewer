@@ -1,7 +1,8 @@
 import "./App.css";
+import { Component, useEffect, useState, useContext } from "react";
+import { AppContext, AppContextProvider } from "./AppContext.jsx";
 import { Admin, Resource, CustomRoutes } from "react-admin";
 import SparqlDataProvider from "./dataProvider/SparqlDataProvider";
-import { Component, useEffect, useState } from "react";
 import {
   getDefaultSession,
   handleIncomingRedirect,
@@ -19,7 +20,7 @@ import CustomEditor from "./components/CustomQueryEditor/customEditor.jsx";
 
 import configManager from "./configManager/configManager.js";
 
-// LOG let appCounter = 0;
+// LOG let innerAppCounter = 0;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,35 +31,20 @@ const queryClient = new QueryClient({
 });
 
 /**
- * @returns {Component} the main component of the application
+ * @returns {Component} the (inner, wrapped below) app component
  */
-function App() {
+function InnerApp() {
   const session = getDefaultSession();
   const [loggedIn, setLoggedIn] = useState();
-  const [config, setConfig] = useState(configManager.getConfig());
-  const [configChangeTrigger, setConfigChangeTrigger] = useState(0);
+  const config = configManager.getConfig();
+  const { configChangeTrigger } = useContext(AppContext);
 
-  // LOG console.log(`--- App #${++appCounter}`);
+  // LOG console.log(`--- InnerApp #${++innerAppCounter}`);
   // LOG console.log(`configChangeTrigger: ${configChangeTrigger}`);
 
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty("--text-color", config.textColor);
-  }, []);
-
-  useEffect(() => {
-    const handleConfigChange = (newConfig) => {
-      setConfig(newConfig);
-      setConfigChangeTrigger(x => x + 1);
-    };
-
-    // Listen for config changes
-    configManager.on('configChanged', handleConfigChange);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      configManager.off('configChanged', handleConfigChange);
-    };
   }, []);
 
   useEffect(() => {
@@ -78,12 +64,12 @@ function App() {
     });
   });
 
-  // LOG console.log(`configChangeTrigger: ${configChangeTrigger}`);
   return (
     <Admin
       // a changing key property is needed as of react-admin v5; the changing key trick is known for react
       // (see for example https://coreui.io/blog/how-to-force-a-react-component-to-re-render/#2-changing-the-key-prop)
-      key={configChangeTrigger} 
+      // here we need it to force a complete rerender of <Admin>
+      key={configChangeTrigger}
       queryClient={queryClient}
       dataProvider={SparqlDataProvider}
       layout={InteractionLayout}
@@ -114,6 +100,22 @@ function App() {
         })}
       </CustomRoutes>
     </Admin>
+  );
+}
+
+// LOG let appCounter = 0;
+
+/**
+ * @returns {Component} the outer app component
+ */
+function App() {
+
+  // LOG console.log(`--- App #${++appCounter}`);
+
+  return (
+    <AppContextProvider>
+      <InnerApp></InnerApp>
+    </AppContextProvider>
   );
 }
 
