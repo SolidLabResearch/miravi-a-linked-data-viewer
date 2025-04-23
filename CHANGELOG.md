@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- configs/oslo-kg: two class-related queries.
+
 ### Changed
 
 - Updated onto-deside configuration 2025-04-09 (#202).
 - In the configuration file: per query `httpProxies` setting replaces global `httpProxy` setting (#4, #47).
 - Error message when query has no sources was replaced with an application message in the empty result list (#204).
+- OSLO KG config: use smaller datasets for queries.
 
 ## [1.7.0] - 2025-04-09
 
@@ -19,14 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A favicon (#188).
 - A cache to remember the entire result table (useful when scrolling through pages of a lengthy result table) (#193).
-- configs/oslo-kg: two class-related queries.
 
 ### Changed
 
 - Using new verification library v0.2.0 (#184).
 - Refactoring, avoiding the usage of an internal, undocumented react-admin component (#185).
 - Removed the loading indicator / refresh button in the appbar (#195).
-- OSLO KG config: use smaller datasets for queries.
 
 ### Fixed
 
