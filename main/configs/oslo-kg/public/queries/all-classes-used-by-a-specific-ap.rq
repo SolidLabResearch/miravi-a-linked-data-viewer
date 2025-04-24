@@ -1,0 +1,9 @@
+PREFIX shacl: <http://www.w3.org/ns/shacl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?class WHERE {
+	?shape a shacl:NodeShape;
+	  shacl:targetClass ?class.
+
+	 $ap rdfs:member ?shape.
+}
