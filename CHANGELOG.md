@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated onto-deside configuration 2025-04-09 (#202).
 - In the configuration file: per query `httpProxies` setting replaces global `httpProxy` setting (#4, #47).
 - Error message when query has no sources was replaced with an application message in the empty result list (#204).
-- OSLO KG config: use smaller datasets for queries.
+- configs/oslo-kg: use smaller datasets for queries.
+- React-admin version updated to 5.7.2 (#207).
 
 ## [1.7.0] - 2025-04-09
 
