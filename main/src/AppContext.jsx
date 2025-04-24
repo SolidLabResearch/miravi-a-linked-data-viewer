@@ -13,7 +13,6 @@ export const AppContext = createContext(null);
  * @returns {Component} 
  */
 export function AppContextProvider({ children }) {
-  const [config, setConfig] = useState(configManager.getConfig());
   const [configChangeTrigger, setConfigChangeTrigger] = useState(0);
   const [openGroups, setOpenGroups] = useState({});
 
@@ -22,15 +21,14 @@ export function AppContextProvider({ children }) {
 
   useEffect(() => {
     const handleConfigChange = (newConfig) => {
-      setConfig(newConfig);
-      setConfigChangeTrigger(x => x + 1);
       // Open the cstm group when a new custom query is created
       if (newConfig.queryGroups.find(group => group.id === 'cstm')) {
         setOpenGroups(prevOpenGroups => ({
           ...prevOpenGroups,
-          ['cstm']: true,
+          cstm: true,
         }));
       }
+      setConfigChangeTrigger(x => x + 1);
       // LOG console.log(`AppContextProvider: configuration change handled`);
     };
 
