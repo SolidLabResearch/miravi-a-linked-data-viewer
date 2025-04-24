@@ -21,7 +21,7 @@ export function AppContextProvider({ children }) {
 
   useEffect(() => {
     const handleConfigChange = (newConfig) => {
-      // Open the cstm group when a new custom query is created
+      // Open the cstm group if it exists
       if (newConfig.queryGroups.find(group => group.id === 'cstm')) {
         setOpenGroups(prevOpenGroups => ({
           ...prevOpenGroups,
