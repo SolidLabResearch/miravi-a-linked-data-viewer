@@ -43,9 +43,7 @@ describe("Indirect variable query", () => {
             cy.contains("Triples with object, objects of different types").click();
 
             // Fill in the form
-            cy.get('form').within(() => {
-                cy.get('#object').click();
-            });
+            cy.get('.ra-input-object').click();
             // RegExp: to have an exact match - see https://stackoverflow.com/questions/56443963/click-an-exact-match-text-in-cypress
             cy.get('li').contains(new RegExp("^" + t.in + "$", "g")).click();
 

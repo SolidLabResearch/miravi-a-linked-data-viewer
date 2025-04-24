@@ -32,9 +32,7 @@ SELECT * WHERE {
     cy.contains("Example queries").click();
     cy.contains("A templated query about musicians").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
     cy.get('button[type="submit"]').click();
@@ -67,14 +65,10 @@ SELECT ?name ?sameAs_url WHERE {
     cy.contains("For testing only").click();
     cy.contains("A templated query about musicians, two variables (indirect variables)").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Vivaldi').click();
 
     cy.get('button[type="submit"]').click();

@@ -115,9 +115,9 @@ class ConfigManager extends EventEmitter {
   }
 
   /**
- * Deletes the query with the given id in the config.queries array in the configuration
- * @param {string} id - id property of the query to delete
- */
+   * Deletes the query with the given id in the config.queries array in the configuration
+   * @param {string} id - id property of the query to delete
+   */
   deleteQueryById(id) {
     let index = this.config.queries.findIndex(query => query.id === id);
     if (index !== -1) {
@@ -164,14 +164,6 @@ class ConfigManager extends EventEmitter {
     return this.config.queries.filter(query => query.queryGroupId === "cstm");
   }
 
-
-  /**
-   * deletes all existing customQueries
-   */
-  deleteCustomQueries() {
-    this.config.queries = this.config.queries.filter(query => query.queryGroupId !== "cstm");
-  }
-
   /**
    * 
    * @returns a boolean whether or not there are custom queries
@@ -193,7 +185,7 @@ class ConfigManager extends EventEmitter {
 
     if (overwriteLoad) {
       // Clear all previous custom queries to overwrite
-      this.deleteCustomQueries();
+      this.config.queries = this.config.queries.filter(query => query.queryGroupId !== "cstm");
     }
 
     // Make sure no duplicates are added

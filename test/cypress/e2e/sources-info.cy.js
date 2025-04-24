@@ -30,6 +30,9 @@ describe("Sources info", () => {
 
     cy.contains("Components and their materials").click();
     cy.contains("Finished in:");
+    cy.get('#main-content').within(() => {
+      cy.contains("Components and their materials"); // wait for the next results!!!
+    });
     cy.get('[aria-label="Sources info"]').click();
 
     cy.get('[aria-label="Fetch was successful"]').should("exist");

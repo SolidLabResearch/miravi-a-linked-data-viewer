@@ -10,9 +10,7 @@ describe("Templated query", () => {
     cy.contains("A templated query about musicians").click();
 
     // Fill in the query, select Baroque (7 existing artists -> perfect for this test)
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
     // Comfirm query
@@ -48,9 +46,7 @@ describe("Templated query", () => {
     cy.contains("For testing only").click();
     cy.contains("A templated query about musicians (double results)").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Romantic').click();
 
     cy.get('button').contains('Query').click();
@@ -64,13 +60,9 @@ describe("Templated query", () => {
     cy.contains("Example queries").click();
     cy.contains("A templated query about musicians (two variables)").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Classical').click();
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Mozart').click();
 
     cy.get('button').contains('Query').click();
@@ -94,10 +86,8 @@ describe("Templated query", () => {
 
     // Making sure we get the form to enter new variables
     // and that the previously selected value(s) are still there
-    cy.get('form').within(() => {
-      cy.get('#genre').should('have.value', '"Classical"');
-      cy.get('#sameAsUrl').should('have.value', '<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>');
-    });
+    cy.get('.ra-input-genre').find('input').should('have.value', '"Classical"');
+    cy.get('.ra-input-sameAsUrl').find('input').should('have.value', '<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>');
 
     // Previously selected variables are still there; submit the same combination again
     cy.get('button[type="submit"]').click();
@@ -114,14 +104,10 @@ describe("Templated query", () => {
     cy.get('button').contains("Change Variables").should("exist");
     cy.get('button').contains("Change Variables").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Beethoven').click();
 
     cy.get('button[type="submit"]').click();
@@ -136,14 +122,10 @@ describe("Templated query", () => {
     cy.get('button').contains("Change Variables").should("exist");
     cy.get('button').contains("Change Variables").click();
 
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Romantic').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Schubert').click();
 
     cy.get('button[type="submit"]').click();
@@ -178,20 +160,14 @@ describe("Templated query", () => {
 
     // Making sure we get the form to enter new variables
     // and that the previously selected value(s) are still there
-    cy.get('form').within(() => {
-      cy.get('#genre').should('have.value', '"Classical"');
-      cy.get('#sameAsUrl').should('have.value', '<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>');
-    });
+    cy.get('.ra-input-genre').find('input').should('have.value', '"Classical"');
+    cy.get('.ra-input-sameAsUrl').find('input').should('have.value', '<https://en.wikipedia.org/wiki/Wolfgang_Amadeus_Mozart>');
 
     // Change variables and make another existing combination
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Baroque').click();
 
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Bach').click();
 
     cy.get('button[type="submit"]').click();
@@ -226,15 +202,11 @@ describe("Templated query", () => {
     cy.contains("A templated query about musicians (two variables)").click();
 
     // Chose a genre
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Classical').click();
 
      // Pick the wrong url so we force an empty result
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Bach').click();
 
     // Confirm this query
@@ -250,15 +222,11 @@ describe("Templated query", () => {
     cy.contains("A templated query about musicians (two variables)").click();
 
     // Chose a genre
-    cy.get('form').within(() => {
-      cy.get('#genre').click();
-    });
+    cy.get('.ra-input-genre').click();
     cy.get('li').contains('Classical').click();
 
      // Pick the wrong url so we force an empty result
-    cy.get('form').within(() => {
-      cy.get('#sameAsUrl').click();
-    });
+    cy.get('.ra-input-sameAsUrl').click();
     cy.get('li').contains('Bach').click();
 
     // Confirm this query
@@ -272,11 +240,8 @@ describe("Templated query", () => {
 
     // Making sure we get the form to enter new variables
     // and that the previously selected value(s) are still there
-    cy.get('form').within(() => {
-      cy.get('#genre').should("exist");
-      cy.get('#genre').should('have.value', '"Classical"');
-      cy.get('#sameAsUrl').should('have.value', '<https://en.wikipedia.org/wiki/Johann_Sebastian_Bach>');
-    });
+    cy.get('.ra-input-genre').find('input').should('have.value', '"Classical"');
+    cy.get('.ra-input-sameAsUrl').find('input').should('have.value', '<https://en.wikipedia.org/wiki/Johann_Sebastian_Bach>');
 
   });
 

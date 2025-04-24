@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useContext } from 'react';
+import { Menu } from "react-admin";
+import { AppContext } from "../../../AppContext";
 import { useResourceDefinitions } from "ra-core";
 import { DashboardMenuItem } from "ra-ui-materialui";
-import { Menu } from "react-admin";
 import { ThemeProvider, createTheme, Tooltip, Box, Typography } from "@mui/material";
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -14,37 +15,16 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import IconProvider from "../../../IconProvider/IconProvider";
 import configManager from '../../../configManager/configManager';
 
-
 // LOG let selectionMenuCounter = 0;
 
 const SelectionMenu = () => {
   const resources = useResourceDefinitions();
-  const [config, setConfig] = useState(configManager.getConfig());
-  const [openGroups, setOpenGroups] = useState({});
+  const { openGroups, setOpenGroups } = useContext(AppContext);
+  const config = configManager.getConfig();
 
   let queryGroups = config.queryGroups || [];
   queryGroups.forEach(group => group.queries = []);
   const looseQueries = setUpQueryGroups(queryGroups, resources);
-
-  useEffect(() => {
-    const handleGroupChange = (newConfig) => {
-      setConfig(newConfig);
-
-      // Open the cstm group when a new custom query is created
-      if(newConfig.queryGroups.find(group => group.id === 'cstm')){
-        setOpenGroups(prevOpenGroups => ({
-          ...prevOpenGroups,
-          ['cstm']: true,
-        }));
-      }
-    };
-
-    configManager.on('configChanged', handleGroupChange);
-
-    return () => {
-      configManager.off('configChanged', handleGroupChange);
-    };
-  }, []);
 
   const handleGroupToggle = (groupId) => {
     setOpenGroups(prevOpenGroups => ({
