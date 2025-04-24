@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated onto-deside configuration 2025-04-09 (#202).
+- configs/onto-deside: updated to project configuration 2025-04-09 (#202).
 - In the configuration file: per query `httpProxies` setting replaces global `httpProxy` setting (#4, #47).
 - Error message when query has no sources was replaced with an application message in the empty result list (#204).
 - configs/oslo-kg: use smaller datasets for queries.
