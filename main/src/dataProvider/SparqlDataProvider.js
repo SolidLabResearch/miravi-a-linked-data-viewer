@@ -34,50 +34,65 @@ export default {
     const limit = pagination.perPage;
     const offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
+    let results = [];
+    let totalItems = 0;
+    let noSources = false;
+    let errorMessage = "";
 
-    handleComunicaContextCreation(query);
+    try {
+      handleComunicaContextCreation(query);
 
-    if (query.sourcesIndex) {
-      const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.httpProxies);
-      query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
-    }
-
-    if (meta && meta.variableValues) {
-      query.variableValues = meta.variableValues;
-    }
-
-    let results;
-    const hash = JSON.stringify({ resource, variableValues: query.variableValues });
-    // LOG console.log(`hash: ${hash}`);
-    if (hash == listCache.hash) {
-      // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
-      results = listCache.results;
-    } else {
-      if (query.comunicaContext?.sources?.length) {
-        results = await executeQuery(query);
-      } else {
-        results = [];
+      if (query.sourcesIndex) {
+        const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.httpProxies);
+        query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
       }
-      listCache.hash = hash;
-      listCache.results = results;
-      // LOG console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
-    }
 
-    let totalItems = results.length;
-    results = results.slice(offset, offset + limit);
+      if (meta && meta.variableValues) {
+        query.variableValues = meta.variableValues;
+      }
 
-    if (Object.keys(filter).length > 0) {
-      results = results.filter((result) => {
-        return Object.keys(filter).every((key) => {
-          return result[key] === filter[key];
+      const hash = JSON.stringify({ resource, variableValues: query.variableValues });
+      // LOG console.log(`hash: ${hash}`);
+      if (hash == listCache.hash) {
+        // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+        results = listCache.results;
+      } else {
+        if (query.comunicaContext?.sources?.length) {
+          results = await executeQuery(query);
+          listCache.hash = hash;
+          listCache.results = results;
+          // LOG console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+        } else {
+          noSources = true;
+        }
+      }
+
+      totalItems = results.length;
+      results = results.slice(offset, offset + limit);
+
+      if (Object.keys(filter).length > 0) {
+        results = results.filter((result) => {
+          return Object.keys(filter).every((key) => {
+            return result[key] === filter[key];
+          });
         });
-      });
+      }
+    } catch (error) {
+      // catch all errors here and save the message for meta in the result
+      errorMessage = error.message;
     }
 
-    return {
+    const ret = {
       data: results,
-      total: totalItems
+      total: totalItems,
+      meta: {
+        resultEmpty: !results.length,
+        noSources,
+        errorMessage
+      }
     };
+    // LOG console.log(`ret: ${JSON.stringify(ret, null, 2)}`);
+    return ret;
   },
   getOne: async function getOne() {
     // Our implementation doesn't use this function

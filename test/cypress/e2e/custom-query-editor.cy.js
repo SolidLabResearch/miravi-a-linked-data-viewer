@@ -175,14 +175,14 @@ SELECT ?name ?birthDate_int WHERE {
 
     cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
 
-    //Submit the faultive query
+    //Submit the faulty query
     cy.get('button[type="submit"]').click();
 
     cy.contains("Custom queries").click();
     cy.contains("broken query").click();
 
-    // Verify that there are no results
-    cy.contains("No broken query found").should('exist');
+    // Verify that the faulty query results in an error message
+    cy.contains("Something went wrong").should('exist');
 
     // Edit the query
     cy.get('button').contains("Edit Query").click();

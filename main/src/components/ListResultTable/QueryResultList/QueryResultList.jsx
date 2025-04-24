@@ -5,6 +5,7 @@ import GenericField from "../../../representationProvider/GenericField";
 import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { SvgIcon, Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import CustomQueryEditButton from "../../CustomQueryEditor/customQueryEditButton";
@@ -40,7 +41,7 @@ function QueryResultList(props) {
       <Typography sx={{ fontSize: '2rem' }} > {queryTitle} </Typography>
       {variableValues && <>
         {Object.keys(variableValues).map((key) => {
-          return (<Typography sx={{ fontSize: '1.5rem' }} > {key}: {variableValues[key]} </Typography>)
+          return (<Typography key={key} sx={{ fontSize: '1.5rem' }} > {key}: {variableValues[key]} </Typography>)
         })
         }
       </>
@@ -50,9 +51,8 @@ function QueryResultList(props) {
         disableAuthentication={true} // needed to overrule the default, which is to force logging in
         title=" "
         actions={ <ActionBar />}
-        empty={<NoValuesDisplay query={query} />}
+        empty={false}
         queryOptions={{
-          keepPreviousData: false,
           meta: {
             variableValues: variableValues
           }}}>
@@ -79,11 +79,25 @@ const Aside = (props) => {
 }
 
 const NoValuesDisplay = (props) => {
-  const msg = props?.query?.comunicaContext?.sources?.length ? "The result list is empty." : "The result list is empty (no sources found).";
+  const { meta } = props;
+  let icon;
+  let msg;
+
+  if (meta.errorMessage) {
+    icon = ReportProblemOutlinedIcon;
+    msg = `Something went wrong... ${meta.errorMessage}`;
+  } else if (meta.noSources) {
+    icon = SearchOffIcon;
+    msg = "The result list is empty (no sources found)."
+  } else if (meta.resultEmpty) {
+    icon = SearchOffIcon;
+    msg = "The result list is empty."
+  }
+
   return (
     <div>
       <Box display="flex" alignItems="center" sx={{ m: 3 }}>
-        <SvgIcon component={SearchOffIcon} />
+        <SvgIcon component={icon} sx={{ m: 3}} />
         <span>{msg}</span>
       </Box>
     </div>
@@ -92,7 +106,7 @@ const NoValuesDisplay = (props) => {
 
 const MyDatagrid = (props) => {
   const { query } = props;
-  const { data, isLoading } = useListContext();
+  const { data, isLoading, meta } = useListContext();
 
   // LOG console.log(`--- MyDatagrid #${++myDatagridCounter}`);
   // LOG console.log(`props: ${ JSON.stringify(props, null, 2) }`);
@@ -116,17 +130,19 @@ const MyDatagrid = (props) => {
   }
 
   return (
-    <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>
-      {Object.keys(values).map((key) => {
-        return (
-          <GenericField
-            key={key}
-            source={key}
-            label={key.split("_")[0]}
-          />
-        );
-      })}
-    </Datagrid>
+    Object.keys(values).length ?
+      <Datagrid header={<TableHeader query={query} />} bulkActionButtons={false}>
+        {Object.keys(values).map((key) => {
+          return (
+            <GenericField
+              key={key}
+              source={key}
+              label={key.split("_")[0]}
+            />
+          );
+        })}
+      </Datagrid> :
+      <NoValuesDisplay meta={meta} />
   );
 }
 
