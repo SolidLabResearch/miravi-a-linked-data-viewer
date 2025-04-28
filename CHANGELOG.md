@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - configs/oslo-kg: use smaller datasets for queries.
 - React-admin version updated to 5.7.2 (#207).
 
+### Fixed
+
+- Avoided (infinite) display of "The list is loading. Just a moment please." for queries that should show "The result list is empty.", in cases where the user does not have the right to read the involved source(s) (#209).
+
 ## [1.7.0] - 2025-04-09
 
 ### Added
