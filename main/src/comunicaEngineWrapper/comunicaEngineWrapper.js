@@ -79,27 +79,31 @@ class ComunicaEngineWrapper {
             callbacks["variables"](variables);
           }
           const bindingsStream = await result.execute();
-          await new Promise((resolve, reject) => {
-            if (callbacks["bindings"]) {
-              bindingsStream.on('data', (bindings) => {
-                callbacks["bindings"](bindings);
-              });
-            }
-            bindingsStream.on('end', resolve);
-            bindingsStream.on('error', reject);
-          });
+          if (!bindingsStream.done) {
+            await new Promise((resolve, reject) => {
+              if (callbacks["bindings"]) {
+                bindingsStream.on('data', (bindings) => {
+                  callbacks["bindings"](bindings);
+                });
+              }
+              bindingsStream.on('end', resolve);
+              bindingsStream.on('error', reject);
+            });
+          }
           break;
         case 'quads':
           const quadStream = await result.execute();
-          await new Promise((resolve, reject) => {
-            if (callbacks["quads"]) {
-              quadStream.on('data', (quad) => {
-                callbacks["quads"](quad);
-              });
-            }
-            quadStream.on('end', resolve);
-            quadStream.on('error', reject);
-          });
+          if (!bindingsStream.done) {
+            await new Promise((resolve, reject) => {
+              if (callbacks["quads"]) {
+                quadStream.on('data', (quad) => {
+                  callbacks["quads"](quad);
+                });
+              }
+              quadStream.on('end', resolve);
+              quadStream.on('error', reject);
+            });
+          }
           break;
         case 'boolean':
           const answer = await result.execute();
