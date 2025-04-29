@@ -20,8 +20,8 @@ and [CHANGELOG.md](./CHANGELOG.md) should reflect all modifications under the `#
 In [CHANGELOG.md](./CHANGELOG.md):
 
 * Create the new release section by adding a new release title line below the `## [Unreleased]` title line. Example: `## [1.7.0] - 2025-04-09`.
-* Add a new release link line near the end of the file. Example: `[1.7.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.7.0`.
-* Update the `[Unreleased]` link in the bottom line to use the new release tag. Example: `[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.7.0...HEAD`
+* Add a new release link line near the end of the file. Example: `[1.7.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.7.0`.
+* Update the `[Unreleased]` link in the bottom line to use the new release tag. Example: `[Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v1.7.0...HEAD`
 
 Enter the release tag in the version string in [/main/src/version.js](./main/src/version.js).
 

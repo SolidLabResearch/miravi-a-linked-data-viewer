@@ -10,9 +10,11 @@ function main(config) {
   const configDest = path.join('.', 'src', 'config.json');
   fse.copySync(configSrc, configDest, options);
 
+  const publicDefaults = path.join('.', 'config-defaults', 'public');
   const publicSrc = path.join(from, 'public');
   const publicDest = path.join('.', 'public');
   fse.emptyDirSync(publicDest);
+  fse.copySync(publicDefaults, publicDest, options);
   fse.copySync(publicSrc, publicDest, options);
 
 }
