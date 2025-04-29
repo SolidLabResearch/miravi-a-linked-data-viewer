@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Error message when query has no sources was replaced with an application message in the empty result list (#204).
 - configs/oslo-kg: use smaller datasets for queries.
 - React-admin version updated to 5.7.2 (#207).
+- Tool renamed to 'Miravi - a linked data viewer'; default favicon.ico and miravi.png provided (#210).
 
 ### Fixed
 
@@ -239,20 +240,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[1.0.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.0.0
-[1.1.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.0
-[1.1.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.1
-[1.1.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.2
-[1.1.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.3
-[1.2.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.0
-[1.2.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.1
-[1.2.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.2
-[1.2.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.3
-[1.3.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.0
-[1.3.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.1
-[1.4.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.0
-[1.4.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.1
-[1.5.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.5.0
-[1.6.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.6.0
-[1.7.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.7.0
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.7.0...HEAD
+[1.0.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.0.0
+[1.1.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.0
+[1.1.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.1
+[1.1.2]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.2
+[1.1.3]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.3
+[1.2.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.0
+[1.2.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.1
+[1.2.2]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.2
+[1.2.3]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.3
+[1.3.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.3.0
+[1.3.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.3.1
+[1.4.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.4.0
+[1.4.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.4.1
+[1.5.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.5.0
+[1.6.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.6.0
+[1.7.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.7.0
+[Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v1.7.0...HEAD

@@ -1,7 +1,12 @@
-# Generic Data Viewer React Admin
+# Miravi - a linked data viewer
 
-This Web app allows users to easily execute queries over multiple data sources (including Solid pods) and
+This Web app allows users to easily execute queries over multiple linked data sources (including Solid pods) and
 inspect the corresponding results.
+
+About the name: Miravi reflects the many facets of the web — linking open and permissioned data into a unified view.
+Rooted in the Latin *mirari* ("to look with wonder"), it turns fragmented knowledge into meaningful insight.
+
+<img src="./doc/miravi.png" width="200">
 
 Table of contents:
 
@@ -387,9 +392,10 @@ The easiest way to add your own configuration is:
 1. Get inspired by the configuration in `main/configs/demo`.
 2. Choose your `<your-config>`: a string obeying regex `[a-z0-9-]+`; directory `main/configs/<your-config>` should not yet be in use.
 3. Add your own queries in the `main/configs/<your-config>/public/queries` directory and in general, your own resources in the `main/configs/<your-config>/public` directory.
-4. Write your own `main/configs/<your-config>/config.json` file, following the [configuration file documentation above](#configuration-file).
-5. Run or build as documented above for the `demo` configuration, of course now using `<your-config>`.
-6. Consider a pull request to add your configuration to this repo.
+4. Add your own additional resources in `main/configs/<your-config>/public`, if the defaults you'll get from `main/config-defaults/public` are not satisfactory for you.
+5. Write your own `main/configs/<your-config>/config.json` file, following the [configuration file documentation above](#configuration-file).
+6. Run or build as documented above for the `demo` configuration, of course now using `<your-config>`.
+7. Consider a pull request to add your configuration to this repo.
 
 ### Testing
 

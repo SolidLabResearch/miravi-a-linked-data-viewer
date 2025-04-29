@@ -19,7 +19,7 @@ describe("Sources info", () => {
     cy.get('[aria-label="Fetch was successful"]').should("exist");
   });
 
-  it("Fetch status on cached source - see https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/59", () => {
+  it("Fetch status on cached source - see https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/issues/59", () => {
     cy.visit("/");
     cy.contains("Project related examples").click();
     cy.contains("Components").click();
