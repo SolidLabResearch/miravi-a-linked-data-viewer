@@ -536,6 +536,24 @@
         "url": "http://localhost:8080/example/index-example-file-does-not-exist",
         "queryLocation": "/sourceQueries/index_example_common_lt.rq"
       }
+    },
+    {
+      "id": "9150",
+      "queryGroupId": "gr-test",
+      "queryLocation": "musicians_variables.rq",
+      "name": "A templated query about musicians (indirect variables) - no sources",
+      "description": "Test what happens when variables cannot be loaded because no source(s) available.",
+      "icon": "MusicNoteIcon",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians-file-does-not-exist"
+        ]
+      }
     }
   ]
 }

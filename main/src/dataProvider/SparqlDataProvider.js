@@ -438,11 +438,11 @@ async function getVariableOptions(query) {
     }
   }
   catch (error) {
-    throw new Error(`Error getting variable options: ${error.message}`);
+    throw new Error(`Error getting variable options... ${error.message}`);
   }
 
   if (variableOptions == {}) {
-    throw new Error(`The variable options are empty`);
+    throw new Error(`Error getting variable options... The variable options are empty`);
   }
   return variableOptions;
 }

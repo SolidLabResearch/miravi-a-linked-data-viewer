@@ -106,6 +106,14 @@ describe("Indirect variable query", () => {
 
     });
 
+    it("Indirect with 1 variable but no sources available to get variables from", () => {
+
+        cy.visit("/");
+        cy.contains("For testing only").click();
+        cy.contains("A templated query about musicians (indirect variables) - no sources").click();
+
+        cy.contains("Error getting variable options...").should("exist");;
+    });
 });
 
 

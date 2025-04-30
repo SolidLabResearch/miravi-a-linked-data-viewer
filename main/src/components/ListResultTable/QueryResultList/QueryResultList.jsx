@@ -4,9 +4,8 @@ import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import TableHeader from "./TableHeader/TableHeader";
 import Button from '@mui/material/Button';
-import SearchOffIcon from '@mui/icons-material/SearchOff';
-import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
-import { SvgIcon, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import ErrorDisplay from "../../../components/ErrorDisplay/ErrorDisplay";
 import PropTypes from "prop-types";
 import CustomQueryEditButton from "../../CustomQueryEditor/customQueryEditButton";
 import IconProvider from "../../../IconProvider/IconProvider";
@@ -81,28 +80,14 @@ const Aside = (props) => {
 
 const NoValuesDisplay = (props) => {
   const { meta } = props;
-  let icon;
-  let msg;
 
   if (meta.errorMessage) {
-    icon = ReportProblemOutlinedIcon;
-    msg = `Something went wrong... ${meta.errorMessage}`;
+    return <ErrorDisplay errorMessage={`Something went wrong... ${meta.errorMessage}`} />
   } else if (meta.noSources) {
-    icon = SearchOffIcon;
-    msg = "The result list is empty (no sources found)."
+    return <ErrorDisplay searchingMessage="The result list is empty (no sources found)." />
   } else if (meta.resultEmpty) {
-    icon = SearchOffIcon;
-    msg = "The result list is empty."
+    return <ErrorDisplay searchingMessage="The result list is empty." />
   }
-
-  return (
-    <div>
-      <Box display="flex" alignItems="center" sx={{ m: 3 }}>
-        <SvgIcon component={icon} sx={{ m: 3}} />
-        <span>{msg}</span>
-      </Box>
-    </div>
-  );
 }
 
 const MyDatagrid = (props) => {
