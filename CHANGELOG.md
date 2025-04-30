@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Avoided (infinite) display of "The list is loading. Just a moment please." for queries that should show "The result list is empty.", in cases where the user does not have the right to read the involved source(s) (#209).
+- Result list sorting works again and the behavior is improved - see the issue for details (#216).
 
 ## [1.7.0] - 2025-04-09
 
