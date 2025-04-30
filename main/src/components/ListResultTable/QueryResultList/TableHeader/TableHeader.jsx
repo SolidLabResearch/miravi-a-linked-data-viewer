@@ -46,7 +46,7 @@ function TableHeader({ children }) {
           <>
             <TableCell
               key={child.props.source}
-              sx={{ height: "100%", "font-weight": "bold", "& > *": { verticalAlign: "middle" } }}
+              sx={{ height: "100%", fontWeight: "bold", "& > *": { verticalAlign: "middle" } }}
             >
               {sortingAllowed ? <span
                 role="button"

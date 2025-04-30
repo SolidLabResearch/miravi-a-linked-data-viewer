@@ -3,6 +3,7 @@ import { useResourceContext, Loading, useDataProvider, useResourceDefinition } f
 import { useLocation, useNavigate } from 'react-router-dom';
 import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
 import QueryResultList from "./QueryResultList/QueryResultList";
+import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
 
 import configManager from '../../configManager/configManager.js';
 
@@ -21,6 +22,7 @@ const TemplatedListResultTable = (props) => {
   const navigate = useNavigate();
   const query = configManager.getQueryWorkingCopyById(resource);
   const [waitingForVariableOptions, setWaitingForVariableOptions] = useState(!!(query.variables || query.indirectVariables));
+  const [waitingForVariableOptionsError, setWaitingForVariableOptionsError] = useState("");
   const [variableOptions, setVariableOptions] = useState({});
   const [variableValues, setVariableValues] = useState({});
   const [variablesSubmitted, setVariablesSubmitted] = useState(false);
@@ -31,6 +33,7 @@ const TemplatedListResultTable = (props) => {
   // LOG console.log(`props: ${JSON.stringify(props, null, 2)}`);
   // LOG console.log(`resource: ${resource}`);
   // LOG console.log(`waitingForVariableOptions: ${waitingForVariableOptions}`);
+  // LOG console.log(`waitingForVariableOptionsError: ${waitingForVariableOptionsError}`);
   // LOG console.log(`variableOptions: ${JSON.stringify(variableOptions, null, 2)}`);
   // LOG console.log(`variableValues: ${JSON.stringify(variableValues, null, 2)}`);
   // LOG console.log(`variablesSubmitted: ${variablesSubmitted}`);
@@ -40,10 +43,15 @@ const TemplatedListResultTable = (props) => {
   useEffect(() => {
     (async () => {
       if (query.variables || query.indirectVariables) {
-        // LOG console.log('start waiting for variable options');
-        setVariableOptions(await dataProvider.getVariableOptions(query));
-        // LOG console.log('done waiting for variable options');
-        setWaitingForVariableOptions(false);
+        try {
+          // LOG console.log('start waiting for variable options');
+          setVariableOptions(await dataProvider.getVariableOptions(query));
+          // LOG console.log('done waiting for variable options');
+          setWaitingForVariableOptions(false);
+        } catch (error) {
+          // LOG console.log(`error getting variable options: ${error.message}`);
+          setWaitingForVariableOptionsError(error.message);
+        }
       }
     })();
   }, [resource]);
@@ -53,6 +61,11 @@ const TemplatedListResultTable = (props) => {
   if (!resourceDef.options) {
     // LOG console.log('TemplatedListResultTable waiting for custom query creation to complete.');
     return false;
+  }
+
+  if (waitingForVariableOptionsError) {
+    // LOG console.log(`TemplatedListResultTable failure while waiting for variable options: ${waitingForVariableOptionsError}`);
+    return <ErrorDisplay errorMessage={waitingForVariableOptionsError} />;
   }
 
   if (waitingForVariableOptions) {
