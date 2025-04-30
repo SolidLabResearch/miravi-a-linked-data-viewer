@@ -51,7 +51,7 @@ export default {
         query.variableValues = meta.variableValues;
       }
 
-      const hash = JSON.stringify({ resource, variableValues: query.variableValues });
+      const hash = JSON.stringify({ resource, sort, variableValues: query.variableValues });
       // LOG console.log(`hash: ${hash}`);
       if (hash == listCache.hash) {
         // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
@@ -151,17 +151,22 @@ async function buildQueryText(query) {
     if (!query.variableOntology) {
       query.variableOntology = findPredicates(parsedQuery);
     }
-    if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
-      const { field, order } = query.sort;
-      parsedQuery.order = [
-        {
-          expression: { termType: "Variable", value: field },
-          descending: order === "DESC",
-        },
-      ];
-    }
+    let comments = "";
+    if (!parsedQuery.order) {
+      comments = "Custom sorting is allowed.";
+      if (query.sort && query.sort.field !== "id") {
+        const { field, order } = query.sort;
+        parsedQuery.order = [
+          {
+            expression: { termType: "Variable", value: field },
+            descending: order === "DESC",
+          },
+        ];
+      }
+    } 
     const generator = new Generator();
-    return generator.stringify(parsedQuery);
+    let result = generator.stringify(parsedQuery);
+    return `# ${comments}\n${result}`;
   } catch (error) {
     throw new Error(error.message);
   }

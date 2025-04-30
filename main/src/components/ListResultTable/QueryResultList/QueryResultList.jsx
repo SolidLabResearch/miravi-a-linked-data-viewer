@@ -49,6 +49,7 @@ function QueryResultList(props) {
       <List
         {...props}
         disableAuthentication={true} // needed to overrule the default, which is to force logging in
+        storeKey={false} // do not remember pagination, sorting, ...
         title=" "
         actions={ <ActionBar />}
         empty={false}
