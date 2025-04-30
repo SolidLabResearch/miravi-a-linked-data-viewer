@@ -1,4 +1,4 @@
-import { Link, TableCell, TableHead, TableRow } from "@mui/material";
+import { Link, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import React from "react";
 import { useListContext } from "react-admin";
 import "./TableHeader.css";
@@ -46,7 +46,7 @@ function TableHeader({ children }) {
           <>
             <TableCell
               key={child.props.source}
-              sx={{ height: "100%", "& > *": { verticalAlign: "middle" } }}
+              sx={{ height: "100%", "font-weight": "bold", "& > *": { verticalAlign: "middle" } }}
             >
               {sortingAllowed ? <span
                 role="button"
@@ -54,9 +54,11 @@ function TableHeader({ children }) {
                 onClick={() => handleHeaderClick(child.props.source)}
               >
                 {child.props.label}
-              </span> : <span>
-                {child.props.label}
-              </span>}
+              </span> : <Tooltip title="Custom sorting is disabled for queries containing an ORDER clause.">
+                <span>
+                  {child.props.label}
+                </span>
+              </Tooltip>}
               {!!variableOntology && variableOntology[child.props.source] && (
                 <Link
                   target="_blank"
