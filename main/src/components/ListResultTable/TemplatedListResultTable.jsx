@@ -45,8 +45,10 @@ const TemplatedListResultTable = (props) => {
       if (query.variables || query.indirectVariables) {
         try {
           // LOG console.log('start waiting for variable options');
+          // LOG const t1 = Date.now();
           setVariableOptions(await dataProvider.getVariableOptions(query));
-          // LOG console.log('done waiting for variable options');
+          // LOG const t2 = Date.now();
+          // LOG console.log(`done waiting for variable options after ${t2-t1} ms`);
           setWaitingForVariableOptions(false);
         } catch (error) {
           // LOG console.log(`error getting variable options: ${error.message}`);

@@ -1,5 +1,9 @@
 describe("Indirect variable query", () => {
 
+    function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     it("Indirect with 1 variable (different types)", () => {
 
         const testdata = [
@@ -16,23 +20,23 @@ describe("Indirect variable query", () => {
                 out: 'This is a string in English'
             },
             {
-                in: 'true',
+                in: '"true"^^<http://www.w3.org/2001/XMLSchema#boolean>',
                 out: 'true'
             },
             {
-                in: '1',
+                in: '"1"^^<http://www.w3.org/2001/XMLSchema#integer>',
                 out: '1'
             },
             {
-                in: '1.3',
+                in: '"1.3"^^<http://www.w3.org/2001/XMLSchema#decimal>',
                 out: '1.3'
             },
             {
-                in: '1.5E6',
+                in: '"1.5E6"^^<http://www.w3.org/2001/XMLSchema#double>',
                 out: '1.5E6'
             },
             {
-                in: '"This is a string containing some \\\\"double quotes\\\\""',
+                in: '"This is a string containing some \\"double quotes\\""',
                 out: 'This is a string containing some "double quotes"'
             }
         ];
@@ -45,7 +49,7 @@ describe("Indirect variable query", () => {
             // Fill in the form
             cy.get('.ra-input-object').click();
             // RegExp: to have an exact match - see https://stackoverflow.com/questions/56443963/click-an-exact-match-text-in-cypress
-            cy.get('li').contains(new RegExp("^" + t.in + "$", "g")).click();
+            cy.get('li').contains(new RegExp(`^${escapeRegex(t.in)}$`, "g")).click();
 
             // Comfirm query
             cy.get('button').contains('Query').click();
