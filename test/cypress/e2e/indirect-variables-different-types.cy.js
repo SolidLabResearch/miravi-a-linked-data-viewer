@@ -49,7 +49,7 @@ describe("Indirect variable query", () => {
             // Fill in the form
             cy.get('.ra-input-object').click();
             // RegExp: to have an exact match - see https://stackoverflow.com/questions/56443963/click-an-exact-match-text-in-cypress
-            cy.get('li').contains(new RegExp(`^${escapeRegex(t.in)}$`, "g")).click();
+            cy.get('li').contains(new RegExp(`^${escapeRegex(t.in)}$`)).click();
 
             // Comfirm query
             cy.get('button').contains('Query').click();
