@@ -414,7 +414,7 @@ async function getVariableOptions(query) {
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
         { sources: query.comunicaContext.sources }, query.httpProxies);
       await new Promise((resolve, reject) => {
-        bindingsStream.on('data', (bindings) => { 
+        bindingsStream.on('data', (bindings) => {
           // see https://comunica.dev/docs/query/advanced/bindings/
           // LOG console.log(`bindings: ${bindings.toString()}`);
           for (const [variable, term] of bindings) {
