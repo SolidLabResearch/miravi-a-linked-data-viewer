@@ -177,9 +177,15 @@ The configuration file must follow the structure shown below.
         "queryLocation": "Path to the location, relative to 'queryFolder', of the (auxiliary) query that yields the sources from above RDF resource"
       },
       "variables": {
-        "variableExampleString": ["\"String1\"", "\"String2\""],
-        "variableExampleUri": ["<https://example.com/uri1>", "<https://example.com/uri2>"],
-        "variableExampleInteger": ["1", "2"]
+        "variableExampleStrings": ["\"String1\"", "\"String2\""],
+        "variableExampleUris": ["<https://example.com/uri1>", "<https://example.com/uri2>"],
+        "variableExampleLangStrings": ["\"String1\"@en", "\"Chaîne2\"@fr"],
+        "variableExampleTypedLiterals": [
+          "\"1\"^^<http://www.w3.org/2001/XMLSchema#integer>",
+          "\"1.3\"^^<http://www.w3.org/2001/XMLSchema#decimal>",
+          "\"1.5E6\"^^<http://www.w3.org/2001/XMLSchema#double>",
+          "\"true\"^^<http://www.w3.org/2001/XMLSchema#boolean>"
+        ]   
       },
       "indirectVariables": {
         "queryLocations": [
