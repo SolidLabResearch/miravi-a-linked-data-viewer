@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - configs/oslo-kg: use smaller datasets for queries.
 - React-admin version updated to 5.7.2 (#207).
 - Tool renamed to 'Miravi - a linked data viewer'; default favicon.ico and miravi.png provided (#210).
+- Bumped Comunica version from 3.2.3 to 4.2.0, resulting in increased execution speed of some queries (#212).
 
 ### Fixed
 
