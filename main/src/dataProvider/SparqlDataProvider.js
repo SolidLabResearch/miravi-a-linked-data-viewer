@@ -58,6 +58,7 @@ export default {
         results = listCache.results;
       } else {
         if (query.comunicaContext?.sources?.length) {
+          // LOG console.log(`query.queryText: ${ query.queryText }`);
           results = await executeQuery(query);
           listCache.hash = hash;
           listCache.results = results;
@@ -336,6 +337,32 @@ function handleComunicaContextCreation(query) {
 
 async function getVariableOptions(query) {
 
+  function termToSparqlCompatibleString(term) {
+    switch (term.termType) {
+      case 'NamedNode':
+        return `<${term.value}>`;
+
+      case 'Literal':
+        const escaped = term.value.replace(/"/g, '\\"');
+        if (term.language) {
+          return `"${escaped}"@${term.language}`;
+        }
+        if (term.datatype && term.datatype.value !== 'http://www.w3.org/2001/XMLSchema#string') {
+          return `"${escaped}"^^<${term.datatype.value}>`;
+        }
+        return `"${escaped}"`;
+
+      case 'BlankNode':
+        return `_:${term.value}`;
+
+      case 'Variable':
+        return `?${term.value}`;
+
+      default:
+        throw new Error(`Unknown RDF Term type: ${term.termType}`);
+    }
+  }
+
   // LOG console.log(`--- getVariableOptions #${++getVariableOptionsCounter}`);
 
   // BEGIN duplicated chunk of code (duplicated in order for templated queries with indirect queries having sources from a source index to work correctly)
@@ -389,44 +416,14 @@ async function getVariableOptions(query) {
       await new Promise((resolve, reject) => {
         bindingsStream.on('data', (bindings) => {
           // see https://comunica.dev/docs/query/advanced/bindings/
+          // LOG console.log(`bindings: ${bindings.toString()}`);
           for (const [variable, term] of bindings) {
             const name = variable.value;
             if (!variableOptions[name]) {
               variableOptions[name] = [];
             }
-            let variableValue;
-            switch (term.termType) {
-              case "Literal":
-                // escape double quotes
-                // example: This is a string containing some \"double quotes\"
-                variableValue = `${term.value.replace(/"/g, '\\"')}`;
-                // test whether there is a type specifier ^^...
-                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
-                if (/\"\^\^/.test(term.id)) {
-                  // do not surround with double quotes
-                  // example: 1
-                } else {
-                  // surround with double quotes
-                  // example: "This is a string containing some \"double quotes\""
-                  variableValue = `"${variableValue}"`;
-                }
-                // test whether there is a language tag @...
-                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
-                const lt = /\@(.*)$/.exec(term.id);
-                if (lt) {
-                  // append language tag
-                  // example: "This is a string in English"@en
-                  variableValue = `${variableValue}@${lt[1]}`;
-                }
-                break;
-              case "NamedNode":
-                // surround with triangle brackets
-                // example: <https://www.example.com/data/o1>
-                variableValue = `<${term.value}>`;
-                break;
-              default:
-                break;
-            }
+            const variableValue = termToSparqlCompatibleString(term);
+            // LOG console.log(`variableValue: ${variableValue}`);
             if (variableValue && !variableOptions[name].includes(variableValue)) {
               variableOptions[name].push(variableValue);
             }
