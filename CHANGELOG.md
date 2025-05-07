@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoided (infinite) display of "The list is loading. Just a moment please." for queries that should show "The result list is empty.", in cases where the user does not have the right to read the involved source(s) (#209).
 - Result list sorting works again and the behavior is improved - see the issue for details (#216).
 - Loading values for variables ends with an error message if a required source is not available (#218).
+- When visiting a templated query with variable values defined in the URL search parameters,
+  the resolved query is executed immediately, avoiding the delay it takes to first retrieve all options for the variables (#211).
 
 ## [1.7.0] - 2025-04-09
 
