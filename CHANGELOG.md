@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tool renamed to 'Miravi - a linked data viewer'; default favicon.ico and miravi.png provided (#210).
 - Bumped Comunica version from 3.2.3 to 4.2.0, resulting in increased execution speed of some queries (#212).
   Breaking change for typed literals in query configuration, "variables" field; see README for new syntax.
+- Removed not supported cosmetic fields from configuration file (#18).
 
 ### Fixed
 

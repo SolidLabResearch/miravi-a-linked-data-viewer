@@ -2,14 +2,9 @@
   "title": "Miravi - a linked data viewer",
   "logoLocation": "images/miravi.png",
   "logoRedirectURL": "https://github.com/SolidLabResearch/miravi-a-linked-data-viewer",
-  "mainAppColor": "lightgray",
-  "backgroundColor": "#fff",
-  "titleColor": "black",
-  "textColor": "#1976D2",
   "queryFolder": "queries",
   "showMilliseconds": false,
   "defaultIDP": "http://localhost:8080",
-  "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
   "queryGroups": [
     {

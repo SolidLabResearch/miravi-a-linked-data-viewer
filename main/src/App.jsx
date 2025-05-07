@@ -43,11 +43,6 @@ function InnerApp() {
   // LOG console.log(`configChangeTrigger: ${configChangeTrigger}`);
 
   useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty("--text-color", config.textColor);
-  }, []);
-
-  useEffect(() => {
     session.onLogin(() => setLoggedIn(true));
     session.onLogout(() => setLoggedIn(false));
 
