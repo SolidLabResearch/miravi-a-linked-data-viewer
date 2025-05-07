@@ -7,7 +7,7 @@ import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
 
 import configManager from '../../configManager/configManager.js';
 
-/* LOG */ let templatedListResultTableCounter = 0;
+// LOG let templatedListResultTableCounter = 0;
 
 /**
  * A wrapper component around ListResultTable, to support templated queries
@@ -30,32 +30,32 @@ const TemplatedListResultTable = (props) => {
   const isTemplatedQuery = !!(query.variables || query.indirectVariables);
   const templatedQueryFormEnabled = isTemplatedQuery && !variablesSubmitted;
 
-  /* LOG */ console.log(`--- TemplatedListResultTable #${++templatedListResultTableCounter}`);
-  /* LOG */ console.log(`props: ${JSON.stringify(props, null, 2)}`);
-  /* LOG */ console.log(`resource: ${resource}`);
-  /* LOG */ console.log(`askingForVariableOptions: ${askingForVariableOptions}`);
-  /* LOG */ console.log(`waitingForVariableOptions: ${waitingForVariableOptions}`);
-  /* LOG */ console.log(`variableOptionsError: ${variableOptionsError}`);
-  /* LOG */ console.log(`variableOptions: ${JSON.stringify(variableOptions, null, 2)}`);
-  /* LOG */ console.log(`variableValues: ${JSON.stringify(variableValues, null, 2)}`);
-  /* LOG */ console.log(`variablesSubmitted: ${variablesSubmitted}`);
-  /* LOG */ console.log(`isTemplatedQuery: ${isTemplatedQuery}`);
-  /* LOG */ console.log(`templatedQueryFormEnabled: ${templatedQueryFormEnabled}`);
+  // LOG console.log(`--- TemplatedListResultTable #${++templatedListResultTableCounter}`);
+  // LOG console.log(`props: ${JSON.stringify(props, null, 2)}`);
+  // LOG console.log(`resource: ${resource}`);
+  // LOG console.log(`askingForVariableOptions: ${askingForVariableOptions}`);
+  // LOG console.log(`waitingForVariableOptions: ${waitingForVariableOptions}`);
+  // LOG console.log(`variableOptionsError: ${variableOptionsError}`);
+  // LOG console.log(`variableOptions: ${JSON.stringify(variableOptions, null, 2)}`);
+  // LOG console.log(`variableValues: ${JSON.stringify(variableValues, null, 2)}`);
+  // LOG console.log(`variablesSubmitted: ${variablesSubmitted}`);
+  // LOG console.log(`isTemplatedQuery: ${isTemplatedQuery}`);
+  // LOG console.log(`templatedQueryFormEnabled: ${templatedQueryFormEnabled}`);
 
   useEffect(() => {
     (async () => {
       if (askingForVariableOptions) {
         setAskingForVariableOptions(false);
         try {
-          /* LOG */ console.log('Start waiting for variable options');
+          // LOG console.log('Start waiting for variable options');
           setWaitingForVariableOptions(true);
-          /* LOG */ const t1 = Date.now();
+          // LOG const t1 = Date.now();
           setVariableOptions(await dataProvider.getVariableOptions(query));
-          /* LOG */ const t2 = Date.now();
-          /* LOG */ console.log(`Done waiting for variable options after ${t2-t1} ms`);
+          // LOG const t2 = Date.now();
+          // LOG console.log(`Done waiting for variable options after ${t2-t1} ms`);
           setWaitingForVariableOptions(false);
         } catch (error) {
-          /* LOG */ console.log(`Error getting variable options: ${error.message}`);
+          // LOG console.log(`Error getting variable options: ${error.message}`);
           setVariableOptionsError(error.message);
         }
       }
@@ -65,12 +65,12 @@ const TemplatedListResultTable = (props) => {
 
   // Cover a transient state after creation of a new custom query. EventEmitter's event processing may still be in progress.
   if (!resourceDef.options) {
-    /* LOG */ console.log('TemplatedListResultTable waiting for custom query creation to complete.');
+    // LOG console.log('TemplatedListResultTable waiting for custom query creation to complete.');
     return false;
   }
 
   if (variableOptionsError) {
-    /* LOG */ console.log(`TemplatedListResultTable variable options error: ${variableOptionsError}`);
+    // LOG console.log(`TemplatedListResultTable variable options error: ${variableOptionsError}`);
     return <ErrorDisplay errorMessage={variableOptionsError} />;
   }
 
@@ -80,12 +80,12 @@ const TemplatedListResultTable = (props) => {
       if (!askingForVariableOptions && !waitingForVariableOptions && !variablesSubmitted) {
         const vv = initialVariableValuesFromUrlSearchParams(new URLSearchParams(location.search));
         if (Object.keys(vv).length) {
-          /* LOG */ console.log("Accepting initial variable values from url search parameters.");
+          // LOG console.log("Accepting initial variable values from url search parameters.");
           setVariableValues(vv);
           setVariablesSubmitted(true);
           return false;
         }
-        /* LOG */ console.log("Trigger the search for variable options in body.");
+        // LOG console.log("Trigger the search for variable options in body.");
         setAskingForVariableOptions(true);
         return false;
       }
@@ -93,7 +93,7 @@ const TemplatedListResultTable = (props) => {
       // Check for next visit with url search parameters
       const vv = newVariableValuesFromUrlSearchParams(new URLSearchParams(location.search), variableValues);
       if (vv && Object.keys(variableValues).some((v) => variableValues[v] != vv[v])) {
-        /* LOG */ console.log("Accepting new variable values from url search parameters.");
+        // LOG console.log("Accepting new variable values from url search parameters.");
         setVariableValues(vv);
         setVariablesSubmitted(true);
         return false;
@@ -102,7 +102,7 @@ const TemplatedListResultTable = (props) => {
   }
 
   if (waitingForVariableOptions) {
-    /* LOG */ console.log('TemplatedListResultTable waiting for variable options.');
+    // LOG console.log('TemplatedListResultTable waiting for variable options.');
     return <Loading sx={{ height: "auto" }} loadingSecondary={"The options for the variables in this query are loading. Just a moment please."} />;
   }
 
@@ -120,7 +120,7 @@ const TemplatedListResultTable = (props) => {
     setVariablesSubmitted(false);
     if (!Object.keys(variableOptions).length) {
       if (!askingForVariableOptions) {
-        /* LOG */ console.log("Trigger the search for variable options in changeVariables.");
+        // LOG console.log("Trigger the search for variable options in changeVariables.");
         setAskingForVariableOptions(true);
       }
     }
