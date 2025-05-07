@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Loading values for variables ends with an error message if a required source is not available (#218).
 - When visiting a templated query with variable values defined in the URL search parameters,
   the resolved query is executed immediately, avoiding the delay it takes to first retrieve all options for the variables (#211).
+- CONSTRUCT queries work again (#222).
 
 ## [1.7.0] - 2025-04-09
 

@@ -93,7 +93,7 @@ class ComunicaEngineWrapper {
           break;
         case 'quads':
           const quadStream = await result.execute();
-          if (!bindingsStream.done) {
+          if (!quadStream.done) {
             await new Promise((resolve, reject) => {
               if (callbacks["quads"]) {
                 quadStream.on('data', (quad) => {
