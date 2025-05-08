@@ -83,6 +83,8 @@ class ComunicaEngineWrapper {
             await new Promise((resolve, reject) => {
               if (callbacks["bindings"]) {
                 bindingsStream.on('data', (bindings) => {
+                  // see https://comunica.dev/docs/query/advanced/bindings/
+                  // LOG console.log(`query bindings: ${bindings.toString()}`);
                   callbacks["bindings"](bindings);
                 });
               }
@@ -97,6 +99,7 @@ class ComunicaEngineWrapper {
             await new Promise((resolve, reject) => {
               if (callbacks["quads"]) {
                 quadStream.on('data', (quad) => {
+                  // LOG console.log(`query quad: ${JSON.stringify(quad, null, 2)}`);
                   callbacks["quads"](quad);
                 });
               }
@@ -108,6 +111,7 @@ class ComunicaEngineWrapper {
         case 'boolean':
           const answer = await result.execute();
           if (callbacks["boolean"]) {
+            // LOG console.log(`query answer: ${answer}`);
             callbacks["boolean"](answer);
           }
           break;

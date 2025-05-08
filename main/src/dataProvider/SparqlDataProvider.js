@@ -236,6 +236,7 @@ async function executeQuery(query) {
         newResult[variable] = term;
       }
       newResult.id = index++;
+      // LOG console.log(`executeQuery callbackBindings newResult: ${JSON.stringify(newResult, null, 2)}`);
       results.push(newResult);
     };
     const callbackQuads = (quad) => {
@@ -246,6 +247,7 @@ async function executeQuery(query) {
         graph: quad.graph,
         id: index++
       }
+      // LOG console.log(`executeQuery callbackQuads newResult: ${JSON.stringify(newResult, null, 2)}`);
       results.push(newResult);
     };
     const callbackBoolean = (b) => {
@@ -258,6 +260,7 @@ async function executeQuery(query) {
         },
         id: index++
       }
+      // LOG console.log(`executeQuery callbackBoolean newResult: ${JSON.stringify(newResult, null, 2)}`);
       results.push(newResult);
     };
     await comunicaEngineWrapper.query(query.queryText,
@@ -293,9 +296,11 @@ async function getSourcesFromSourcesIndex(sourcesIndex, httpProxies) {
       { lenient: true, sources: [sourcesIndex.url] }, httpProxies, { engine: "link-traversal" });
     await new Promise((resolve, reject) => {
       bindingsStream.on('data', (bindings) => {
+        // LOG console.log(`getSourcesFromSourcesIndex bindings: ${bindings.toString()}`);
         for (const term of bindings.values()) {  // check for 1st value
           const source = term.value;
           if (!sourcesList.includes(source)) {
+            // LOG console.log(`getSourcesFromSourcesIndex adding source: ${source}`);
             sourcesList.push(source);
           }
           // we only want the first term, whatever the variable's name is (note: a for ... of loop seems the only way to access it)
@@ -415,16 +420,15 @@ async function getVariableOptions(query) {
         { sources: query.comunicaContext.sources }, query.httpProxies);
       await new Promise((resolve, reject) => {
         bindingsStream.on('data', (bindings) => {
-          // see https://comunica.dev/docs/query/advanced/bindings/
-          // LOG console.log(`bindings: ${bindings.toString()}`);
+          // LOG console.log(`getVariableOptions bindings: ${bindings.toString()}`);
           for (const [variable, term] of bindings) {
             const name = variable.value;
             if (!variableOptions[name]) {
               variableOptions[name] = [];
             }
             const variableValue = termToSparqlCompatibleString(term);
-            // LOG console.log(`variableValue: ${variableValue}`);
             if (variableValue && !variableOptions[name].includes(variableValue)) {
+              // LOG console.log(`getVariableOptions adding variable option for '${name}': ${variableValue}`);
               variableOptions[name].push(variableValue);
             }
           }
