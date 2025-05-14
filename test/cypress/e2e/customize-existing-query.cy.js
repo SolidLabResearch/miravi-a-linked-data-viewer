@@ -1,6 +1,8 @@
+import { setCodeMirrorValue, getCodeMirrorValue } from "../support/utils";
+
 describe("Customize existing query", () => {
 
-  it("simple query", () => {
+  it("simple query", async () => {
     cy.visit("/");
     cy.contains("Example queries").click();
     cy.contains("A public list of books I'd love to own").click();
@@ -12,7 +14,7 @@ describe("Customize existing query", () => {
 
     cy.get('input[name="name"]').should('have.value', "(Cloned from) A public list of books I'd love to own");
 
-    cy.get('textarea[name="queryString"]').should('have.value', `PREFIX schema: <http://schema.org/> 
+    expect(await getCodeMirrorValue("#sparql-edit-field-queryString")).to.equal(`PREFIX schema: <http://schema.org/> 
 
 SELECT * WHERE {
     ?list schema:name ?listTitle;
@@ -27,7 +29,7 @@ SELECT * WHERE {
 
   })
 
-  it("templated query - fixed variables", () => {
+  it("templated query - fixed variables", async () => {
     cy.visit("/");
     cy.contains("Example queries").click();
     cy.contains("A templated query about musicians").click();
@@ -42,7 +44,7 @@ SELECT * WHERE {
 
     cy.get('input[name="name"]').should('have.value', "(Cloned from) A templated query about musicians");
 
-    cy.get('textarea[name="queryString"]').should('have.value', `PREFIX schema: <http://schema.org/>
+    expect(await getCodeMirrorValue("#sparql-edit-field-queryString")).to.equal(`PREFIX schema: <http://schema.org/>
 
 SELECT ?name ?sameAs_url WHERE {
   ?list schema:name ?listTitle;
@@ -59,7 +61,7 @@ SELECT ?name ?sameAs_url WHERE {
 
   })
 
-  it("templated query - indirect variables", () => {
+  it("templated query - indirect variables", async () => {
 
     cy.visit("/");
     cy.contains("For testing only").click();
@@ -78,7 +80,7 @@ SELECT ?name ?sameAs_url WHERE {
 
     cy.get('input[name="name"]').should('have.value', "(Cloned from) A templated query about musicians, two variables (indirect variables)");
 
-    cy.get('textarea[name="queryString"]').should('have.value', `PREFIX schema: <http://schema.org/>
+    expect(await getCodeMirrorValue("#sparql-edit-field-queryString")).to.equal(`PREFIX schema: <http://schema.org/>
 
 SELECT ?name WHERE {
   ?list schema:name ?listTitle;
@@ -111,7 +113,7 @@ ORDER BY ?sameAsUrl
 
   })
 
-  it("index file", () => {
+  it("index file", async () => {
     cy.visit("/");
     cy.contains("Example queries").click();
     cy.contains("Sources from an index file").click();
@@ -123,7 +125,7 @@ ORDER BY ?sameAsUrl
 
     cy.get('input[name="name"]').should('have.value', "(Cloned from) Sources from an index file");
 
-    cy.get('textarea[name="queryString"]').should('have.value', `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    expect(await getCodeMirrorValue("#sparql-edit-field-queryString")).to.equal(`PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
 SELECT ?component ?componentName ?material ?materialName ?percentage
@@ -181,7 +183,7 @@ SELECT DISTINCT ?source WHERE {
 
 describe("Clone and customize existing query, clone the custom after", () => {
 
-  it("clone simple query", () => {
+  it("clone simple query", async () => {
     cy.visit("/");
     cy.contains("Example queries").click();
     cy.contains("A public list of books I'd love to own").click();
@@ -193,7 +195,7 @@ describe("Clone and customize existing query, clone the custom after", () => {
 
     cy.get('input[name="name"]').should('have.value', "(Cloned from) A public list of books I'd love to own");
 
-    cy.get('textarea[name="queryString"]').should('have.value', `PREFIX schema: <http://schema.org/> 
+    expect(await getCodeMirrorValue("#sparql-edit-field-queryString")).to.equal(`PREFIX schema: <http://schema.org/> 
 
 SELECT * WHERE {
     ?list schema:name ?listTitle;

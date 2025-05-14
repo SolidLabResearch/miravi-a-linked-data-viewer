@@ -1,3 +1,5 @@
+import { setCodeMirrorValue } from "../support/utils";
+
 describe("Saving custom queries on pods - logged out", () => {
 
     it("Interaction with pods should be disabled when logged out", () => {
@@ -52,8 +54,7 @@ describe("Saving custom queries on pods - logged in", () => {
         cy.get('input[name="name"]').type("new query");
         cy.get('textarea[name="description"]').type("new description");
     
-        cy.get('textarea[name="queryString"]').clear();
-        cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
+        setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
     
     SELECT * WHERE {
         ?list schema:name ?listTitle;

@@ -13,8 +13,7 @@ import IconProvider from '../../IconProvider/IconProvider';
 
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
-import YasqeField from './yasqe';
-
+import { SparqlEditField } from "./sparqlEditField";
 
 export default function CustomEditor(props) {
   const session = getDefaultSession();
@@ -107,8 +106,18 @@ ORDER BY ?genre`;
 
     if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorHttpProxies && !parsingErrorTemplate) {
       setShowError(false);
-      const formData = new FormData(event.currentTarget);
-      const jsonData = Object.fromEntries(formData.entries());
+      // TODO BEGIN old code
+      // const formData = new FormData(event.currentTarget);
+      // const jsonData = Object.fromEntries(formData.entries());
+      // TODO END old code
+      // TODO BEGIN hacky solution
+      const htmlFormData = new FormData(event.currentTarget);
+      const jsonDataFromHtml = Object.fromEntries(htmlFormData.entries());
+      // not all required fields are in jsonDataFromHtml; add them here
+      const jsonData = { ...formData, ...jsonDataFromHtml };
+      // LOG console.log(`jsonDataFromHtml: ${JSON.stringify(jsonDataFromHtml, null, 2)}`);
+      // LOG console.log(`jsonData: ${JSON.stringify(jsonData, null, 2)}`);
+      // TODO END hacky solution
 
       if (jsonData.indirectVariablesCheck) {
         jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
@@ -134,7 +143,6 @@ ORDER BY ?genre`;
 
   // These functions handle the entry changes from the user's input in the form
   const handleChange = (event) => {
-    console.log(event)
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -297,24 +305,14 @@ ORDER BY ?genre`;
                 sx={{ marginBottom: '16px' }}
               />
 
-
-              <TextField
-                required
+              <SparqlEditField
+                required={false}
                 label="SPARQL query"
                 name="queryString"
-                multiline
-                fullWidth
-                minRows={5}
-                variant="outlined"
                 helperText="Enter your SPARQL query here."
-                placeholder={defaultSparqlQuery}
                 value={!!formData.queryString ? formData.queryString : formData.queryString === '' ? '' : defaultSparqlQuery}
                 onChange={handleChange}
-                sx={{ marginBottom: '16px' , display: 'none' }}
               />
-
-              <YasqeField name={'queryString'} onChange={handleChange}/>
-              
             </div>
           </Card>
 
