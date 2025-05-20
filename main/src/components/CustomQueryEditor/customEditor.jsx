@@ -80,7 +80,7 @@ ORDER BY ?genre`;
       let searchParams;
       if (props.newQuery) {
         searchParams = new URLSearchParams(location.search);
-      } else {
+    } else {
         const edittingQuery = configManager.getQueryById(props.id);
         searchParams = edittingQuery.searchParams;
       }
@@ -106,22 +106,18 @@ ORDER BY ?genre`;
 
     if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorHttpProxies && !parsingErrorTemplate) {
       setShowError(false);
-      // TODO BEGIN old code
-      // const formData = new FormData(event.currentTarget);
-      // const jsonData = Object.fromEntries(formData.entries());
-      // TODO END old code
-      // TODO BEGIN hacky solution
       const htmlFormData = new FormData(event.currentTarget);
-      const jsonDataFromHtml = Object.fromEntries(htmlFormData.entries());
+      let jsonData = Object.fromEntries(htmlFormData.entries());
+      // LOG console.log(`----- jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
+      // LOG console.log(`----- formData (from state):\n${JSON.stringify(formData, null, 2)}`);
+
       // not all required fields are in jsonDataFromHtml; add them here
-      const jsonData = { ...formData, ...jsonDataFromHtml };
-      // LOG console.log(`jsonDataFromHtml: ${JSON.stringify(jsonDataFromHtml, null, 2)}`);
-      // LOG console.log(`jsonData: ${JSON.stringify(jsonData, null, 2)}`);
-      // TODO END hacky solution
+      jsonData.queryString = formData.queryString;
 
       if (jsonData.indirectVariablesCheck) {
         jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
       }
+      // LOG console.log(`----- jsonData (finally):\n${JSON.stringify(jsonData, null, 2)}`);
 
       const searchParams = new URLSearchParams(jsonData);
       jsonData.searchParams = searchParams;

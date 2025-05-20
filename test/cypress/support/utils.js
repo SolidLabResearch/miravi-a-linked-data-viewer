@@ -1,20 +1,37 @@
-export function setCodeMirrorValue(parentElementSelector, value) {
-  cy.get(`${parentElementSelector} .CodeMirror`)
-    .click()
-    .then((editor) => {
-      const cm = editor[0].CodeMirror;
-      cm.setValue(value);
-      cm.focus();
-    });
-  
-  cy.get(`${parentElementSelector} .CodeMirror`).then((editor) => {
-    const cm = editor[0].CodeMirror;
-    expect(cm.getValue()).to.equal(value);
-  });
-}
+export function orderedUrl(inputUrl) {
+  try {
+    const url = new URL(inputUrl);
 
-export async function getCodeMirrorValue(parentElementSelector) {
-  const editor = await cy.get(`${parentElementSelector} .CodeMirror`);
-  const cm = editor[0].CodeMirror;
-  return cm.getValue();
+    // --- Normalize search params in the main URL ---
+    const mainParams = new URLSearchParams(url.search);
+    const sortedMainParams = [...mainParams.entries()].sort((a, b) => {
+      if (a[0] === b[0]) return a[1].localeCompare(b[1]);
+      return a[0].localeCompare(b[0]);
+    });
+    url.search = '';
+    for (const [key, value] of sortedMainParams) {
+      url.searchParams.append(key, value);
+    }
+
+    // --- Normalize fragment-based query string (if present) ---
+    if (url.hash.includes('?')) {
+      const [fragmentPath, fragmentQuery = ''] = url.hash.slice(1).split('?');
+      const fragParams = new URLSearchParams(fragmentQuery);
+
+      const sortedFragParams = [...fragParams.entries()].sort((a, b) => {
+        if (a[0] === b[0]) return a[1].localeCompare(b[1]);
+        return a[0].localeCompare(b[0]);
+      });
+
+      const newFragmentQuery = sortedFragParams
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+        .join('&');
+
+      url.hash = `#${fragmentPath}?${newFragmentQuery}`;
+    }
+
+    return url.toString();
+  } catch (e) {
+    throw new Error(`Invalid URL: ${inputUrl}`);
+  }
 }

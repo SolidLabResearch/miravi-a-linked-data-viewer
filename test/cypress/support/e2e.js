@@ -1,3 +1,5 @@
+import './commands';
+
 Cypress.on('uncaught:exception', (err, runnable) => {
   // this error may appear in tests that try to access resources that need authentication
   if (err.message.includes('UnauthorizedHttpError')) {
