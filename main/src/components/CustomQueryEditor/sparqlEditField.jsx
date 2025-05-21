@@ -19,31 +19,35 @@ export function SparqlEditField({
 }) {
   const parentRef = useRef(null);
   const yasqeInstance = useRef(null);
-  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   function handleChange() {
     const value = yasqeInstance.current.getValue();
-    if (required) {
-      setError(value.trim() === '');
+    let newErrorMsg = "";
+    if (required && value.trim() === '') {
+      newErrorMsg = "This field is required";
+    } else if (!yasqeInstance.current.queryValid) {
+      newErrorMsg = "Check syntax";
     }
+    setErrorMsg(newErrorMsg);
     if (onChange) {
       // construct an event with properties as expected in customEditor
-      onChange({ target: { name, value } });
+      onChange({ target: { name, value, validFlag: (newErrorMsg == "") } });
     }
   }
 
   useEffect(() => {
     if (parentRef.current && !yasqeInstance.current) {
       yasqeInstance.current = new Yasqe(parentRef.current, {
-        modes: ['sparql'],
         indentUnit: 2,
         tabSize: 2,
         value,
         inputStyle: "textarea",
+        persistencyExpire: 0
       });
 
       yasqeInstance.current.on('change', () => {
-        handleChange(value);
+        handleChange();
       });
     }
 
@@ -68,7 +72,7 @@ export function SparqlEditField({
       fullWidth
       variant="outlined"
       required={required}
-      error={error}
+      error={errorMsg !== ""}
       sx={{ marginBottom: '16px' }}
     >
       <Box sx={{ position: 'relative', mt: 1}}>
@@ -82,7 +86,7 @@ export function SparqlEditField({
               backgroundColor: 'white',
               px: 0.5,
               zIndex: 1,
-              color: error ? 'error.main' : 'rgba(0, 0, 0, 0.6)',
+              color: errorMsg ? 'error.main' : 'rgba(0, 0, 0, 0.6)',
             }}
           >
             {label}
@@ -92,7 +96,7 @@ export function SparqlEditField({
           component="fieldset"
           sx={{
             border: '1px solid',
-            borderColor: error ? 'error.main' : 'rgba(0, 0, 0, 0.23)',
+            borderColor: errorMsg ? 'error.main' : 'rgba(0, 0, 0, 0.23)',
             borderRadius: 1,
             p: 1,
             '& .yasqe_buttons, & .resizeWrapper': {
@@ -105,7 +109,7 @@ export function SparqlEditField({
       </Box>
 
       <FormHelperText>
-        {error && required ? 'This field is required.' : helperText}
+        {errorMsg ? `${helperText} (${errorMsg})` : helperText}
       </FormHelperText>
     </FormControl>
   );

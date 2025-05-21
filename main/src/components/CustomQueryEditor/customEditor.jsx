@@ -34,9 +34,10 @@ export default function CustomEditor(props) {
     directVariablesCheck: false,
     indirectVariablesCheck: false,
   });
+  const [validFlags, setValidFlags] = useState({});
 
-  const [showError, setShowError] = useState(false);
-  const [editError, setEditError] = useState(false);
+  const [errorWhileLoading, setErrorWhileLoading] = useState("");
+  const [parsingError, setParsingError] = useState("");
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorHttpProxies, setParsingErrorHttpProxies] = useState(false);
@@ -95,7 +96,7 @@ ORDER BY ?genre`;
       setFormData(obj);
 
     } catch (error) {
-      setEditError(true);
+      setErrorWhileLoading("Apologies, something went wrong with the loading of your custom query...");
     }
   }, [location.search]);
 
@@ -104,8 +105,12 @@ ORDER BY ?genre`;
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorHttpProxies && !parsingErrorTemplate) {
-      setShowError(false);
+    if (Object.values(validFlags).some((x) => x === false)) {
+      setParsingError("Invalid query. Check the SPARQL fields.");
+    } else if (parsingErrorComunica || parsingErrorAsk || parsingErrorHttpProxies || parsingErrorTemplate) {
+      setParsingError("Invalid query. Check the JSON fields.");
+    } else {
+      setParsingError("");
       const htmlFormData = new FormData(event.currentTarget);
       let jsonData = Object.fromEntries(htmlFormData.entries());
       // LOG console.log(`----- jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
@@ -132,18 +137,23 @@ ORDER BY ?genre`;
         const customQuery = configManager.getQueryById(props.id);
         updateQuery(jsonData, customQuery);
       }
-    } else {
-      setShowError(true);
     }
   };
 
   // These functions handle the entry changes from the user's input in the form
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value, validFlag } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
+      [name]: value
     }));
+    if (validFlag !== undefined) {
+      setValidFlags((prevValidFlags) => ({
+        ...prevValidFlags,
+        [name]: validFlag
+      }));
+    }
+    setParsingError("");
   };
 
   const handleIndirectVariablesChange = (event, index) => {
@@ -267,7 +277,7 @@ ORDER BY ?genre`;
       >
         <CardContent>
 
-          {editError ? <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'darkred' }}> Apologies, something went wrong with the loading of your data... </Typography> : null   /* This is a small work around an error that occurs with indirect variables. */}
+          {errorWhileLoading ? <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'darkred' }}> {errorWhileLoading} </Typography> : null   /* This is a small work around an error that occurs with indirect variables. */}
           <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{props.newQuery ? 'Custom Query Editor' : 'Edit'}</Typography>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
@@ -302,7 +312,7 @@ ORDER BY ?genre`;
               />
 
               <SparqlEditField
-                required={false}
+                required
                 label="SPARQL query"
                 name="queryString"
                 helperText="Enter your SPARQL query here."
@@ -358,7 +368,7 @@ ORDER BY ?genre`;
                   error={parsingErrorComunica}
                   minRows={5}
                   variant="outlined"
-                  helperText={`Write the extra configurations in JSON-format${parsingErrorComunica ? ' (Invalid Syntax)' : '.'}`}
+                  helperText={`Write the extra configurations in JSON-format.${parsingErrorComunica && ' (Check syntax)'}`}
                   value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
                   placeholder={defaultExtraComunicaContext}
                   onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
@@ -594,9 +604,9 @@ ORDER BY ?genre`;
 
         </CardContent>
 
-        {showError && (
+        {parsingError && (
           <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
-            Invalid Query. Check the JSON-Syntax
+            {parsingError}
           </Typography>
         )}
 

@@ -9,6 +9,15 @@ describe("Custom Query Editor tests", () => {
     cy.get('input[name="name"]').type("new query");
     cy.get('textarea[name="description"]').type("new description");
 
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "This is not a valid SPARQL query");
+
+    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
+
+    cy.get('button[type="submit"]').click();
+
+    // Check faulty input error
+    cy.contains("Invalid query. Check the SPARQL fields.");
+
     cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
 
 SELECT * WHERE {
@@ -21,7 +30,6 @@ SELECT * WHERE {
     ].
 }`);
 
-    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
     cy.get('button[type="submit"]').click();
 
 
@@ -88,7 +96,7 @@ ASK WHERE {
     cy.get('button[type="submit"]').click();
 
     // Check faulty input error
-    cy.contains("Invalid Query. Check the JSON-Syntax");
+    cy.contains("Invalid query. Check the JSON fields.");
 
     cy.get('textarea[name="askQuery"]').clear()
     cy.get('textarea[name="askQuery"]').type('{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}', { parseSpecialCharSequences: false })
@@ -124,7 +132,7 @@ SELECT ?name ?birthDate_int WHERE {
     cy.get('button[type="submit"]').click();
 
     // Check faulty input error
-    cy.contains("Invalid Query. Check the JSON-Syntax");
+    cy.contains("Invalid query. Check the JSON fields.");
 
     cy.get('textarea[name="httpProxies"]').clear()
     cy.get('textarea[name="httpProxies"]').type('[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
@@ -168,11 +176,12 @@ SELECT ?name ?birthDate_int WHERE {
     cy.get('input[name="name"]').type("broken query");
     cy.get('textarea[name="description"]').type("just a description");
 
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "this is faultive querytext")
+    // This incomplete SPARQL query passes the SPARQL edit field syntax checker, but will fail when executed
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "SELECT")
 
     cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
 
-    //Submit the faulty query
+    // Submit the incomplete query
     cy.get('button[type="submit"]').click();
 
     cy.contains("Custom queries").click();
