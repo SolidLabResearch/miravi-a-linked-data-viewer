@@ -116,8 +116,13 @@ ORDER BY ?genre`;
       // LOG console.log(`----- jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
       // LOG console.log(`----- formData (from state):\n${JSON.stringify(formData, null, 2)}`);
 
-      // not all required fields are in jsonDataFromHtml; add them here
-      jsonData.queryString = formData.queryString;
+      // not all required properties are in jsonDataFromHtml; add them here from formData
+      const additionalProperties = ["queryString", "indexSourceQuery"];
+      for (const p of additionalProperties) {
+        if (formData.hasOwnProperty(p)) {
+          jsonData[p] = formData[p];
+        }
+      }
 
       if (jsonData.indirectVariablesCheck) {
         jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
@@ -143,10 +148,17 @@ ORDER BY ?genre`;
   // These functions handle the entry changes from the user's input in the form
   const handleChange = (event) => {
     const { name, value, validFlag } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value
-    }));
+    const indirectVariablesQueryRegex = /indirectVariablesQuery-(\d)+/;
+    const result = indirectVariablesQueryRegex.exec(name);
+    if (result) {
+      const index = result[1];
+      handleIndirectVariablesChange(event, index);
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value
+      }));
+    }
     if (validFlag !== undefined) {
       setValidFlags((prevValidFlags) => ({
         ...prevValidFlags,
@@ -230,9 +242,17 @@ ORDER BY ?genre`;
     setIndirectVariableSourceList([...indirectVariableSourceList, ""]);
   }
   const handleIndirectVariableSourceRemove = (index) => {
-    const newList = [...indirectVariableSourceList];
-    newList.splice(index, 1);
-    setIndirectVariableSourceList(newList);
+    setIndirectVariableSourceList((prevList) => {
+      const newList = [...prevList];
+      newList.splice(index, 1);
+      return newList;
+     });
+    setValidFlags((prevValidFlags) => {
+      const name = `indirectVariablesQuery-${index}`;
+      const { [name]: _, ...rest } = prevValidFlags;
+      return rest;
+    });
+
   }
 
   // These Functions are the submit functions for whether the creation or edit of a custom query
@@ -407,19 +427,13 @@ ORDER BY ?genre`;
                   sx={{ marginBottom: '16px' }}
                 />
 
-                <TextField
+                <SparqlEditField
                   required={ensureBoolean(formData.sourceIndexCheck)}
                   label="SPARQL query"
                   name="indexSourceQuery"
-                  multiline
-                  fullWidth
-                  minRows={5}
-                  variant="outlined"
-                  helperText="Give the SPARQL query to get the sources from the index file."
-                  placeholder={defaultSparqlQueryIndexSources}
+                  helperText="Enter a SPARQL query to get the sources from the index file."
                   value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
                   onChange={handleChange}
-                  sx={{ marginBottom: '16px' }}
                 />
               </div>
             }
@@ -456,7 +470,7 @@ ORDER BY ?genre`;
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
+                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Check syntax)' : '.'}`}
                     value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables, null, 5) : formData.variables : formData.variables === '' ? '' : defaultTemplateOptions}
                     placeholder={defaultTemplateOptions}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
@@ -489,19 +503,14 @@ ORDER BY ?genre`;
                   {
                     indirectVariableSourceList.map((sourceString, index) => (
                       <div key={index} style={{ position: 'relative' }}>
-                        <TextField
+                        <SparqlEditField
                           required={ensureBoolean(formData.indirectVariablesCheck)}
                           label={`Query ${index + 1} for indirect variable(s)`}
-                          name={`indirectQuery${index + 1}`}
-                          multiline
-                          fullWidth
-                          minRows={5}
-                          variant="outlined"
-                          helperText={`Enter the ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
+                          name={`indirectVariablesQuery-${index}`}
+                          helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
                           value={sourceString}
-                          placeholder={defaultSparqlQueryIndirectVariables}
-                          onChange={(e) => handleIndirectVariablesChange(e, index)}
-                          sx={{ marginBottom: '16px' }}
+                          // onChange={(e) => handleIndirectVariablesChange(e, index)}
+                          onChange={handleChange}
                         />
 
                         <Button
@@ -553,7 +562,7 @@ ORDER BY ?genre`;
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Invalid Syntax)' : '.'}`}
+                    helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Check syntax)' : '.'}`}
                     value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery, null, 2) : formData.askQuery : formData.askQuery === '' ? '' : defaultAskQueryDetails}
                     placeholder={defaultAskQueryDetails}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
@@ -589,7 +598,7 @@ ORDER BY ?genre`;
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write http proxies in JSON-format${parsingErrorHttpProxies ? ' (Invalid Syntax)' : '.'}`}
+                    helperText={`Write http proxies in JSON-format${parsingErrorHttpProxies ? ' (Check syntax)' : '.'}`}
                     value={!!formData.httpProxies ? typeof formData.httpProxies === 'object' ? JSON.stringify(formData.httpProxies, null, 2) : formData.httpProxies : formData.httpProxies === '' ? '' : defaultHttpProxiesDetails}
                     placeholder={defaultHttpProxiesDetails}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}

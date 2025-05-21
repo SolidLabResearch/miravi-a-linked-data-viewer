@@ -89,7 +89,7 @@ SELECT ?name WHERE {
 }
 `);
 
-    cy.get('textarea[name="indirectQuery1"]').should('have.value', `PREFIX schema: <http://schema.org/> 
+    cy.checkCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", `PREFIX schema: <http://schema.org/> 
 
 SELECT DISTINCT ?genre
 WHERE {
@@ -98,7 +98,7 @@ WHERE {
 ORDER BY ?genre
 `);
 
-    cy.get('textarea[name="indirectQuery2"]').should('have.value', `PREFIX schema: <http://schema.org/> 
+    cy.checkCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", `PREFIX schema: <http://schema.org/> 
 
 SELECT DISTINCT ?sameAsUrl
 WHERE { 
@@ -145,7 +145,7 @@ ORDER BY ?componentName
 `);
 
     cy.get('input[name="indexSourceUrl"]').should('have.value', `http://localhost:8080/example/index-example-texon-only-lt`)
-    cy.get('textarea[name="indexSourceQuery"]').should('have.value', `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    cy.checkCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?source WHERE {
   ?s rdfs:seeAlso ?source.

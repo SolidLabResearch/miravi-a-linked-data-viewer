@@ -112,7 +112,7 @@ ASK WHERE {
     cy.visit("/#/customQuery");
 
     cy.get('input[name="name"]').type("My idols custom...");
-    cy.get('textarea[name="description"]').type("Test a query wit http proxies");
+    cy.get('textarea[name="description"]').type("Test a query with http proxies");
 
     cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
 SELECT ?name ?birthDate_int WHERE {
@@ -158,7 +158,7 @@ SELECT ?name ?birthDate_int WHERE {
     cy.get('textarea[name="comunicaContext"]').should('have.value', `{"Advanced Comunica Context":true}`);
 
     cy.get('input[name="indexSourceUrl"]').should('have.value', "Index Source");
-    cy.get('textarea[name="indexSourceQuery"]').should('have.value', "Index Query ");
+    cy.checkCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "Index Query ");
 
     cy.get('textarea[name="askQuery"]').should('have.value', `{"trueText":" filled in","falseText":"not filled in"}`);
 
@@ -328,8 +328,7 @@ ORDER BY ?componentName`
     cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
-    cy.get('textarea[name="indexSourceQuery"]').clear();
-    cy.get('textarea[name="indexSourceQuery"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
 
@@ -495,8 +494,7 @@ schema:sameAs ?sameAs_url;
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
     cy.get('button[type="submit"]').click();
 
 
@@ -536,11 +534,9 @@ schema:sameAs $sameAsUrl;
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
     cy.get('button').contains("Add another query").click();
-    cy.get('textarea[name="indirectQuery2"]').clear()
-    cy.get('textarea[name="indirectQuery2"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
 
     cy.get('button[type="submit"]').click();
     // Run some testcases now
@@ -619,8 +615,7 @@ schema:sameAs ?sameAs_url;
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
     cy.get('button[type="submit"]').click();
 
 
@@ -652,8 +647,7 @@ schema:sameAs $sameAsUrl;
     );
     // add source for the second variable
     cy.get('button').contains("Add another query").click();
-    cy.get('textarea[name="indirectQuery2"]').clear()
-    cy.get('textarea[name="indirectQuery2"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
 
 
     // The changes are done, now submit it
@@ -710,8 +704,7 @@ ORDER BY ?componentName`);
     cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
-    cy.get('textarea[name="indexSourceQuery"]').clear();
-    cy.get('textarea[name="indexSourceQuery"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
 
@@ -724,8 +717,7 @@ WHERE {
 
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
@@ -798,8 +790,7 @@ ORDER BY ?componentName
     cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
-    cy.get('textarea[name="indexSourceQuery"]').clear();
-    cy.get('textarea[name="indexSourceQuery"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
 
@@ -812,8 +803,7 @@ WHERE {
 
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
@@ -827,8 +817,7 @@ ORDER BY ?componentName`)
 
     cy.get('button').contains("Add another query").click();
 
-    cy.get('textarea[name="indirectQuery2"]').clear()
-    cy.get('textarea[name="indirectQuery2"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
