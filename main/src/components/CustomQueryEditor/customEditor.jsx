@@ -517,7 +517,7 @@ ORDER BY ?genre`;
                           variant="outlined"
                           color='error' onClick={() => handleIndirectVariableSourceRemove(index)}
                           type="button" disabled={indirectVariableSourceList.length <= 1}
-                          style={{ zIndex: '2', position: 'absolute', top: '15px', right: '8px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ zIndex: '2', position: 'absolute', top: '30px', right: '17px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           <IconProvider.DeleteIcon />
                         </Button>

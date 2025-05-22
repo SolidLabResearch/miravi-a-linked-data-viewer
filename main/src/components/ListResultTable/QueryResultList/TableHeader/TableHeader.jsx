@@ -37,7 +37,7 @@ function TableHeader({ children }) {
 
   const query = configManager.getQueryWorkingCopyById(resource);
   const variableOntology = query.variableOntology;
-  const sortingAllowed = query.queryText.startsWith("# Custom sorting is allowed.");
+  const sortingAllowed = query?.queryText?.startsWith("# Custom sorting is allowed.");
   
   return (
     <TableHead>
