@@ -509,7 +509,6 @@ ORDER BY ?genre`;
                           name={`indirectVariablesQuery-${index}`}
                           helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
                           value={sourceString}
-                          // onChange={(e) => handleIndirectVariablesChange(e, index)}
                           onChange={handleChange}
                         />
 

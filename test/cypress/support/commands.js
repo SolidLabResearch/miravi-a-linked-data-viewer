@@ -1,5 +1,3 @@
-
-
 Cypress.Commands.add('checkCodeMirrorValue', (parentElementSelector, expected) => {
   cy.get(`${parentElementSelector} .CodeMirror`).then((editor) => {
     const cm = editor[0].CodeMirror;

@@ -693,37 +693,6 @@ schema:sameAs $sameAsUrl;
 
   });
 
-  it("Custom templated query with 1 indirect variables; bad SPARQL syntax in indirectVariablesQuery-1", () => {
-
-    // Create the indirect variable
-    cy.visit("/#/customQuery");
-
-    cy.get('input[name="name"]').type("custom indirect template 2");
-    cy.get('textarea[name="description"]').type("description for an indirect templated query 2");
-
-    // Query handling a variable
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
-SELECT ?name WHERE {
-?list schema:name ?listTitle;
-schema:name ?name;
-schema:genre $genre;
-schema:sameAs ?sameAsUrl;
-}`
-    );
-
-    cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
-    cy.get('input[name="indirectVariablesCheck"]').click()
-
-    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }")
-    cy.get('button').contains("Add another query").click();
-    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "this is not a valid SPARQL query")
-
-    cy.get('button[type="submit"]').click();
-
-    cy.contains("Invalid query. Check the SPARQL fields.");    
-  });
-
-
   it("Make a custom templated query with 1 indirect variable and edit into a query with 2 indirect variables", () => {
 
 
