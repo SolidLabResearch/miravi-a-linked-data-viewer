@@ -15,6 +15,8 @@ import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
 import { SparqlEditField } from "./sparqlEditField";
 
+import { JsonEditField } from "./jsonEditField";
+
 export default function CustomEditor(props) {
   const session = getDefaultSession();
   const loggedIn = session.info.isLoggedIn;
@@ -394,6 +396,15 @@ ORDER BY ?genre`;
                   onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   sx={{ marginBottom: '16px' }}
+                />
+                <JsonEditField
+                  required={ensureBoolean(formData.comunicaContextCheck)}
+                  label="Comunica context configuration"
+                  name="comunicaContext"
+                  helperText="Write the extra configurations in JSON-format."
+                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
+                  //onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
+                  //onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                 />
               </div>
             }
