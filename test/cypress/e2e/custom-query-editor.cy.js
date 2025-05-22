@@ -1,31 +1,49 @@
+import { orderedUrl } from "../support/utils";
 
 describe("Custom Query Editor tests", () => {
 
-  it("Create a new query", () => {
+  it("Create a new simple query", () => {
 
     cy.visit("/#/customQuery");
 
-    cy.get('input[name="name"]').type("new query");
+    cy.get('input[name="name"]').type("new simple query");
     cy.get('textarea[name="description"]').type("new description");
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
 
-SELECT * WHERE {
-    ?list schema:name ?listTitle;
-      schema:itemListElement [
-      schema:name ?bookTitle;
-      schema:creator [
-        schema:name ?authorName
-      ]
-    ].
-}`);
+      SELECT * WHERE {
+          ?list schema:name ?listTitle;
+            schema:itemListElement [
+            schema:name ?bookTitle;
+            schema:creator [
+              schema:name ?authorName
+            ]
+          ].
+      }`);
+
     cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
+
     cy.get('button[type="submit"]').click();
 
 
     // Checking if the book query works
     cy.contains("Colleen Hoover").should('exist');
+  });
+
+  it("Create a new simple query; bad SPARQL syntax in queryString", () => {
+
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("new simple query bad queryString");
+    cy.get('textarea[name="description"]').type("new description");
+
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "This is not a valid SPARQL query");
+
+    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
+
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Invalid query. Check the SPARQL fields.");
   });
 
   it("Create a new query, with multiple sources", () => {
@@ -35,8 +53,7 @@ SELECT * WHERE {
     cy.get('input[name="name"]').type("material query");
     cy.get('textarea[name="description"]').type("this query has 3 sources");
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`# Query Texon's components
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `# Query Texon's components
 # Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl
 
 PREFIX oo: <http://purl.org/openorg/>
@@ -70,8 +87,7 @@ ORDER BY ?componentName
     cy.get('input[name="name"]').type("Is there an artist etc...");
     cy.get('textarea[name="description"]').type("Test an ASK query");
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbo: <http://dbpedia.org/ontology/>
 PREFIX dbp: <http://dbpedia.org/resource/>
 ASK WHERE {
@@ -89,7 +105,7 @@ ASK WHERE {
     cy.get('button[type="submit"]').click();
 
     // Check faulty input error
-    cy.contains("Invalid Query. Check the JSON-Syntax");
+    cy.contains("Invalid query. Check the JSON fields.");
 
     cy.get('textarea[name="askQuery"]').clear()
     cy.get('textarea[name="askQuery"]').type('{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}', { parseSpecialCharSequences: false })
@@ -105,10 +121,9 @@ ASK WHERE {
     cy.visit("/#/customQuery");
 
     cy.get('input[name="name"]').type("My idols custom...");
-    cy.get('textarea[name="description"]').type("Test a query wit http proxies");
+    cy.get('textarea[name="description"]').type("Test a query with http proxies");
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
 SELECT ?name ?birthDate_int WHERE {
     ?list schema:name ?listTitle;
       schema:itemListElement [
@@ -126,7 +141,7 @@ SELECT ?name ?birthDate_int WHERE {
     cy.get('button[type="submit"]').click();
 
     // Check faulty input error
-    cy.contains("Invalid Query. Check the JSON-Syntax");
+    cy.contains("Invalid query. Check the JSON fields.");
 
     cy.get('textarea[name="httpProxies"]').clear()
     cy.get('textarea[name="httpProxies"]').type('[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
@@ -146,13 +161,13 @@ SELECT ?name ?birthDate_int WHERE {
     // Verify that every field is correctly filled-in
     cy.get('input[name="name"]').should('have.value', 'Query Name');
     cy.get('textarea[name="description"]').should('have.value', 'Query Description');
-    cy.get('textarea[name="queryString"]').should('have.value', 'Sparql query text');
+    cy.checkCodeMirrorValue("#sparql-edit-field-queryString", 'Sparql query text');
 
     cy.get('input[name="source"]').should('have.value', "The Comunica Source");
     cy.get('textarea[name="comunicaContext"]').should('have.value', `{"Advanced Comunica Context":true}`);
 
     cy.get('input[name="indexSourceUrl"]').should('have.value', "Index Source");
-    cy.get('textarea[name="indexSourceQuery"]').should('have.value', "Index Query ");
+    cy.checkCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "Index Query ");
 
     cy.get('textarea[name="askQuery"]').should('have.value', `{"trueText":" filled in","falseText":"not filled in"}`);
 
@@ -170,12 +185,12 @@ SELECT ?name ?birthDate_int WHERE {
     cy.get('input[name="name"]').type("broken query");
     cy.get('textarea[name="description"]').type("just a description");
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type("this is faultive querytext")
+    // This incomplete SPARQL query passes the SPARQL edit field syntax checker, but will fail when executed
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "SELECT")
 
     cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
 
-    //Submit the faulty query
+    // Submit the incomplete query
     cy.get('button[type="submit"]').click();
 
     cy.contains("Custom queries").click();
@@ -191,8 +206,7 @@ SELECT ?name ?birthDate_int WHERE {
     cy.get('input[name="name"]').clear();
     cy.get('input[name="name"]').type("Fixed query");
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
 SELECT * WHERE {
     ?list schema:name ?listTitle;
       schema:itemListElement [
@@ -222,8 +236,7 @@ SELECT * WHERE {
     cy.get('input[name="name"]').type("new query");
     cy.get('textarea[name="description"]').type("new description");
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/> 
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
 SELECT * WHERE {
     ?list schema:name ?listTitle;
       schema:itemListElement [
@@ -239,7 +252,7 @@ SELECT * WHERE {
     cy.get('button').contains("Share Query").click();
 
     cy.get('textarea[name="queryURL"]').invoke('val').then((val) => {
-      expect(val).to.equal(Cypress.config('baseUrl') + '#/customQuery?name=new+query&description=new+description&queryString=PREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E+%0ASELECT+*+WHERE+%7B%0A++++%3Flist+schema%3Aname+%3FlistTitle%3B%0A++++++schema%3AitemListElement+%5B%0A++++++schema%3Aname+%3FbookTitle%3B%0A++++++schema%3Acreator+%5B%0A++++++++schema%3Aname+%3FauthorName%0A++++++%5D%0A++++%5D.%0A%7D&source=http%3A%2F%2Flocalhost%3A8080%2Fexample%2Fwish-list');
+      expect(orderedUrl(val)).to.equal(orderedUrl(Cypress.config('baseUrl') + '#/customQuery?name=new+query&description=new+description&queryString=PREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E+%0ASELECT+*+WHERE+%7B%0A++++%3Flist+schema%3Aname+%3FlistTitle%3B%0A++++++schema%3AitemListElement+%5B%0A++++++schema%3Aname+%3FbookTitle%3B%0A++++++schema%3Acreator+%5B%0A++++++++schema%3Aname+%3FauthorName%0A++++++%5D%0A++++%5D.%0A%7D&source=http%3A%2F%2Flocalhost%3A8080%2Fexample%2Fwish-list'));
     });
 
 
@@ -253,8 +266,7 @@ SELECT * WHERE {
     cy.get('textarea[name="description"]').type("description for template");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
 SELECT ?name ?sameAs_url WHERE {
   ?list schema:name ?listTitle;
     schema:name ?name;
@@ -294,8 +306,7 @@ SELECT ?name ?sameAs_url WHERE {
     cy.get('textarea[name="description"]').type("description for index");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`# Query Texon's components and their materials
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `# Query Texon's components and their materials
 # Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/boms.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/materials.ttl
 
 PREFIX oo: <http://purl.org/openorg/>
@@ -326,8 +337,7 @@ ORDER BY ?componentName`
     cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
-    cy.get('textarea[name="indexSourceQuery"]').clear();
-    cy.get('textarea[name="indexSourceQuery"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
 
@@ -344,6 +354,54 @@ WHERE {
 
 
 
+  it("Custom Query With Index File; bad SPARQL syntax in indexSourceQuery", () => {
+
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("custom with index file bad indexSourceQuery");
+    cy.get('textarea[name="description"]').type("description for index");
+
+    // Query handling a variable
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `# Query Texon's components and their materials
+# Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/boms.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/materials.ttl
+
+PREFIX oo: <http://purl.org/openorg/>
+PREFIX ao: <http://purl.org/ontology/ao/core#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX d: <https://www.example.com/data/>
+PREFIX o: <https://www.example.com/ont/>
+
+SELECT ?component ?componentName ?material ?materialName ?percentage
+WHERE {
+  ?component
+    a o:Component ;
+    o:name ?componentName ;
+    o:has-component-bom [
+      o:has-component-material-assoc [
+        o:percentage ?percentage ;
+        o:has-material ?material ;
+      ];
+    ];
+  .
+  ?material o:name ?materialName ;
+}
+ORDER BY ?componentName`
+    );
+
+    // No Comunica Sources Required
+    cy.get('input[name="sourceIndexCheck"]').click()
+    cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
+
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "this is not a valid SPARQL query")
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Invalid query. Check the SPARQL fields.");
+
+  })
+
+
+
   it("Make a templated query, then edit it to make it a normal query", () => {
 
     // First create the query
@@ -353,8 +411,7 @@ WHERE {
     cy.get('textarea[name="description"]').type("description for template");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
       SELECT ?name ?sameAs_url WHERE {
         ?list schema:name ?listTitle;
           schema:name ?name;
@@ -388,8 +445,7 @@ WHERE {
     // Now that this templated one works, lets edit it to make a normal query from it
     cy.get('button').contains("Edit Query").click();
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
   SELECT ?name ?genre ?sameAs_url WHERE {
     ?list schema:name ?listTitle;
       schema:name ?name;
@@ -419,8 +475,7 @@ WHERE {
     cy.get('textarea[name="description"]').type("description for template");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
       SELECT ?name ?genre ?sameAs_url WHERE {
         ?list schema:name ?listTitle;
           schema:name ?name;
@@ -443,8 +498,7 @@ WHERE {
     // Now that this normal one works, lets edit it to make a templated query from it
     cy.get('button').contains("Edit Query").click();
 
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
   SELECT ?name ?sameAs_url WHERE {
     ?list schema:name ?listTitle;
       schema:name ?name;
@@ -485,8 +539,7 @@ WHERE {
     cy.get('textarea[name="description"]').type("description for an indirect templated query");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
 SELECT ?name ?sameAs_url WHERE {
 ?list schema:name ?listTitle;
 schema:name ?name;
@@ -498,8 +551,7 @@ schema:sameAs ?sameAs_url;
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }")
     cy.get('button[type="submit"]').click();
 
 
@@ -518,6 +570,45 @@ schema:sameAs ?sameAs_url;
 
   });
 
+  it("Custom templated query with 1 indirect variable; bad SPARQL syntax in indirectVariablesQuery-1", () => {
+
+    // Create the indirect variable
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("custom indirect template bad indirectVariablesQuery-1");
+    cy.get('textarea[name="description"]').type("description for an indirect templated query");
+
+    // Query handling a variable
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
+SELECT ?name WHERE {
+?list schema:name ?listTitle;
+schema:name ?name;
+schema:genre $genre;
+schema:sameAs ?sameAsUrl;
+}`
+    );
+
+    cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
+    cy.get('input[name="indirectVariablesCheck"]').click()
+
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }")
+
+    // Test the bad SPARQL syntax on a second indirect variable query
+    cy.get('button').contains("Add another query").click();
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "this is not a valid SPARQL query")
+
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Invalid query. Check the SPARQL fields.");
+
+    // Deleting the second indirect variable query should also clear the error status
+    cy.get('[data-testid="DeleteIcon"]').last().click();
+
+    cy.get('button[type="submit"]').click();
+
+    cy.get('.ra-input-genre').should("exist");
+  });
+
   it("Custom templated query with 2 indirect variables", () => {
 
     // Create the indirect variable
@@ -527,8 +618,7 @@ schema:sameAs ?sameAs_url;
     cy.get('textarea[name="description"]').type("description for an indirect templated query 2");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
 SELECT ?name WHERE {
 ?list schema:name ?listTitle;
 schema:name ?name;
@@ -540,11 +630,9 @@ schema:sameAs $sameAsUrl;
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }")
     cy.get('button').contains("Add another query").click();
-    cy.get('textarea[name="indirectQuery2"]').clear()
-    cy.get('textarea[name="indirectQuery2"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }")
 
     cy.get('button[type="submit"]').click();
     // Run some testcases now
@@ -613,8 +701,7 @@ schema:sameAs $sameAsUrl;
 
     cy.get('input[name="name"]').type("custom indirect template");
     cy.get('textarea[name="description"]').type("description for an indirect templated query");
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
 SELECT ?name ?sameAs_url WHERE {
 ?list schema:name ?listTitle;
 schema:name ?name;
@@ -624,8 +711,7 @@ schema:sameAs ?sameAs_url;
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }")
     cy.get('button[type="submit"]').click();
 
 
@@ -647,8 +733,7 @@ schema:sameAs ?sameAs_url;
     cy.get('input[name="name"]').should('have.value', 'custom indirect template');
 
     // Now change the query
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX schema: <http://schema.org/>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
 SELECT ?name WHERE {
 ?list schema:name ?listTitle;
 schema:name ?name;
@@ -658,8 +743,7 @@ schema:sameAs $sameAsUrl;
     );
     // add source for the second variable
     cy.get('button').contains("Add another query").click();
-    cy.get('textarea[name="indirectQuery2"]').clear()
-    cy.get('textarea[name="indirectQuery2"]').type("PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }", { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?sameAsUrl WHERE { ?list schema:sameAs ?sameAsUrl; }")
 
 
     // The changes are done, now submit it
@@ -689,8 +773,7 @@ schema:sameAs $sameAsUrl;
     cy.get('textarea[name="description"]').type("description for an indirect templated query and index sources");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
@@ -717,8 +800,7 @@ ORDER BY ?componentName`);
     cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
-    cy.get('textarea[name="indexSourceQuery"]').clear();
-    cy.get('textarea[name="indexSourceQuery"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
 
@@ -731,8 +813,7 @@ WHERE {
 
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
@@ -777,8 +858,7 @@ ORDER BY ?componentName`)
     cy.get('textarea[name="description"]').type("description for an indirect templated query and index sources");
 
     // Query handling a variable
-    cy.get('textarea[name="queryString"]').clear();
-    cy.get('textarea[name="queryString"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
@@ -806,8 +886,7 @@ ORDER BY ?componentName
     cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
-    cy.get('textarea[name="indexSourceQuery"]').clear();
-    cy.get('textarea[name="indexSourceQuery"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
 
@@ -820,8 +899,7 @@ WHERE {
 
     cy.get('input[name="indirectVariablesCheck"]').click()
 
-    cy.get('textarea[name="indirectQuery1"]').clear()
-    cy.get('textarea[name="indirectQuery1"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 
@@ -835,8 +913,7 @@ ORDER BY ?componentName`)
 
     cy.get('button').contains("Add another query").click();
 
-    cy.get('textarea[name="indirectQuery2"]').clear()
-    cy.get('textarea[name="indirectQuery2"]').type(`PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX o: <https://www.example.com/ont/>
 

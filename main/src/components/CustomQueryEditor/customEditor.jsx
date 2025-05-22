@@ -13,6 +13,7 @@ import IconProvider from '../../IconProvider/IconProvider';
 
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
+import { SparqlEditField } from "./sparqlEditField";
 
 export default function CustomEditor(props) {
   const session = getDefaultSession();
@@ -33,9 +34,10 @@ export default function CustomEditor(props) {
     directVariablesCheck: false,
     indirectVariablesCheck: false,
   });
+  const [validFlags, setValidFlags] = useState({});
 
-  const [showError, setShowError] = useState(false);
-  const [editError, setEditError] = useState(false);
+  const [errorWhileLoading, setErrorWhileLoading] = useState("");
+  const [parsingError, setParsingError] = useState("");
   const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
   const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
   const [parsingErrorHttpProxies, setParsingErrorHttpProxies] = useState(false);
@@ -79,7 +81,7 @@ ORDER BY ?genre`;
       let searchParams;
       if (props.newQuery) {
         searchParams = new URLSearchParams(location.search);
-      } else {
+    } else {
         const edittingQuery = configManager.getQueryById(props.id);
         searchParams = edittingQuery.searchParams;
       }
@@ -94,7 +96,7 @@ ORDER BY ?genre`;
       setFormData(obj);
 
     } catch (error) {
-      setEditError(true);
+      setErrorWhileLoading("Apologies, something went wrong with the loading of your custom query...");
     }
   }, [location.search]);
 
@@ -103,14 +105,29 @@ ORDER BY ?genre`;
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorHttpProxies && !parsingErrorTemplate) {
-      setShowError(false);
-      const formData = new FormData(event.currentTarget);
-      const jsonData = Object.fromEntries(formData.entries());
+    if (Object.values(validFlags).some((x) => x === false)) {
+      setParsingError("Invalid query. Check the SPARQL fields.");
+    } else if (parsingErrorComunica || parsingErrorAsk || parsingErrorHttpProxies || parsingErrorTemplate) {
+      setParsingError("Invalid query. Check the JSON fields.");
+    } else {
+      setParsingError("");
+      const htmlFormData = new FormData(event.currentTarget);
+      let jsonData = Object.fromEntries(htmlFormData.entries());
+      // LOG console.log(`----- jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
+      // LOG console.log(`----- formData (from state):\n${JSON.stringify(formData, null, 2)}`);
+
+      // not all required properties are in jsonDataFromHtml; add them here from formData
+      const additionalProperties = ["queryString", "indexSourceQuery"];
+      for (const p of additionalProperties) {
+        if (formData.hasOwnProperty(p)) {
+          jsonData[p] = formData[p];
+        }
+      }
 
       if (jsonData.indirectVariablesCheck) {
         jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
       }
+      // LOG console.log(`----- jsonData (finally):\n${JSON.stringify(jsonData, null, 2)}`);
 
       const searchParams = new URLSearchParams(jsonData);
       jsonData.searchParams = searchParams;
@@ -125,18 +142,30 @@ ORDER BY ?genre`;
         const customQuery = configManager.getQueryById(props.id);
         updateQuery(jsonData, customQuery);
       }
-    } else {
-      setShowError(true);
     }
   };
 
   // These functions handle the entry changes from the user's input in the form
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    const { name, value, validFlag } = event.target;
+    const indirectVariablesQueryRegex = /indirectVariablesQuery-(\d)+/;
+    const result = indirectVariablesQueryRegex.exec(name);
+    if (result) {
+      const index = result[1];
+      handleIndirectVariablesChange(event, index);
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value
+      }));
+    }
+    if (validFlag !== undefined) {
+      setValidFlags((prevValidFlags) => ({
+        ...prevValidFlags,
+        [name]: validFlag
+      }));
+    }
+    setParsingError("");
   };
 
   const handleIndirectVariablesChange = (event, index) => {
@@ -213,9 +242,17 @@ ORDER BY ?genre`;
     setIndirectVariableSourceList([...indirectVariableSourceList, ""]);
   }
   const handleIndirectVariableSourceRemove = (index) => {
-    const newList = [...indirectVariableSourceList];
-    newList.splice(index, 1);
-    setIndirectVariableSourceList(newList);
+    setIndirectVariableSourceList((prevList) => {
+      const newList = [...prevList];
+      newList.splice(index, 1);
+      return newList;
+     });
+    setValidFlags((prevValidFlags) => {
+      const name = `indirectVariablesQuery-${index}`;
+      const { [name]: _, ...rest } = prevValidFlags;
+      return rest;
+    });
+
   }
 
   // These Functions are the submit functions for whether the creation or edit of a custom query
@@ -260,7 +297,7 @@ ORDER BY ?genre`;
       >
         <CardContent>
 
-          {editError ? <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'darkred' }}> Apologies, something went wrong with the loading of your data... </Typography> : null   /* This is a small work around an error that occurs with indirect variables. */}
+          {errorWhileLoading ? <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'darkred' }}> {errorWhileLoading} </Typography> : null   /* This is a small work around an error that occurs with indirect variables. */}
           <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{props.newQuery ? 'Custom Query Editor' : 'Edit'}</Typography>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
@@ -294,19 +331,13 @@ ORDER BY ?genre`;
                 sx={{ marginBottom: '16px' }}
               />
 
-              <TextField
+              <SparqlEditField
                 required
                 label="SPARQL query"
                 name="queryString"
-                multiline
-                fullWidth
-                minRows={5}
-                variant="outlined"
                 helperText="Enter your SPARQL query here."
-                placeholder={defaultSparqlQuery}
                 value={!!formData.queryString ? formData.queryString : formData.queryString === '' ? '' : defaultSparqlQuery}
                 onChange={handleChange}
-                sx={{ marginBottom: '16px' }}
               />
             </div>
           </Card>
@@ -357,7 +388,7 @@ ORDER BY ?genre`;
                   error={parsingErrorComunica}
                   minRows={5}
                   variant="outlined"
-                  helperText={`Write the extra configurations in JSON-format${parsingErrorComunica ? ' (Invalid Syntax)' : '.'}`}
+                  helperText={`Write the extra configurations in JSON-format.${parsingErrorComunica && ' (Check syntax)'}`}
                   value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
                   placeholder={defaultExtraComunicaContext}
                   onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
@@ -396,19 +427,13 @@ ORDER BY ?genre`;
                   sx={{ marginBottom: '16px' }}
                 />
 
-                <TextField
+                <SparqlEditField
                   required={ensureBoolean(formData.sourceIndexCheck)}
                   label="SPARQL query"
                   name="indexSourceQuery"
-                  multiline
-                  fullWidth
-                  minRows={5}
-                  variant="outlined"
-                  helperText="Give the SPARQL query to get the sources from the index file."
-                  placeholder={defaultSparqlQueryIndexSources}
+                  helperText="Enter a SPARQL query to get the sources from the index file."
                   value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
                   onChange={handleChange}
-                  sx={{ marginBottom: '16px' }}
                 />
               </div>
             }
@@ -445,7 +470,7 @@ ORDER BY ?genre`;
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
+                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Check syntax)' : '.'}`}
                     value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables, null, 5) : formData.variables : formData.variables === '' ? '' : defaultTemplateOptions}
                     placeholder={defaultTemplateOptions}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
@@ -478,26 +503,20 @@ ORDER BY ?genre`;
                   {
                     indirectVariableSourceList.map((sourceString, index) => (
                       <div key={index} style={{ position: 'relative' }}>
-                        <TextField
+                        <SparqlEditField
                           required={ensureBoolean(formData.indirectVariablesCheck)}
                           label={`Query ${index + 1} for indirect variable(s)`}
-                          name={`indirectQuery${index + 1}`}
-                          multiline
-                          fullWidth
-                          minRows={5}
-                          variant="outlined"
-                          helperText={`Enter the ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
+                          name={`indirectVariablesQuery-${index}`}
+                          helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
                           value={sourceString}
-                          placeholder={defaultSparqlQueryIndirectVariables}
-                          onChange={(e) => handleIndirectVariablesChange(e, index)}
-                          sx={{ marginBottom: '16px' }}
+                          onChange={handleChange}
                         />
 
                         <Button
                           variant="outlined"
                           color='error' onClick={() => handleIndirectVariableSourceRemove(index)}
                           type="button" disabled={indirectVariableSourceList.length <= 1}
-                          style={{ position: 'absolute', top: '15px', right: '8px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                          style={{ zIndex: '2', position: 'absolute', top: '30px', right: '17px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           <IconProvider.DeleteIcon />
                         </Button>
@@ -542,7 +561,7 @@ ORDER BY ?genre`;
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Invalid Syntax)' : '.'}`}
+                    helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Check syntax)' : '.'}`}
                     value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery, null, 2) : formData.askQuery : formData.askQuery === '' ? '' : defaultAskQueryDetails}
                     placeholder={defaultAskQueryDetails}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
@@ -578,7 +597,7 @@ ORDER BY ?genre`;
                     fullWidth
                     minRows={5}
                     variant="outlined"
-                    helperText={`Write http proxies in JSON-format${parsingErrorHttpProxies ? ' (Invalid Syntax)' : '.'}`}
+                    helperText={`Write http proxies in JSON-format${parsingErrorHttpProxies ? ' (Check syntax)' : '.'}`}
                     value={!!formData.httpProxies ? typeof formData.httpProxies === 'object' ? JSON.stringify(formData.httpProxies, null, 2) : formData.httpProxies : formData.httpProxies === '' ? '' : defaultHttpProxiesDetails}
                     placeholder={defaultHttpProxiesDetails}
                     onClick={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}
@@ -593,9 +612,9 @@ ORDER BY ?genre`;
 
         </CardContent>
 
-        {showError && (
+        {parsingError && (
           <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
-            Invalid Query. Check the JSON-Syntax
+            {parsingError}
           </Typography>
         )}
 
