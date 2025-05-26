@@ -207,6 +207,9 @@ SELECT ?name ?birthDate_int WHERE {
     cy.checkCodeMirrorValue("#json-edit-field-httpProxies", `[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}]`);
 
     cy.checkCodeMirrorValue("#json-edit-field-variables", `{"firstvariables":["only one"]}`);
+
+    // The first error
+    cy.contains("Invalid SPARQL query.");
   });
 
   it("Successfully edit a query to make it work", () => {
