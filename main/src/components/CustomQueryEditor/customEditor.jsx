@@ -84,7 +84,6 @@ export default function CustomEditor(props) {
       searchParams.forEach((value, key) => {
         obj[key] = value;
       });
-      normalizeCheckboxValues(obj, obj);
       if (obj.indirectQueries) {
         setIndirectVariableSourceList(JSON.parse(obj.indirectQueries));
       }
@@ -94,7 +93,6 @@ export default function CustomEditor(props) {
     }
   }, [location.search]);
 
-  // TODO: move into handleChange
   useEffect(() => {
     let newErrorMessage = "";
     // only one error message is set, so the first one that occurs is the one that is shown
@@ -137,80 +135,123 @@ export default function CustomEditor(props) {
     setParsingError(newErrorMessage);
   }, [formData, validFlags]);
 
-  const normalizeCheckboxValues = (fromObject, toObject) => {
-    for (const c of allCheckboxNames) {
-      if (fromObject[c] === 'on' || fromObject[c] === true) {
-        toObject[c] = true;
-      } else if (fromObject[c] === 'off' || fromObject[c] === false) {
-        toObject[c] = false;
+  const isChecked = (value) => value === 'on' || value === true;
+
+  const parseAllObjectsToJSON = (dataWithStrings) => {
+
+    const parsedObject = dataWithStrings;
+
+    if (isChecked(dataWithStrings.comunicaContextCheck)) {
+      parsedObject.comunicaContext = JSON.parse(dataWithStrings.comunicaContext);
+
+      if (!!dataWithStrings.source && dataWithStrings.source.trim() !== '')
+        parsedObject.comunicaContext.sources = dataWithStrings.source.split(';').map(source => source.trim());
+
+    } else if (!!dataWithStrings.source && dataWithStrings.source.trim() !== '') {
+      parsedObject.comunicaContext = {
+        sources: formData.source.split(';').map(source => source.trim())
       }
     }
-  };
 
-  // TODO avoid
-  const ensureBoolean = (value) => value === 'on' || value === true;
+    if (isChecked(dataWithStrings.sourceIndexCheck)) {
+      parsedObject.sourcesIndex = {
+        url: parsedObject.indexSourceUrl,
+        queryString: parsedObject.indexSourceQuery
+      }
+    }
 
+    if (isChecked(dataWithStrings.askQueryCheck)) {
+      parsedObject.askQuery = JSON.parse(dataWithStrings.askQuery);
+    }
 
+    if (isChecked(dataWithStrings.httpProxiesCheck)) {
+      parsedObject.httpProxies = JSON.parse(dataWithStrings.httpProxies);
+    }
 
-  // This function handles the submission of the form. Both for editing as for creation. This distinction is made by the `props.newQuery`.
+    if (isChecked(dataWithStrings.directVariablesCheck)) {
+      parsedObject.variables = JSON.parse(dataWithStrings.variables);
+    }
+
+    if (isChecked(dataWithStrings.indirectVariablesCheck)) {
+      parsedObject.indirectVariables = { queryStrings: JSON.parse(dataWithStrings.indirectQueries) };
+    }
+
+    return parsedObject;
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    /* LOG */ console.log("----- customEditor.handleSubmit");
+    // LOG console.log("----- customEditor.handleSubmit");
 
     if (parsingError) {
-      /* LOG */ console.log(`not submitting, parsingError: ${parsingError}`);
+      // LOG console.log(`not submitting, parsingError: ${parsingError}`);
       return;
     }
 
     const htmlFormData = new FormData(event.currentTarget);
     let jsonData = Object.fromEntries(htmlFormData.entries());
-    /* LOG */ console.log(`jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
-    /* LOG */ console.log(`formData (from state):\n${JSON.stringify(formData, null, 2)}`);
-    normalizeCheckboxValues(jsonData, jsonData);
+    // LOG console.log(`jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
+    // LOG console.log(`formData (from state):\n${JSON.stringify(formData, null, 2)}`);
 
     jsonData.queryString = formData.queryString;
-    if (jsonData.sourceIndexCheck) {
+    if (isChecked(jsonData.sourceIndexCheck)) {
       jsonData.indexSourceQuery = formData.indexSourceQuery;
     }
-    if (jsonData.comunicaContextCheck) {
+    if (isChecked(jsonData.comunicaContextCheck)) {
       jsonData.comunicaContext = formData.comunicaContext;
     }
-    if (jsonData.sourceIndexCheck) {
+    if (isChecked(jsonData.sourceIndexCheck)) {
       jsonData.indexSourceQuery = formData.indexSourceQuery;
     }
-    if (jsonData.directVariablesCheck) {
+    if (isChecked(jsonData.directVariablesCheck)) {
       jsonData.variables = formData.variables;
     }
-    if (jsonData.indirectVariablesCheck) {
+    if (isChecked(jsonData.indirectVariablesCheck)) {
       jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
     }
-    if (jsonData.askQueryCheck) {
+    if (isChecked(jsonData.askQueryCheck)) {
       jsonData.askQuery = formData.askQuery;
     }
-    if (jsonData.httpProxiesCheck) {
+    if (isChecked(jsonData.httpProxiesCheck)) {
       jsonData.httpProxies = formData.httpProxies;
     }
 
-    /* LOG */ console.log(`jsonData (finally):\n${JSON.stringify(jsonData, null, 2)}`);
+    // LOG console.log(`jsonData (finally):\n${JSON.stringify(jsonData, null, 2)}`);
 
     const searchParams = new URLSearchParams(jsonData);
     jsonData.searchParams = searchParams;
 
     if (props.newQuery) {
+      // TODO wat staat dit hier te doen?
       navigate({ search: searchParams.toString() });
 
       configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
-      addQuery(jsonData);
-    }
-    else {
+      
+      const creationID = Date.now().toString();
+      const jsonData2 = parseAllObjectsToJSON(jsonData);
+      configManager.addQuery({
+        ...jsonData2,
+        id: creationID,
+        queryGroupId: "cstm",
+        icon: "AutoAwesomeIcon",
+      });
+      navigate(`/${creationID}`);
+    } else {
       const customQuery = configManager.getQueryById(props.id);
-      updateQuery(jsonData, customQuery);
+      const jsonData2 = parseAllObjectsToJSON(jsonData);
+      configManager.updateQuery({
+        ...jsonData2,
+        id: customQuery.id,
+        queryGroupId: customQuery.queryGroupId,
+        icon: customQuery.icon
+      });
+
+      navigate(`/${customQuery.id}`);
     }
   
   };
 
-  // These functions handle the entry changes from the user's input in the form
   const handleChange = (event) => {
     const { name, value, validFlag } = event.target;
     const indirectVariablesQueryRegex = /indirectVariablesQuery-(\d)+/;
@@ -232,56 +273,13 @@ export default function CustomEditor(props) {
     }
   };
 
+  // TODO put inline
   const handleIndirectVariablesChange = (event, index) => {
     const newList = [...indirectVariableSourceList];
     newList[index] = event.target.value;
     setIndirectVariableSourceList(newList);
   }
 
-  // These functions serve for a correct parsing of JSON objects, lists, etc. right before submitting
-  const parseAllObjectsToJSON = (dataWithStrings) => {
-
-    const parsedObject = dataWithStrings;
-
-    if (ensureBoolean(dataWithStrings.comunicaContextCheck)) {
-      parsedObject.comunicaContext = JSON.parse(dataWithStrings.comunicaContext);
-
-      if (!!dataWithStrings.source && dataWithStrings.source.trim() !== '')
-        parsedObject.comunicaContext.sources = dataWithStrings.source.split(';').map(source => source.trim());
-
-    } else if (!!dataWithStrings.source && dataWithStrings.source.trim() !== '') {
-      parsedObject.comunicaContext = {
-        sources: formData.source.split(';').map(source => source.trim())
-      }
-    }
-
-    if (ensureBoolean(dataWithStrings.sourceIndexCheck)) {
-      parsedObject.sourcesIndex = {
-        url: parsedObject.indexSourceUrl,
-        queryString: parsedObject.indexSourceQuery
-      }
-    }
-
-    if (ensureBoolean(dataWithStrings.askQueryCheck)) {
-      parsedObject.askQuery = JSON.parse(dataWithStrings.askQuery);
-    }
-
-    if (ensureBoolean(dataWithStrings.httpProxiesCheck)) {
-      parsedObject.httpProxies = JSON.parse(dataWithStrings.httpProxies);
-    }
-
-    if (ensureBoolean(dataWithStrings.directVariablesCheck)) {
-      parsedObject.variables = JSON.parse(dataWithStrings.variables);
-    }
-
-    if (ensureBoolean(dataWithStrings.indirectVariablesCheck)) {
-      parsedObject.indirectVariables = { queryStrings: JSON.parse(dataWithStrings.indirectQueries) };
-    }
-
-    return parsedObject;
-  }
-
-  // These are the functions for the addition and removal of indirect variable input fields
   const handleIndirectVariableSource = () => {
     setIndirectVariableSourceList([...indirectVariableSourceList, ""]);
   }
@@ -298,32 +296,6 @@ export default function CustomEditor(props) {
     });
 
   }
-
-  // These Functions are the submit functions for whether the creation or edit of a custom query
-  const addQuery = (formData) => {
-    const creationID = Date.now().toString();
-    formData = parseAllObjectsToJSON(formData);
-
-    configManager.addQuery({
-      ...formData,
-      id: creationID,
-      queryGroupId: "cstm",
-      icon: "AutoAwesomeIcon",
-    });
-    navigate(`/${creationID}`);
-  };
-
-  const updateQuery = (formData, customQuery) => {
-    formData = parseAllObjectsToJSON(formData);
-    configManager.updateQuery({
-      ...formData,
-      id: customQuery.id,
-      queryGroupId: customQuery.queryGroupId,
-      icon: customQuery.icon
-    });
-
-    navigate(`/${customQuery.id}`);
-  };
 
   return (
     <React.Fragment>
@@ -423,7 +395,7 @@ export default function CustomEditor(props) {
             {formData.comunicaContextCheck &&
               <div>
                 {/* <TextField
-                  required={ensureBoolean(formData.comunicaContextCheck)}
+                  required={isChecked(formData.comunicaContextCheck)}
                   label="Comunica context configuration"
                   name="comunicaContext"
                   multiline
@@ -439,7 +411,7 @@ export default function CustomEditor(props) {
                   sx={{ marginBottom: '16px' }}
                 /> */}
                 <JsonEditField
-                  required={ensureBoolean(formData.comunicaContextCheck)}
+                  required={isChecked(formData.comunicaContextCheck)}
                   label="Comunica context configuration"
                   name="comunicaContext"
                   helperText="Enter your extra comunica context in JSON-format."
@@ -466,7 +438,7 @@ export default function CustomEditor(props) {
             {formData.sourceIndexCheck &&
               <div>
                 <TextField
-                  required={ensureBoolean(formData.sourceIndexCheck)}
+                  required={isChecked(formData.sourceIndexCheck)}
                   fullWidth
                   name="indexSourceUrl"
                   label="Index file URL"
@@ -479,7 +451,7 @@ export default function CustomEditor(props) {
                 />
 
                 <SparqlEditField
-                  required={ensureBoolean(formData.sourceIndexCheck)}
+                  required={isChecked(formData.sourceIndexCheck)}
                   label="Indirect sources SPARQL query"
                   name="indexSourceQuery"
                   helperText="Enter a SPARQL query to get the sources from the index file here."
@@ -512,7 +484,7 @@ export default function CustomEditor(props) {
                 <div>
                   <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
                   {/* <TextField
-                    required={ensureBoolean(formData.directVariablesCheck)}
+                    required={isChecked(formData.directVariablesCheck)}
                     label="Templated query variables"
                     name="variables"
                     error={parsingErrorTemplate}
@@ -528,7 +500,7 @@ export default function CustomEditor(props) {
                     sx={{ marginBottom: '16px' }}
                   /> */}
                   <JsonEditField
-                    required={ensureBoolean(formData.directVariablesCheck)}
+                    required={isChecked(formData.directVariablesCheck)}
                     label="Fixed templated query variables"
                     name="variables"
                     helperText="Enter your fixed templated variables specification in JSON-format."
@@ -561,7 +533,7 @@ export default function CustomEditor(props) {
                     indirectVariableSourceList.map((sourceString, index) => (
                       <div key={index} style={{ position: 'relative' }}>
                         <SparqlEditField
-                          required={ensureBoolean(formData.indirectVariablesCheck)}
+                          required={isChecked(formData.indirectVariablesCheck)}
                           label={`SPARQL query ${index + 1} for indirect variable(s)`}
                           name={`indirectVariablesQuery-${index}`}
                           helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve variables.`}
@@ -609,7 +581,7 @@ export default function CustomEditor(props) {
               {formData.askQueryCheck &&
                 <div>
                   {/* <TextField
-                    required={ensureBoolean(formData.askQueryCheck)}
+                    required={isChecked(formData.askQueryCheck)}
                     label="Creating an ask query"
                     name="askQuery"
                     error={parsingErrorAsk}
@@ -625,7 +597,7 @@ export default function CustomEditor(props) {
                     sx={{ marginBottom: '16px' }}
                   /> */}
                   <JsonEditField
-                    required={ensureBoolean(formData.askQueryCheck)}
+                    required={isChecked(formData.askQueryCheck)}
                     label="Creating an ask query"
                     name="askQuery"
                     helperText="Enter your ASK query specification in JSON-format."
@@ -652,7 +624,7 @@ export default function CustomEditor(props) {
               {formData.httpProxiesCheck &&
                 <div>
                   {/* <TextField
-                    required={ensureBoolean(formData.httpProxiesCheck)}
+                    required={isChecked(formData.httpProxiesCheck)}
                     label="Specifying http proxies"
                     name="httpProxies"
                     error={parsingErrorHttpProxies}
@@ -668,7 +640,7 @@ export default function CustomEditor(props) {
                     sx={{ marginBottom: '16px' }}
                   /> */}
                   <JsonEditField
-                    required={ensureBoolean(formData.httpProxiesCheck)}
+                    required={isChecked(formData.httpProxiesCheck)}
                     label="Specifying HTTP proxies"
                     name="httpProxies"
                     helperText="Enter your HTTP proxies specification JSON-format."
@@ -685,7 +657,7 @@ export default function CustomEditor(props) {
 
         {parsingError && (
           <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
-            {parsingError}
+            <span data-cy="parsingError">{parsingError}</span>
           </Typography>
         )}
 
