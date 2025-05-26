@@ -314,7 +314,18 @@ SELECT ?name ?sameAs_url WHERE {
           "\\"Romantic\\"",
           "\\"Baroque\\"",
           "\\"Classical\\""
-        ]
+    }`)
+
+    cy.contains("Invalid fixed templated variables specification.");
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid fixed templated variables specification.");
+
+    cy.setCodeMirrorValue("#json-edit-field-variables", `{
+      "genre": [
+        "\\"Romantic\\"",
+        "\\"Baroque\\"",
+        "\\"Classical\\""
+      ]
     }`)
 
     cy.get('[data-cy="parsingError"]').should('not.exist');
