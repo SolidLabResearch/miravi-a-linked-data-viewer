@@ -46,7 +46,6 @@ const defaultTemplateOptions = JSON.stringify(
   }, null, 2);
 const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
 const defaultHttpProxiesDetails = JSON.stringify([{ "urlStart": "http://www.example.com/path-xyz", "httpProxy": "http://myproxy.org/" }], null, 2);
-const allCheckboxNames = ['comunicaContextCheck', 'sourceIndexCheck', 'directVariablesCheck', 'indirectVariablesCheck', 'askQueryCheck', 'httpProxiesCheck'];
 
 export default function CustomEditor(props) {
   const session = getDefaultSession();
@@ -99,22 +98,22 @@ export default function CustomEditor(props) {
     if (validFlags['queryString'] === false) {
       newErrorMessage = "Invalid SPARQL query.";
     }
-    if (!newErrorMessage && formData.comunicaContextCheck) {
+    if (!newErrorMessage && isChecked(formData.comunicaContextCheck)) {
       if (validFlags['comunicaContext'] === false) {
         newErrorMessage = "Invalid Comunica context configuration.";
       }
     }
-    if (!newErrorMessage && formData.sourceIndexCheck) {
+    if (!newErrorMessage && isChecked(formData.sourceIndexCheck)) {
       if (validFlags['indexSourceQuery'] === false) {
         newErrorMessage = "Invalid indirect sources SPARQL query.";
       }
     }
-    if (!newErrorMessage && formData.directVariablesCheck) {
+    if (!newErrorMessage && isChecked(formData.directVariablesCheck)) {
       if (validFlags['variables'] === false) {
         newErrorMessage = "Invalid fixed templated variables specification.";
       }
     }
-    if (!newErrorMessage && formData.indirectVariablesCheck) {
+    if (!newErrorMessage && isChecked(formData.indirectVariablesCheck)) {
       for (const [key, value] of Object.entries(validFlags)) {
         if (key.startsWith('indirectVariablesQuery-') && value === false) {
           newErrorMessage = `Invalid SPARQL query to retrieve variable(s) from source(s).`;
@@ -122,12 +121,12 @@ export default function CustomEditor(props) {
         }
       }
     }
-    if (!newErrorMessage && formData.askQueryCheck) {
+    if (!newErrorMessage && isChecked(formData.askQueryCheck)) {
       if (validFlags['askQuery'] === false) {
         newErrorMessage = "Invalid ASK query specification.";
       }
     }
-    if (!newErrorMessage && formData.httpProxiesCheck) {
+    if (!newErrorMessage && isChecked(formData.httpProxiesCheck)) {
       if (validFlags['httpProxies'] === false) {
         newErrorMessage = "Invalid HTTP proxies specification.";
       }
@@ -358,12 +357,12 @@ export default function CustomEditor(props) {
               <FormControlLabel
                 control={<Checkbox
                   name='comunicaContextCheck'
-                  checked={!!formData.comunicaContextCheck}
+                  checked={isChecked(formData.comunicaContextCheck)}
                   onChange={
                     () => {
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'comunicaContextCheck': !formData.comunicaContextCheck,
+                        'comunicaContextCheck': !isChecked(formData.comunicaContextCheck),
                       }));
                     }
                   }
@@ -372,7 +371,7 @@ export default function CustomEditor(props) {
 
             </div>
             <TextField
-              required={!formData.sourceIndexCheck}
+              required={!isChecked(formData.sourceIndexCheck)}
               fullWidth
               name="source"
               label="Fixed data source(s)"
@@ -385,26 +384,10 @@ export default function CustomEditor(props) {
             />
 
 
-            {formData.comunicaContextCheck &&
+            {isChecked(formData.comunicaContextCheck) &&
               <div>
-                {/* <TextField
-                  required={isChecked(formData.comunicaContextCheck)}
-                  label="Comunica context configuration"
-                  name="comunicaContext"
-                  multiline
-                  fullWidth
-                  error={parsingErrorComunica}
-                  minRows={5}
-                  variant="outlined"
-                  helperText={`Write the extra configurations in JSON-format.${parsingErrorComunica && ' (Check syntax)'}`}
-                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
-                  placeholder={defaultExtraComunicaContext}
-                  onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
-                  onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
-                  sx={{ marginBottom: '16px' }}
-                /> */}
                 <JsonEditField
-                  required={isChecked(formData.comunicaContextCheck)}
+                  required
                   label="Comunica context configuration"
                   name="comunicaContext"
                   helperText="Enter your extra comunica context in JSON-format."
@@ -417,21 +400,21 @@ export default function CustomEditor(props) {
             <FormControlLabel
               control={<Checkbox
                 name='sourceIndexCheck'
-                checked={!!formData.sourceIndexCheck}
+                checked={isChecked(formData.sourceIndexCheck)}
                 onChange={
                   () => {
                     setFormData((prevFormData) => ({
                       ...prevFormData,
-                      'sourceIndexCheck': !formData.sourceIndexCheck,
+                      'sourceIndexCheck': !isChecked(formData.sourceIndexCheck),
                     }));
                   }
                 }
               />} label="Indirect sources" />
 
-            {formData.sourceIndexCheck &&
+            {isChecked(formData.sourceIndexCheck) &&
               <div>
                 <TextField
-                  required={isChecked(formData.sourceIndexCheck)}
+                  required
                   fullWidth
                   name="indexSourceUrl"
                   label="Index file URL"
@@ -444,7 +427,7 @@ export default function CustomEditor(props) {
                 />
 
                 <SparqlEditField
-                  required={isChecked(formData.sourceIndexCheck)}
+                  required
                   label="Indirect sources SPARQL query"
                   name="indexSourceQuery"
                   helperText="Enter a SPARQL query to get the sources from the index file here."
@@ -462,38 +445,22 @@ export default function CustomEditor(props) {
               <FormControlLabel
                 control={<Checkbox
                   name='directVariablesCheck'
-                  checked={!!formData.directVariablesCheck}
+                  checked={isChecked(formData.directVariablesCheck)}
                   onChange={
                     () => {
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'directVariablesCheck': !formData.directVariablesCheck,
+                        'directVariablesCheck': !isChecked(formData.directVariablesCheck),
                       }));
                     }
                   }
                 />} label="Fixed Variables" />
 
-              {formData.directVariablesCheck &&
+              {isChecked(formData.directVariablesCheck) &&
                 <div>
                   <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
-                  {/* <TextField
-                    required={isChecked(formData.directVariablesCheck)}
-                    label="Templated query variables"
-                    name="variables"
-                    error={parsingErrorTemplate}
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    variant="outlined"
-                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Check syntax)' : '.'}`}
-                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables, null, 5) : formData.variables : formData.variables === '' ? '' : defaultTemplateOptions}
-                    placeholder={defaultTemplateOptions}
-                    onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
-                    onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
-                    sx={{ marginBottom: '16px' }}
-                  /> */}
                   <JsonEditField
-                    required={isChecked(formData.directVariablesCheck)}
+                    required
                     label="Fixed templated query variables"
                     name="variables"
                     helperText="Enter your fixed templated variables specification in JSON-format."
@@ -506,18 +473,18 @@ export default function CustomEditor(props) {
               <FormControlLabel
                 control={<Checkbox
                   name='indirectVariablesCheck'
-                  checked={!!formData.indirectVariablesCheck}
+                  checked={isChecked(formData.indirectVariablesCheck)}
                   onChange={
                     () => {
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'indirectVariablesCheck': !formData.indirectVariablesCheck,
+                        'indirectVariablesCheck': !isChecked(formData.indirectVariablesCheck),
                       }));
                     }
                   }
                 />} label="Indirect Variables" />
 
-              {formData.indirectVariablesCheck &&
+              {isChecked(formData.indirectVariablesCheck) &&
                 <div>
                   <div style={{ marginBottom: '20px' }}>
                     <Typography variant="base" sx={{ color: '#777' }}> Give one or more SPARQL queries to retrieve variable(s) from source(s).</Typography>
@@ -526,7 +493,7 @@ export default function CustomEditor(props) {
                     indirectVariablesQueryList.map((ivQuery, index) => (
                       <div key={index} style={{ position: 'relative' }}>
                         <SparqlEditField
-                          required={true}
+                          required
                           label={`SPARQL query ${index + 1} for indirect variable(s)`}
                           name={`indirectVariablesQuery-${index}`}
                           helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve variables.`}
@@ -560,37 +527,21 @@ export default function CustomEditor(props) {
               <FormControlLabel
                 control={<Checkbox
                   name='askQueryCheck'
-                  checked={!!formData.askQueryCheck}
+                  checked={isChecked(formData.askQueryCheck)}
                   onChange={
                     () => {
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'askQueryCheck': !formData.askQueryCheck,
+                        'askQueryCheck': !isChecked(formData.askQueryCheck),
                       }));
                     }
                   }
                 />} label="ASK query" />
 
-              {formData.askQueryCheck &&
+              {isChecked(formData.askQueryCheck) &&
                 <div>
-                  {/* <TextField
-                    required={isChecked(formData.askQueryCheck)}
-                    label="Creating an ask query"
-                    name="askQuery"
-                    error={parsingErrorAsk}
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    variant="outlined"
-                    helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Check syntax)' : '.'}`}
-                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery, null, 2) : formData.askQuery : formData.askQuery === '' ? '' : defaultAskQueryDetails}
-                    placeholder={defaultAskQueryDetails}
-                    onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
-                    onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
-                    sx={{ marginBottom: '16px' }}
-                  /> */}
                   <JsonEditField
-                    required={isChecked(formData.askQueryCheck)}
+                    required
                     label="Creating an ask query"
                     name="askQuery"
                     helperText="Enter your ASK query specification in JSON-format."
@@ -603,37 +554,21 @@ export default function CustomEditor(props) {
               <FormControlLabel
                 control={<Checkbox
                   name='httpProxiesCheck'
-                  checked={!!formData.httpProxiesCheck}
+                  checked={isChecked(formData.httpProxiesCheck)}
                   onChange={
                     () => {
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'httpProxiesCheck': !formData.httpProxiesCheck,
+                        'httpProxiesCheck': !isChecked(formData.httpProxiesCheck),
                       }));
                     }
                   }
                 />} label="Http proxies" />
 
-              {formData.httpProxiesCheck &&
+              {isChecked(formData.httpProxiesCheck) &&
                 <div>
-                  {/* <TextField
-                    required={isChecked(formData.httpProxiesCheck)}
-                    label="Specifying http proxies"
-                    name="httpProxies"
-                    error={parsingErrorHttpProxies}
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    variant="outlined"
-                    helperText={`Write http proxies in JSON-format${parsingErrorHttpProxies ? ' (Check syntax)' : '.'}`}
-                    value={!!formData.httpProxies ? typeof formData.httpProxies === 'object' ? JSON.stringify(formData.httpProxies, null, 2) : formData.httpProxies : formData.httpProxies === '' ? '' : defaultHttpProxiesDetails}
-                    placeholder={defaultHttpProxiesDetails}
-                    onClick={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}
-                    onChange={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}
-                    sx={{ marginBottom: '16px' }}
-                  /> */}
                   <JsonEditField
-                    required={isChecked(formData.httpProxiesCheck)}
+                    required
                     label="Specifying HTTP proxies"
                     name="httpProxies"
                     helperText="Enter your HTTP proxies specification JSON-format."
