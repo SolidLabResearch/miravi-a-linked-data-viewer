@@ -376,7 +376,7 @@ export default function CustomEditor(props) {
               name="source"
               label="Fixed data source(s)"
               placeholder="http://example.com/source1; http://example.com/source2"
-              helperText="Give the source URL(s) for the query. Separate URLs with '; '.  (These are the comunica context sources)"
+              helperText="Give the source URL(s) for the query. Separate URLs with '; '.  (These are the Comunica context sources)"
               variant="outlined"
               value={!!formData.source ? formData.source : ''}
               onChange={handleChange}
@@ -390,7 +390,7 @@ export default function CustomEditor(props) {
                   required
                   label="Comunica context configuration"
                   name="comunicaContext"
-                  helperText="Enter your extra comunica context in JSON-format."
+                  helperText="Enter your extra Comunica context in JSON-format."
                   value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
                   onChange={handleChange}
                 />

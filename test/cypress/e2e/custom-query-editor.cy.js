@@ -43,6 +43,43 @@ describe("Custom Query Editor tests", () => {
     cy.contains("Invalid SPARQL query.");
   });
 
+  it("Create a new simple query with a Comunica context", () => {
+    cy.visit("/#/customQuery");
+
+    cy.get('input[name="name"]').type("new simple query with comunica context");
+    cy.get('textarea[name="description"]').type("new description");
+
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
+
+      SELECT * WHERE {
+          ?list schema:name ?listTitle;
+            schema:itemListElement [
+            schema:name ?bookTitle;
+            schema:creator [
+              schema:name ?authorName
+            ]
+          ].
+      }`);
+
+    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list ; http://huppledepup.doesnotexist.com/we-want-lenient");
+
+    cy.get('input[name="comunicaContextCheck"]').click();
+
+    cy.setCodeMirrorValue("#json-edit-field-comunicaContext", `{"lenient": truezzz}`);
+
+    cy.contains("Invalid Comunica context configuration.");
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid Comunica context configuration.");
+
+    cy.setCodeMirrorValue("#json-edit-field-comunicaContext", `{"lenient": true}`);
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    // Checking if the book query works
+    cy.contains("Colleen Hoover").should('exist');
+  });
+
   it("Create a new query, with multiple sources", () => {
     cy.visit("/#/customQuery");
 
