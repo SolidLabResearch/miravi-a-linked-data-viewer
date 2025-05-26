@@ -17,6 +17,37 @@ import { SparqlEditField } from "./sparqlEditField";
 
 import { JsonEditField } from "./jsonEditField";
 
+const defaultSparqlQuery = `SELECT ?s ?p ?o
+WHERE {
+  ?s ?p ?o
+}`;
+const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?source
+WHERE {
+  ?s rdfs:seeAlso ?source
+}`;
+const defaultSparqlQueryIndirectVariables = `PREFIX schema: <http://schema.org/>
+  
+SELECT DISTINCT ?genre
+WHERE {
+  ?list schema:genre ?genre
+}
+ORDER BY ?genre`;
+
+const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
+const defaultTemplateOptions = JSON.stringify(
+  {
+    "variableOne": [
+      "option1",
+      "(etc...)"
+    ],
+    "(etc...)": []
+  }, null, 2);
+const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
+const defaultHttpProxiesDetails = JSON.stringify([{ "urlStart": "http://www.example.com/path-xyz", "httpProxy": "http://myproxy.org/" }], null, 2);
+const allCheckboxNames = ['comunicaContextCheck', 'sourceIndexCheck', 'directVariablesCheck', 'indirectVariablesCheck', 'askQueryCheck', 'httpProxiesCheck'];
+
 export default function CustomEditor(props) {
   const session = getDefaultSession();
   const loggedIn = session.info.isLoggedIn;
@@ -28,123 +59,155 @@ export default function CustomEditor(props) {
     description: '',
     source: '',
     queryString: '',
-    comunicaContext: '',
     comunicaContextCheck: false,
     sourceIndexCheck: false,
-    askQueryCheck: false,
-    httpProxiesCheck: false,
     directVariablesCheck: false,
     indirectVariablesCheck: false,
+    askQueryCheck: false,
+    httpProxiesCheck: false,
   });
   const [validFlags, setValidFlags] = useState({});
-
   const [errorWhileLoading, setErrorWhileLoading] = useState("");
   const [parsingError, setParsingError] = useState("");
-  const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
-  const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
-  const [parsingErrorHttpProxies, setParsingErrorHttpProxies] = useState(false);
-  const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
-
-  // Default placeholders for the forms
-  const defaultSparqlQuery = `SELECT ?s ?p ?o
-WHERE {
-  ?s ?p ?o
-}`;
-  const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-SELECT ?source
-WHERE {
-  ?s rdfs:seeAlso ?source
-}`;
-  const defaultSparqlQueryIndirectVariables = `PREFIX schema: <http://schema.org/>
-  
-SELECT DISTINCT ?genre
-WHERE {
-  ?list schema:genre ?genre
-}
-ORDER BY ?genre`;
   const [indirectVariableSourceList, setIndirectVariableSourceList] = useState([defaultSparqlQueryIndirectVariables]);
-
-  const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
-  const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
-  const defaultHttpProxiesDetails = JSON.stringify([{ "urlStart": "http://www.example.com/path-xyz", "httpProxy": "http://myproxy.org/" }], null, 2);
-  const defaultTemplateOptions = JSON.stringify(
-    {
-      "variableOne": [
-        "option1",
-        "(etc...)"
-      ],
-      "(etc...)": []
-    }, null, 5);
-
 
   useEffect(() => {
     try {
       let searchParams;
       if (props.newQuery) {
         searchParams = new URLSearchParams(location.search);
-    } else {
-        const edittingQuery = configManager.getQueryById(props.id);
-        searchParams = edittingQuery.searchParams;
+      } else {
+        const editingQuery = configManager.getQueryById(props.id);
+        searchParams = editingQuery.searchParams;
       }
       const obj = {}
       searchParams.forEach((value, key) => {
         obj[key] = value;
-      })
-
+      });
+      normalizeCheckboxValues(obj, obj);
       if (obj.indirectQueries) {
         setIndirectVariableSourceList(JSON.parse(obj.indirectQueries));
       }
       setFormData(obj);
-
     } catch (error) {
       setErrorWhileLoading("Apologies, something went wrong with the loading of your custom query...");
     }
   }, [location.search]);
 
+  // TODO: move into handleChange
+  useEffect(() => {
+    let newErrorMessage = "";
+    // only one error message is set, so the first one that occurs is the one that is shown
+    if (validFlags['queryString'] === false) {
+      newErrorMessage = "Invalid SPARQL query.";
+    }
+    if (!newErrorMessage && formData.comunicaContextCheck) {
+      if (validFlags['comunicaContext'] === false) {
+        newErrorMessage = "Invalid Comunica context configuration.";
+      }
+    }
+    if (!newErrorMessage && formData.sourceIndexCheck) {
+      if (validFlags['indexSourceQuery'] === false) {
+        newErrorMessage = "Invalid indirect sources SPARQL query.";
+      }
+    }
+    if (!newErrorMessage && formData.directVariablesCheck) {
+      if (validFlags['variables'] === false) {
+        newErrorMessage = "Invalid fixed templated variables specification.";
+      }
+    }
+    if (!newErrorMessage && formData.indirectVariablesCheck) {
+      for (const [key, value] of Object.entries(validFlags)) {
+        if (key.startsWith('indirectVariablesQuery-') && value === false) {
+          newErrorMessage = `Invalid SPARQL query to retrieve variable(s) from source(s).`;
+          break;
+        }
+      }
+    }
+    if (!newErrorMessage && formData.askQueryCheck) {
+      if (validFlags['askQuery'] === false) {
+        newErrorMessage = "Invalid ASK query specification.";
+      }
+    }
+    if (!newErrorMessage && formData.httpProxiesCheck) {
+      if (validFlags['httpProxies'] === false) {
+        newErrorMessage = "Invalid HTTP proxies specification.";
+      }
+    }
+    setParsingError(newErrorMessage);
+  }, [formData, validFlags]);
 
-  // This function handles the submission of the form. Both for editting as for creation. This distinction is made by the `props.newQuery`.
+  const normalizeCheckboxValues = (fromObject, toObject) => {
+    for (const c of allCheckboxNames) {
+      if (fromObject[c] === 'on' || fromObject[c] === true) {
+        toObject[c] = true;
+      } else if (fromObject[c] === 'off' || fromObject[c] === false) {
+        toObject[c] = false;
+      }
+    }
+  };
+
+  // TODO avoid
+  const ensureBoolean = (value) => value === 'on' || value === true;
+
+
+
+  // This function handles the submission of the form. Both for editing as for creation. This distinction is made by the `props.newQuery`.
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (Object.values(validFlags).some((x) => x === false)) {
-      setParsingError("Invalid query. Check the SPARQL fields.");
-    } else if (parsingErrorComunica || parsingErrorAsk || parsingErrorHttpProxies || parsingErrorTemplate) {
-      setParsingError("Invalid query. Check the JSON fields.");
-    } else {
-      setParsingError("");
-      const htmlFormData = new FormData(event.currentTarget);
-      let jsonData = Object.fromEntries(htmlFormData.entries());
-      // LOG console.log(`----- jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
-      // LOG console.log(`----- formData (from state):\n${JSON.stringify(formData, null, 2)}`);
+    /* LOG */ console.log("----- customEditor.handleSubmit");
 
-      // not all required properties are in jsonDataFromHtml; add them here from formData
-      const additionalProperties = ["queryString", "indexSourceQuery"];
-      for (const p of additionalProperties) {
-        if (formData.hasOwnProperty(p)) {
-          jsonData[p] = formData[p];
-        }
-      }
-
-      if (jsonData.indirectVariablesCheck) {
-        jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
-      }
-      // LOG console.log(`----- jsonData (finally):\n${JSON.stringify(jsonData, null, 2)}`);
-
-      const searchParams = new URLSearchParams(jsonData);
-      jsonData.searchParams = searchParams;
-
-      if (props.newQuery) {
-        navigate({ search: searchParams.toString() });
-
-        configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
-        addQuery(jsonData);
-      }
-      else {
-        const customQuery = configManager.getQueryById(props.id);
-        updateQuery(jsonData, customQuery);
-      }
+    if (parsingError) {
+      /* LOG */ console.log(`not submitting, parsingError: ${parsingError}`);
+      return;
     }
+
+    const htmlFormData = new FormData(event.currentTarget);
+    let jsonData = Object.fromEntries(htmlFormData.entries());
+    /* LOG */ console.log(`jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
+    /* LOG */ console.log(`formData (from state):\n${JSON.stringify(formData, null, 2)}`);
+    normalizeCheckboxValues(jsonData, jsonData);
+
+    jsonData.queryString = formData.queryString;
+    if (jsonData.sourceIndexCheck) {
+      jsonData.indexSourceQuery = formData.indexSourceQuery;
+    }
+    if (jsonData.comunicaContextCheck) {
+      jsonData.comunicaContext = formData.comunicaContext;
+    }
+    if (jsonData.sourceIndexCheck) {
+      jsonData.indexSourceQuery = formData.indexSourceQuery;
+    }
+    if (jsonData.directVariablesCheck) {
+      jsonData.variables = formData.variables;
+    }
+    if (jsonData.indirectVariablesCheck) {
+      jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
+    }
+    if (jsonData.askQueryCheck) {
+      jsonData.askQuery = formData.askQuery;
+    }
+    if (jsonData.httpProxiesCheck) {
+      jsonData.httpProxies = formData.httpProxies;
+    }
+
+    /* LOG */ console.log(`jsonData (finally):\n${JSON.stringify(jsonData, null, 2)}`);
+
+    const searchParams = new URLSearchParams(jsonData);
+    jsonData.searchParams = searchParams;
+
+    if (props.newQuery) {
+      navigate({ search: searchParams.toString() });
+
+      configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+      addQuery(jsonData);
+    }
+    else {
+      const customQuery = configManager.getQueryById(props.id);
+      updateQuery(jsonData, customQuery);
+    }
+  
   };
 
   // These functions handle the entry changes from the user's input in the form
@@ -167,7 +230,6 @@ ORDER BY ?genre`;
         [name]: validFlag
       }));
     }
-    setParsingError("");
   };
 
   const handleIndirectVariablesChange = (event, index) => {
@@ -176,27 +238,7 @@ ORDER BY ?genre`;
     setIndirectVariableSourceList(newList);
   }
 
-  const handleJSONparsing = (event, errorSetter) => {
-    const { name, value } = event.target;
-    errorSetter(false);
-
-    let parsedValue;
-    try {
-      parsedValue = JSON.parse(value);
-    } catch (error) {
-      errorSetter(true);
-      parsedValue = value;
-    }
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: parsedValue,
-    }));
-  };
-
   // These functions serve for a correct parsing of JSON objects, lists, etc. right before submitting
-  const ensureBoolean = (value) => value === 'on' || value === true;
-
   const parseAllObjectsToJSON = (dataWithStrings) => {
 
     const parsedObject = dataWithStrings;
@@ -354,7 +396,6 @@ ORDER BY ?genre`;
                   checked={!!formData.comunicaContextCheck}
                   onChange={
                     () => {
-                      setParsingErrorComunica(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'comunicaContextCheck': !formData.comunicaContextCheck,
@@ -381,7 +422,7 @@ ORDER BY ?genre`;
 
             {formData.comunicaContextCheck &&
               <div>
-                <TextField
+                {/* <TextField
                   required={ensureBoolean(formData.comunicaContextCheck)}
                   label="Comunica context configuration"
                   name="comunicaContext"
@@ -396,15 +437,14 @@ ORDER BY ?genre`;
                   onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
                   sx={{ marginBottom: '16px' }}
-                />
+                /> */}
                 <JsonEditField
                   required={ensureBoolean(formData.comunicaContextCheck)}
                   label="Comunica context configuration"
                   name="comunicaContext"
-                  helperText="Write the extra configurations in JSON-format."
+                  helperText="Enter your extra comunica context in JSON-format."
                   value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
-                  //onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
-                  //onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
+                  onChange={handleChange}
                 />
               </div>
             }
@@ -440,9 +480,9 @@ ORDER BY ?genre`;
 
                 <SparqlEditField
                   required={ensureBoolean(formData.sourceIndexCheck)}
-                  label="SPARQL query"
+                  label="Indirect sources SPARQL query"
                   name="indexSourceQuery"
-                  helperText="Enter a SPARQL query to get the sources from the index file."
+                  helperText="Enter a SPARQL query to get the sources from the index file here."
                   value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
                   onChange={handleChange}
                 />
@@ -460,7 +500,6 @@ ORDER BY ?genre`;
                   checked={!!formData.directVariablesCheck}
                   onChange={
                     () => {
-                      setParsingErrorTemplate(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'directVariablesCheck': !formData.directVariablesCheck,
@@ -472,7 +511,7 @@ ORDER BY ?genre`;
               {formData.directVariablesCheck &&
                 <div>
                   <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
-                  <TextField
+                  {/* <TextField
                     required={ensureBoolean(formData.directVariablesCheck)}
                     label="Templated query variables"
                     name="variables"
@@ -487,6 +526,14 @@ ORDER BY ?genre`;
                     onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
                     sx={{ marginBottom: '16px' }}
+                  /> */}
+                  <JsonEditField
+                    required={ensureBoolean(formData.directVariablesCheck)}
+                    label="Fixed templated query variables"
+                    name="variables"
+                    helperText="Enter your fixed templated variables specification in JSON-format."
+                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables, null, 5) : formData.variables : formData.variables === '' ? '' : defaultTemplateOptions}
+                    onChange={handleChange}
                   />
                 </div>
               }
@@ -497,7 +544,6 @@ ORDER BY ?genre`;
                   checked={!!formData.indirectVariablesCheck}
                   onChange={
                     () => {
-                      setParsingErrorTemplate(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'indirectVariablesCheck': !formData.indirectVariablesCheck,
@@ -509,16 +555,16 @@ ORDER BY ?genre`;
               {formData.indirectVariablesCheck &&
                 <div>
                   <div style={{ marginBottom: '20px' }}>
-                    <Typography variant="base" sx={{ color: '#777' }}> Give one or more queries to retrieve the variable(s) from the source(s).</Typography>
+                    <Typography variant="base" sx={{ color: '#777' }}> Give one or more SPARQL queries to retrieve variable(s) from source(s).</Typography>
                   </div>
                   {
                     indirectVariableSourceList.map((sourceString, index) => (
                       <div key={index} style={{ position: 'relative' }}>
                         <SparqlEditField
                           required={ensureBoolean(formData.indirectVariablesCheck)}
-                          label={`Query ${index + 1} for indirect variable(s)`}
+                          label={`SPARQL query ${index + 1} for indirect variable(s)`}
                           name={`indirectVariablesQuery-${index}`}
-                          helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
+                          helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve variables.`}
                           value={sourceString}
                           onChange={handleChange}
                         />
@@ -552,7 +598,6 @@ ORDER BY ?genre`;
                   checked={!!formData.askQueryCheck}
                   onChange={
                     () => {
-                      setParsingErrorAsk(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'askQueryCheck': !formData.askQueryCheck,
@@ -563,7 +608,7 @@ ORDER BY ?genre`;
 
               {formData.askQueryCheck &&
                 <div>
-                  <TextField
+                  {/* <TextField
                     required={ensureBoolean(formData.askQueryCheck)}
                     label="Creating an ask query"
                     name="askQuery"
@@ -578,6 +623,14 @@ ORDER BY ?genre`;
                     onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
                     sx={{ marginBottom: '16px' }}
+                  /> */}
+                  <JsonEditField
+                    required={ensureBoolean(formData.askQueryCheck)}
+                    label="Creating an ask query"
+                    name="askQuery"
+                    helperText="Enter your ASK query specification in JSON-format."
+                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery, null, 2) : formData.askQuery : formData.askQuery === '' ? '' : defaultAskQueryDetails}
+                    onChange={handleChange}
                   />
                 </div>
               }
@@ -588,7 +641,6 @@ ORDER BY ?genre`;
                   checked={!!formData.httpProxiesCheck}
                   onChange={
                     () => {
-                      setParsingErrorHttpProxies(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
                         'httpProxiesCheck': !formData.httpProxiesCheck,
@@ -599,7 +651,7 @@ ORDER BY ?genre`;
 
               {formData.httpProxiesCheck &&
                 <div>
-                  <TextField
+                  {/* <TextField
                     required={ensureBoolean(formData.httpProxiesCheck)}
                     label="Specifying http proxies"
                     name="httpProxies"
@@ -614,6 +666,14 @@ ORDER BY ?genre`;
                     onClick={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}
                     onChange={(e) => handleJSONparsing(e, setParsingErrorHttpProxies)}
                     sx={{ marginBottom: '16px' }}
+                  /> */}
+                  <JsonEditField
+                    required={ensureBoolean(formData.httpProxiesCheck)}
+                    label="Specifying HTTP proxies"
+                    name="httpProxies"
+                    helperText="Enter your HTTP proxies specification JSON-format."
+                    value={!!formData.httpProxies ? typeof formData.httpProxies === 'object' ? JSON.stringify(formData.httpProxies, null, 2) : formData.httpProxies : formData.httpProxies === '' ? '' : defaultHttpProxiesDetails}
+                    onChange={handleChange}
                   />
                 </div>
               }

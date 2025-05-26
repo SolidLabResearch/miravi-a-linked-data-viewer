@@ -10,7 +10,7 @@ export default defineConfig({
     video: false,
     setupNodeEvents(on, config) {
       // uncomment next line only temporarily to see app's console.log in cypress test output (https://www.npmjs.com/package/cypress-log-to-output)
-      // cypressLogToOutput.install(on);
+      cypressLogToOutput.install(on);
       return config;
     },
   },

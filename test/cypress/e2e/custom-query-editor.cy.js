@@ -41,9 +41,10 @@ describe("Custom Query Editor tests", () => {
 
     cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
 
+    cy.contains("Invalid SPARQL query.");
     cy.get('button[type="submit"]').click();
+    cy.contains("Invalid SPARQL query.");
 
-    cy.contains("Invalid query. Check the SPARQL fields.");
   });
 
   it("Create a new query, with multiple sources", () => {
@@ -99,16 +100,15 @@ ASK WHERE {
 
     cy.get('input[name="askQueryCheck"]').click()
 
-    cy.get('textarea[name="askQuery"]').clear()
-    cy.get('textarea[name="askQuery"]').type('"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}', { parseSpecialCharSequences: false })
-
-    cy.get('button[type="submit"]').click();
+    cy.setCodeMirrorValue("#json-edit-field-askQuery", '"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}')
 
     // Check faulty input error
-    cy.contains("Invalid query. Check the JSON fields.");
+    cy.contains("Invalid ASK query specification.");
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid ASK query specification.");
 
-    cy.get('textarea[name="askQuery"]').clear()
-    cy.get('textarea[name="askQuery"]').type('{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}', { parseSpecialCharSequences: false })
+
+    cy.setCodeMirrorValue("#json-edit-field-askQuery", '{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}')
 
     cy.get('button[type="submit"]').click();
 
@@ -135,16 +135,14 @@ SELECT ?name ?birthDate_int WHERE {
 
     cy.get('input[name="httpProxiesCheck"]').click()
 
-    cy.get('textarea[name="httpProxies"]').clear()
-    cy.get('textarea[name="httpProxies"]').type('{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
-
-    cy.get('button[type="submit"]').click();
+    cy.setCodeMirrorValue("#json-edit-field-httpProxies", '{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
 
     // Check faulty input error
-    cy.contains("Invalid query. Check the JSON fields.");
+    cy.contains("Invalid HTTP proxies specification.");
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid HTTP proxies specification.");
 
-    cy.get('textarea[name="httpProxies"]').clear()
-    cy.get('textarea[name="httpProxies"]').type('[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
+    cy.setCodeMirrorValue("#json-edit-field-httpProxies", '[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false })
 
     cy.get('button[type="submit"]').click();
 
@@ -164,16 +162,16 @@ SELECT ?name ?birthDate_int WHERE {
     cy.checkCodeMirrorValue("#sparql-edit-field-queryString", 'Sparql query text');
 
     cy.get('input[name="source"]').should('have.value', "The Comunica Source");
-    cy.get('textarea[name="comunicaContext"]').should('have.value', `{"Advanced Comunica Context":true}`);
+    cy.checkCodeMirrorValue("#json-edit-field-comunicaContext", `{"Advanced Comunica Context":true}`);
 
     cy.get('input[name="indexSourceUrl"]').should('have.value', "Index Source");
     cy.checkCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "Index Query ");
 
-    cy.get('textarea[name="askQuery"]').should('have.value', `{"trueText":" filled in","falseText":"not filled in"}`);
+    cy.checkCodeMirrorValue("#json-edit-field-askQuery", `{"trueText":" filled in","falseText":"not filled in"}`);
 
-    cy.get('textarea[name="httpProxies"]').should('have.value', `[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}]`);
+    cy.checkCodeMirrorValue("#json-edit-field-httpProxies", `[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}]`);
 
-    cy.get('textarea[name="variables"]').should('have.value', `{"firstvariables":["only one"]}`);
+    cy.checkCodeMirrorValue("#json-edit-field-variables", `{"firstvariables":["only one"]}`);
 
   })
 
@@ -278,8 +276,7 @@ SELECT ?name ?sameAs_url WHERE {
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="directVariablesCheck"]').click()
 
-    cy.get('textarea[name="variables"]').clear()
-    cy.get('textarea[name="variables"]').type(`{
+    cy.setCodeMirrorValue("#json-edit-field-variables", `{
         "genre": [
           "\\"Romantic\\"",
           "\\"Baroque\\"",
@@ -396,7 +393,9 @@ ORDER BY ?componentName`
     cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "this is not a valid SPARQL query")
     cy.get('button[type="submit"]').click();
 
-    cy.contains("Invalid query. Check the SPARQL fields.");
+    cy.contains("Invalid indirect sources SPARQL query.");
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid indirect sources SPARQL query.");
 
   })
 
@@ -423,8 +422,7 @@ ORDER BY ?componentName`
     cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
     cy.get('input[name="directVariablesCheck"]').click()
 
-    cy.get('textarea[name="variables"]').clear()
-    cy.get('textarea[name="variables"]').type(`{
+    cy.setCodeMirrorValue("#json-edit-field-variables", `{
           "genre": [
             "\\"Romantic\\"",
             "\\"Baroque\\"",
@@ -509,8 +507,7 @@ ORDER BY ?componentName`
 
     cy.get('input[name="directVariablesCheck"]').click()
 
-    cy.get('textarea[name="variables"]').clear()
-    cy.get('textarea[name="variables"]').type(`{
+    cy.setCodeMirrorValue("#json-edit-field-variables", `{
           "genre": [
             "\\"Romantic\\"",
             "\\"Baroque\\"",
@@ -599,7 +596,9 @@ schema:sameAs ?sameAsUrl;
 
     cy.get('button[type="submit"]').click();
 
-    cy.contains("Invalid query. Check the SPARQL fields.");
+    cy.contains("Invalid SPARQL query to retrieve variable(s) from source(s).");
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid SPARQL query to retrieve variable(s) from source(s).");
 
     // Deleting the second indirect variable query should also clear the error status
     cy.get('[data-testid="DeleteIcon"]').last().click();

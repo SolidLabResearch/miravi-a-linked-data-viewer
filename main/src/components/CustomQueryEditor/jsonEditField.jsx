@@ -67,11 +67,13 @@ export function JsonEditField({
       cmInstance.current.on('change', () => {
         handleChange();
       });
+
+      // force first change event
+      handleChange();
     }
 
     return () => {
       if (cmInstance.current) {
-        cmInstance.current.toTextArea?.(); // if created from a textarea
         cmInstance.current.getWrapperElement().remove(); // remove DOM node and count on GC to clean up
         cmInstance.current = null;
       }

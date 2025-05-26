@@ -52,7 +52,7 @@ SELECT ?name ?sameAs_url WHERE {
     schema:sameAs ?sameAs_url;
 }`);
 
-    cy.get('textarea[name="variables"]').should('have.value', `{"genre":["\\"Romantic\\"","\\"Baroque\\"","\\"Classical\\""]}`)
+    cy.checkCodeMirrorValue("#json-edit-field-variables", `{"genre":["\\"Romantic\\"","\\"Baroque\\"","\\"Classical\\""]}`)
 
 
 
@@ -163,7 +163,7 @@ SELECT DISTINCT ?source WHERE {
 
     cy.url().should('include', 'customQuery');
 
-    cy.get('textarea[name="askQuery"]').should('have.value', `{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}`);
+    cy.checkCodeMirrorValue("#json-edit-field-askQuery", `{"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}`);
   })
 
   it("http proxies", () => {
@@ -175,7 +175,7 @@ SELECT DISTINCT ?source WHERE {
 
     cy.url().should('include', 'customQuery');
 
-    cy.get('textarea[name="httpProxies"]').should('have.value', `[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}]`);
+    cy.checkCodeMirrorValue("#json-edit-field-httpProxies", `[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}]`);
   })
 
 })
