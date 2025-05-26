@@ -138,7 +138,6 @@ export default function CustomEditor(props) {
   const isChecked = (value) => value === 'on' || value === true;
 
   const parseAllObjectsToJSON = (dataWithStrings) => {
-
     const parsedObject = dataWithStrings;
 
     if (isChecked(dataWithStrings.comunicaContextCheck)) {
@@ -223,9 +222,6 @@ export default function CustomEditor(props) {
     collectedData.searchParams = searchParams;
 
     if (props.newQuery) {
-      // TODO wat staat dit hier te doen?
-      navigate({ search: searchParams.toString() });
-
       configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
       
       const creationID = Date.now().toString();
@@ -236,6 +232,7 @@ export default function CustomEditor(props) {
         queryGroupId: "cstm",
         icon: "AutoAwesomeIcon",
       });
+
       navigate(`/${creationID}`);
     } else {
       const customQuery = configManager.getQueryById(props.id);
@@ -249,7 +246,6 @@ export default function CustomEditor(props) {
 
       navigate(`/${customQuery.id}`);
     }
-  
   };
 
   const handleChange = (event) => {
