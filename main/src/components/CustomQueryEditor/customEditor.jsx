@@ -69,7 +69,7 @@ export default function CustomEditor(props) {
   const [validFlags, setValidFlags] = useState({});
   const [errorWhileLoading, setErrorWhileLoading] = useState("");
   const [parsingError, setParsingError] = useState("");
-  const [indirectVariableSourceList, setIndirectVariableSourceList] = useState([defaultSparqlQueryIndirectVariables]);
+  const [indirectVariablesQueryList, setIndirectVariablesQueryList] = useState([defaultSparqlQueryIndirectVariables]);
 
   useEffect(() => {
     try {
@@ -85,7 +85,7 @@ export default function CustomEditor(props) {
         obj[key] = value;
       });
       if (obj.indirectQueries) {
-        setIndirectVariableSourceList(JSON.parse(obj.indirectQueries));
+        setIndirectVariablesQueryList(JSON.parse(obj.indirectQueries));
       }
       setFormData(obj);
     } catch (error) {
@@ -190,37 +190,37 @@ export default function CustomEditor(props) {
     }
 
     const htmlFormData = new FormData(event.currentTarget);
-    let jsonData = Object.fromEntries(htmlFormData.entries());
-    // LOG console.log(`jsonData (from HTML form data):\n${JSON.stringify(jsonData, null, 2)}`);
+    let collectedData = Object.fromEntries(htmlFormData.entries());
+    // LOG console.log(`collectedData (from HTML form data):\n${JSON.stringify(collectedData, null, 2)}`);
     // LOG console.log(`formData (from state):\n${JSON.stringify(formData, null, 2)}`);
 
-    jsonData.queryString = formData.queryString;
-    if (isChecked(jsonData.sourceIndexCheck)) {
-      jsonData.indexSourceQuery = formData.indexSourceQuery;
+    collectedData.queryString = formData.queryString;
+    if (isChecked(collectedData.sourceIndexCheck)) {
+      collectedData.indexSourceQuery = formData.indexSourceQuery;
     }
-    if (isChecked(jsonData.comunicaContextCheck)) {
-      jsonData.comunicaContext = formData.comunicaContext;
+    if (isChecked(collectedData.comunicaContextCheck)) {
+      collectedData.comunicaContext = formData.comunicaContext;
     }
-    if (isChecked(jsonData.sourceIndexCheck)) {
-      jsonData.indexSourceQuery = formData.indexSourceQuery;
+    if (isChecked(collectedData.sourceIndexCheck)) {
+      collectedData.indexSourceQuery = formData.indexSourceQuery;
     }
-    if (isChecked(jsonData.directVariablesCheck)) {
-      jsonData.variables = formData.variables;
+    if (isChecked(collectedData.directVariablesCheck)) {
+      collectedData.variables = formData.variables;
     }
-    if (isChecked(jsonData.indirectVariablesCheck)) {
-      jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
+    if (isChecked(collectedData.indirectVariablesCheck)) {
+      collectedData.indirectQueries = JSON.stringify(indirectVariablesQueryList);
     }
-    if (isChecked(jsonData.askQueryCheck)) {
-      jsonData.askQuery = formData.askQuery;
+    if (isChecked(collectedData.askQueryCheck)) {
+      collectedData.askQuery = formData.askQuery;
     }
-    if (isChecked(jsonData.httpProxiesCheck)) {
-      jsonData.httpProxies = formData.httpProxies;
+    if (isChecked(collectedData.httpProxiesCheck)) {
+      collectedData.httpProxies = formData.httpProxies;
     }
 
-    // LOG console.log(`jsonData (finally):\n${JSON.stringify(jsonData, null, 2)}`);
+    // LOG console.log(`collectedData (finally):\n${JSON.stringify(collectedData, null, 2)}`);
 
-    const searchParams = new URLSearchParams(jsonData);
-    jsonData.searchParams = searchParams;
+    const searchParams = new URLSearchParams(collectedData);
+    collectedData.searchParams = searchParams;
 
     if (props.newQuery) {
       // TODO wat staat dit hier te doen?
@@ -229,9 +229,9 @@ export default function CustomEditor(props) {
       configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
       
       const creationID = Date.now().toString();
-      const jsonData2 = parseAllObjectsToJSON(jsonData);
+      const jsonData = parseAllObjectsToJSON(collectedData);
       configManager.addQuery({
-        ...jsonData2,
+        ...jsonData,
         id: creationID,
         queryGroupId: "cstm",
         icon: "AutoAwesomeIcon",
@@ -239,9 +239,9 @@ export default function CustomEditor(props) {
       navigate(`/${creationID}`);
     } else {
       const customQuery = configManager.getQueryById(props.id);
-      const jsonData2 = parseAllObjectsToJSON(jsonData);
+      const jsonData = parseAllObjectsToJSON(collectedData);
       configManager.updateQuery({
-        ...jsonData2,
+        ...jsonData,
         id: customQuery.id,
         queryGroupId: customQuery.queryGroupId,
         icon: customQuery.icon
@@ -258,7 +258,11 @@ export default function CustomEditor(props) {
     const result = indirectVariablesQueryRegex.exec(name);
     if (result) {
       const index = result[1];
-      handleIndirectVariablesChange(event, index);
+      setIndirectVariablesQueryList((prevList) => {
+        const newList = [...prevList];
+        newList[index] = value;
+        return newList;
+      });
     } else {
       setFormData((prevFormData) => ({
         ...prevFormData,
@@ -273,18 +277,11 @@ export default function CustomEditor(props) {
     }
   };
 
-  // TODO put inline
-  const handleIndirectVariablesChange = (event, index) => {
-    const newList = [...indirectVariableSourceList];
-    newList[index] = event.target.value;
-    setIndirectVariableSourceList(newList);
+  const handleAddIndirectVariablesQuery = () => {
+    setIndirectVariablesQueryList([...indirectVariablesQueryList, ""]);
   }
-
-  const handleIndirectVariableSource = () => {
-    setIndirectVariableSourceList([...indirectVariableSourceList, ""]);
-  }
-  const handleIndirectVariableSourceRemove = (index) => {
-    setIndirectVariableSourceList((prevList) => {
+  const handleRemoveIndirectVariablesQuery = (index) => {
+    setIndirectVariablesQueryList((prevList) => {
       const newList = [...prevList];
       newList.splice(index, 1);
       return newList;
@@ -530,21 +527,21 @@ export default function CustomEditor(props) {
                     <Typography variant="base" sx={{ color: '#777' }}> Give one or more SPARQL queries to retrieve variable(s) from source(s).</Typography>
                   </div>
                   {
-                    indirectVariableSourceList.map((sourceString, index) => (
+                    indirectVariablesQueryList.map((ivQuery, index) => (
                       <div key={index} style={{ position: 'relative' }}>
                         <SparqlEditField
-                          required={isChecked(formData.indirectVariablesCheck)}
+                          required={true}
                           label={`SPARQL query ${index + 1} for indirect variable(s)`}
                           name={`indirectVariablesQuery-${index}`}
                           helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve variables.`}
-                          value={sourceString}
+                          value={ivQuery}
                           onChange={handleChange}
                         />
 
                         <Button
                           variant="outlined"
-                          color='error' onClick={() => handleIndirectVariableSourceRemove(index)}
-                          type="button" disabled={indirectVariableSourceList.length <= 1}
+                          color='error' onClick={() => handleRemoveIndirectVariablesQuery(index)}
+                          type="button" disabled={indirectVariablesQueryList.length <= 1}
                           style={{ zIndex: '2', position: 'absolute', top: '30px', right: '17px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                         >
                           <IconProvider.DeleteIcon />
@@ -552,7 +549,7 @@ export default function CustomEditor(props) {
                       </div>
                     ))
                   }
-                  <Button variant="outlined" onClick={handleIndirectVariableSource} type="button" startIcon={<IconProvider.AddIcon />}>
+                  <Button variant="outlined" onClick={handleAddIndirectVariablesQuery} type="button" startIcon={<IconProvider.AddIcon />}>
                     Add another query
                   </Button>
                 </div>
