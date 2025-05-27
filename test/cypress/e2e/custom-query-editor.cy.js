@@ -165,7 +165,7 @@ SELECT ?name ?birthDate_int WHERE {
 
     cy.get('input[name="httpProxiesCheck"]').click()
 
-    cy.setCodeMirrorValue("#json-edit-field-httpProxies", '{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false });
+    cy.setCodeMirrorValue("#json-edit-field-httpProxies", '{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]');
 
     cy.contains("Invalid HTTP proxies specification.");
     cy.get('input[name="httpProxiesCheck"]').click()
@@ -174,7 +174,7 @@ SELECT ?name ?birthDate_int WHERE {
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid HTTP proxies specification.");
 
-    cy.setCodeMirrorValue("#json-edit-field-httpProxies", '[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false });
+    cy.setCodeMirrorValue("#json-edit-field-httpProxies", '[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]');
 
     cy.get('[data-cy="parsingError"]').should('not.exist');
     cy.get('button[type="submit"]').click();
