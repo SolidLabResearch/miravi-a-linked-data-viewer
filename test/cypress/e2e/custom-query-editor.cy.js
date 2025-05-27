@@ -68,6 +68,9 @@ describe("Custom Query Editor tests", () => {
     cy.setCodeMirrorValue("#json-edit-field-comunicaContext", `{"lenient": truezzz}`);
 
     cy.contains("Invalid Comunica context configuration.");
+    cy.get('input[name="comunicaContextCheck"]').click();
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('input[name="comunicaContextCheck"]').click();
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid Comunica context configuration.");
 
@@ -137,8 +140,10 @@ ASK WHERE {
 
     cy.setCodeMirrorValue("#json-edit-field-askQuery", '"trueText":"Yes, there is at least one artist influenced by Picasso!","falseText":"No, there is not a single artist influenced by Picasso."}')
 
-    // Check faulty input error
     cy.contains("Invalid ASK query specification.");
+    cy.get('input[name="askQueryCheck"]').click()
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('input[name="askQueryCheck"]').click()
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid ASK query specification.");
 
@@ -172,8 +177,10 @@ SELECT ?name ?birthDate_int WHERE {
 
     cy.setCodeMirrorValue("#json-edit-field-httpProxies", '{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:8000/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]', { parseSpecialCharSequences: false });
 
-    // Check faulty input error
     cy.contains("Invalid HTTP proxies specification.");
+    cy.get('input[name="httpProxiesCheck"]').click()
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('input[name="httpProxiesCheck"]').click()
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid HTTP proxies specification.");
 
@@ -320,6 +327,9 @@ SELECT ?name ?sameAs_url WHERE {
     }`)
 
     cy.contains("Invalid fixed templated variables specification.");
+    cy.get('input[name="directVariablesCheck"]').click()
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('input[name="directVariablesCheck"]').click()
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid fixed templated variables specification.");
 
@@ -436,6 +446,9 @@ ORDER BY ?componentName`
     cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "this is not a valid SPARQL query")
 
     cy.contains("Invalid indirect sources SPARQL query.");
+    cy.get('input[name="sourceIndexCheck"]').click()
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid indirect sources SPARQL query.");
   });
@@ -619,6 +632,9 @@ schema:sameAs ?sameAsUrl;
     cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "this is not a valid SPARQL query")
 
     cy.contains("Invalid SPARQL query to retrieve variable(s) from source(s).");
+    cy.get('input[name="indirectVariablesCheck"]').click()
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('input[name="indirectVariablesCheck"]').click()
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid SPARQL query to retrieve variable(s) from source(s).");
 
