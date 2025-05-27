@@ -6,6 +6,13 @@ describe("Custom Query Editor tests", () => {
 
     cy.get('input[name="name"]').type("new simple query");
     cy.get('textarea[name="description"]').type("new description");
+    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
+
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "This is not a valid SPARQL query");
+
+    cy.contains("Invalid SPARQL query.");
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid SPARQL query.");
 
     cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
 
@@ -19,28 +26,11 @@ describe("Custom Query Editor tests", () => {
           ].
       }`);
 
-    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
-
     cy.get('[data-cy="parsingError"]').should('not.exist');
     cy.get('button[type="submit"]').click();
 
     // Checking if the book query works
     cy.contains("Colleen Hoover").should('exist');
-  });
-
-  it("Create a new simple query; bad SPARQL syntax in queryString", () => {
-    cy.visit("/#/customQuery");
-
-    cy.get('input[name="name"]').type("new simple query bad queryString");
-    cy.get('textarea[name="description"]').type("new description");
-
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "This is not a valid SPARQL query");
-
-    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
-
-    cy.contains("Invalid SPARQL query.");
-    cy.get('button[type="submit"]').click();
-    cy.contains("Invalid SPARQL query.");
   });
 
   it("Create a new simple query with a Comunica context", () => {
@@ -389,6 +379,15 @@ ORDER BY ?componentName`
     cy.get('input[name="sourceIndexCheck"]').click()
     cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
 
+    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "this is not a valid SPARQL query")
+
+    cy.contains("Invalid indirect sources SPARQL query.");
+    cy.get('input[name="sourceIndexCheck"]').click()
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('input[name="sourceIndexCheck"]').click()
+    cy.get('button[type="submit"]').click();
+    cy.contains("Invalid indirect sources SPARQL query.");
+
     cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX example: <http://localhost:8080/example/index-example-texon-only#>
@@ -403,54 +402,6 @@ WHERE {
     cy.get('button[type="submit"]').click();
 
     cy.contains("https://www.example.com/data/component-c01").should('exist');
-  });
-
-  it("Custom Query With Index File; bad SPARQL syntax in indexSourceQuery", () => {
-    cy.visit("/#/customQuery");
-
-    cy.get('input[name="name"]').type("custom with index file bad indexSourceQuery");
-    cy.get('textarea[name="description"]').type("description for index");
-
-    // Query handling a variable
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `# Query Texon's components and their materials
-# Datasources: https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/components.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/boms.ttl https://css5.onto-deside.ilabt.imec.be/texon/data/dt/out/materials.ttl
-
-PREFIX oo: <http://purl.org/openorg/>
-PREFIX ao: <http://purl.org/ontology/ao/core#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX d: <https://www.example.com/data/>
-PREFIX o: <https://www.example.com/ont/>
-
-SELECT ?component ?componentName ?material ?materialName ?percentage
-WHERE {
-  ?component
-    a o:Component ;
-    o:name ?componentName ;
-    o:has-component-bom [
-      o:has-component-material-assoc [
-        o:percentage ?percentage ;
-        o:has-material ?material ;
-      ];
-    ];
-  .
-  ?material o:name ?materialName ;
-}
-ORDER BY ?componentName`
-    );
-
-    // No Comunica Sources Required
-    cy.get('input[name="sourceIndexCheck"]').click()
-    cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/index-example-texon-only")
-
-    cy.setCodeMirrorValue("#sparql-edit-field-indexSourceQuery", "this is not a valid SPARQL query")
-
-    cy.contains("Invalid indirect sources SPARQL query.");
-    cy.get('input[name="sourceIndexCheck"]').click()
-    cy.get('[data-cy="parsingError"]').should('not.exist');
-    cy.get('input[name="sourceIndexCheck"]').click()
-    cy.get('button[type="submit"]').click();
-    cy.contains("Invalid indirect sources SPARQL query.");
   });
 
   it("Make a templated query, then edit it to make it a normal query", () => {
@@ -592,41 +543,6 @@ schema:sameAs ?sameAs_url;
 
     cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }")
 
-    cy.get('[data-cy="parsingError"]').should('not.exist');
-    cy.get('button[type="submit"]').click();
-
-    cy.get('.ra-input-genre').click();
-    cy.get('li').contains('Baroque').click();
-    cy.get('button[type="submit"]').click();
-
-    cy.get('.column-name').find('span').contains("Antonio Caldara").should('exist');
-    cy.get('.column-name').find('span').contains("Pietro Locatelli").should('exist');
-
-    cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
-    cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
-  });
-
-  it("Custom templated query with 1 indirect variable; bad SPARQL syntax in indirectVariablesQuery-1", () => {
-    cy.visit("/#/customQuery");
-
-    cy.get('input[name="name"]').type("custom indirect template bad indirectVariablesQuery-1");
-    cy.get('textarea[name="description"]').type("description for an indirect templated query");
-
-    // Query handling a variable
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
-SELECT ?name WHERE {
-?list schema:name ?listTitle;
-schema:name ?name;
-schema:genre $genre;
-schema:sameAs ?sameAsUrl;
-}`
-    );
-
-    cy.get('input[name="source"]').type("http://localhost:8080/example/favourite-musicians");
-    cy.get('input[name="indirectVariablesCheck"]').click()
-
-    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?genre WHERE { ?list schema:genre ?genre; }")
-
     // Test the bad SPARQL syntax on a second indirect variable query
     cy.get('button').contains("Add another query").click();
     cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-1", "this is not a valid SPARQL query")
@@ -644,7 +560,15 @@ schema:sameAs ?sameAsUrl;
     cy.get('[data-cy="parsingError"]').should('not.exist');
     cy.get('button[type="submit"]').click();
 
-    cy.get('.ra-input-genre').should("exist");
+    cy.get('.ra-input-genre').click();
+    cy.get('li').contains('Baroque').click();
+    cy.get('button[type="submit"]').click();
+
+    cy.get('.column-name').find('span').contains("Antonio Caldara").should('exist');
+    cy.get('.column-name').find('span').contains("Pietro Locatelli").should('exist');
+
+    cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
+    cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
   });
 
   it("Custom templated query with 2 indirect variables", () => {
