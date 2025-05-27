@@ -344,7 +344,7 @@ export default function CustomEditor(props) {
                 label="SPARQL query"
                 name="queryString"
                 helperText="Enter your SPARQL query here."
-                value={!!formData.queryString ? formData.queryString : formData.queryString === '' ? '' : defaultSparqlQuery}
+                value={formData.queryString === '' ? '' : formData.queryString || defaultSparqlQuery}
                 onChange={handleChange}
               />
             </div>
@@ -391,7 +391,7 @@ export default function CustomEditor(props) {
                   label="Comunica context configuration"
                   name="comunicaContext"
                   helperText="Enter your extra Comunica context in JSON-format."
-                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
+                  value={formData.comunicaContext === '' ? '' : formData.comunicaContext || defaultExtraComunicaContext}
                   onChange={handleChange}
                 />
               </div>
@@ -431,7 +431,7 @@ export default function CustomEditor(props) {
                   label="Indirect sources SPARQL query"
                   name="indexSourceQuery"
                   helperText="Enter a SPARQL query to get the sources from the index file here."
-                  value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
+                  value={formData.indexSourceQuery === '' ? '' : formData.indexSourceQuery || defaultSparqlQueryIndexSources}
                   onChange={handleChange}
                 />
               </div>
@@ -464,7 +464,7 @@ export default function CustomEditor(props) {
                     label="Fixed templated query variables"
                     name="variables"
                     helperText="Enter your fixed templated variables specification in JSON-format."
-                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables, null, 5) : formData.variables : formData.variables === '' ? '' : defaultTemplateOptions}
+                    value={formData.variables === '' ? '' : formData.variables || defaultTemplateOptions}
                     onChange={handleChange}
                   />
                 </div>
@@ -545,7 +545,7 @@ export default function CustomEditor(props) {
                     label="Creating an ask query"
                     name="askQuery"
                     helperText="Enter your ASK query specification in JSON-format."
-                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery, null, 2) : formData.askQuery : formData.askQuery === '' ? '' : defaultAskQueryDetails}
+                    value={formData.askQuery === '' ? '' : formData.askQuery || defaultAskQueryDetails}
                     onChange={handleChange}
                   />
                 </div>
@@ -572,7 +572,7 @@ export default function CustomEditor(props) {
                     label="Specifying HTTP proxies"
                     name="httpProxies"
                     helperText="Enter your HTTP proxies specification JSON-format."
-                    value={!!formData.httpProxies ? typeof formData.httpProxies === 'object' ? JSON.stringify(formData.httpProxies, null, 2) : formData.httpProxies : formData.httpProxies === '' ? '' : defaultHttpProxiesDetails}
+                    value={formData.httpProxies === '' ? '' : formData.httpProxies || defaultHttpProxiesDetails}
                     onChange={handleChange}
                   />
                 </div>
