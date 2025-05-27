@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped Comunica version from 3.2.3 to 4.2.0, resulting in increased execution speed of some queries (#212).
   Breaking change for typed literals in query configuration, "variables" field; see README for new syntax.
 - Removed not supported cosmetic fields from configuration file (#18).
-- SPARQL edit fields have syntax coloring and validation now (#143).
+- JSON and SPARQL edit fields have syntax coloring and validation now (#142 and #143).
 
 ### Fixed
 
