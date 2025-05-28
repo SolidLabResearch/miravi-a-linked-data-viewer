@@ -148,8 +148,8 @@ const TemplatedListResultTable = (props) => {
 
   return (
     templatedQueryFormEnabled
-      ? <TemplatedQueryForm variableOptions={variableOptions} defaultFormVariables={variableValues} onSubmit={submitVariables} />
-      : <QueryResultList updateTimestamp={updateTimestamp}{...props} resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
+    ? <TemplatedQueryForm variableOptions={variableOptions} defaultFormVariables={variableValues} onSubmit={submitVariables} />
+    : <QueryResultList updateTimestamp={updateTimestamp}{...props} resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
   )
 }
 

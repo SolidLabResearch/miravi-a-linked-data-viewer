@@ -1,4 +1,4 @@
-import { Component, useEffect } from "react";
+import { Component } from "react";
 import { Datagrid, List, Title, Loading, useListContext, useResourceDefinition } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
