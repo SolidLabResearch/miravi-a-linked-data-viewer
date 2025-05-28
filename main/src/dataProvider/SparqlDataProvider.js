@@ -51,14 +51,13 @@ export default {
         query.variableValues = meta.variableValues;
       }
 
-      const hash = JSON.stringify({ resource, sort, meta });
+      const hash = JSON.stringify({ resource, sort, meta, query });
       // LOG console.log(`hash: ${hash}`);
       if (hash == listCache.hash) {
         // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
         results = listCache.results;
       } else {
         if (query.comunicaContext?.sources?.length) {
-          // LOG console.log(`query.queryText: ${ query.queryText }`);
           results = await executeQuery(query);
           listCache.hash = hash;
           listCache.results = results;
@@ -327,15 +326,17 @@ async function getSourcesFromSourcesIndex(sourcesIndex, httpProxies) {
 function handleComunicaContextCreation(query) {
   if (!query.comunicaContext) {
     query.comunicaContext = {
-      sources: [],
-      lenient: true
+      sources: []
     };
   } else {
-    if (query.comunicaContext.lenient === undefined) {
-      query.comunicaContext.lenient = true;
-    }
     if (!query.comunicaContext.sources) {
       query.comunicaContext.sources = [];
+    }
+  }
+
+  if (query.sourcesIndex) {
+    if (query.comunicaContext.lenient === undefined) {
+      query.comunicaContext.lenient = true;
     }
   }
 }

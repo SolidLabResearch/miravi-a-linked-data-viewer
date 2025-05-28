@@ -6,6 +6,7 @@ import QueryResultList from "./QueryResultList/QueryResultList";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
 
 import configManager from '../../configManager/configManager.js';
+import comunicaEngineWrapper from '../../comunicaEngineWrapper/comunicaEngineWrapper.js';
 
 // LOG let templatedListResultTableCounter = 0;
 
@@ -55,6 +56,8 @@ const TemplatedListResultTable = (props) => {
       setVariableOptions({});
       setVariableValues({});
       setVariablesSubmitted(false);
+      // we need next because comunica would use its cache even if some of its context parameters have changed
+      comunicaEngineWrapper.reset();
     }
   }, [location.state]);
 

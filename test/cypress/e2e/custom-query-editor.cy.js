@@ -14,7 +14,17 @@ describe("Custom Query Editor tests", () => {
     cy.get('button[type="submit"]').click();
     cy.contains("Invalid SPARQL query.");
 
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
+    // This incomplete SPARQL query passes the SPARQL edit field syntax checker, but will fail when executed
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "SELECT")
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Something went wrong").should('exist');
+
+    cy.get('button').contains("Edit Query").click();
+
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
 
       SELECT * WHERE {
           ?list schema:name ?listTitle;
@@ -31,6 +41,26 @@ describe("Custom Query Editor tests", () => {
 
     // Checking if the book query works
     cy.contains("Colleen Hoover").should('exist');
+
+    // Check if updating the custom query results in changed results - here we just change a column name
+    cy.get('button').contains("Edit Query").click();
+
+    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/>
+
+      SELECT * WHERE {
+          ?list schema:name ?listTitle;
+            schema:itemListElement [
+            schema:name ?bookTitleColumnNameChangedXXX;
+            schema:creator [
+              schema:name ?authorName
+            ]
+          ].
+      }`);
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("bookTitleColumnNameChangedXXX").should('exist');
   });
 
   it("Create a new simple query with a Comunica context", () => {
@@ -71,6 +101,16 @@ describe("Custom Query Editor tests", () => {
 
     // Checking if the book query works
     cy.contains("Colleen Hoover").should('exist');
+
+    // Check if updating the custom query results in changed results - here we just undo the Comunica context, resulting in Comunica failing to fetch
+    cy.get('button').contains("Edit Query").click();
+
+    cy.get('input[name="comunicaContextCheck"]').click();
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Something went wrong").should('exist');
   });
 
   it("Create a new query, with multiple sources", () => {
@@ -99,7 +139,7 @@ WHERE {
 }
 ORDER BY ?componentName
 `);
-    
+
     cy.get('input[name="source"]').type("http://localhost:8080/verifiable-example/components-vc ; http://localhost:8080/verifiable-example/components-vc-incorrect-proof ; http://localhost:8080/example/components");
 
     cy.get('[data-cy="parsingError"]').should('not.exist');
@@ -107,6 +147,16 @@ ORDER BY ?componentName
 
     // Checking if the query works
     cy.contains("https://www.example.com/data/component-c01").should('exist');
+
+    // Check if updating the custom query results in changed results - here we just add something to the last source, making it a not existing source, resulting in Comunica failing to fetch
+    cy.get('button').contains("Edit Query").click();
+
+    cy.get('input[name="source"]').type("hihihahahoho");
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Something went wrong").should('exist');
   });
 
   it("Create a new query, here an ASK query", () => {
@@ -123,7 +173,7 @@ ASK WHERE {
   ?person foaf:name ?name.
   ?person dbo:influencedBy dbp:Pablo_Picasso.
 }`);
-    
+
     cy.get('input[name="source"]').type("http://localhost:8080/example/artists");
 
     cy.get('input[name="askQueryCheck"]').click()
@@ -144,6 +194,16 @@ ASK WHERE {
 
     // Check if the query works
     cy.contains("Yes, there is at least one artist influenced by Picasso!")
+
+    // Check if updating the custom query results in changed results - here we just change the askQuery details
+    cy.get('button').contains("Edit Query").click();
+
+    cy.setCodeMirrorValue("#json-edit-field-askQuery", '{"trueText":"Yezzzzz","falseText":"Noooooooooo"}')
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Yezzzzz")
   });
 
   it("Create a new query, here with http proxies", () => {
@@ -160,7 +220,7 @@ SELECT ?name ?birthDate_int WHERE {
       schema:birthDate ?birthDate_int;
     ].
 }`);
-    
+
     cy.get('input[name="source"]').type("http://localhost:8001/example/idols");
 
     cy.get('input[name="httpProxiesCheck"]').click()
@@ -181,6 +241,16 @@ SELECT ?name ?birthDate_int WHERE {
 
     // Check if the query works
     cy.contains("1-2 of 2");
+
+    // Check if updating the custom query results in changed results - here we just change the httpProxies details to point to a not existing proxy, resulting in Comunica failing to fetch
+    cy.get('button').contains("Edit Query").click();
+
+    cy.setCodeMirrorValue("#json-edit-field-httpProxies", '[{"urlStart":"http://localhost:8001","httpProxy":"http://localhost:9999/"}, {"urlStart":"http://localhost:8002","httpProxy":"http://localhost:9000/"}]');
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("Something went wrong").should('exist');
   });
 
   it("Check if all possible parameters are filled in with parameterized URL", () => {
@@ -207,57 +277,6 @@ SELECT ?name ?birthDate_int WHERE {
 
     // The first error
     cy.contains("Invalid SPARQL query.");
-  });
-
-  it("Successfully edit a query to make it work", () => {
-    cy.visit("/#/customQuery");
-
-    // First create a wrong query
-    cy.get('input[name="name"]').type("broken query");
-    cy.get('textarea[name="description"]').type("just a description");
-
-    // This incomplete SPARQL query passes the SPARQL edit field syntax checker, but will fail when executed
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", "SELECT")
-
-    cy.get('input[name="source"]').type("http://localhost:8080/example/wish-list");
-
-    // Submit the incomplete query
-    cy.get('[data-cy="parsingError"]').should('not.exist');
-    cy.get('button[type="submit"]').click();
-
-    cy.contains("Custom queries").click();
-    cy.contains("broken query").click();
-
-    // Verify that the faulty query results in an error message
-    cy.contains("Something went wrong").should('exist');
-
-    // Edit the query
-    cy.get('button').contains("Edit Query").click();
-
-    // Give the query a new name and a correct query text
-    cy.get('input[name="name"]').clear();
-    cy.get('input[name="name"]').type("Fixed query");
-
-    cy.setCodeMirrorValue("#sparql-edit-field-queryString", `PREFIX schema: <http://schema.org/> 
-SELECT * WHERE {
-    ?list schema:name ?listTitle;
-      schema:itemListElement [
-      schema:name ?bookTitle;
-      schema:creator [
-        schema:name ?authorName
-      ]
-    ].
-}`);
-
-    // Submit the correct query
-    cy.get('[data-cy="parsingError"]').should('not.exist');
-    cy.get('button[type="submit"]').click();
-
-    // Now we should be on the page of the fixed query
-    cy.contains("Fixed query").should('exist');
-
-    // Check if the resulting list appears
-    cy.contains("Colleen Hoover").should('exist');
   });
 
   it("Shares the correct URL", () => {
@@ -402,6 +421,17 @@ WHERE {
     cy.get('button[type="submit"]').click();
 
     cy.contains("https://www.example.com/data/component-c01").should('exist');
+
+    // Check if updating the custom query results in changed results - here we just change the indexSourceUrl, resulting in Comunica failing to fetch
+    cy.get('button').contains("Edit Query").click();
+
+    cy.get('input[name="indexSourceUrl"]').clear();
+    cy.get('input[name="indexSourceUrl"]').type("http://localhost:8080/example/huppledepup-does-not-exist")
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.contains("The result list is empty (no sources found).").should('exist');
   });
 
   it("Make a templated query, then edit it to make it a normal query", () => {
@@ -569,6 +599,16 @@ schema:sameAs ?sameAs_url;
 
     cy.get('.column-name').find('span').contains("Franz Schubert").should("not.exist");
     cy.get('.column-name').find('span').contains("Ludwig van Beethoven").should("not.exist");
+
+    // Check if updating the custom query results in changed results - here we just change the first indirectVariablesQuery
+    cy.get('button').contains("Edit Query").click();
+
+    cy.setCodeMirrorValue("#sparql-edit-field-indirectVariablesQuery-0", "PREFIX schema: <http://schema.org/> SELECT DISTINCT ?geEEEnre WHERE { ?list schema:genre ?geEEEnre; }")
+
+    cy.get('[data-cy="parsingError"]').should('not.exist');
+    cy.get('button[type="submit"]').click();
+
+    cy.get('.ra-input-geEEEnre').should('exist');
   });
 
   it("Custom templated query with 2 indirect variables", () => {
