@@ -51,7 +51,7 @@ export default {
         query.variableValues = meta.variableValues;
       }
 
-      const hash = JSON.stringify({ resource, sort, variableValues: query.variableValues });
+      const hash = JSON.stringify({ resource, sort, meta });
       // LOG console.log(`hash: ${hash}`);
       if (hash == listCache.hash) {
         // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);

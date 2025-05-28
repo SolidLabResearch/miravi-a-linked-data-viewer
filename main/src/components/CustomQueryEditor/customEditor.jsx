@@ -243,7 +243,8 @@ export default function CustomEditor(props) {
         icon: customQuery.icon
       });
 
-      navigate(`/${customQuery.id}`);
+      // force a re-render with the updateTimestamp
+      navigate(`/${customQuery.id}`, {/* TODO? replace: true,*/ state: { updateTimestamp: Date.now() } });
     }
   };
 
