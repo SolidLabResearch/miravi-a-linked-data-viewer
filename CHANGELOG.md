@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the resolved query is executed immediately, avoiding the delay it takes to first retrieve all options for the variables (#211).
 - CONSTRUCT queries work again (#222).
 - Config field "logoRedirectURL" is working (#17).
+- After modifying an existing custom query, the previous result table is updated as expected now (#137).
 
 ## [1.7.0] - 2025-04-09
 

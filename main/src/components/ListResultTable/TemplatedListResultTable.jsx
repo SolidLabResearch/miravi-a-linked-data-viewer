@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from 'react';
+import { useState, useEffect, Component } from 'react';
 import { useResourceContext, Loading, useDataProvider, useResourceDefinition } from "react-admin";
 import { useLocation, useNavigate } from 'react-router-dom';
 import TemplatedQueryForm from "./TemplatedQueryForm.jsx";
@@ -6,6 +6,7 @@ import QueryResultList from "./QueryResultList/QueryResultList";
 import ErrorDisplay from "../../components/ErrorDisplay/ErrorDisplay";
 
 import configManager from '../../configManager/configManager.js';
+import comunicaEngineWrapper from '../../comunicaEngineWrapper/comunicaEngineWrapper.js';
 
 // LOG let templatedListResultTableCounter = 0;
 
@@ -21,6 +22,7 @@ const TemplatedListResultTable = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const query = configManager.getQueryWorkingCopyById(resource);
+  const [updateTimestamp, setUpdateTimestamp] = useState(0);
   const [askingForVariableOptions, setAskingForVariableOptions] = useState(false);
   const [waitingForVariableOptions, setWaitingForVariableOptions] = useState(false);
   const [variableOptionsError, setVariableOptionsError] = useState("");
@@ -33,6 +35,7 @@ const TemplatedListResultTable = (props) => {
   // LOG console.log(`--- TemplatedListResultTable #${++templatedListResultTableCounter}`);
   // LOG console.log(`props: ${JSON.stringify(props, null, 2)}`);
   // LOG console.log(`resource: ${resource}`);
+  // LOG console.log(`updateTimestamp: ${updateTimestamp}`);
   // LOG console.log(`askingForVariableOptions: ${askingForVariableOptions}`);
   // LOG console.log(`waitingForVariableOptions: ${waitingForVariableOptions}`);
   // LOG console.log(`variableOptionsError: ${variableOptionsError}`);
@@ -41,6 +44,22 @@ const TemplatedListResultTable = (props) => {
   // LOG console.log(`variablesSubmitted: ${variablesSubmitted}`);
   // LOG console.log(`isTemplatedQuery: ${isTemplatedQuery}`);
   // LOG console.log(`templatedQueryFormEnabled: ${templatedQueryFormEnabled}`);
+
+  useEffect(() => {
+    const t = location.state?.updateTimestamp;
+    if (t && t != updateTimestamp) {
+      setUpdateTimestamp(location.state.updateTimestamp);
+      // LOG console.log(`New updateTimestamp: ${t}`);
+      setAskingForVariableOptions(false);
+      setWaitingForVariableOptions(false);
+      setVariableOptionsError("");
+      setVariableOptions({});
+      setVariableValues({});
+      setVariablesSubmitted(false);
+      // we need next because comunica would use its cache even if some of its context parameters have changed
+      comunicaEngineWrapper.reset();
+    }
+  }, [location.state]);
 
   useEffect(() => {
     (async () => {
@@ -61,7 +80,6 @@ const TemplatedListResultTable = (props) => {
       }
     })();
   }, [askingForVariableOptions]);
-
 
   // Cover a transient state after creation of a new custom query. EventEmitter's event processing may still be in progress.
   if (!resourceDef.options) {
@@ -131,7 +149,7 @@ const TemplatedListResultTable = (props) => {
   return (
     templatedQueryFormEnabled
     ? <TemplatedQueryForm variableOptions={variableOptions} defaultFormVariables={variableValues} onSubmit={submitVariables} />
-    : <QueryResultList {...props} resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
+    : <QueryResultList updateTimestamp={updateTimestamp}{...props} resource={resource} variableValues={variableValues} changeVariables={changeVariables} submitted={variablesSubmitted} />
   )
 }
 

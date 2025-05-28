@@ -21,7 +21,7 @@ import CustomConversionButton from "../../CustomQueryEditor/customConversionButt
  * @returns {Component} custom ListViewer as defined by react-admin containing the results of the query with each variable its generic field. 
  */
 function QueryResultList(props) {
-  const { resource, variableValues, changeVariables, submitted } = props;
+  const { updateTimestamp, resource, variableValues, changeVariables, submitted } = props;
   const resourceDef = useResourceDefinition();
   const queryTitle = resourceDef?.options?.label;
   const config = configManager.getConfig();
@@ -54,7 +54,8 @@ function QueryResultList(props) {
         empty={false}
         queryOptions={{
           meta: {
-            variableValues: variableValues
+            variableValues,
+            updateTimestamp // force the dataProvider to refetch the data when the updateTimestamp changes
           }}}>
         <MyDatagrid {...props} query={query} />
       </List>
@@ -63,6 +64,7 @@ function QueryResultList(props) {
 }
 
 QueryResultList.propTypes = {
+  updateTimestamp: PropTypes.number.isRequired,
   resource: PropTypes.string.isRequired,
   variableValues: PropTypes.object.isRequired,
   changeVariables: PropTypes.func.isRequired,
