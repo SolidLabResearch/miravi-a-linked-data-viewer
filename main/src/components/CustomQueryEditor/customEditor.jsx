@@ -354,6 +354,18 @@ export default function CustomEditor(props) {
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
 
             <Typography variant="h5" sx={{ mt: 2 }}> Comunica Context &amp; Sources </Typography>
+            <TextField
+              required={!isChecked(formData.sourceIndexCheck)}
+              fullWidth
+              name="source"
+              label="Fixed data source(s)"
+              placeholder="http://example.com/source1; http://example.com/source2"
+              helperText="Give the source URL(s) for the query. Separate URLs with '; '.  (These are the Comunica context sources)"
+              variant="outlined"
+              value={!!formData.source ? formData.source : ''}
+              onChange={handleChange}
+              sx={{ marginBottom: '16px' }}
+            />
             <div>
               <FormControlLabel
                 control={<Checkbox
@@ -369,22 +381,7 @@ export default function CustomEditor(props) {
                   }
 
                 />} label="Advanced Comunica Context Settings" />
-
             </div>
-            <TextField
-              required={!isChecked(formData.sourceIndexCheck)}
-              fullWidth
-              name="source"
-              label="Fixed data source(s)"
-              placeholder="http://example.com/source1; http://example.com/source2"
-              helperText="Give the source URL(s) for the query. Separate URLs with '; '.  (These are the Comunica context sources)"
-              variant="outlined"
-              value={!!formData.source ? formData.source : ''}
-              onChange={handleChange}
-              sx={{ marginBottom: '16px' }}
-            />
-
-
             {isChecked(formData.comunicaContextCheck) &&
               <div>
                 <JsonEditField
@@ -398,19 +395,21 @@ export default function CustomEditor(props) {
               </div>
             }
 
-            <FormControlLabel
-              control={<Checkbox
-                name='sourceIndexCheck'
-                checked={isChecked(formData.sourceIndexCheck)}
-                onChange={
-                  () => {
-                    setFormData((prevFormData) => ({
-                      ...prevFormData,
-                      'sourceIndexCheck': !isChecked(formData.sourceIndexCheck),
-                    }));
+            <div>
+              <FormControlLabel
+                control={<Checkbox
+                  name='sourceIndexCheck'
+                  checked={isChecked(formData.sourceIndexCheck)}
+                  onChange={
+                    () => {
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        'sourceIndexCheck': !isChecked(formData.sourceIndexCheck),
+                      }));
+                    }
                   }
-                }
-              />} label="Indirect sources" />
+                />} label="Indirect sources" />
+            </div>
 
             {isChecked(formData.sourceIndexCheck) &&
               <div>
@@ -456,21 +455,23 @@ export default function CustomEditor(props) {
                     }
                   }
                 />} label="Fixed Variables" />
+            </div>
 
-              {isChecked(formData.directVariablesCheck) &&
-                <div>
-                  <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
-                  <JsonEditField
-                    required
-                    label="Fixed templated query variables"
-                    name="variables"
-                    helperText="Enter your fixed templated variables specification in JSON-format."
-                    value={formData.variables === '' ? '' : formData.variables || defaultTemplateOptions}
-                    onChange={handleChange}
-                  />
-                </div>
-              }
+            {isChecked(formData.directVariablesCheck) &&
+              <div>
+                <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
+                <JsonEditField
+                  required
+                  label="Fixed templated query variables"
+                  name="variables"
+                  helperText="Enter your fixed templated variables specification in JSON-format."
+                  value={formData.variables === '' ? '' : formData.variables || defaultTemplateOptions}
+                  onChange={handleChange}
+                />
+              </div>
+            }
 
+            <div>
               <FormControlLabel
                 control={<Checkbox
                   name='indirectVariablesCheck'
@@ -484,47 +485,46 @@ export default function CustomEditor(props) {
                     }
                   }
                 />} label="Indirect Variables" />
-
-              {isChecked(formData.indirectVariablesCheck) &&
-                <div>
-                  <div style={{ marginBottom: '20px' }}>
-                    <Typography variant="base" sx={{ color: '#777' }}> Give one or more SPARQL queries to retrieve variable(s) from source(s).</Typography>
-                  </div>
-                  {
-                    indirectVariablesQueryList.map((ivQuery, index) => (
-                      <div key={index} style={{ position: 'relative' }}>
-                        <SparqlEditField
-                          required
-                          label={`SPARQL query ${index + 1} for indirect variable(s)`}
-                          name={`indirectVariablesQuery-${index}`}
-                          helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve variables.`}
-                          value={ivQuery}
-                          onChange={handleChange}
-                        />
-
-                        <Button
-                          variant="outlined"
-                          color='error' onClick={() => handleRemoveIndirectVariablesQuery(index)}
-                          type="button" disabled={indirectVariablesQueryList.length <= 1}
-                          style={{ zIndex: '2', position: 'absolute', top: '30px', right: '17px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          <IconProvider.DeleteIcon />
-                        </Button>
-                      </div>
-                    ))
-                  }
-                  <Button variant="outlined" onClick={handleAddIndirectVariablesQuery} type="button" startIcon={<IconProvider.AddIcon />}>
-                    Add another query
-                  </Button>
-                </div>
-              }
             </div>
+
+            {isChecked(formData.indirectVariablesCheck) &&
+              <div>
+                <div style={{ marginBottom: '20px' }}>
+                  <Typography variant="base" sx={{ color: '#777' }}> Give one or more SPARQL queries to retrieve variable(s) from source(s).</Typography>
+                </div>
+                {
+                  indirectVariablesQueryList.map((ivQuery, index) => (
+                    <div key={index} style={{ position: 'relative' }}>
+                      <SparqlEditField
+                        required
+                        label={`SPARQL query ${index + 1} for indirect variable(s)`}
+                        name={`indirectVariablesQuery-${index}`}
+                        helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve variables.`}
+                        value={ivQuery}
+                        onChange={handleChange}
+                      />
+
+                      <Button
+                        variant="outlined"
+                        color='error' onClick={() => handleRemoveIndirectVariablesQuery(index)}
+                        type="button" disabled={indirectVariablesQueryList.length <= 1}
+                        style={{ zIndex: '2', position: 'absolute', top: '30px', right: '17px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <IconProvider.DeleteIcon />
+                      </Button>
+                    </div>
+                  ))
+                }
+                <Button variant="outlined" onClick={handleAddIndirectVariablesQuery} type="button" startIcon={<IconProvider.AddIcon />}>
+                  Add another query
+                </Button>
+              </div>
+            }
           </Card>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
             <Typography variant="h5" sx={{ mt: 2 }}> Extra Options</Typography>
             <div>
-
               <FormControlLabel
                 control={<Checkbox
                   name='askQueryCheck'
@@ -538,20 +538,20 @@ export default function CustomEditor(props) {
                     }
                   }
                 />} label="ASK query" />
-
-              {isChecked(formData.askQueryCheck) &&
-                <div>
-                  <JsonEditField
-                    required
-                    label="Creating an ask query"
-                    name="askQuery"
-                    helperText="Enter your ASK query specification in JSON-format."
-                    value={formData.askQuery === '' ? '' : formData.askQuery || defaultAskQueryDetails}
-                    onChange={handleChange}
-                  />
-                </div>
-              }
-
+            </div>
+            {isChecked(formData.askQueryCheck) &&
+              <div>
+                <JsonEditField
+                  required
+                  label="Creating an ask query"
+                  name="askQuery"
+                  helperText="Enter your ASK query specification in JSON-format."
+                  value={formData.askQuery === '' ? '' : formData.askQuery || defaultAskQueryDetails}
+                  onChange={handleChange}
+                />
+              </div>
+            }
+            <div>
               <FormControlLabel
                 control={<Checkbox
                   name='httpProxiesCheck'
@@ -565,21 +565,19 @@ export default function CustomEditor(props) {
                     }
                   }
                 />} label="Http proxies" />
-
-              {isChecked(formData.httpProxiesCheck) &&
-                <div>
-                  <JsonEditField
-                    required
-                    label="Specifying HTTP proxies"
-                    name="httpProxies"
-                    helperText="Enter your HTTP proxies specification JSON-format."
-                    value={formData.httpProxies === '' ? '' : formData.httpProxies || defaultHttpProxiesDetails}
-                    onChange={handleChange}
-                  />
-                </div>
-              }
-
             </div>
+            {isChecked(formData.httpProxiesCheck) &&
+              <div>
+                <JsonEditField
+                  required
+                  label="Specifying HTTP proxies"
+                  name="httpProxies"
+                  helperText="Enter your HTTP proxies specification JSON-format."
+                  value={formData.httpProxies === '' ? '' : formData.httpProxies || defaultHttpProxiesDetails}
+                  onChange={handleChange}
+                />
+              </div>
+            }
           </Card>
 
         </CardContent>
