@@ -13,6 +13,39 @@ import IconProvider from '../../IconProvider/IconProvider';
 
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
 
+import { SparqlEditField } from "./sparqlEditField";
+
+import { JsonEditField } from "./jsonEditField";
+
+const defaultSparqlQuery = `SELECT ?s ?p ?o
+WHERE {
+  ?s ?p ?o
+}`;
+const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?source
+WHERE {
+  ?s rdfs:seeAlso ?source
+}`;
+const defaultSparqlQueryIndirectVariables = `PREFIX schema: <http://schema.org/>
+  
+SELECT DISTINCT ?genre
+WHERE {
+  ?list schema:genre ?genre
+}
+ORDER BY ?genre`;
+
+const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
+const defaultTemplateOptions = JSON.stringify(
+  {
+    "variableOne": [
+      "option1",
+      "(etc...)"
+    ],
+    "(etc...)": []
+  }, null, 2);
+const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
+const defaultHttpProxiesDetails = JSON.stringify([{ "urlStart": "http://www.example.com/path-xyz", "httpProxy": "http://myproxy.org/" }], null, 2);
 
 export default function CustomEditor(props) {
   const session = getDefaultSession();
@@ -25,51 +58,17 @@ export default function CustomEditor(props) {
     description: '',
     source: '',
     queryString: '',
-    comunicaContext: '',
     comunicaContextCheck: false,
     sourceIndexCheck: false,
-    askQueryCheck: false,
     directVariablesCheck: false,
     indirectVariablesCheck: false,
+    askQueryCheck: false,
+    httpProxiesCheck: false,
   });
-
-  const [showError, setShowError] = useState(false);
-  const [editError, setEditError] = useState(false);
-  const [parsingErrorComunica, setParsingErrorComunica] = useState(false);
-  const [parsingErrorAsk, setParsingErrorAsk] = useState(false);
-  const [parsingErrorTemplate, setParsingErrorTemplate] = useState(false);
-
-  // Default placeholders for the forms
-  const defaultSparqlQuery = `SELECT ?s ?p ?o
-WHERE {
-  ?s ?p ?o
-}`;
-  const defaultSparqlQueryIndexSources = `PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-SELECT ?source
-WHERE {
-  ?s rdfs:seeAlso ?source
-}`;
-  const defaultSparqlQueryIndirectVariables = `PREFIX schema: <http://schema.org/>
-  
-SELECT DISTINCT ?genre
-WHERE {
-  ?list schema:genre ?genre
-}
-ORDER BY ?genre`;
-  const [indirectVariableSourceList, setIndirectVariableSourceList] = useState([defaultSparqlQueryIndirectVariables]);
-
-  const defaultExtraComunicaContext = JSON.stringify({ "lenient": true }, null, 2);
-  const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when true.", "falseText": "this displays when false." }, null, 2);
-  const defaultTemplateOptions = JSON.stringify(
-    {
-      "variableOne": [
-        "option1",
-        "(etc...)"
-      ],
-      "(etc...)": []
-    }, null, 5);
-
+  const [validFlags, setValidFlags] = useState({});
+  const [errorWhileLoading, setErrorWhileLoading] = useState("");
+  const [parsingError, setParsingError] = useState("");
+  const [indirectVariablesQueryList, setIndirectVariablesQueryList] = useState([defaultSparqlQueryIndirectVariables]);
 
   useEffect(() => {
     try {
@@ -77,97 +76,70 @@ ORDER BY ?genre`;
       if (props.newQuery) {
         searchParams = new URLSearchParams(location.search);
       } else {
-        const edittingQuery = configManager.getQueryById(props.id);
-        searchParams = edittingQuery.searchParams;
+        const editingQuery = configManager.getQueryById(props.id);
+        searchParams = editingQuery.searchParams;
       }
       const obj = {}
       searchParams.forEach((value, key) => {
         obj[key] = value;
-      })
-
+      });
       if (obj.indirectQueries) {
-        setIndirectVariableSourceList(JSON.parse(obj.indirectQueries));
+        setIndirectVariablesQueryList(JSON.parse(obj.indirectQueries));
       }
       setFormData(obj);
-
     } catch (error) {
-      setEditError(true);
+      setErrorWhileLoading("Apologies, something went wrong with the loading of your custom query...");
     }
   }, [location.search]);
 
-
-  // This function handles the submission of the form. Both for editting as for creation. This distinction is made by the `props.newQuery`.
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!parsingErrorComunica && !parsingErrorAsk && !parsingErrorTemplate) {
-      setShowError(false);
-      const formData = new FormData(event.currentTarget);
-      const jsonData = Object.fromEntries(formData.entries());
-
-      if (jsonData.indirectVariablesCheck) {
-        jsonData.indirectQueries = JSON.stringify(indirectVariableSourceList);
-      }
-
-      const searchParams = new URLSearchParams(jsonData);
-      jsonData.searchParams = searchParams;
-
-      if (props.newQuery) {
-        navigate({ search: searchParams.toString() });
-
-        configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
-        addQuery(jsonData);
-      }
-      else {
-        const customQuery = configManager.getQueryById(props.id);
-        updateQuery(jsonData, customQuery);
-      }
-    } else {
-      setShowError(true);
+  useEffect(() => {
+    let newErrorMessage = "";
+    // only one error message is set, so the first one that occurs is the one that is shown
+    if (validFlags['queryString'] === false) {
+      newErrorMessage = "Invalid SPARQL query.";
     }
-  };
-
-  // These functions handle the entry changes from the user's input in the form
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
-
-  const handleIndirectVariablesChange = (event, index) => {
-    const newList = [...indirectVariableSourceList];
-    newList[index] = event.target.value;
-    setIndirectVariableSourceList(newList);
-  }
-
-  const handleJSONparsing = (event, errorSetter) => {
-    const { name, value } = event.target;
-    errorSetter(false);
-
-    let parsedValue;
-    try {
-      parsedValue = JSON.parse(value);
-    } catch (error) {
-      errorSetter(true);
-      parsedValue = value;
+    if (!newErrorMessage && isChecked(formData.comunicaContextCheck)) {
+      if (validFlags['comunicaContext'] === false) {
+        newErrorMessage = "Invalid Comunica context configuration.";
+      }
     }
+    if (!newErrorMessage && isChecked(formData.sourceIndexCheck)) {
+      if (validFlags['indexSourceQuery'] === false) {
+        newErrorMessage = "Invalid indirect sources SPARQL query.";
+      }
+    }
+    if (!newErrorMessage && isChecked(formData.directVariablesCheck)) {
+      if (validFlags['variables'] === false) {
+        newErrorMessage = "Invalid fixed templated variables specification.";
+      }
+    }
+    if (!newErrorMessage && isChecked(formData.indirectVariablesCheck)) {
+      for (const [key, value] of Object.entries(validFlags)) {
+        if (key.startsWith('indirectVariablesQuery-') && value === false) {
+          newErrorMessage = `Invalid SPARQL query to retrieve variable(s) from source(s).`;
+          break;
+        }
+      }
+    }
+    if (!newErrorMessage && isChecked(formData.askQueryCheck)) {
+      if (validFlags['askQuery'] === false) {
+        newErrorMessage = "Invalid ASK query specification.";
+      }
+    }
+    if (!newErrorMessage && isChecked(formData.httpProxiesCheck)) {
+      if (validFlags['httpProxies'] === false) {
+        newErrorMessage = "Invalid HTTP proxies specification.";
+      }
+    }
+    setParsingError(newErrorMessage);
+  }, [formData, validFlags]);
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: parsedValue,
-    }));
-  };
-
-  // These functions serve for a correct parsing of JSON objects, lists, etc. right before submitting
-  const ensureBoolean = (value) => value === 'on' || value === true;
+  const isChecked = (value) => value === 'on' || value === true;
 
   const parseAllObjectsToJSON = (dataWithStrings) => {
-
     const parsedObject = dataWithStrings;
 
-    if (ensureBoolean(dataWithStrings.comunicaContextCheck)) {
+    if (isChecked(dataWithStrings.comunicaContextCheck)) {
       parsedObject.comunicaContext = JSON.parse(dataWithStrings.comunicaContext);
 
       if (!!dataWithStrings.source && dataWithStrings.source.trim() !== '')
@@ -179,63 +151,144 @@ ORDER BY ?genre`;
       }
     }
 
-    if (ensureBoolean(dataWithStrings.sourceIndexCheck)) {
+    if (isChecked(dataWithStrings.sourceIndexCheck)) {
       parsedObject.sourcesIndex = {
         url: parsedObject.indexSourceUrl,
         queryString: parsedObject.indexSourceQuery
       }
     }
 
-    if (ensureBoolean(dataWithStrings.askQueryCheck)) {
+    if (isChecked(dataWithStrings.askQueryCheck)) {
       parsedObject.askQuery = JSON.parse(dataWithStrings.askQuery);
     }
 
-    if (ensureBoolean(dataWithStrings.directVariablesCheck)) {
+    if (isChecked(dataWithStrings.httpProxiesCheck)) {
+      parsedObject.httpProxies = JSON.parse(dataWithStrings.httpProxies);
+    }
+
+    if (isChecked(dataWithStrings.directVariablesCheck)) {
       parsedObject.variables = JSON.parse(dataWithStrings.variables);
     }
 
-    if (ensureBoolean(dataWithStrings.indirectVariablesCheck)) {
+    if (isChecked(dataWithStrings.indirectVariablesCheck)) {
       parsedObject.indirectVariables = { queryStrings: JSON.parse(dataWithStrings.indirectQueries) };
     }
 
     return parsedObject;
   }
 
-  // These are the functions for the addition and removal of indirect variable input fields
-  const handleIndirectVariableSource = () => {
-    setIndirectVariableSourceList([...indirectVariableSourceList, ""]);
-  }
-  const handleIndirectVariableSourceRemove = (index) => {
-    const newList = [...indirectVariableSourceList];
-    newList.splice(index, 1);
-    setIndirectVariableSourceList(newList);
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  // These Functions are the submit functions for whether the creation or edit of a custom query
-  const addQuery = (formData) => {
-    const creationID = Date.now().toString();
-    formData = parseAllObjectsToJSON(formData);
+    // LOG console.log("----- customEditor.handleSubmit");
 
-    configManager.addQuery({
-      ...formData,
-      id: creationID,
-      queryGroupId: "cstm",
-      icon: "AutoAwesomeIcon",
-    });
-    navigate(`/${creationID}`);
+    if (parsingError) {
+      // LOG console.log(`not submitting, parsingError: ${parsingError}`);
+      return;
+    }
+
+    const htmlFormData = new FormData(event.currentTarget);
+    let collectedData = Object.fromEntries(htmlFormData.entries());
+    // LOG console.log(`collectedData (from HTML form data):\n${JSON.stringify(collectedData, null, 2)}`);
+    // LOG console.log(`formData (from state):\n${JSON.stringify(formData, null, 2)}`);
+
+    collectedData.queryString = formData.queryString;
+    if (isChecked(collectedData.sourceIndexCheck)) {
+      collectedData.indexSourceQuery = formData.indexSourceQuery;
+    }
+    if (isChecked(collectedData.comunicaContextCheck)) {
+      collectedData.comunicaContext = formData.comunicaContext;
+    }
+    if (isChecked(collectedData.sourceIndexCheck)) {
+      collectedData.indexSourceQuery = formData.indexSourceQuery;
+    }
+    if (isChecked(collectedData.directVariablesCheck)) {
+      collectedData.variables = formData.variables;
+    }
+    if (isChecked(collectedData.indirectVariablesCheck)) {
+      collectedData.indirectQueries = JSON.stringify(indirectVariablesQueryList);
+    }
+    if (isChecked(collectedData.askQueryCheck)) {
+      collectedData.askQuery = formData.askQuery;
+    }
+    if (isChecked(collectedData.httpProxiesCheck)) {
+      collectedData.httpProxies = formData.httpProxies;
+    }
+
+    // LOG console.log(`collectedData (finally):\n${JSON.stringify(collectedData, null, 2)}`);
+
+    const searchParams = new URLSearchParams(collectedData);
+    collectedData.searchParams = searchParams;
+
+    if (props.newQuery) {
+      configManager.addNewQueryGroup('cstm', 'Custom queries', 'EditNoteIcon');
+      
+      const creationID = Date.now().toString();
+      const jsonData = parseAllObjectsToJSON(collectedData);
+      configManager.addQuery({
+        ...jsonData,
+        id: creationID,
+        queryGroupId: "cstm",
+        icon: "AutoAwesomeIcon",
+      });
+
+      navigate(`/${creationID}`);
+    } else {
+      const customQuery = configManager.getQueryById(props.id);
+      const jsonData = parseAllObjectsToJSON(collectedData);
+      configManager.updateQuery({
+        ...jsonData,
+        id: customQuery.id,
+        queryGroupId: customQuery.queryGroupId,
+        icon: customQuery.icon
+      });
+
+      // force a re-render with the updateTimestamp
+      navigate(`/${customQuery.id}`, {state: { updateTimestamp: Date.now() } });
+    }
   };
 
-  const updateQuery = (formData, customQuery) => {
-    formData = parseAllObjectsToJSON(formData);
-    configManager.updateQuery({
-      ...formData,
-      id: customQuery.id,
-      queryGroupId: customQuery.queryGroupId,
-      icon: customQuery.icon
+  const handleChange = (event) => {
+    const { name, value, validFlag } = event.target;
+    const indirectVariablesQueryRegex = /indirectVariablesQuery-(\d)+/;
+    const result = indirectVariablesQueryRegex.exec(name);
+    if (result) {
+      const index = result[1];
+      setIndirectVariablesQueryList((prevList) => {
+        const newList = [...prevList];
+        newList[index] = value;
+        return newList;
+      });
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value
+      }));
+    }
+    if (validFlag !== undefined) {
+      setValidFlags((prevValidFlags) => ({
+        ...prevValidFlags,
+        [name]: validFlag
+      }));
+    }
+  };
+
+  const handleAddIndirectVariablesQuery = () => {
+    setIndirectVariablesQueryList([...indirectVariablesQueryList, ""]);
+  }
+  const handleRemoveIndirectVariablesQuery = (index) => {
+    setIndirectVariablesQueryList((prevList) => {
+      const newList = [...prevList];
+      newList.splice(index, 1);
+      return newList;
+     });
+    setValidFlags((prevValidFlags) => {
+      const name = `indirectVariablesQuery-${index}`;
+      const { [name]: _, ...rest } = prevValidFlags;
+      return rest;
     });
 
-    navigate(`/${customQuery.id}`);
-  };
+  }
 
   return (
     <React.Fragment>
@@ -253,7 +306,7 @@ ORDER BY ?genre`;
       >
         <CardContent>
 
-          {editError ? <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'darkred' }}> Apologies, something went wrong with the loading of your data... </Typography> : null   /* This is a small work around an error that occurs with indirect variables. */}
+          {errorWhileLoading ? <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'darkred' }}> {errorWhileLoading} </Typography> : null   /* This is a small work around an error that occurs with indirect variables. */}
           <Typography variant="h5" sx={{ fontWeight: 'bold' }}>{props.newQuery ? 'Custom Query Editor' : 'Edit'}</Typography>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
@@ -287,19 +340,13 @@ ORDER BY ?genre`;
                 sx={{ marginBottom: '16px' }}
               />
 
-              <TextField
+              <SparqlEditField
                 required
                 label="SPARQL query"
                 name="queryString"
-                multiline
-                fullWidth
-                minRows={5}
-                variant="outlined"
                 helperText="Enter your SPARQL query here."
-                placeholder={defaultSparqlQuery}
-                value={!!formData.queryString ? formData.queryString : formData.queryString === '' ? '' : defaultSparqlQuery}
+                value={formData.queryString === '' ? '' : formData.queryString || defaultSparqlQuery}
                 onChange={handleChange}
-                sx={{ marginBottom: '16px' }}
               />
             </div>
           </Card>
@@ -307,77 +354,67 @@ ORDER BY ?genre`;
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
 
             <Typography variant="h5" sx={{ mt: 2 }}> Comunica Context &amp; Sources </Typography>
-            <div>
-              <FormControlLabel
-                control={<Checkbox
-                  name='comunicaContextCheck'
-                  checked={!!formData.comunicaContextCheck}
-                  onChange={
-                    () => {
-                      setParsingErrorComunica(false);
-                      setFormData((prevFormData) => ({
-                        ...prevFormData,
-                        'comunicaContextCheck': !formData.comunicaContextCheck,
-                      }));
-                    }
-                  }
-
-                />} label="Advanced Comunica Context Settings" />
-
-            </div>
             <TextField
-              required={!formData.sourceIndexCheck}
+              required={!isChecked(formData.sourceIndexCheck)}
               fullWidth
               name="source"
               label="Fixed data source(s)"
               placeholder="http://example.com/source1; http://example.com/source2"
-              helperText="Give the source URL(s) for the query. Separate URLs with '; '.  (These are the comunica context sources)"
+              helperText="Give the source URL(s) for the query. Separate URLs with '; '.  (These are the Comunica context sources)"
               variant="outlined"
               value={!!formData.source ? formData.source : ''}
               onChange={handleChange}
               sx={{ marginBottom: '16px' }}
             />
+            <div>
+              <FormControlLabel
+                control={<Checkbox
+                  name='comunicaContextCheck'
+                  checked={isChecked(formData.comunicaContextCheck)}
+                  onChange={
+                    () => {
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        'comunicaContextCheck': !isChecked(formData.comunicaContextCheck),
+                      }));
+                    }
+                  }
 
-
-            {formData.comunicaContextCheck &&
+                />} label="Advanced Comunica Context Settings" />
+            </div>
+            {isChecked(formData.comunicaContextCheck) &&
               <div>
-                <TextField
-                  required={ensureBoolean(formData.comunicaContextCheck)}
+                <JsonEditField
+                  required
                   label="Comunica context configuration"
                   name="comunicaContext"
-                  multiline
-                  fullWidth
-                  error={parsingErrorComunica}
-                  minRows={5}
-                  variant="outlined"
-                  helperText={`Write the extra configurations in JSON-format${parsingErrorComunica ? ' (Invalid Syntax)' : '.'}`}
-                  value={!!formData.comunicaContext ? typeof formData.comunicaContext === 'object' ? JSON.stringify(formData.comunicaContext, null, 2) : formData.comunicaContext : formData.comunicaContext === '' ? '' : defaultExtraComunicaContext}
-                  placeholder={defaultExtraComunicaContext}
-                  onClick={(e) => handleJSONparsing(e, setParsingErrorComunica)}
-                  onChange={(e) => handleJSONparsing(e, setParsingErrorComunica)}
-                  sx={{ marginBottom: '16px' }}
+                  helperText="Enter your extra Comunica context in JSON-format."
+                  value={formData.comunicaContext === '' ? '' : formData.comunicaContext || defaultExtraComunicaContext}
+                  onChange={handleChange}
                 />
               </div>
             }
 
-            <FormControlLabel
-              control={<Checkbox
-                name='sourceIndexCheck'
-                checked={!!formData.sourceIndexCheck}
-                onChange={
-                  () => {
-                    setFormData((prevFormData) => ({
-                      ...prevFormData,
-                      'sourceIndexCheck': !formData.sourceIndexCheck,
-                    }));
+            <div>
+              <FormControlLabel
+                control={<Checkbox
+                  name='sourceIndexCheck'
+                  checked={isChecked(formData.sourceIndexCheck)}
+                  onChange={
+                    () => {
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        'sourceIndexCheck': !isChecked(formData.sourceIndexCheck),
+                      }));
+                    }
                   }
-                }
-              />} label="Indirect sources" />
+                />} label="Indirect sources" />
+            </div>
 
-            {formData.sourceIndexCheck &&
+            {isChecked(formData.sourceIndexCheck) &&
               <div>
                 <TextField
-                  required={ensureBoolean(formData.sourceIndexCheck)}
+                  required
                   fullWidth
                   name="indexSourceUrl"
                   label="Index file URL"
@@ -389,19 +426,13 @@ ORDER BY ?genre`;
                   sx={{ marginBottom: '16px' }}
                 />
 
-                <TextField
-                  required={ensureBoolean(formData.sourceIndexCheck)}
-                  label="SPARQL query"
+                <SparqlEditField
+                  required
+                  label="Indirect sources SPARQL query"
                   name="indexSourceQuery"
-                  multiline
-                  fullWidth
-                  minRows={5}
-                  variant="outlined"
-                  helperText="Give the SPARQL query to get the sources from the index file."
-                  placeholder={defaultSparqlQueryIndexSources}
-                  value={!!formData.indexSourceQuery ? formData.indexSourceQuery : formData.indexSourceQuery === '' ? '' : defaultSparqlQueryIndexSources}
+                  helperText="Enter a SPARQL query to get the sources from the index file here."
+                  value={formData.indexSourceQuery === '' ? '' : formData.indexSourceQuery || defaultSparqlQueryIndexSources}
                   onChange={handleChange}
-                  sx={{ marginBottom: '16px' }}
                 />
               </div>
             }
@@ -414,145 +445,146 @@ ORDER BY ?genre`;
               <FormControlLabel
                 control={<Checkbox
                   name='directVariablesCheck'
-                  checked={!!formData.directVariablesCheck}
+                  checked={isChecked(formData.directVariablesCheck)}
                   onChange={
                     () => {
-                      setParsingErrorTemplate(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'directVariablesCheck': !formData.directVariablesCheck,
+                        'directVariablesCheck': !isChecked(formData.directVariablesCheck),
                       }));
                     }
                   }
                 />} label="Fixed Variables" />
+            </div>
 
-              {formData.directVariablesCheck &&
-                <div>
-                  <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
-                  <TextField
-                    required={ensureBoolean(formData.directVariablesCheck)}
-                    label="Templated query variables"
-                    name="variables"
-                    error={parsingErrorTemplate}
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    variant="outlined"
-                    helperText={`Write the variables specification in JSON-format${parsingErrorTemplate ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.variables ? typeof formData.variables === 'object' ? JSON.stringify(formData.variables, null, 5) : formData.variables : formData.variables === '' ? '' : defaultTemplateOptions}
-                    placeholder={defaultTemplateOptions}
-                    onClick={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
-                    onChange={(e) => handleJSONparsing(e, setParsingErrorTemplate)}
-                    sx={{ marginBottom: '16px' }}
-                  />
-                </div>
-              }
+            {isChecked(formData.directVariablesCheck) &&
+              <div>
+                <Typography variant="base" sx={{ mt: 2, color: 'darkgrey' }}> Give the variable names and options for this templated query.</Typography>
+                <JsonEditField
+                  required
+                  label="Fixed templated query variables"
+                  name="variables"
+                  helperText="Enter your fixed templated variables specification in JSON-format."
+                  value={formData.variables === '' ? '' : formData.variables || defaultTemplateOptions}
+                  onChange={handleChange}
+                />
+              </div>
+            }
 
+            <div>
               <FormControlLabel
                 control={<Checkbox
                   name='indirectVariablesCheck'
-                  checked={!!formData.indirectVariablesCheck}
+                  checked={isChecked(formData.indirectVariablesCheck)}
                   onChange={
                     () => {
-                      setParsingErrorTemplate(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'indirectVariablesCheck': !formData.indirectVariablesCheck,
+                        'indirectVariablesCheck': !isChecked(formData.indirectVariablesCheck),
                       }));
                     }
                   }
                 />} label="Indirect Variables" />
-
-              {formData.indirectVariablesCheck &&
-                <div>
-                  <div style={{ marginBottom: '20px' }}>
-                    <Typography variant="base" sx={{ color: '#777' }}> Give one or more queries to retrieve the variable(s) from the source(s).</Typography>
-                  </div>
-                  {
-                    indirectVariableSourceList.map((sourceString, index) => (
-                      <div key={index} style={{ position: 'relative' }}>
-                        <TextField
-                          required={ensureBoolean(formData.indirectVariablesCheck)}
-                          label={`Query ${index + 1} for indirect variable(s)`}
-                          name={`indirectQuery${index + 1}`}
-                          multiline
-                          fullWidth
-                          minRows={5}
-                          variant="outlined"
-                          helperText={`Enter the ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve the variables.`}
-                          value={sourceString}
-                          placeholder={defaultSparqlQueryIndirectVariables}
-                          onChange={(e) => handleIndirectVariablesChange(e, index)}
-                          sx={{ marginBottom: '16px' }}
-                        />
-
-                        <Button
-                          variant="outlined"
-                          color='error' onClick={() => handleIndirectVariableSourceRemove(index)}
-                          type="button" disabled={indirectVariableSourceList.length <= 1}
-                          style={{ position: 'absolute', top: '15px', right: '8px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          <IconProvider.DeleteIcon />
-                        </Button>
-                      </div>
-                    ))
-                  }
-                  <Button variant="outlined" onClick={handleIndirectVariableSource} type="button" startIcon={<IconProvider.AddIcon />}>
-                    Add another query
-                  </Button>
-                </div>
-              }
             </div>
+
+            {isChecked(formData.indirectVariablesCheck) &&
+              <div>
+                <div style={{ marginBottom: '20px' }}>
+                  <Typography variant="base" sx={{ color: '#777' }}> Give one or more SPARQL queries to retrieve variable(s) from source(s).</Typography>
+                </div>
+                {
+                  indirectVariablesQueryList.map((ivQuery, index) => (
+                    <div key={index} style={{ position: 'relative' }}>
+                      <SparqlEditField
+                        required
+                        label={`SPARQL query ${index + 1} for indirect variable(s)`}
+                        name={`indirectVariablesQuery-${index}`}
+                        helperText={`Enter a ${index === 0 ? "1st" : index === 1 ? "2nd" : index + 1 + "th"} SPARQL query to retrieve variables.`}
+                        value={ivQuery}
+                        onChange={handleChange}
+                      />
+
+                      <Button
+                        variant="outlined"
+                        color='error' onClick={() => handleRemoveIndirectVariablesQuery(index)}
+                        type="button" disabled={indirectVariablesQueryList.length <= 1}
+                        style={{ zIndex: '2', position: 'absolute', top: '30px', right: '17px', padding: '8px', minWidth: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <IconProvider.DeleteIcon />
+                      </Button>
+                    </div>
+                  ))
+                }
+                <Button variant="outlined" onClick={handleAddIndirectVariablesQuery} type="button" startIcon={<IconProvider.AddIcon />}>
+                  Add another query
+                </Button>
+              </div>
+            }
           </Card>
 
           <Card sx={{ py: '10px', px: '20px', my: 2 }}>
             <Typography variant="h5" sx={{ mt: 2 }}> Extra Options</Typography>
             <div>
-
               <FormControlLabel
                 control={<Checkbox
                   name='askQueryCheck'
-                  checked={!!formData.askQueryCheck}
+                  checked={isChecked(formData.askQueryCheck)}
                   onChange={
                     () => {
-                      setParsingErrorAsk(false);
                       setFormData((prevFormData) => ({
                         ...prevFormData,
-                        'askQueryCheck': !formData.askQueryCheck,
+                        'askQueryCheck': !isChecked(formData.askQueryCheck),
                       }));
                     }
                   }
                 />} label="ASK query" />
-
-              {formData.askQueryCheck &&
-                <div>
-                  <TextField
-                    required={ensureBoolean(formData.askQueryCheck)}
-                    label="Creating an ask query"
-                    name="askQuery"
-                    error={parsingErrorAsk}
-                    multiline
-                    fullWidth
-                    minRows={5}
-                    variant="outlined"
-                    helperText={`Write askQuery details in JSON-format${parsingErrorAsk ? ' (Invalid Syntax)' : '.'}`}
-                    value={!!formData.askQuery ? typeof formData.askQuery === 'object' ? JSON.stringify(formData.askQuery, null, 2) : formData.askQuery : formData.askQuery === '' ? '' : defaultAskQueryDetails}
-                    placeholder={defaultAskQueryDetails}
-                    onClick={(e) => handleJSONparsing(e, setParsingErrorAsk)}
-                    onChange={(e) => handleJSONparsing(e, setParsingErrorAsk)}
-                    sx={{ marginBottom: '16px' }}
-                  />
-                </div>
-              }
-
             </div>
+            {isChecked(formData.askQueryCheck) &&
+              <div>
+                <JsonEditField
+                  required
+                  label="Creating an ask query"
+                  name="askQuery"
+                  helperText="Enter your ASK query specification in JSON-format."
+                  value={formData.askQuery === '' ? '' : formData.askQuery || defaultAskQueryDetails}
+                  onChange={handleChange}
+                />
+              </div>
+            }
+            <div>
+              <FormControlLabel
+                control={<Checkbox
+                  name='httpProxiesCheck'
+                  checked={isChecked(formData.httpProxiesCheck)}
+                  onChange={
+                    () => {
+                      setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        'httpProxiesCheck': !isChecked(formData.httpProxiesCheck),
+                      }));
+                    }
+                  }
+                />} label="Http proxies" />
+            </div>
+            {isChecked(formData.httpProxiesCheck) &&
+              <div>
+                <JsonEditField
+                  required
+                  label="Specifying HTTP proxies"
+                  name="httpProxies"
+                  helperText="Enter your HTTP proxies specification JSON-format."
+                  value={formData.httpProxies === '' ? '' : formData.httpProxies || defaultHttpProxiesDetails}
+                  onChange={handleChange}
+                />
+              </div>
+            }
           </Card>
 
         </CardContent>
 
-        {showError && (
+        {parsingError && (
           <Typography variant="body2" sx={{ color: 'red', mb: '10px' }}>
-            Invalid Query. Check the JSON-Syntax
+            <span data-cy="parsingError">{parsingError}</span>
           </Typography>
         )}
 

@@ -1,4 +1,4 @@
-import { Link, TableCell, TableHead, TableRow } from "@mui/material";
+import { Link, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import React from "react";
 import { useListContext } from "react-admin";
 import "./TableHeader.css";
@@ -24,8 +24,8 @@ function TableHeader({ children }) {
    * @param {string} target - the source of the column that was clicked 
    */
   function handleHeaderClick(target) {
-    const newSort = { field: target, order: "DESC" };
-    if (sort) {
+    const newSort = { field: target, order: "ASC" };
+    if (sort && sort.field == target) {
       if (sort.order === "ASC") {
         newSort.order = "DESC";
       } else {
@@ -37,7 +37,8 @@ function TableHeader({ children }) {
 
   const query = configManager.getQueryWorkingCopyById(resource);
   const variableOntology = query.variableOntology;
-
+  const sortingAllowed = query?.queryText?.startsWith("# Custom sorting is allowed.");
+  
   return (
     <TableHead>
       <TableRow>
@@ -45,15 +46,19 @@ function TableHeader({ children }) {
           <>
             <TableCell
               key={child.props.source}
-              sx={{ height: "100%", "& > *": { verticalAlign: "middle" } }}
+              sx={{ height: "100%", fontWeight: "bold", "& > *": { verticalAlign: "middle" } }}
             >
-              <span
+              {sortingAllowed ? <span
                 role="button"
                 className="header-button"
                 onClick={() => handleHeaderClick(child.props.source)}
               >
                 {child.props.label}
-              </span>
+              </span> : <Tooltip title="Custom sorting is disabled for queries containing an ORDER clause.">
+                <span>
+                  {child.props.label}
+                </span>
+              </Tooltip>}
               {!!variableOntology && variableOntology[child.props.source] && (
                 <Link
                   target="_blank"

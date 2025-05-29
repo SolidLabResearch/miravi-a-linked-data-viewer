@@ -1,4 +1,3 @@
-import { ProxyHandlerStatic } from "@comunica/actor-http-proxy";
 import { Generator, Parser } from "sparqljs";
 import NotImplementedError from "../NotImplementedError";
 import { Term } from "sparqljs";
@@ -7,24 +6,6 @@ import configManager from "../configManager/configManager";
 import comunicaEngineWrapper from "../comunicaEngineWrapper/comunicaEngineWrapper";
 
 let config = configManager.getConfig();
-
-let proxyHandler;
-
-const setProxyHandler = () => {
-  if (config.httpProxy) {
-    proxyHandler = new ProxyHandlerStatic(config.httpProxy);
-  } else {
-    proxyHandler = undefined;
-  }
-};
-setProxyHandler();
-
-const onConfigChanged = (newConfig) => {
-  config = newConfig;
-  setProxyHandler();
-};
-
-configManager.on('configChanged', onConfigChanged);
 
 // simple cache to save time while scrolling through pages of a list
 // results = the result of executeQuery, totalItems
@@ -53,46 +34,65 @@ export default {
     const limit = pagination.perPage;
     const offset = (pagination.page - 1) * pagination.perPage;
     query.sort = sort;
+    let results = [];
+    let totalItems = 0;
+    let noSources = false;
+    let errorMessage = "";
 
-    handleComunicaContextCreation(query);
+    try {
+      handleComunicaContextCreation(query);
 
-    if (query.sourcesIndex) {
-      const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.useProxy);
-      query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
-    }
+      if (query.sourcesIndex) {
+        const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.httpProxies);
+        query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
+      }
 
-    if (meta && meta.variableValues) {
-      query.variableValues = meta.variableValues;
-    }
+      if (meta && meta.variableValues) {
+        query.variableValues = meta.variableValues;
+      }
 
-    let results;
-    const hash = JSON.stringify({ resource, variableValues: query.variableValues });
-    // LOG console.log(`hash: ${hash}`);
-    if (hash == listCache.hash) {
-      // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
-      results = listCache.results;
-    } else {
-      results = await executeQuery(query);
-      listCache.hash = hash;
-      listCache.results = results;
-      // LOG console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
-    }
+      const hash = JSON.stringify({ resource, sort, meta, query });
+      // LOG console.log(`hash: ${hash}`);
+      if (hash == listCache.hash) {
+        // LOG console.log(`reusing listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+        results = listCache.results;
+      } else {
+        if (query.comunicaContext?.sources?.length) {
+          results = await executeQuery(query);
+          listCache.hash = hash;
+          listCache.results = results;
+          // LOG console.log(`new listCache.results: ${JSON.stringify(listCache.results, null, 2)}`);
+        } else {
+          noSources = true;
+        }
+      }
 
-    let totalItems = results.length;
-    results = results.slice(offset, offset + limit);
+      totalItems = results.length;
+      results = results.slice(offset, offset + limit);
 
-    if (Object.keys(filter).length > 0) {
-      results = results.filter((result) => {
-        return Object.keys(filter).every((key) => {
-          return result[key] === filter[key];
+      if (Object.keys(filter).length > 0) {
+        results = results.filter((result) => {
+          return Object.keys(filter).every((key) => {
+            return result[key] === filter[key];
+          });
         });
-      });
+      }
+    } catch (error) {
+      // catch all errors here and save the message for meta in the result
+      errorMessage = error.message;
     }
 
-    return {
+    const ret = {
       data: results,
-      total: totalItems
+      total: totalItems,
+      meta: {
+        resultEmpty: !results.length,
+        noSources,
+        errorMessage
+      }
     };
+    // LOG console.log(`ret: ${JSON.stringify(ret, null, 2)}`);
+    return ret;
   },
   getOne: async function getOne() {
     // Our implementation doesn't use this function
@@ -151,17 +151,22 @@ async function buildQueryText(query) {
     if (!query.variableOntology) {
       query.variableOntology = findPredicates(parsedQuery);
     }
-    if (!parsedQuery.order && query.sort && query.sort.field !== "id") {
-      const { field, order } = query.sort;
-      parsedQuery.order = [
-        {
-          expression: { termType: "Variable", value: field },
-          descending: order === "DESC",
-        },
-      ];
-    }
+    let comments = "";
+    if (!parsedQuery.order) {
+      comments = "Custom sorting is allowed.";
+      if (query.sort && query.sort.field !== "id") {
+        const { field, order } = query.sort;
+        parsedQuery.order = [
+          {
+            expression: { termType: "Variable", value: field },
+            descending: order === "DESC",
+          },
+        ];
+      }
+    } 
     const generator = new Generator();
-    return generator.stringify(parsedQuery);
+    let result = generator.stringify(parsedQuery);
+    return `# ${comments}\n${result}`;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -230,6 +235,7 @@ async function executeQuery(query) {
         newResult[variable] = term;
       }
       newResult.id = index++;
+      // LOG console.log(`executeQuery callbackBindings newResult: ${JSON.stringify(newResult, null, 2)}`);
       results.push(newResult);
     };
     const callbackQuads = (quad) => {
@@ -240,6 +246,7 @@ async function executeQuery(query) {
         graph: quad.graph,
         id: index++
       }
+      // LOG console.log(`executeQuery callbackQuads newResult: ${JSON.stringify(newResult, null, 2)}`);
       results.push(newResult);
     };
     const callbackBoolean = (b) => {
@@ -252,11 +259,13 @@ async function executeQuery(query) {
         },
         id: index++
       }
+      // LOG console.log(`executeQuery callbackBoolean newResult: ${JSON.stringify(newResult, null, 2)}`);
       results.push(newResult);
     };
     await comunicaEngineWrapper.query(query.queryText,
        // WEIRD: we need to make a copy of the context here (a shallow copy is fine); concurrent calls ???
       { ...query.comunicaContext },
+      query.httpProxies && [ ...query.httpProxies ],
       { "variables": callbackVariables, "bindings": callbackBindings, "quads": callbackQuads, "boolean": callbackBoolean });
     return results;
   } catch (error) {
@@ -268,10 +277,10 @@ async function executeQuery(query) {
  * Gets sources from a sources index
  * 
  * @param {object} sourcesIndex - the sourcesIndex object as found in the configuration
- * @param {boolean} useProxy - true if the main query needs a proxy (in which case we implicitly use it to access the sources index too)
+ * @param {array} httpProxies - array of httpProxy definitions
  * @returns {array} array of sources found
  */
-async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
+async function getSourcesFromSourcesIndex(sourcesIndex, httpProxies) {
   const sourcesList = [];
   try {
     let queryStringIndexSource;
@@ -283,12 +292,14 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
     }
 
     const bindingsStream = await comunicaEngineWrapper.queryBindings(queryStringIndexSource,
-      { lenient: true, sources: [sourcesIndex.url], httpProxyHandler: (useProxy ? proxyHandler : undefined) }, { engine: "link-traversal" });
+      { lenient: true, sources: [sourcesIndex.url] }, httpProxies, { engine: "link-traversal" });
     await new Promise((resolve, reject) => {
       bindingsStream.on('data', (bindings) => {
+        // LOG console.log(`getSourcesFromSourcesIndex bindings: ${bindings.toString()}`);
         for (const term of bindings.values()) {  // check for 1st value
           const source = term.value;
           if (!sourcesList.includes(source)) {
+            // LOG console.log(`getSourcesFromSourcesIndex adding source: ${source}`);
             sourcesList.push(source);
           }
           // we only want the first term, whatever the variable's name is (note: a for ... of loop seems the only way to access it)
@@ -303,10 +314,6 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
     throw new Error(`Error adding sources from index: ${error.message}`);
   }
 
-  if (sourcesList.length == 0) {
-    throw new Error(`The resulting list of sources is empty`);
-  }
-
   return sourcesList;
 }
 
@@ -319,23 +326,48 @@ async function getSourcesFromSourcesIndex(sourcesIndex, useProxy) {
 function handleComunicaContextCreation(query) {
   if (!query.comunicaContext) {
     query.comunicaContext = {
-      sources: [],
-      lenient: true
+      sources: []
     };
   } else {
-    if (query.comunicaContext.lenient === undefined) {
-      query.comunicaContext.lenient = true;
-    }
     if (!query.comunicaContext.sources) {
       query.comunicaContext.sources = [];
     }
-    if (query.comunicaContext.useProxy) {
-      query.comunicaContext.httpProxyHandler = proxyHandler;
+  }
+
+  if (query.sourcesIndex) {
+    if (query.comunicaContext.lenient === undefined) {
+      query.comunicaContext.lenient = true;
     }
   }
 }
 
 async function getVariableOptions(query) {
+
+  function termToSparqlCompatibleString(term) {
+    switch (term.termType) {
+      case 'NamedNode':
+        return `<${term.value}>`;
+
+      case 'Literal':
+        const escaped = term.value.replace(/"/g, '\\"');
+        if (term.language) {
+          return `"${escaped}"@${term.language}`;
+        }
+        if (term.datatype && term.datatype.value !== 'http://www.w3.org/2001/XMLSchema#string') {
+          return `"${escaped}"^^<${term.datatype.value}>`;
+        }
+        return `"${escaped}"`;
+
+      case 'BlankNode':
+        return `_:${term.value}`;
+
+      case 'Variable':
+        return `?${term.value}`;
+
+      default:
+        throw new Error(`Unknown RDF Term type: ${term.termType}`);
+    }
+  }
 
   // LOG console.log(`--- getVariableOptions #${++getVariableOptionsCounter}`);
 
@@ -343,7 +375,7 @@ async function getVariableOptions(query) {
   handleComunicaContextCreation(query);
 
   if (query.sourcesIndex) {
-    const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.comunicaContext.useProxy);
+    const additionalSources = await getSourcesFromSourcesIndex(query.sourcesIndex, query.httpProxies);
     query.comunicaContext.sources = [...new Set([...query.comunicaContext.sources, ...additionalSources])];
   }
   // END duplicated chunk of code
@@ -386,49 +418,18 @@ async function getVariableOptions(query) {
   try {
     for (const queryString of queryStringList) {
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
-        { sources: query.comunicaContext.sources, httpProxyHandler: (query.comunicaContext.useProxy ? proxyHandler : undefined) });
+        { sources: query.comunicaContext.sources }, query.httpProxies);
       await new Promise((resolve, reject) => {
         bindingsStream.on('data', (bindings) => {
-          // see https://comunica.dev/docs/query/advanced/bindings/
+          // LOG console.log(`getVariableOptions bindings: ${bindings.toString()}`);
           for (const [variable, term] of bindings) {
             const name = variable.value;
             if (!variableOptions[name]) {
               variableOptions[name] = [];
             }
-            let variableValue;
-            switch (term.termType) {
-              case "Literal":
-                // escape double quotes
-                // example: This is a string containing some \"double quotes\"
-                variableValue = `${term.value.replace(/"/g, '\\"')}`;
-                // test whether there is a type specifier ^^...
-                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
-                if (/\"\^\^/.test(term.id)) {
-                  // do not surround with double quotes
-                  // example: 1
-                } else {
-                  // surround with double quotes
-                  // example: "This is a string containing some \"double quotes\""
-                  variableValue = `"${variableValue}"`;
-                }
-                // test whether there is a language tag @...
-                // this code is hacky, because it depends on undocumented term.id - cover it with sufficient test cases!
-                const lt = /\@(.*)$/.exec(term.id);
-                if (lt) {
-                  // append language tag
-                  // example: "This is a string in English"@en
-                  variableValue = `${variableValue}@${lt[1]}`;
-                }
-                break;
-              case "NamedNode":
-                // surround with triangle brackets
-                // example: <https://www.example.com/data/o1>
-                variableValue = `<${term.value}>`;
-                break;
-              default:
-                break;
-            }
+            const variableValue = termToSparqlCompatibleString(term);
             if (variableValue && !variableOptions[name].includes(variableValue)) {
+              // LOG console.log(`getVariableOptions adding variable option for '${name}': ${variableValue}`);
               variableOptions[name].push(variableValue);
             }
           }
@@ -439,11 +440,11 @@ async function getVariableOptions(query) {
     }
   }
   catch (error) {
-    throw new Error(`Error getting variable options: ${error.message}`);
+    throw new Error(`Error getting variable options... ${error.message}`);
   }
 
   if (variableOptions == {}) {
-    throw new Error(`The variable options are empty`);
+    throw new Error(`Error getting variable options... The variable options are empty`);
   }
   return variableOptions;
 }

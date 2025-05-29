@@ -19,7 +19,7 @@ describe("Sources info", () => {
     cy.get('[aria-label="Fetch was successful"]').should("exist");
   });
 
-  it("Fetch status on cached source - see https://github.com/SolidLabResearch/generic-data-viewer-react-admin/issues/59", () => {
+  it("Fetch status on cached source - see https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/issues/59", () => {
     cy.visit("/");
     cy.contains("Project related examples").click();
     cy.contains("Components").click();
@@ -30,6 +30,9 @@ describe("Sources info", () => {
 
     cy.contains("Components and their materials").click();
     cy.contains("Finished in:");
+    cy.get('#main-content').within(() => {
+      cy.contains("Components and their materials"); // wait for the next results!!!
+    });
     cy.get('[aria-label="Sources info"]').click();
 
     cy.get('[aria-label="Fetch was successful"]').should("exist");

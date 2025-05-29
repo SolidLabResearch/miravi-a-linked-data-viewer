@@ -56,11 +56,11 @@ function NavigationBar(props) {
   return (
     <>
       <AppBar {...props} toolbar={<></>} userMenu={<AuthenticationMenu />}>
-        <img
-          id="app-logo"
-          src={config.logoLocation}
-          alt="Web application logo"
-        ></img>
+        <a href={config.logoRedirectURL} target="_blank"><img
+            id="app-logo"
+            src={config.logoLocation}
+            alt="Web application logo">
+          </img></a>
         <TitlePortal/>
         <AboutButton click={handleAboutOpen} />
         <InvalidateButton/>

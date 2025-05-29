@@ -26,6 +26,7 @@ export default function CustomConversionButton({ id }) {
         convertTemplatedQueriesFixedVariables()
         convertComunicaContextAndSources()
         convertASKquery()
+        convertHttpProxies()
 
         // The id and group have to be deleted because a new custom query is going to be made. Name is modified.
         delete convertedQuery.id
@@ -132,6 +133,13 @@ export default function CustomConversionButton({ id }) {
     function convertASKquery() {
         if (convertedQuery.askQuery) {
             convertedQuery.askQueryCheck = "on"
+        }
+    }
+
+    // This function handles the logic for http proxies
+    function convertHttpProxies() {
+        if (convertedQuery.httpProxies) {
+            convertedQuery.httpProxiesCheck = "on"
         }
     }
 

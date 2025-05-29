@@ -1,16 +1,10 @@
 {
-  "title": "Generic Data Viewer",
-  "logoLocation": "images/IDLab-logo.png",
-  "logoRedirectURL": "https://idlab.technology/",
-  "mainAppColor": "lightgray",
-  "backgroundColor": "#fff",
-  "titleColor": "black",
-  "textColor": "#1976D2",
+  "title": "Miravi - a linked data viewer",
+  "logoLocation": "images/miravi.png",
+  "logoRedirectURL": "https://github.com/SolidLabResearch/miravi-a-linked-data-viewer",
   "queryFolder": "queries",
-  "httpProxy": "http://localhost:8000/",
   "showMilliseconds": false,
   "defaultIDP": "http://localhost:8080",
-  "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
   "queryGroups": [
     {
@@ -38,9 +32,14 @@
       "comunicaContext": {
         "sources": [
           "http://localhost:8001/example/idols"
-        ],
-        "useProxy": true
-      }
+        ]
+      },
+      "httpProxies": [
+        {
+          "urlStart": "http://localhost:8001",
+          "httpProxy": "http://localhost:8000/"
+        }
+      ]
     },
     {
       "id": "1010",
@@ -503,6 +502,52 @@
           "http://localhost:8080/example/test-objects"
         ],
         "lenient": true
+      }
+    },
+    {
+      "id": "9130",
+      "queryGroupId": "gr-test",
+      "queryLocation": "components.rq",
+      "name": "Http proxy test combined with indirect sources and source verification",
+      "description": "Contents same as those for the 'Source verification' query, but now through http proxy in a worse case test.",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-for-proxy-test-only",
+        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
+      },
+      "httpProxies": [
+        {
+          "urlStart": "http://localhost:8080",
+          "httpProxy": "http://localhost:8000/"
+        }
+      ]
+    },
+    {
+      "id": "9140",
+      "queryGroupId": "gr-test",
+      "queryLocation": "components_materials.rq",
+      "name": "Sources from an index file - no sources",
+      "description": "Test what happens if the sourceIndex query results in 0 sources.",
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-file-does-not-exist",
+        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
+      }
+    },
+    {
+      "id": "9150",
+      "queryGroupId": "gr-test",
+      "queryLocation": "musicians_variables.rq",
+      "name": "A templated query about musicians (indirect variables) - no sources",
+      "description": "Test what happens when variables cannot be loaded because no source(s) available.",
+      "icon": "MusicNoteIcon",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/musicians_genre_variable.rq"
+        ]
+      },
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/favourite-musicians-file-does-not-exist"
+        ]
       }
     }
   ]

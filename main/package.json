@@ -1,5 +1,5 @@
 {
-  "name": "generic-data-viewer-admin",
+  "name": "miravi-a-linked-data-viewer",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -13,27 +13,26 @@
     "dev-with-path": "vite --base /random/path/"
   },
   "dependencies": {
-    "@comunica/query-sparql": "^3.2.3",
+    "@comunica/query-sparql": "^4.2.0",
     "@inrupt/solid-client": "^1.30.0",
     "@inrupt/solid-client-authn-browser": "^1.17.1",
     "@inrupt/vocab-common-rdf": "^1.0.5",
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.4",
     "@rdfjs/types": "^1.1.0",
+    "@triply/yasqe": "^4.2.28",
     "events": "^3.3.0",
+    "jsonlint-mod": "^1.7.6",
     "prop-types": "^15.8.1",
     "query-sparql-link-traversal-solid-no-default-predicates": "^0.1.1",
     "rdf-string": "^1.6.3",
-    "react": "^18.2.0",
-    "react-admin": "^4.12.3",
-    "react-dom": "^18.2.0",
-    "react-query": "^3.39.3",
+    "react-admin": "^5.7.2",
     "sparqljs": "^3.7.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.0.3",
+    "@types/react": "^18.3.20",
+    "@types/react-dom": "^18.3.6",
+    "@vitejs/plugin-react": "^4.4.0",
     "eslint": "^8.45.0",
     "eslint-plugin-cypress": "^2.14.0",
     "eslint-plugin-jsdoc": "^46.4.6",
@@ -42,6 +41,6 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "fs-extra": "^11.3.0",
     "markdownlint-cli2": "^0.9.2",
-    "vite": "^4.4.5"
+    "vite": "^4.5.13"
   }
 }

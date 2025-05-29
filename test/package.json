@@ -1,5 +1,5 @@
 {
-  "name": "tools-for-generic-data-viewer-admin",
+  "name": "tools-for-miravi-a-linked-data-viewer",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "cors-anywhere": "^0.4.4",
     "cypress": "^13.8.0",
+    "cypress-log-to-output": "^1.1.2",
     "express": "^4.18.2",
     "http-server": "^14.1.1",
     "rimraf": "^5.0.1"

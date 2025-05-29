@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2025-05-29
+
+### Added
+
+- configs/oslo-kg: two class-related queries.
+
+### Changed
+
+- configs/onto-deside: updated to project configuration 2025-04-09 (#202).
+- In the configuration file: per query `httpProxies` setting replaces global `httpProxy` setting (#4, #47).
+- Error message when query has no sources was replaced with an application message in the empty result list (#204).
+- configs/oslo-kg: use smaller datasets for queries.
+- React-admin version updated to 5.7.2 (#207).
+- Tool renamed to 'Miravi - a linked data viewer'; default favicon.ico and miravi.png provided (#210).
+- Bumped Comunica version from 3.2.3 to 4.2.0, resulting in increased execution speed of some queries (#212).
+  Breaking change for typed literals in query configuration, "variables" field; see README for new syntax.
+- Removed not supported cosmetic fields from configuration file (#18).
+- JSON and SPARQL edit fields have syntax coloring and validation now (#142 and #143).
+
+### Fixed
+
+- Avoided (infinite) display of "The list is loading. Just a moment please." for queries that should show "The result list is empty.", in cases where the user does not have the right to read the involved source(s) (#209).
+- Result list sorting works again and the behavior is improved - see the issue for details (#216).
+- Loading values for variables ends with an error message if a required source is not available (#218).
+- When visiting a templated query with variable values defined in the URL search parameters,
+  the resolved query is executed immediately, avoiding the delay it takes to first retrieve all options for the variables (#211).
+- CONSTRUCT queries work again (#222).
+- Config field "logoRedirectURL" is working (#17).
+- After modifying an existing custom query, the previous result table is updated as expected now (#137).
+
 ## [1.7.0] - 2025-04-09
 
 ### Added
@@ -223,20 +253,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[1.0.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.0.0
-[1.1.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.0
-[1.1.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.1
-[1.1.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.2
-[1.1.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.1.3
-[1.2.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.0
-[1.2.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.1
-[1.2.2]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.2
-[1.2.3]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.2.3
-[1.3.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.0
-[1.3.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.3.1
-[1.4.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.0
-[1.4.1]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.4.1
-[1.5.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.5.0
-[1.6.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.6.0
-[1.7.0]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/releases/tag/v1.7.0
-[Unreleased]: https://github.com/SolidLabResearch/generic-data-viewer-react-admin/compare/v1.7.0...HEAD
+[1.0.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.0.0
+[1.1.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.0
+[1.1.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.1
+[1.1.2]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.2
+[1.1.3]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.1.3
+[1.2.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.0
+[1.2.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.1
+[1.2.2]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.2
+[1.2.3]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.2.3
+[1.3.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.3.0
+[1.3.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.3.1
+[1.4.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.4.0
+[1.4.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.4.1
+[1.5.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.5.0
+[1.6.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.6.0
+[1.7.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.7.0
+[2.0.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.0.0
+[Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v2.0.0...HEAD

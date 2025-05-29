@@ -2,14 +2,9 @@
   "title": "Search the OSLO vocabularia and application profiles",
   "logoLocation": "images/IDLab-logo.png",
   "logoRedirectURL": "https://idlab.technology/",
-  "mainAppColor": "lightgray",
-  "backgroundColor": "#fff",
-  "titleColor": "black",
-  "textColor": "#1976D2",
   "queryFolder": "queries",
   "showMilliseconds": false,
   "defaultIDP": "",
-  "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please select a query from the menu on the left.",
   "queries": [
     {
@@ -61,10 +56,10 @@
     {
       "id": "104",
       "queryLocation": "all-aps-that-use-a-specific-property.rq",
-      "name": "All application profiles that use a specific-property",
+      "name": "All application profiles that use a specific property",
       "comunicaContext": {
         "sources": [
-          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/predicates-ap.ttl"
         ]
       },
       "indirectVariables": {
@@ -77,7 +72,33 @@
       "name": "All properties used by a specific application profile",
       "comunicaContext": {
         "sources": [
-          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/bundle.ttl"
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/predicates-ap.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/ap.rq"]
+      }
+    },
+    {
+      "id": "106",
+      "queryLocation": "all-aps-that-use-a-specific-class.rq",
+      "name": "All application profiles that use a specific class",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/classes-ap.ttl"
+        ]
+      },
+      "indirectVariables": {
+        "queryLocations": ["variableQueries/class-in-ap.rq"]
+      }
+    },
+    {
+      "id": "107",
+      "queryLocation": "all-classes-used-by-a-specific-ap.rq",
+      "name": "All classes used by a specific application profile",
+      "comunicaContext": {
+        "sources": [
+          "https://raw.githubusercontent.com/KNowledgeOnWebScale/data-vlaanderen-bundled-rdf/refs/heads/main/classes-ap.ttl"
         ]
       },
       "indirectVariables": {
