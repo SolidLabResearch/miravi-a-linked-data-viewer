@@ -8,6 +8,10 @@ Rooted in the Latin *mirari* ("to look with wonder"), it turns fragmented knowle
 
 <img src="./doc/miravi.png" width="200">
 
+Miravi is fully configurable. In the illustration below, [this configuration](./main/configs/onto-deside/config.json) is at work.
+
+![A screencast about configs/onto-deside](doc/screencast-onto-deside.gif)
+
 Table of contents:
 
 * [Preface](#preface)
