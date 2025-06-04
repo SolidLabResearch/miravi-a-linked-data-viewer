@@ -27,9 +27,10 @@ Table of contents:
 * [Custom queries](#custom-queries)
 * [Representation Mapper](#representation-mapper)
 * [Advanced topics](#advanced-topics)
-  * [Converting custom queries into common queries](#converting-custom-queries-into-common-queries)
-* [For developers](#for-developers)
   * [Adding your own configuration](#adding-your-own-configuration)
+  * [Converting custom queries into common queries](#converting-custom-queries-into-common-queries)
+* [Illustrations](#illustrations)
+* [For developers](#for-developers)
   * [Testing](#testing)
     * [Additional prerequisites](#additional-prerequisites)
     * [Testing the production version](#testing-the-production-version)
@@ -366,6 +367,18 @@ They've already got styling matching that of `react-admin` and are easy to use.
 
 ## Advanced topics
 
+### Adding your own configuration
+
+The easiest way to add your own configuration is:
+
+1. Get inspired by the configuration in `main/configs/demo`.
+2. Choose your `<your-config>`: a string obeying regex `[a-z0-9-]+`; directory `main/configs/<your-config>` should not yet be in use.
+3. Add your own queries in the `main/configs/<your-config>/public/queries` directory and in general, your own resources in the `main/configs/<your-config>/public` directory.
+4. Add your own additional resources in `main/configs/<your-config>/public`, if the defaults you'll get from `main/config-defaults/public` are not satisfactory for you.
+5. Write your own `main/configs/<your-config>/config.json` file, following the [configuration file documentation above](#configuration-file).
+6. Run or build as documented above for the `demo` configuration, of course now using `<your-config>`.
+7. Consider a pull request to add your configuration to this repo.
+
 ### Converting custom queries into common queries
 
 Once you have your basic configuration working, you may extend it with custom queries interactively with the query editor
@@ -384,19 +397,11 @@ Follow these steps to get started:
 5. **Adapt any other properties** according to your preferences.
 6. **Save `main/configs/<your-config>/config.json`**, rerun or rebuild and refresh your browser to test.
 
+## Illustrations
+
+* [A screencast about configs/onto-deside](doc/screencast-onto-deside.gif)
+
 ## For developers
-
-### Adding your own configuration
-
-The easiest way to add your own configuration is:
-
-1. Get inspired by the configuration in `main/configs/demo`.
-2. Choose your `<your-config>`: a string obeying regex `[a-z0-9-]+`; directory `main/configs/<your-config>` should not yet be in use.
-3. Add your own queries in the `main/configs/<your-config>/public/queries` directory and in general, your own resources in the `main/configs/<your-config>/public` directory.
-4. Add your own additional resources in `main/configs/<your-config>/public`, if the defaults you'll get from `main/config-defaults/public` are not satisfactory for you.
-5. Write your own `main/configs/<your-config>/config.json` file, following the [configuration file documentation above](#configuration-file).
-6. Run or build as documented above for the `demo` configuration, of course now using `<your-config>`.
-7. Consider a pull request to add your configuration to this repo.
 
 ### Testing
 
