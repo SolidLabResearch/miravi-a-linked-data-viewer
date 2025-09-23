@@ -445,6 +445,38 @@
       }
     },
     {
+      "id": "9081",
+      "queryGroupId": "gr-test",
+      "queryLocation": "component_material_one_variable.rq",
+      "name": "Component and materials - 1 variable (indirect source & indirect variables; one unauthorized source)",
+      "description": "Query components (including details about materials) with the sources obtained from index files and variables from the sources. One unauthorized indirect source, to check lenient while getting variable options.",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq"
+        ]
+      },
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-with-unauthorized-source-lt",
+        "queryLocation": "/sourceQueries/index_example_common_lt.rq"
+      }
+    },
+    {
+      "id": "9082",
+      "queryGroupId": "gr-test",
+      "queryLocation": "component_material_one_variable.rq",
+      "name": "Component and materials - 1 variable (indirect source & indirect variables; no indirect sources found)",
+      "description": "Query components (including details about materials) with zero sources obtained from index files and variables from the sources.",
+      "indirectVariables": {
+        "queryLocations": [
+          "variableQueries/components_name_variable.rq"
+        ]
+      },
+      "sourcesIndex": {
+        "url": "http://localhost:8080/example/index-example-texon-only-lt",
+        "queryLocation": "/sourceQueries/index_example_common_lt_bad.rq"
+      }
+    },
+    {
       "id": "9090",
       "queryGroupId": "gr-test",
       "queryLocation": "component_material_variables.rq",

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Screencast for the Onto-DESIDE use case (#228).
 
+### Fixed
+
+- Avoided "Error getting variable options..." in templated queries with indirect sources to which the user has no read access (#231).
+
 ## [2.0.0] - 2025-05-29
 
 ### Added
