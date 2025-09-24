@@ -1,3 +1,4 @@
+import PendingIcon from '@mui/icons-material/Pending';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from "@mui/icons-material/Cancel";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -14,7 +15,13 @@ import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngine
 function SourceFetchStatusIcon({ source }) {
   const status = comunicaEngineWrapper.getFetchStatusNumber(source);
 
-  if (comunicaEngineWrapper.getFetchSuccess(source)) {
+  if (comunicaEngineWrapper.getFetchSuccess(source) === undefined) {
+    return (
+      <Tooltip title="Not fetched">
+        <PendingIcon size="small" />
+      </Tooltip>
+    );
+  } else if (comunicaEngineWrapper.getFetchSuccess(source)) {
     return (
       <Tooltip title="Fetch was successful">
         <CheckIcon size="small" />

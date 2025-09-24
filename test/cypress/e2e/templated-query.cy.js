@@ -265,6 +265,41 @@ describe("Templated query", () => {
 
   });
 
+  it("Indirect with 1 variable and sources from indexfile, with one unauthorized source", () => {
+
+    cy.visit("/");
+    cy.contains("For testing only").click();
+    cy.contains("Component and materials - 1 variable (indirect source & indirect variables; one unauthorized source)").click();
+
+    // Fill in the form
+    cy.get('.ra-input-componentName').click();
+    cy.get('li').contains('Component 1').click();
+
+    // Comfirm query
+    cy.get('button[type="submit"]').click();
+
+    // Check that it is correctly loaded with and only the correct data appears
+    cy.contains("Finished in:");
+
+    cy.get('.column-componentName').find('span').contains("Component 1").should("exist");
+    cy.get('.column-materialName').find('span').contains("Material 2").should("exist");
+    cy.get('.column-materialName').find('span').contains("Material 1").should("exist");
+
+    cy.get('.column-componentName').find('span').contains("Component 2").should("not.exist");
+    cy.get('.column-componentName').find('span').contains("Component 3").should("not.exist");
+    cy.get('.column-materialName').find('span').contains("Material 6").should("not.exist");
+
+  });
+
+  it("Indirect with 1 variable and sources from indexfile, no indirect sources found", () => {
+
+    cy.visit("/");
+    cy.contains("For testing only").click();
+    cy.contains("Component and materials - 1 variable (indirect source & indirect variables; no indirect sources found)").click();
+
+    cy.contains("Error getting variable options...").should("exist");;
+  });
+
   it("Indirect with 2 variables and sources from indexfile", () => {
     cy.visit("/");
     cy.contains("For testing only").click();
