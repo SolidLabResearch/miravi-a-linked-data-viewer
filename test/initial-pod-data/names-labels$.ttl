@@ -1,0 +1,8 @@
+PREFIX schema: <http://schema.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex: <https://www.example.com/ont/>
+
+ex:1 schema:name "A name, given with predicates schema:name and rdfs:label" ;
+  rdfs:label "A name, given with predicates schema:name and rdfs:label" .
+ex:2 schema:name "A name, given with predicate schema:name" ;
+  rdfs:label "A name, given with predicate rdfs:label" .

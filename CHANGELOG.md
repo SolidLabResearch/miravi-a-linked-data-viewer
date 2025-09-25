@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Link in table result header is no longer arbitrary if more than one predicate has the same object (#230.)
 - Avoided "Error getting variable options..." in templated queries with indirect sources to which the user has no read access (#231).
 - Corrected fetch status in templated queries with indirect sources to which the user has no read access (#232).
 
