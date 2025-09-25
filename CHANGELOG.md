@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Screencast for the Onto-DESIDE use case (#228).
+- Presentation as presented during the SemDev Workhop co-located with SEMANTiCS 2025 (#234).
 
 ### Fixed
 

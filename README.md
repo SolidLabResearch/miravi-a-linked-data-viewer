@@ -12,6 +12,9 @@ Miravi is fully configurable. In the illustration below, [this configuration](./
 
 ![A screencast about configs/onto-deside](doc/screencast-onto-deside.gif)
 
+For a more complete presentation of Miravi and description of the design choices, please have a look at our
+[presentation as presented during the SemDev Workhop co-located with SEMANTiCS 2025](./doc/slides-miravi-semdev-2025.pdf).
+
 Table of contents:
 
 * [Preface](#preface)
@@ -404,6 +407,7 @@ Follow these steps to get started:
 ## Illustrations
 
 * [A screencast about configs/onto-deside](doc/screencast-onto-deside.gif)
+* [Presentation as presented during the SemDev Workhop co-located with SEMANTiCS 2025](./doc/slides-miravi-semdev-2025.pdf)
 
 ## For developers
 
