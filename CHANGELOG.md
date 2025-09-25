@@ -283,5 +283,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.6.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.6.0
 [1.7.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.7.0
 [2.0.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.0.0
-[2.1.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.0.0
+[2.1.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.1.0
 [Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v2.1.0...HEAD
