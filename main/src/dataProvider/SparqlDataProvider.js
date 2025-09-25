@@ -189,10 +189,10 @@ function replaceVariables(rawText, variableValues) {
 }
 
 /**
- * Given a query and an object, this function returns the predicate of the object in the query.
+ * Given a query and an object, this function returns the predicates of the object in the query.
  * 
  * @param {object} query - the parsed query in which the predicate is to be looked for.
- * @returns {object} an object with the variable as key and the predicate as value.
+ * @returns {object} an object with the variable as key and as value an array of predicates.
  */
 function findPredicates(query) {
   const ontologyMapper = {};
@@ -204,7 +204,11 @@ function findPredicates(query) {
       if (part.triples) {
         for (const triple of part.triples) {
           if (triple.predicate.termType !== "Variable") {
-            ontologyMapper[triple.object.value] = triple.predicate.value;
+            if (!ontologyMapper[triple.object.value]) {
+              ontologyMapper[triple.object.value] = [triple.predicate.value];
+            } else if (!ontologyMapper[triple.object.value].includes(triple.predicate.value)) {
+              ontologyMapper[triple.object.value].push(triple.predicate.value);
+            }
           }
         }
       }
@@ -293,22 +297,19 @@ async function getSourcesFromSourcesIndex(sourcesIndex, httpProxies) {
 
     const bindingsStream = await comunicaEngineWrapper.queryBindings(queryStringIndexSource,
       { lenient: true, sources: [sourcesIndex.url] }, httpProxies, { engine: "link-traversal" });
-    await new Promise((resolve, reject) => {
-      bindingsStream.on('data', (bindings) => {
-        // LOG console.log(`getSourcesFromSourcesIndex bindings: ${bindings.toString()}`);
-        for (const term of bindings.values()) {  // check for 1st value
-          const source = term.value;
-          if (!sourcesList.includes(source)) {
-            // LOG console.log(`getSourcesFromSourcesIndex adding source: ${source}`);
-            sourcesList.push(source);
-          }
-          // we only want the first term, whatever the variable's name is (note: a for ... of loop seems the only way to access it)
-          break;
+    const bindingsArray = await bindingsStream.toArray();
+    for (const bindings of bindingsArray) {
+      // LOG console.log(`getSourcesFromSourcesIndex bindings: ${bindings.toString()}`);
+      for (const term of bindings.values()) {  // check for 1st value
+        const source = term.value;
+        if (!sourcesList.includes(source)) {
+          // LOG console.log(`getSourcesFromSourcesIndex adding source: ${source}`);
+          sourcesList.push(source);
         }
-      });
-      bindingsStream.on('end', resolve);
-      bindingsStream.on('error', reject);
-    });
+        // we only want the first term, whatever the variable's name is (note: a for ... of loop seems the only way to access it)
+        break;
+      }
+    }
   }
   catch (error) {
     throw new Error(`Error adding sources from index: ${error.message}`);
@@ -380,6 +381,9 @@ async function getVariableOptions(query) {
   }
   // END duplicated chunk of code
 
+  if (query.comunicaContext.sources.length === 0) {
+    throw new Error(`Error getting variable options... No sources found.`);
+  }
 
   let variableOptions;
   let queryStringList = [];
@@ -417,35 +421,35 @@ async function getVariableOptions(query) {
 
   try {
     for (const queryString of queryStringList) {
+      // queryBindings with lenient true to avoid errors with unauthorized sources
       const bindingsStream = await comunicaEngineWrapper.queryBindings(queryString,
-        { sources: query.comunicaContext.sources }, query.httpProxies);
-      await new Promise((resolve, reject) => {
-        bindingsStream.on('data', (bindings) => {
-          // LOG console.log(`getVariableOptions bindings: ${bindings.toString()}`);
-          for (const [variable, term] of bindings) {
-            const name = variable.value;
-            if (!variableOptions[name]) {
-              variableOptions[name] = [];
-            }
-            const variableValue = termToSparqlCompatibleString(term);
-            if (variableValue && !variableOptions[name].includes(variableValue)) {
-              // LOG console.log(`getVariableOptions adding variable option for '${name}': ${variableValue}`);
-              variableOptions[name].push(variableValue);
-            }
+        { lenient: true, sources: query.comunicaContext.sources }, query.httpProxies);
+      // convert stream to array (works when no bindings found - handling events 'data', 'end' and 'error' does not work when no bindints found)
+      const bindingsArray = await bindingsStream.toArray();
+      for (const bindings of bindingsArray) {
+        // LOG console.log(`getVariableOptions bindings: ${bindings.toString()}`);
+        for (const [variable, term] of bindings) {
+          const name = variable.value;
+          if (!variableOptions[name]) {
+            variableOptions[name] = [];
           }
-        });
-        bindingsStream.on('end', resolve);
-        bindingsStream.on('error', reject);
-      });
+          const variableValue = termToSparqlCompatibleString(term);
+          if (variableValue && !variableOptions[name].includes(variableValue)) {
+            // LOG console.log(`getVariableOptions adding variable option for '${name}': ${variableValue}`);
+            variableOptions[name].push(variableValue);
+          }
+        }
+      }
     }
   }
   catch (error) {
     throw new Error(`Error getting variable options... ${error.message}`);
   }
 
-  if (variableOptions == {}) {
-    throw new Error(`Error getting variable options... The variable options are empty`);
+  if (Object.keys(variableOptions).length === 0) {
+    throw new Error(`Error getting variable options... No variable options found.`);
   }
+
   return variableOptions;
 }
 

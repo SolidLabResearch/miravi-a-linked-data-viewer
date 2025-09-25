@@ -60,16 +60,18 @@ function TableHeader({ children }) {
                 </span>
               </Tooltip>}
               {!!variableOntology && variableOntology[child.props.source] && (
-                <Link
-                  target="_blank"
-                  href={variableOntology[child.props.source]}
-                  sx={{ height: "100%", margin: "0 5px", "& > *": { verticalAlign: "middle" } }}
-                >
-                  <LinkIcon
-                    fontSize="small"
-                    sx={{ height: "100%", color: "gray" }}
-                  />
-                </Link>
+                variableOntology[child.props.source].map((link) => (
+                  <Link
+                    target="_blank"
+                    href={link}
+                    sx={{ height: "100%", margin: "0 0 0 5px", "& > *": { verticalAlign: "middle" } }}
+                  >
+                    <LinkIcon
+                      fontSize="small"
+                      sx={{ height: "100%", color: "gray" }}
+                    />
+                  </Link>
+                ))
               )}
               {sort.field === child.props.source && (
                 <>

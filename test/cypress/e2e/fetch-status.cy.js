@@ -11,16 +11,16 @@ describe("Fetch Status", () => {
         // Check if the public and restricted sources appear
         cy.get('[aria-label="Sources info"]').click();
         
-        cy.contains("http://localhost:8080/example/favourite-books");
-        cy.contains("http://localhost:8080/example/wish-list");
-
         // Check if the correct icons appear
-        cy.get('[aria-label="Authentication required"]').should("exist");
-        cy.get('[aria-label="Unauthorized"]').should("exist");
-
-        cy.get('[aria-label="No authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch was successful"]').should("exist");
-        
+        cy.contains("http://localhost:8080/example/wish-list").parent().within(() => {
+            cy.get('[aria-label="No authentication required"]').should("exist");
+            cy.get('[aria-label="Fetch was successful"]').should("exist");
+        });
+        cy.contains("http://localhost:8080/example/favourite-books").parent().within(() => {
+            cy.get('[aria-label="Authentication required"]').should("exist");
+            cy.get('[aria-label="Unauthorized"]').should("exist");
+        });
+        cy.get('[aria-label="Not fetched"]').should("not.exist");
 
         // Checking that a non-authorized book is not appearing 
         cy.contains("It Ends With Us").should("not.exist");
@@ -58,16 +58,16 @@ describe("Fetch Status", () => {
         // Check if the public and restricted sources appear
         cy.get('[aria-label="Sources info"]').click();
 
-        cy.contains("http://localhost:8080/example/favourite-books");
-        cy.contains("http://localhost:8080/example/wish-list");
-
         // Check if the correct icons appear
-        cy.get('[aria-label="Authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch Failed"]').should("not.exist");
-        cy.get('[aria-label="Unauthorized"]').should("not.exist");
-
-        cy.get('[aria-label="No authentication required"]').should("exist");
-        cy.get('[aria-label="Fetch was successful"]').should("exist");
+        cy.contains("http://localhost:8080/example/wish-list").parent().within(() => {
+            cy.get('[aria-label="No authentication required"]').should("exist");
+            cy.get('[aria-label="Fetch was successful"]').should("exist");
+        });
+        cy.contains("http://localhost:8080/example/favourite-books").parent().within(() => {
+            cy.get('[aria-label="Authentication required"]').should("exist");
+            cy.get('[aria-label="Fetch was successful"]').should("exist");
+        });
+        cy.get('[aria-label="Not fetched"]').should("not.exist");
 
         // Checking that you see authorized books
         cy.contains("It Ends With Us");
@@ -85,15 +85,45 @@ describe("Fetch Status", () => {
         // Check if the good and bad sources appear
         cy.get('[aria-label="Sources info"]').click();
         
-        // First fetch should be a success
-        cy.contains("http://localhost:8080/example/favourite-musicians");
-        cy.get('[aria-label="No authentication required"]').should("exist");
-        cy.get('[aria-label="Unauthorized"]').should("not.exist");
-        cy.get('[aria-label="Fetch was successful"]').should("exist");
+        // Check if the correct icons appear
+        cy.contains("http://localhost:8080/example/favourite-musicians").parent().within(() => {
+            cy.get('[aria-label="No authentication required"]').should("exist");
+            cy.get('[aria-label="Fetch was successful"]').should("exist");
+        });
+        cy.contains("http://www.example.com/fetch-failure-but-query-success").parent().within(() => {
+            cy.get('[aria-label="Uncertain if authentication is required"]').should("exist");
+            cy.get('[aria-label="Fetch failed"]').should("exist");
+        });
+        cy.get('[aria-label="Not fetched"]').should("not.exist");
 
-        // the bad source should fail to fetch
-        cy.contains("http://www.example.com/fetch-failure-but-query-success");
-        cy.get('[aria-label="Fetch failed"]').should("exist");
+    });
+
+    it("Fetch data with no authenticated user, indirect source & indirect variables and one unauthorized source", () => {
+
+        cy.visit("/");
+        cy.contains("For testing only").click();
+        cy.contains("Component and materials - 1 variable (indirect source & indirect variables; one unauthorized source)").click();
+
+        // Fill in the form
+        cy.get('.ra-input-componentName').click();
+        cy.get('li').contains('Component 1').click();
+
+        // Comfirm query
+        cy.get('button[type="submit"]').click();
+
+        // Check if the public and restricted sources appear
+        cy.get('[aria-label="Sources info"]').click();
+
+        // Check if the correct icons appear
+        cy.contains("http://localhost:8080/example/boms").parent().within(() => {
+            cy.get('[aria-label="No authentication required"]').should("exist");
+            cy.get('[aria-label="Fetch was successful"]').should("exist");
+        });
+        cy.contains("http://localhost:8080/example/favourite-books").parent().within(() => {
+            cy.get('[aria-label="Authentication required"]').should("exist");
+            cy.get('[aria-label="Unauthorized"]').should("exist");
+        });
+        cy.get('[aria-label="Not fetched"]').should("not.exist");
 
     });
 

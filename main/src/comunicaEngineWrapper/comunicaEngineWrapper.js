@@ -36,6 +36,7 @@ class ComunicaEngineWrapper {
     this._fetchSuccess = {};
     this._fetchStatusNumber = {};
     this._underlyingFetchFunction = undefined;
+    // LOG console.log(`Comunica engines reset`);
   }
 
   getFetchSuccess(arg) {
@@ -168,13 +169,14 @@ class ComunicaEngineWrapper {
    * @param {array} httpProxies - array of httpProxy definitions
    */
   _prepareQuery(context, httpProxies) {
-    // avoid faulty fetch status for sources cached in Comunica
-    for (const source of context.sources) {
-      this._fetchSuccess[source] = true;
-    }
-    this._underlyingFetchFunction = fetch;
+    // note: there is no need to preset this._fetchSuccess[source] here;
+    // if Comunica caches, we still have the previous value
     if (getDefaultSession().info.isLoggedIn) {
       this._underlyingFetchFunction = authFetch;
+      // LOG console.log(`Using authFetch as underlying fetch function`);
+    } else {
+      this._underlyingFetchFunction = fetch;
+      // LOG console.log(`Using fetch as underlying fetch function`);
     }
     context.fetch = ComunicaEngineWrapper._getWrappedFetchFunction(this._underlyingFetchFunction, httpProxies, this);
   }

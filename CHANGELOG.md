@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-09-25
+
+### Added
+
+- Screencast for the Onto-DESIDE use case (#228).
+- Presentation as presented during the SemDev Workhop co-located with SEMANTiCS 2025 (#234).
+
+### Fixed
+
+- Link in table result header is no longer arbitrary if more than one predicate has the same object (#230.)
+- Avoided "Error getting variable options..." in templated queries with indirect sources to which the user has no read access (#231).
+- Corrected fetch status in templated queries with indirect sources to which the user has no read access (#232).
+
 ## [2.0.0] - 2025-05-29
 
 ### Added
@@ -270,4 +283,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.6.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.6.0
 [1.7.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v1.7.0
 [2.0.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.0.0
-[Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v2.0.0...HEAD
+[2.1.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.1.0
+[Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v2.1.0...HEAD
