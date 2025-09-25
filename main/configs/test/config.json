@@ -581,6 +581,32 @@
           "http://localhost:8080/example/favourite-musicians-file-does-not-exist"
         ]
       }
+    },
+    {
+      "id": "9200",
+      "queryGroupId": "gr-test",
+      "queryLocation": "schema_name.rq",
+      "name": "A query that looks for names that are the object of predicate schema:name",
+      "description": "Tests a single link in the 'name' column header.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/names-labels"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "9201",
+      "queryGroupId": "gr-test",
+      "queryLocation": "schema_name_rdfs_label.rq",
+      "name": "A query that looks for names that are both the objects of predicates schema:name and rdfs:label",
+      "description": "Tests two links in the 'name' column header.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8080/example/names-labels"
+        ],
+        "lenient": true
+      }
     }
   ]
 }

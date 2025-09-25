@@ -189,10 +189,10 @@ function replaceVariables(rawText, variableValues) {
 }
 
 /**
- * Given a query and an object, this function returns the predicate of the object in the query.
+ * Given a query and an object, this function returns the predicates of the object in the query.
  * 
  * @param {object} query - the parsed query in which the predicate is to be looked for.
- * @returns {object} an object with the variable as key and the predicate as value.
+ * @returns {object} an object with the variable as key and as value an array of predicates.
  */
 function findPredicates(query) {
   const ontologyMapper = {};
@@ -204,7 +204,11 @@ function findPredicates(query) {
       if (part.triples) {
         for (const triple of part.triples) {
           if (triple.predicate.termType !== "Variable") {
-            ontologyMapper[triple.object.value] = triple.predicate.value;
+            if (!ontologyMapper[triple.object.value]) {
+              ontologyMapper[triple.object.value] = [triple.predicate.value];
+            } else if (!ontologyMapper[triple.object.value].includes(triple.predicate.value)) {
+              ontologyMapper[triple.object.value].push(triple.predicate.value);
+            }
           }
         }
       }
