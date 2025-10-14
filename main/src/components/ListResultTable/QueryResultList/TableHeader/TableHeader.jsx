@@ -64,6 +64,7 @@ function TableHeader({ children }) {
                   <Link
                     target="_blank"
                     href={link}
+                    key={link}
                     sx={{ height: "100%", margin: "0 0 0 5px", "& > *": { verticalAlign: "middle" } }}
                   >
                     <LinkIcon
