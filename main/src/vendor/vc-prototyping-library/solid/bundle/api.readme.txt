@@ -1,0 +1,1 @@
+https://gitlab.ilabt.imec.be/KNoWS/verifiable-credentials/vc-prototyping-library/-/tags/v0.1.0
