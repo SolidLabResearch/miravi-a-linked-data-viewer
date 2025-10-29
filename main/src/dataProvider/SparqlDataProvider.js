@@ -146,6 +146,11 @@ async function buildQueryText(query) {
     }
 
     query.rawText = rawText;
+
+    if (rawText.includes("?id ") || rawText.includes("$id ")) {
+      throw new Error('Variable "id" is not allowed in Miravi queries. Please rename this variable.');
+    }
+
     const parser = new Parser();
     const parsedQuery = parser.parse(rawText);
     if (!query.variableOntology) {
@@ -235,6 +240,9 @@ async function executeQuery(query) {
     const callbackBindings = (bindings) => {
       const newResult = {};
       for (const variable of variables) {
+        if (variable === "id") {
+          throw new Error('Variable name "id" is reserved - please rename this variable in the query');
+        }
         const term = bindings.get(variable);
         newResult[variable] = term;
       }

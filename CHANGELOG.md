@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Verifiable credentials use VC prototyping library now (#238).
+- Export cleaned so that it doesn't contain irrelevant columns (#242).
+
+### Added
+
+- Documented and tested SPARQL query restrictions (#243).
 
 ## [2.1.0] - 2025-09-25
 

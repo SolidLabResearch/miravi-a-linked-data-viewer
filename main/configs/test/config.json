@@ -607,6 +607,18 @@
         ],
         "lenient": true
       }
+    },
+    {
+      "id": "9300",
+      "queryGroupId": "gr-test",
+      "queryLocation": "idols_id.rq",
+      "name": "Reserved variable name test",
+      "description": "Tests a query with a reserved variable name.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:8000/example/idols"
+        ]
+      }
     }
   ]
 }
