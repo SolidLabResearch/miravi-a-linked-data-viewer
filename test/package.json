@@ -1,5 +1,5 @@
 {
-  "name": "tools-for-miravi-a-linked-data-viewer",
+  "name": "miravi-test",
   "private": true,
   "type": "module",
   "scripts": {
