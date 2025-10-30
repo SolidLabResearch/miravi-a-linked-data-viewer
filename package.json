@@ -1,0 +1,10 @@
+{
+  "name": "miravi-a-linked-data-viewer-top-level",
+  "description": "Miravi - a linked data viewer",
+  "private": true,
+  "license": "MIT",
+  "author": "Martin Vanbrabant",
+  "scripts": {
+    "postinstall": "cd main && npm install && cd ../test && npm install"
+  }
+}

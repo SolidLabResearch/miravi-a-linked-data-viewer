@@ -1,7 +1,6 @@
 {
   "name": "tools-for-miravi-a-linked-data-viewer",
   "private": true,
-  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "serve": "bash scripts/prepare-dir-to-serve.sh && http-server -p 5173 serve-this",
