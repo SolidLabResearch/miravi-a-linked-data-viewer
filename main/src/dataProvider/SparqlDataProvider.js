@@ -240,9 +240,6 @@ async function executeQuery(query) {
     const callbackBindings = (bindings) => {
       const newResult = {};
       for (const variable of variables) {
-        if (variable === "id") {
-          throw new Error('Variable name "id" is reserved - please rename this variable in the query');
-        }
         const term = bindings.get(variable);
         newResult[variable] = term;
       }

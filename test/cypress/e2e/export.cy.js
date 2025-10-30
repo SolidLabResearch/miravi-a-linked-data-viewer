@@ -1,6 +1,6 @@
 describe("Export", () => {
   it("Export of a list containing a Literal and a NamedNode should return the expected results", () => {
-    const downloadsFolder = 'cypress/downloads';
+    const downloadsFolder = Cypress.config('downloadsFolder');
     cy.task('clearFolder', downloadsFolder);
     cy.visit("/");
     cy.contains("Example queries").click();
