@@ -146,6 +146,11 @@ async function buildQueryText(query) {
     }
 
     query.rawText = rawText;
+
+    if (rawText.includes("?id ") || rawText.includes("$id ")) {
+      throw new Error('Variable "id" is not allowed in Miravi queries. Please rename this variable.');
+    }
+
     const parser = new Parser();
     const parsedQuery = parser.parse(rawText);
     if (!query.variableOntology) {

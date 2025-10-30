@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Datagrid, List, Title, Loading, useListContext, useResourceDefinition } from "react-admin";
+import { Datagrid, List, Title, Loading, useListContext, useResourceDefinition, downloadCSV } from "react-admin";
 import ActionBar from "../../ActionBar/ActionBar";
 import GenericField from "../../../representationProvider/GenericField";
 import TableHeader from "./TableHeader/TableHeader";
@@ -11,7 +11,7 @@ import CustomQueryEditButton from "../../CustomQueryEditor/customQueryEditButton
 import IconProvider from "../../../IconProvider/IconProvider";
 import configManager from "../../../configManager/configManager";
 import CustomConversionButton from "../../CustomQueryEditor/customConversionButton";
-
+import jsonExport from 'jsonexport/dist';
 
 // LOG let queryResultListCounter = 0;
 // LOG let myDatagridCounter = 0;
@@ -47,6 +47,7 @@ function QueryResultList(props) {
       }
       <List
         {...props}
+        exporter={exporter}
         disableAuthentication={true} // needed to overrule the default, which is to force logging in
         storeKey={false} // do not remember pagination, sorting, ...
         title=" "
@@ -132,6 +133,33 @@ const MyDatagrid = (props) => {
       </Datagrid> :
       <NoValuesDisplay meta={meta} />
   );
+}
+
+// https://marmelab.com/react-admin/doc/5.7/List.html#exporter
+const exporter = (rows, _, __, resource) => {
+  const entriesForExport = rows.map(row => strip(row));
+  jsonExport(entriesForExport, (err, csv) => {
+    downloadCSV(csv, resource); // download as '<resource>.csv` file
+  });
+};
+
+function strip(obj, level = 0) {
+  if (obj && typeof obj === 'object') {
+    const result = {};
+    for (const [k, v] of Object.entries(obj)) {
+      if (level === 0 && k === 'id') {
+        // skip id at top level
+      } else if (level === 1 && k === 'datatype' && v && typeof v === 'object') {
+        // remove x.datatype.termType; promote x.datatype.value to x.datatype
+        const { termType, ...rest } = v;
+        result[k] = strip(rest, level + 1);
+      } else {
+        result[k] = strip(v, level + 1);
+      }
+    }
+    return result;
+  }
+  return obj;
 }
 
 export default QueryResultList;

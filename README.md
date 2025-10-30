@@ -24,6 +24,7 @@ Table of contents:
 * [Static, production build](#static-production-build)
 * [Logging in](#logging-in)
 * [Configuration file](#configuration-file)
+  * [Writing SPARQL queries](#writing-sparql-queries)
   * [Specifying sources](#specifying-sources)
   * [About httpProxies](#about-httpproxies)
   * [Adding variable type](#adding-variable-type)
@@ -154,7 +155,7 @@ The configuration file must follow the structure shown below.
   "logoLocation": "Image location of the logo shown at the top of the app (relative to public folder.).",
   "logoRedirectURL": "The URL the Web application redirects to when a user clicks on the logo.",
   "defaultIDP": "The default value used for IDP when logging in, this IDP can be manually changed in the Web app as well. ",
-  "queryFolder": "The base location of the queries, all query locations will start from this folder (relative to public folder).",
+  "queryFolder": "The base location of the SPARQL queries, all query locations will start from this folder (relative to public folder).",
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
   "queryGroups" : [
     {
@@ -167,7 +168,7 @@ The configuration file must follow the structure shown below.
     {
       "id": "A unique ID for the query. This ID appears in the URL of the displayed result. Queries are ordered in the menu according to ascending ID.",
       "queryGroupId": "ID of the query group too which this query belongs. If not given, the query is displayed outside existing groups.",
-      "queryLocation": "Path to the query location, relative to 'queryFolder'",
+      "queryLocation": "Path to the SPARQL query location, relative to 'queryFolder'",
       "name": "A name for the query",
       "description": "Description of the query",
       "icon": "The key to the icon for the query. This is optional and a default menu icon will be used when left empty.",
@@ -212,6 +213,16 @@ The configuration file must follow the structure shown below.
   ]
 }
 ```
+
+### Writing SPARQL queries
+
+Write each [SPARQL query](https://www.w3.org/TR/sparql11-query/) in a separate file (see `queryLocation` in the configuration file).
+
+The following restrictions apply to SPARQL queries in Miravi:
+
+* Mark your query variables with `?`, not with `$`. The `$` sign is reserved for use in [templated queries](#templated-queries).
+* Do not use `_` in variable names, unless for [adding variable type](#adding-variable-type).
+* Do not use `id` as a variable name. It is reserved for internal use.
 
 ### Specifying sources
 
