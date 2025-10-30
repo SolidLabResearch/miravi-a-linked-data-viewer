@@ -150,7 +150,7 @@ function strip(obj, level = 0) {
       if (level === 0 && k === 'id') {
         // skip id at top level
       } else if (level === 1 && k === 'datatype' && v && typeof v === 'object') {
-        // remove x.datatype.termType; promote x.datatype.value to x.datatype
+        // remove x.datatype.termType
         const { termType, ...rest } = v;
         result[k] = strip(rest, level + 1);
       } else {

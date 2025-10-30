@@ -65,14 +65,14 @@ The instructions below explain when and how to use the `select-config.cjs` scrip
 
 ## Getting started
 
-The Web application is located in directory `main`.
-Go to that directory.
-
 To install:
 
 ```bash
 npm install
 ```
+
+The Web application is located in directory `main`.
+Go to that directory.
 
 To select the appropriate configuration (here shown for `demo`):
 
@@ -103,12 +103,6 @@ Resources:
 * proxies used in the `demo` and `test` configurations.
 
 Go to directory `test`.
-
-To install, execute:
-
-```bash
-npm install
-```
 
 Spin up resources:
 

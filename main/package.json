@@ -1,7 +1,6 @@
 {
   "name": "miravi-a-linked-data-viewer",
   "private": true,
-  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
