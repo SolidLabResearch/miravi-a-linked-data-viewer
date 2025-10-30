@@ -18,8 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Verifiable credentials use VC prototyping library now (#238).
 
-### Added
-
 ## [2.1.0] - 2025-09-25
 
 ### Added
