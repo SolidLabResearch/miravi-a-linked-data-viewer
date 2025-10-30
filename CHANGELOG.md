@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2025-10-30
+
 ### Added
 
 - Added a top level package.json (#246).
@@ -303,4 +305,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.1.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.1.0
 [2.1.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.1.1
 [2.2.0]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.2.0
-[Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v2.2.0...HEAD
+[2.2.1]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/releases/tag/v2.2.1
+[Unreleased]: https://github.com/SolidLabResearch/miravi-a-linked-data-viewer/compare/v2.2.1...HEAD
