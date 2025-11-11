@@ -31,6 +31,7 @@ function ChainVerificationIcon({ source }) {
   const [isLoading, setIsLoading] = useState(true);
   const [verificationState, setVerificationState] = useState(undefined);
   const [needsVerification, setNeedsVerification] = useState(false);
+  const [anchorState, setAnchorState] = useState(undefined);
 
   /**
    * The verifiable credentials verify function
@@ -42,12 +43,30 @@ function ChainVerificationIcon({ source }) {
     try {
       console.log('Verifying source chain for source: ' + source);
       const response = await fetchFunction(source);
-      const txt = await response.text();
+      const verifiableCredential = await response.json();
 
+      // Verify the anchored VC's on-chain hash using the verifier service
+      const urlEndpoint = 'http://localhost:4444/verify'
+      const verifyResponse = await (
+        await fetch(urlEndpoint,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ verifiableCredential })
+          }
+        )
+      ).json()
+      const {verified, anchor} = verifyResponse;
+      console.log('Chain verification result: ', verifyResponse)
+      if(verified === true) {
+        // TODO: provide more metadata (e.g., anchor)
+        console.log('anchor: ', anchor)
+        setAnchorState(anchor);
+        return VERIFICATION_STATES.VERIFIED;
+      }
 
-      console.log(txt)
-      // TODO: verify the anchored VC's on-chain hash
-      
     } catch (error) {
       return VERIFICATION_STATES.ERROR;
     }
@@ -71,7 +90,7 @@ function ChainVerificationIcon({ source }) {
       switch (verificationState) {
         case VERIFICATION_STATES.VERIFIED:
           return (
-            <Tooltip title="Verification succeeded">
+            <Tooltip title={`Verification succeeded. Chain hash: ${anchorState.vcHash}`}>
               <GppGoodIcon size="small" />
             </Tooltip>
           );
