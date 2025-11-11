@@ -18,6 +18,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
+import ChainVerificationIcon from "./ChainVerificationIcon/ChainVerificationIcon.jsx";
 
 import configManager from "../../configManager/configManager.js";
 
@@ -96,6 +97,7 @@ function ActionBar() {
                   <TableCell>Authentication needed</TableCell>
                   <TableCell>Fetch status</TableCell>
                   <TableCell>Verified</TableCell>
+                  <TableCell>Chain Verified</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -110,6 +112,9 @@ function ActionBar() {
                     </TableCell>
                     <TableCell>
                       <SourceVerificationIcon httpProxies={query.httpProxies} source={source} />
+                    </TableCell>
+                    <TableCell>
+                      <ChainVerificationIcon source={source} />
                     </TableCell>
                   </TableRow>
                 ))}

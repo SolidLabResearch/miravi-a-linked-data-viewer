@@ -1,0 +1,61 @@
+{
+  "title": "Query the SecuWeb Food Supply Chain",
+  "logoLocation": "images/IDLab-logo.png",
+  "logoRedirectURL": "https://idlab.technology/",
+  "mainAppColor": "lightgray",
+  "backgroundColor": "#fff",
+  "titleColor": "black",
+  "textColor": "#1976D2",
+  "queryFolder": "queries",
+  "showMilliseconds": false,
+  "defaultIDP": "/",
+  "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
+  "introductionText": "Please log in as the appropriate actor and select a query from the menu on the left.",
+  "queryGroups": [
+    {
+      "id": "farmer",
+      "name": "Farmer",
+      "icon": "InfoIcon"
+    }
+  ],
+  "queries": [
+    {
+      "id": "0",
+      "queryLocation": "spo.rq",
+      "name": "SPO",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:3000/farmer/shipments/out/vc/shipment1.jsonld",
+          "http://localhost:3000/farmer/shipments/out/vc/shipment2.jsonld"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "1",
+      "queryLocation": "products.rq",
+      "name": "Products",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:3000/farmer/products/vc/product-x.jsonld",
+          "http://localhost:3000/farmer/products/vc/product-y.jsonld"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "101",
+      "queryGroupId": "farmer",
+      "queryLocation": "shipments.rq",
+      "name": "Query shipments from: Farmer",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:3000/farmer/shipments/out/vc/shipment1.jsonld",
+          "http://localhost:3000/farmer/shipments/out/vc/shipment2.jsonld"
+        ],
+        "lenient": true
+      }
+    }
+    
+  ]
+}

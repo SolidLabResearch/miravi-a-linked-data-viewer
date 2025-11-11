@@ -1,0 +1,14 @@
+prefix vc: <https://www.w3.org/2018/credentials#>
+
+
+SELECT ?x ?p ?o 
+WHERE {
+
+  ?x 
+    a vc:VerifiableCredential;
+    vc:credentialSubject [
+      ?p ?o ;
+  	];
+
+    .
+}
