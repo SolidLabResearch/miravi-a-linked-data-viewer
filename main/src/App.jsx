@@ -72,6 +72,8 @@ function InnerApp() {
       loginPage={SolidLoginForm}
       requireAuth={false}
       dashboard={Dashboard}
+      // see https://marmelab.com/react-admin/AppTheme.html: always use light theme; never use dark theme
+      defaultTheme="light"
     >
       {config.queries.map((query) => {
         return (
