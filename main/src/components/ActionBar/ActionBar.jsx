@@ -54,6 +54,11 @@ function ActionBar() {
   const context = query.comunicaContext;
   const sources = context?.sources || []; // in early calls, context might be undefined
 
+  // Obtain verification feature configuration variables.
+  // These variables will be used to determine which table columns to show.
+  const onchain = config.features?.verification?.onchain;
+  const vc      = config.features?.verification?.vc;
+
   return (
     <Grid container direction="row" width={"100%"} rowSpacing={1}>
       <Grid item height={"fit-content"} width={"100%"}>
@@ -96,8 +101,8 @@ function ActionBar() {
                   <TableCell>Source</TableCell>
                   <TableCell>Authentication needed</TableCell>
                   <TableCell>Fetch status</TableCell>
-                  <TableCell>Verified</TableCell>
-                  <TableCell>Chain Verified</TableCell>
+                  { !!vc && <TableCell>Verified</TableCell> }
+                  { !!onchain && <TableCell>Chain Verified</TableCell> }
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -110,12 +115,8 @@ function ActionBar() {
                     <TableCell>
                       <SourceFetchStatusIcon source={source} />
                     </TableCell>
-                    <TableCell>
-                      <SourceVerificationIcon httpProxies={query.httpProxies} source={source} />
-                    </TableCell>
-                    <TableCell>
-                      <ChainVerificationIcon source={source} />
-                    </TableCell>
+                    { !!vc && <TableCell> <SourceVerificationIcon httpProxies={query.httpProxies} source={source} /> </TableCell> }
+                    { !!onchain &&<TableCell> <ChainVerificationIcon source={source} /> </TableCell> }
                   </TableRow>
                 ))}
               </TableBody>

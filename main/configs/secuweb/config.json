@@ -11,6 +11,12 @@
   "defaultIDP": "/",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and select a query from the menu on the left.",
+  "features": {
+    "verification": {
+      "vc": false,
+      "onchain": true
+    }
+  },
   "queryGroups": [
     {
       "id": "farmer",
