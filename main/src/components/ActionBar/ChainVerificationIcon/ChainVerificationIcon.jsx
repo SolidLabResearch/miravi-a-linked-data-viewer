@@ -1,13 +1,11 @@
-import { CircularProgress, Tooltip, IconButton } from "@mui/material";
-import { Component, useState } from "react";
+import {CircularProgress, IconButton, Tooltip} from "@mui/material";
+import {Component, useState} from "react";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import PropTypes from "prop-types";
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import GppBadIcon from '@mui/icons-material/GppBad';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
-import { SolidApi } from '../../../vendor/vc-prototyping-library/solid/bundle/api';
 import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngineWrapper';
-
 
 const VERIFICATION_STATES = {
   VERIFIED: 'VERIFIED',
@@ -15,9 +13,6 @@ const VERIFICATION_STATES = {
   INVALID_SOURCE: 'INVALID_SOURCE',
   ERROR: 'ERROR'
 }
-
-let vcApi;
-let vcPublicKey;
 
 /**
  * @param {object} props - the props passed to the component
@@ -41,7 +36,6 @@ function ChainVerificationIcon({ source }) {
    */
   const verifyFunction = async (source, fetchFunction) => {
     try {
-      console.log('Verifying source chain for source: ' + source);
       const response = await fetchFunction(source);
       const verifiableCredential = await response.json();
 
@@ -58,15 +52,12 @@ function ChainVerificationIcon({ source }) {
           }
         )
       ).json()
+
       const {verified, anchor} = verifyResponse;
-      console.log('Chain verification result: ', verifyResponse)
       if(verified === true) {
-        // TODO: provide more metadata (e.g., anchor)
-        console.log('anchor: ', anchor)
         setAnchorState(anchor);
         return VERIFICATION_STATES.VERIFIED;
       }
-
     } catch (error) {
       return VERIFICATION_STATES.ERROR;
     }
