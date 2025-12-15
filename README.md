@@ -330,8 +330,6 @@ Nevertheless, you can use any React component you want, just make sure it's a fu
 
 ## Verification Features
 
-> [!NOTE] Verification features can be configured in `"features"` object, as shown in the configuration example above.
-
 Miravi can apply two types of verification: Source Verification and Chain Verification.
 Both types require the data source to be structured according to the [W3C Verifiable Credentials Data Model](https://www.w3.org/TR/vc-data-model-2.0/).
 
@@ -343,10 +341,31 @@ Both types require the data source to be structured according to the [W3C Verifi
     Input (JSON):
       { verifiableCredential: VC }
     Output (JSON):
-      { verified: Boolean, anchor: AnchorInfo }
+      { verified: Boolean,
+        anchor: { verified: Boolean, anchor: String }
+      }
   ```
+
+  When enabled, the REST endpoint for the on-chain verification needs to be specified (cfr. configuration excerpt below).
   
-  When enabled, the REST endpoint for the on-chain verification needs to be specified.
+Verification features can be configured in the top-level `"features"` object, as shown in the configuration example above.
+
+```json
+  {
+    // ...
+    "features": {
+     "verification": {
+        "vc": {
+          "enabled": true
+        },
+        "onchain": {
+          "enabled": true,
+          "endpoint": "http://localhost:4444/verify"
+        }
+      }
+    }
+  }
+```
 
 ## Custom queries
 
