@@ -104,7 +104,7 @@ function ChainVerificationIcon({ source }) {
     }
   } else {
     return (
-      <Tooltip title="Verify source">
+      <Tooltip title="Verify on chain">
         <IconButton sx={{ color: "#1976D2", padding: "0", marginLeft: "0" }} onClick={verify}>
           <QuestionMarkIcon fontSize="small" />
         </IconButton>
