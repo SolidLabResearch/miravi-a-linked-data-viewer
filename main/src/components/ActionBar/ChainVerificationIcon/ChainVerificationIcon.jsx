@@ -16,9 +16,9 @@ const VERIFICATION_STATES = {
 
 /**
  * @param {object} props - the props passed to the component
- * @param {string} props.source - the source to check
+ * @param {string} props.source - the VC to verify
  * @param {array} props.httpProxies - array of httpProxy definitions
- * @returns {Component} an icon indicating whether the source was verified or not
+ * @returns {Component} an icon indicating whether the anchored VC was verified or not
  */
 function ChainVerificationIcon({ source }) {
   const sourceUrl = source;
@@ -65,7 +65,7 @@ function ChainVerificationIcon({ source }) {
   };
 
   /**
-   * Handle the request for source verification
+   * Handle the request for on-chain verification
    */
   function verify() {
     setNeedsVerification(true);
