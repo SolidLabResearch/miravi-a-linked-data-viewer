@@ -348,7 +348,7 @@ Both types require the data source to be structured according to the [W3C Verifi
 
   When enabled, the REST endpoint for the on-chain verification needs to be specified (cfr. configuration excerpt below).
   
-Verification features can be configured in the top-level `"features"` object, as shown in the configuration example above.
+Verification features can be configured in the top-level `"features"` object, as shown in the following configuration excerpt:
 
 ```json
   {
