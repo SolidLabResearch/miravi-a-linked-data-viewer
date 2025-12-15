@@ -6,7 +6,6 @@ import GppGoodIcon from '@mui/icons-material/GppGood';
 import GppBadIcon from '@mui/icons-material/GppBad';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import comunicaEngineWrapper from '../../../comunicaEngineWrapper/comunicaEngineWrapper';
-
 const VERIFICATION_STATES = {
   VERIFIED: 'VERIFIED',
   NOT_VERIFIED: 'NOT_VERIFIED',
@@ -16,13 +15,12 @@ const VERIFICATION_STATES = {
 
 /**
  * @param {object} props - the props passed to the component
- * @param {string} props.source - the VC to verify
- * @param {array} props.httpProxies - array of httpProxy definitions
+ * @param {string} props.source - The data source to verify
+ * @param {string} props.endpoint - URL of the chain verification endpoint
  * @returns {Component} an icon indicating whether the anchored VC was verified or not
  */
-function ChainVerificationIcon({ source }) {
+function ChainVerificationIcon({ source, endpoint }) {
   const sourceUrl = source;
-
   const [isLoading, setIsLoading] = useState(true);
   const [verificationState, setVerificationState] = useState(undefined);
   const [needsVerification, setNeedsVerification] = useState(false);
@@ -41,9 +39,8 @@ function ChainVerificationIcon({ source }) {
       const verifiableCredential = await response.json();
 
       // Verify the anchored VC's on-chain hash using the verifier service
-      const urlEndpoint = 'http://localhost:4444/verify' // # TODO: make configurable
       const verifyResponse = await (
-        await fetch(urlEndpoint,
+        await fetch(endpoint,
           {
             method: 'POST',
             headers: {
@@ -116,6 +113,7 @@ function ChainVerificationIcon({ source }) {
 
 ChainVerificationIcon.propTypes = {
   source: PropTypes.string.isRequired,
+  endpoint: PropTypes.string.isRequired,
 }
 
 export default ChainVerificationIcon;

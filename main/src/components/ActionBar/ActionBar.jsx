@@ -56,8 +56,8 @@ function ActionBar() {
 
   // Obtain verification feature configuration variables.
   // These variables will be used to determine which table columns to show.
-  const onchain = config.features?.verification?.onchain;
-  const vc      = config.features?.verification?.vc;
+  const onchain = config.features?.verification?.onchain ?? { enabled: false }
+  const vc      = config.features?.verification?.vc ?? { enabled: false }
 
   return (
     <Grid container direction="row" width={"100%"} rowSpacing={1}>
@@ -101,8 +101,8 @@ function ActionBar() {
                   <TableCell>Source</TableCell>
                   <TableCell>Authentication needed</TableCell>
                   <TableCell>Fetch status</TableCell>
-                  { !!vc && <TableCell>Verified</TableCell> }
-                  { !!onchain && <TableCell>Chain Verified</TableCell> }
+                  { !!vc.enabled && <TableCell>Verified</TableCell> }
+                  { !!onchain.enabled && <TableCell>Chain Verified</TableCell> }
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -115,8 +115,8 @@ function ActionBar() {
                     <TableCell>
                       <SourceFetchStatusIcon source={source} />
                     </TableCell>
-                    { !!vc && <TableCell> <SourceVerificationIcon httpProxies={query.httpProxies} source={source} /> </TableCell> }
-                    { !!onchain &&<TableCell> <ChainVerificationIcon source={source} /> </TableCell> }
+                    { !!vc.enabled && <TableCell> <SourceVerificationIcon httpProxies={query.httpProxies} source={source} /> </TableCell> }
+                    { !!onchain.enabled &&<TableCell> <ChainVerificationIcon endpoint={onchain.endpoint} source={source} /> </TableCell> }
                   </TableRow>
                 ))}
               </TableBody>
