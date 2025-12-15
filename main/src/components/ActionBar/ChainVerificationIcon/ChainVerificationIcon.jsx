@@ -29,18 +29,19 @@ function ChainVerificationIcon({ source }) {
   const [anchorState, setAnchorState] = useState(undefined);
 
   /**
-   * The verifiable credentials verify function
+   * On-chain verification function.
+   * This function depends on the chain-verification service (currently, this service's configuration is hardcoded).
    * @param {string} source - the source to check
    * @param {function} fetchFunction - the fetch function to use
    * @ returns {string} - one of the VERIFICATION_STATES
    */
-  const verifyFunction = async (source, fetchFunction) => {
+  const verifyAnchoredVC = async (source, fetchFunction) => {
     try {
       const response = await fetchFunction(source);
       const verifiableCredential = await response.json();
 
       // Verify the anchored VC's on-chain hash using the verifier service
-      const urlEndpoint = 'http://localhost:4444/verify'
+      const urlEndpoint = 'http://localhost:4444/verify' // # TODO: make configurable
       const verifyResponse = await (
         await fetch(urlEndpoint,
           {
@@ -68,7 +69,7 @@ function ChainVerificationIcon({ source }) {
    */
   function verify() {
     setNeedsVerification(true);
-    verifyFunction(sourceUrl, comunicaEngineWrapper.getUnderlyingFetchFunction()).then((result) => {
+    verifyAnchoredVC(sourceUrl, comunicaEngineWrapper.getUnderlyingFetchFunction()).then((result) => {
       setVerificationState(result);
       setIsLoading(false);
     })
