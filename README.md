@@ -17,33 +17,35 @@ For a more complete presentation of Miravi and description of the design choices
 
 Table of contents:
 
-* [Preface](#preface)
-* [Prerequisites](#prerequisites)
-* [Getting started](#getting-started)
-* [The supporting resources](#the-supporting-resources)
-* [Static, production build](#static-production-build)
-* [Logging in](#logging-in)
-* [Configuration file](#configuration-file)
-  * [Writing SPARQL queries](#writing-sparql-queries)
-  * [Specifying sources](#specifying-sources)
-  * [About httpProxies](#about-httpproxies)
-  * [Adding variable type](#adding-variable-type)
-  * [Templated queries](#templated-queries)
-    * [Templated queries with fixed values for the template variables](#templated-queries-with-fixed-values-for-the-template-variables)
-    * [Templated queries with values for the template variables to be derived from the data](#templated-queries-with-values-for-the-template-variables-to-be-derived-from-the-data)
-  * [Query icons](#query-icons)
-* [Custom queries](#custom-queries)
-* [Representation Mapper](#representation-mapper)
-* [Advanced topics](#advanced-topics)
-  * [Adding your own configuration](#adding-your-own-configuration)
-  * [Converting custom queries into common queries](#converting-custom-queries-into-common-queries)
-* [Illustrations](#illustrations)
-* [For developers](#for-developers)
-  * [Testing](#testing)
-    * [Additional prerequisites](#additional-prerequisites)
-    * [Testing the production version](#testing-the-production-version)
-    * [Testing the development version](#testing-the-development-version)
-  * [Release activities](#release-activities)
+- [Miravi - a linked data viewer](#miravi---a-linked-data-viewer)
+  - [Preface](#preface)
+  - [Prerequisites](#prerequisites)
+  - [Getting started](#getting-started)
+  - [The supporting resources](#the-supporting-resources)
+  - [Static, production build](#static-production-build)
+  - [Logging in](#logging-in)
+  - [Configuration file](#configuration-file)
+    - [Writing SPARQL queries](#writing-sparql-queries)
+    - [Specifying sources](#specifying-sources)
+    - [About httpProxies](#about-httpproxies)
+    - [Adding variable type](#adding-variable-type)
+    - [Templated queries](#templated-queries)
+      - [Templated queries with fixed values for the template variables](#templated-queries-with-fixed-values-for-the-template-variables)
+      - [Templated queries with values for the template variables to be derived from the data](#templated-queries-with-values-for-the-template-variables-to-be-derived-from-the-data)
+    - [Query icons](#query-icons)
+  - [Verification Features](#verification-features)
+  - [Custom queries](#custom-queries)
+  - [Representation Mapper](#representation-mapper)
+  - [Advanced topics](#advanced-topics)
+    - [Adding your own configuration](#adding-your-own-configuration)
+    - [Converting custom queries into common queries](#converting-custom-queries-into-common-queries)
+  - [Illustrations](#illustrations)
+  - [For developers](#for-developers)
+    - [Testing](#testing)
+      - [Additional prerequisites](#additional-prerequisites)
+      - [Testing the production version](#testing-the-production-version)
+      - [Testing the development version](#testing-the-development-version)
+    - [Release activities](#release-activities)
 
 ## Preface
 
@@ -151,6 +153,17 @@ The configuration file must follow the structure shown below.
   "defaultIDP": "The default value used for IDP when logging in, this IDP can be manually changed in the Web app as well. ",
   "queryFolder": "The base location of the SPARQL queries, all query locations will start from this folder (relative to public folder).",
   "introductionText": "The text that the app shows on the dashboard, which the app also shows when you first open it.",
+  "features": {
+    "verification": {
+      "vc": {
+        "enabled": true
+      },
+      "onchain": {
+        "enabled": true,
+        "endpoint": "http://localhost:4444/verify"
+      }
+    }
+  },
   "queryGroups" : [
     {
       "id": "A unique ID for the query group",
@@ -314,6 +327,26 @@ You configure this icon per query in the configuration file.
 For this to work you need to add the icon to the exports in [IconProvider.js](./main/src/IconProvider/IconProvider.js).
 We advise to use the [Material UI icons](https://material-ui.com/components/material-icons/) as this is what's used internally in `react-admin` and it is also included in the dependencies.
 Nevertheless, you can use any React component you want, just make sure it's a functional component.
+
+## Verification Features
+
+> [!NOTE] Verification features can be configured in `"features"` object, as shown in the configuration example above.
+
+Miravi can apply two types of verification: Source Verification and Chain Verification.
+Both types require the data source to be structured according to the [W3C Verifiable Credentials Data Model](https://www.w3.org/TR/vc-data-model-2.0/).
+
+- **Source Verification** verifies the data source's credential proof. This functionality is directly embedded into Miravi.
+- **Chain Verification** verifies the data source's on-chain hash. To avoid tight coupling with a specific blockchain environment, chain verification is assumed to be implemented by a separate service. The service should expose a POST request endpoint that takes a VC object (as a body parameter) and returns a response containing the verification result and the corresponding hash (in case of a succesful verification).
+  
+  ```plain
+  POST /verify
+    Input (JSON):
+      { verifiableCredential: VC }
+    Output (JSON):
+      { verified: Boolean, anchor: AnchorInfo }
+  ```
+  
+  When enabled, the REST endpoint for the on-chain verification needs to be specified.
 
 ## Custom queries
 
