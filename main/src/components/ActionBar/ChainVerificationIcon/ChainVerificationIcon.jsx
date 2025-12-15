@@ -28,7 +28,7 @@ function ChainVerificationIcon({ source, endpoint }) {
 
   /**
    * On-chain verification function.
-   * This function depends on the chain-verification service (currently, this service's configuration is hardcoded).
+   * This function depends on an external chain-verification service (see "features/verification/onchain" in config)
    * @param {string} source - the source to check
    * @param {function} fetchFunction - the fetch function to use
    * @ returns {string} - one of the VERIFICATION_STATES
@@ -79,7 +79,7 @@ function ChainVerificationIcon({ source, endpoint }) {
       switch (verificationState) {
         case VERIFICATION_STATES.VERIFIED:
           return (
-            <Tooltip title={`Verification succeeded. Chain hash: ${anchorState.vcHash}`}>
+            <Tooltip title={`Verification succeeded. On-chain hash: ${anchorState.vcHash}`}>
               <GppGoodIcon size="small" />
             </Tooltip>
           );
@@ -102,7 +102,7 @@ function ChainVerificationIcon({ source, endpoint }) {
     }
   } else {
     return (
-      <Tooltip title="Verify on chain">
+      <Tooltip title="Verify on-chain hash">
         <IconButton sx={{ color: "#1976D2", padding: "0", marginLeft: "0" }} onClick={verify}>
           <QuestionMarkIcon fontSize="small" />
         </IconButton>
