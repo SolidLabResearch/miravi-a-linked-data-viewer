@@ -17,22 +17,47 @@
       "onchain": true
     }
   },
+
   "queryGroups": [
     {
       "id": "farmer",
       "name": "Farmer",
       "icon": "InfoIcon"
+    },
+    {
+      "id": "transporter",
+      "name": "Transporter",
+      "icon": "LocalShippingIcon"
+    },
+    {
+      "id": "packager",
+      "name": "Packager",
+      "icon": "Inventory2Icon"
+    },
+    {
+      "id": "retailer",
+      "name": "Retailer",
+      "icon": "StorefrontIcon"
     }
   ],
   "queries": [
     {
       "id": "0",
       "queryLocation": "spo.rq",
-      "name": "SPO",
+      "name": "SPO (all actors)",
       "comunicaContext": {
         "sources": [
-          "http://localhost:3000/farmer/shipments/out/vc/shipment1.jsonld",
-          "http://localhost:3000/farmer/shipments/out/vc/shipment2.jsonld"
+          "/farmer/shipments/out/vc/shipment1.jsonld",
+          "/farmer/shipments/out/vc/shipment2.jsonld",
+          "/farmer/products/vc/product-x.jsonld",
+          "/farmer/products/vc/product-y.jsonld",
+          "/packager/products/vc/packaged-batch-001.jsonld",
+          "/packager/shipments/out/vc/shipment3.jsonld",
+          "/transporter/transport-events/vc/pickup-shipment1.jsonld",
+          "/transporter/transport-events/vc/delivery-shipment1.jsonld",
+          "/transporter/transport-events/vc/pickup-shipment3.jsonld",
+          "/transporter/transport-events/vc/delivery-shipment3.jsonld",
+          "/retailer/shipments/in/vc/receipt-shipment3.jsonld"
         ],
         "lenient": true
       }
@@ -40,11 +65,13 @@
     {
       "id": "1",
       "queryLocation": "products.rq",
-      "name": "Products",
+      "name": "Products (Farmer + Packager)",
       "comunicaContext": {
         "sources": [
-          "http://localhost:3000/farmer/products/vc/product-x.jsonld",
-          "http://localhost:3000/farmer/products/vc/product-y.jsonld"
+          "/farmer/products/vc/product-x.jsonld",
+          "/farmer/products/vc/product-y.jsonld",
+          "/packager/products/vc/packaged-batch-001.jsonld",
+          "/packager/shipments/out/vc/shipment3.jsonld"
         ],
         "lenient": true
       }
@@ -53,15 +80,56 @@
       "id": "101",
       "queryGroupId": "farmer",
       "queryLocation": "shipments.rq",
-      "name": "Query shipments from: Farmer",
+      "name": "Farmer: shipments & product facts",
       "comunicaContext": {
         "sources": [
-          "http://localhost:3000/farmer/shipments/out/vc/shipment1.jsonld",
-          "http://localhost:3000/farmer/shipments/out/vc/shipment2.jsonld"
+          "/farmer/shipments/out/vc/shipment1.jsonld",
+          "/farmer/shipments/out/vc/shipment2.jsonld",
+          "/farmer/products/vc/product-x.jsonld",
+          "/farmer/products/vc/product-y.jsonld"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "102",
+      "queryGroupId": "transporter",
+      "queryLocation": "shipments.rq",
+      "name": "Transporter: transport events",
+      "comunicaContext": {
+        "sources": [
+          "/transporter/transport-events/vc/pickup-shipment1.jsonld",
+          "/transporter/transport-events/vc/delivery-shipment1.jsonld",
+          "/transporter/transport-events/vc/pickup-shipment3.jsonld",
+          "/transporter/transport-events/vc/delivery-shipment3.jsonld"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "103",
+      "queryGroupId": "packager",
+      "queryLocation": "shipments.rq",
+      "name": "Packager: packaging batch + outbound shipment",
+      "comunicaContext": {
+        "sources": [
+          "/packager/products/vc/packaged-batch-001.jsonld",
+          "/packager/shipments/out/vc/shipment3.jsonld"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "104",
+      "queryGroupId": "retailer",
+      "queryLocation": "shipments.rq",
+      "name": "Retailer: inbound receipt",
+      "comunicaContext": {
+        "sources": [
+          "/retailer/shipments/in/vc/receipt-shipment3.jsonld"
         ],
         "lenient": true
       }
     }
-    
   ]
 }
