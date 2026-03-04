@@ -13,7 +13,7 @@
   "introductionText": "Please log in as the appropriate actor and select a query from the menu on the left.",
   "features": {
     "verification": {
-      "vc": false,
+      "vc": true,
       "onchain": true
     }
   },
