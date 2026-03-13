@@ -5,25 +5,28 @@ import {
   getThing,
   getUrl,
 } from "@inrupt/solid-client";
-import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
+//import { getDefaultSession, fetch } from "@inrupt/solid-client-authn-browser";
+import { getDefaultAuth } from "trustflows-client";
 import { FOAF } from "@inrupt/vocab-common-rdf";
 
 import comunicaEngineWrapper from "../comunicaEngineWrapper/comunicaEngineWrapper";
-
+import configManager from "../configManager/configManager";
 
 const queryEngine = new QueryEngine();
 
 export default {
   login: async function login({ value }) {
-    const session = getDefaultSession();
-    let idp;
+    //const session = getDefaultSession();
+    const auth = getDefaultAuth();
 
+    let idp;
+/*
     try {
       // assume it is a WebID
       idp = await queryIDPfromWebId(value);
     } catch (error) {
       // continue anyway, value may be an IDP
-    }
+    }*/
 
     if (!idp) {
       // value couldn't be queried or there was no IDP returned from the query
@@ -32,12 +35,16 @@ export default {
     }
 
     try {
-      await session.login({
+      /*await session.login({
         oidcIssuer: idp,
         // leading dot needed to run from any path
         redirectUrl: new URL('.', window.location.href).toString(),
         clientName: "Miravi - a linked data viewer",
-      });
+      });*/
+      const config = configManager.getConfig();
+      const clientIdUrl = config.trustflowsClientId || new URL('/app/client-id.jsonld', window.location.href).toString();
+      const redirectUrl = config.redirectURL;
+      await auth.login(idp, clientIdUrl, redirectUrl);
     } catch (error) {
       throw new Error("Login failed");
     }
@@ -45,23 +52,35 @@ export default {
   logout: async function logout() {
     await comunicaEngineWrapper.reset();
     await queryEngine.invalidateHttpCache();
-    const session = getDefaultSession();
-    await session.logout();
+   // const session = getDefaultSession();
+    // await session.logout();
+    const auth = getDefaultAuth();
+    const config = configManager.getConfig();
+    const redirectUrl = config.redirectURL;
+    await auth.logout(redirectUrl);
     window.location.reload();  
     return false;
   },
   checkAuth: async function checkAuth() {
-    const session = getDefaultSession();
-    return session.info;
+   // const session = getDefaultSession();
+   // return session.info;
+    return getDefaultAuth();
   },
   getPermissions: async function getPermissions() {
-    const session = getDefaultSession();
-    return { loggedIn: session.info.isLoggedIn };
+    //const session = getDefaultSession();
+    //return { loggedIn: session.info.isLoggedIn };
+    const auth = getDefaultAuth();
+    auth.isLoggedIn().then((status) => {
+      return { loggedIn: status };
+    });
+    
   },
   checkError: async function checkError(error) {
-    const session = getDefaultSession();
+    // const session = getDefaultSession();
+    const auth = getDefaultAuth();
     if ((error.status === 401 || error.status === 403)) {
-      if(session.info.isLoggedIn){
+      // if(session.info.isLoggedIn){
+      if (auth.isLoggedIn) {
         throw new Error("You don't have access to this resource.");
       }
       else{
@@ -71,10 +90,15 @@ export default {
 
   },
   getIdentity: async function getIdentity() {
-    const session = getDefaultSession();
-    const webId = session.info.webId;
+    //const session = getDefaultSession();
+    const auth = getDefaultAuth();
+    //const webId = session.info.webId;
+    const webId = auth.webId;
     const identity = {};
-    if (!session.info.isLoggedIn) {
+    /*if (!session.info.isLoggedIn) {
+      return identity;
+    }*/
+    if (!auth.isLoggedIn) { 
       return identity;
     }
     try {

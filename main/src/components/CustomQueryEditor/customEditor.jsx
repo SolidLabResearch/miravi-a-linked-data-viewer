@@ -11,8 +11,8 @@ import Checkbox from '@mui/material/Checkbox';
 import configManager from '../../configManager/configManager';
 import IconProvider from '../../IconProvider/IconProvider';
 
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
-
+//import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+import { getDefaultAuth } from 'trustflows-client';
 import { SparqlEditField } from "./sparqlEditField";
 
 import { JsonEditField } from "./jsonEditField";
@@ -48,9 +48,10 @@ const defaultAskQueryDetails = JSON.stringify({ "trueText": "this displays when 
 const defaultHttpProxiesDetails = JSON.stringify([{ "urlStart": "http://www.example.com/path-xyz", "httpProxy": "http://myproxy.org/" }], null, 2);
 
 export default function CustomEditor(props) {
-  const session = getDefaultSession();
-  const loggedIn = session.info.isLoggedIn;
-
+  //const session = getDefaultSession();
+  const auth = getDefaultAuth();
+  //const loggedIn = session.info.isLoggedIn;
+  const [loggedIn, setLoggedIn] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -69,6 +70,12 @@ export default function CustomEditor(props) {
   const [errorWhileLoading, setErrorWhileLoading] = useState("");
   const [parsingError, setParsingError] = useState("");
   const [indirectVariablesQueryList, setIndirectVariablesQueryList] = useState([defaultSparqlQueryIndirectVariables]);
+
+  useEffect(() => {
+    auth.isLoggedIn().then((status) => {
+      setLoggedIn(status);
+    });
+  }, [auth]);
 
   useEffect(() => {
     try {

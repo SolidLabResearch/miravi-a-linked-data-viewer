@@ -1,4 +1,5 @@
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+//import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+import { getDefaultAuth } from "trustflows-client";
 import configManager from "../../../configManager/configManager";
 
 /**
@@ -10,11 +11,13 @@ import configManager from "../../../configManager/configManager";
  * @returns a response
  */
 export async function addResource(url, contentType, data) {
-  const session = getDefaultSession();
-
+  //const session = getDefaultSession();
+  const auth = getDefaultAuth();
+  let authFetch = auth.createAuthFetch();
   try {
 
-    let response = await session.fetch(url, {
+    //let response = await session.fetch(url, {
+    let response = await authFetch(url, {
       method: 'PUT',
       headers: { 'content-type': contentType },
       body: data
@@ -37,11 +40,13 @@ export async function addResource(url, contentType, data) {
  * @returns the requested data
  */
 export async function getResource(url) {
-  const session = getDefaultSession();
-
+  //const session = getDefaultSession();
+  const auth = getDefaultAuth();
+  let authFetch = auth.createAuthFetch();
   try {
 
-    let response = await session.fetch(url, {
+    //let response = await session.fetch(url, {
+    let response = await authFetch(url, {
       method: 'GET',
     });
 

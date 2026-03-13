@@ -1,0 +1,8 @@
+
+{
+	"@context": "https://www.w3.org/ns/solid/oidc-context.jsonld",
+	"client_id": "http://localhost:5173/app/client-id.jsonld",
+	"client_name": "Miravi - a linked data viewer",
+	"redirect_uris": [ "http://localhost:5173" ],
+	"post_logout_redirect_uris": [ "http://localhost:5173" ]
+}

@@ -1,0 +1,5 @@
+SELECT DISTINCT ?object WHERE {
+  ?subject ?predicate ?object
+}
+ORDER BY ?object
+LIMIT 50

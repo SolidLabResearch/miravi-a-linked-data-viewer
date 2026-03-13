@@ -26,7 +26,8 @@
     "query-sparql-link-traversal-solid-no-default-predicates": "^0.1.1",
     "rdf-string": "^1.6.3",
     "react-admin": "^5.7.2",
-    "sparqljs": "^3.7.1"
+    "sparqljs": "^3.7.1", 
+    "trustflows-client": "^0.1.0-alpha.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.20",

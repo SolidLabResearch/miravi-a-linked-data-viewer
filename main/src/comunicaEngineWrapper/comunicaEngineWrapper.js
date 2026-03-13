@@ -4,6 +4,7 @@ import {
   getDefaultSession,
   fetch as authFetch,
 } from "@inrupt/solid-client-authn-browser";
+import { getDefaultAuth } from "trustflows-client";
 import { translateUrlToProxiedUrl } from '../lib/utils';
 
 // LOG let wrappedFetchFunctionCounter = 0;
@@ -171,8 +172,11 @@ class ComunicaEngineWrapper {
   _prepareQuery(context, httpProxies) {
     // note: there is no need to preset this._fetchSuccess[source] here;
     // if Comunica caches, we still have the previous value
-    if (getDefaultSession().info.isLoggedIn) {
-      this._underlyingFetchFunction = authFetch;
+   // if (getDefaultSession().info.isLoggedIn) {
+    //   this._underlyingFetchFunction = authFetch;
+    if (getDefaultAuth().isLoggedIn) {
+         const auth = getDefaultAuth();
+       this._underlyingFetchFunction = auth.createAuthFetch();
       // LOG console.log(`Using authFetch as underlying fetch function`);
     } else {
       this._underlyingFetchFunction = fetch;

@@ -1,0 +1,9 @@
+PREFIX ex: <http://example.com/>
+
+SELECT ?image_img ?title ?type_url
+WHERE {
+  ?s ex:title ?title;
+      ex:image ?image_img.
+  OPTIONAL {?s ex:type ?type_url}
+} 
+ORDER BY ?title

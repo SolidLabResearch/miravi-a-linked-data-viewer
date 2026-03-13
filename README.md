@@ -1,4 +1,11 @@
-# Miravi - a linked data viewer
+# Miravi - a linked data viewer - UMA compliant
+
+## IMPORTANT NOTE
+
+This branch contains an temporary adapted version of miravi, capable of handling authentication for the new UMA-compliant CSS and a demo for Solid4Media.
+As the aggregator has no stable identifiers yet, the config of this demo will need to be adapted add every restart of the aggregator.
+The tests in this repo that need authentication with the original CSS will fail.
+The other config that need authentication with the original CSS will also fail.
 
 This Web app allows users to easily execute queries over multiple linked data sources (including Solid pods) and
 inspect the corresponding results.
@@ -17,6 +24,7 @@ For a more complete presentation of Miravi and description of the design choices
 
 Table of contents:
 
+* [IMPORTANT NOTE](#important-note)
 * [Preface](#preface)
 * [Prerequisites](#prerequisites)
 * [Getting started](#getting-started)

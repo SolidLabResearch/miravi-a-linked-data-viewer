@@ -1,0 +1,122 @@
+{
+  "title": "Miravi - a linked data viewer",
+  "logoLocation": "images/miravi.png",
+  "logoRedirectURL": "https://github.com/SolidLabResearch/miravi-a-linked-data-viewer",
+  "queryFolder": "queries",
+  "showMilliseconds": false,
+  "defaultIDP": "http://rs.local:3000",
+  "trustflowsClientId": "http://localhost:5173/app/client-id.jsonld",
+  "redirectURL": "http://localhost:5173",
+  "introductionText": "Please log in as the appropriate actor and make your choice in the menu on the left.",
+  "queryGroups": [],
+  "queries": [
+    {
+      "id": "1",
+      "queryLocation": "example_spo.rq",
+      "name": "Family media profile",
+      "description": "",
+      "comunicaContext": {
+        "sources": [
+          "http://aggregator.local:5000/services/8452f306-ca21-4b30-a87e-a39df4034789/ca026f4a-807a-4ed5-9cb7-9bc780dc8f82"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "2",
+      "queryLocation": "interests.rq",
+      "name": "Family interests",
+      "description": "Gives all interests of the family members",
+      "comunicaContext": {
+        "sources": [
+          "http://aggregator.local:5000/services/8452f306-ca21-4b30-a87e-a39df4034789/ca026f4a-807a-4ed5-9cb7-9bc780dc8f82"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "3",
+      "queryLocation": "favorites.rq",
+      "name": "Family favorites",
+      "description": "Gives all favorites of the family members",
+      "comunicaContext": {
+        "sources": [
+          "http://aggregator.local:5000/services/8452f306-ca21-4b30-a87e-a39df4034789/ca026f4a-807a-4ed5-9cb7-9bc780dc8f82"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "4",
+      "queryLocation": "example_spo.rq",
+      "name": "Alice's media profile",
+      "description": "",
+      "comunicaContext": {
+        "sources": [
+          "http://rs.local:3000/alice/mediaprofile"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "5",
+      "queryLocation": "interests.rq",
+      "name": "Alice's interests",
+      "description": "Gives all interests of Alice",
+      "comunicaContext": {
+        "sources": [
+          "http://rs.local:3000/alice/mediaprofile"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "6",
+      "queryLocation": "favorites.rq",
+      "name": "Alice's favorites",
+      "description": "Gives all favorites of Alice",
+      "comunicaContext": {
+        "sources": [
+          "http://rs.local:3000/alice/mediaprofile"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "7",
+      "queryLocation": "example_spo.rq",
+      "name": "Bob's media profile",
+      "description": "",
+      "comunicaContext": {
+        "sources": [
+          "http://rs.local:3000/bob/mediaprofile"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "8",
+      "queryLocation": "interests.rq",
+      "name": "Bob's interests",
+      "description": "Gives all interests of Bob",
+      "comunicaContext": {
+        "sources": [
+          "http://rs.local:3000/bob/mediaprofile"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "9",
+      "queryLocation": "favorites.rq",
+      "name": "Bob's favorites",
+      "description": "Gives all favorites of Bob",
+      "comunicaContext": {
+        "sources": [
+          "http://rs.local:3000/bob/mediaprofile"
+        ],
+        "lenient": true
+      }
+    }
+  ]
+}

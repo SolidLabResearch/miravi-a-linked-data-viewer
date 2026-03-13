@@ -3,10 +3,7 @@ import { Component, useEffect, useState, useContext } from "react";
 import { AppContext, AppContextProvider } from "./AppContext.jsx";
 import { Admin, Resource, CustomRoutes } from "react-admin";
 import SparqlDataProvider from "./dataProvider/SparqlDataProvider";
-import {
-  getDefaultSession,
-  handleIncomingRedirect,
-} from "@inrupt/solid-client-authn-browser";
+import { getDefaultAuth } from "trustflows-client";
 import IconProvider from "./IconProvider/IconProvider";
 import authenticationProvider from "./authenticationProvider/authenticationProvider";
 import SolidLoginForm from "./components/LoginPage/LoginPage";
@@ -15,7 +12,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import InteractionLayout from "./components/InteractionLayout/InteractionLayout";
 import TemplatedListResultTable from "./components/ListResultTable/TemplatedListResultTable.jsx";
 
-import { Route } from "react-router-dom";
+import { Route, Navigate } from "react-router-dom";
 import CustomEditor from "./components/CustomQueryEditor/customEditor.jsx";
 
 import configManager from "./configManager/configManager.js";
@@ -34,8 +31,8 @@ const queryClient = new QueryClient({
  * @returns {Component} the (inner, wrapped below) app component
  */
 function InnerApp() {
-  const session = getDefaultSession();
-  const [loggedIn, setLoggedIn] = useState();
+  const auth = getDefaultAuth();
+  const [loggedIn, setLoggedIn] = useState(false);
   const config = configManager.getConfig();
   const { configChangeTrigger } = useContext(AppContext);
 
@@ -43,21 +40,40 @@ function InnerApp() {
   // LOG console.log(`configChangeTrigger: ${configChangeTrigger}`);
 
   useEffect(() => {
-    session.onLogin(() => setLoggedIn(true));
-    session.onLogout(() => setLoggedIn(false));
+    let cancelled = false;
 
-    // In this function we don't use await because inside a React Effect it causes linting warnings and according to several sources on the Web it is not recommended.
-    // https://ultimatecourses.com/blog/using-async-await-inside-react-use-effect-hook
-    // https://www.thisdot.co/blog/async-code-in-useeffect-is-dangerous-how-do-we-deal-with-it/
-    handleIncomingRedirect({ restorePreviousSession: true }).then((info) => {
-      if (info) {
-        const status = info.isLoggedIn;
-        if (status !== loggedIn) {
-          setLoggedIn(status);
+    (async () => {
+      await auth.handleIncomingRedirect();
+      const status = await auth.isLoggedIn();
+      if (!cancelled) setLoggedIn(status);
+  
+/*
+      
+        const authFetch = auth.createAuthFetch();
+
+        console.log(`=== Fetching query results`);
+        const resp = await authFetch(
+          "http://aggregator.local:5000/services/02af826e-c368-486b-9570-e28eda9c4084/c19d4276-40f1-4506-bf14-f4ab3ac63bde"
+        );
+      if (!resp.ok) {
+        const results = await resp.text();
+        console.log("=== response text");
+        console.log(results);
+          throw new Error(
+            `Failed to fetch service results: ${resp.status} ${results}`,
+          );
         }
-      }
-    });
-  });
+        const results = await resp.text();
+        console.log("=== Query results");
+        console.log(results);*/
+      
+    
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <Admin

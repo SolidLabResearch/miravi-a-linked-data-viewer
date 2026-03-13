@@ -15,12 +15,13 @@ import IconButton from '@mui/material/IconButton';
 
 import configManager from '../../../configManager/configManager';
 import { addResource, getResource } from './podStorageManager';
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
-
+//import { getDefaultSession } from "@inrupt/solid-client-authn-browser";
+import { getDefaultAuth } from "trustflows-client";
 import { flushSync } from 'react-dom';
 
 export default function SaveCustomToPod() {
-    const session = getDefaultSession();
+    //const session = getDefaultSession();
+    const auth = getDefaultAuth();
     const formRef = useRef(null);
 
     const [saveErrorMessage, setSaveErrorMessage] = useState("");
@@ -31,27 +32,36 @@ export default function SaveCustomToPod() {
     const [loadPodUri, setLoadPodUri] = useState("");
     const [savePodUri, setSavePodUri] = useState("");
 
-    const placeholderString = session.info.isLoggedIn ? "" : "Log in to connect to a pod.";
+    //const placeholderString = session.info.isLoggedIn ? "" : "Log in to connect to a pod.";
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const placeholderString = isUserLoggedIn ? "" : "Log in to connect to a pod.";
 
     const [confirmDialog, setConfirmDialog] = useState(false);
 
     const [overwriteLoad, setOverwriteLoad] = useState(false);
 
-    // Place holders for the textfields
-    if (session.info.isLoggedIn) {
-        if (!defaultPodRoot) {
-            let podRoot = session.info.webId.replace(/profile\/card#.*$/, 'customQueries/myQueries.json');
-            setDefaultPodRoot(true);
-            setLoadPodUri(podRoot);
-            setSavePodUri(podRoot);
-        }
-    } else {
-        if (defaultPodRoot) {
-            setDefaultPodRoot(false);
-            setLoadPodUri("");
-            setSavePodUri("");
-        }
-    }
+    // Check login status and set pod root accordingly
+    useEffect(() => {
+        auth.isLoggedIn().then((status) => {
+            setIsUserLoggedIn(status);
+            if (status) {
+                if (!defaultPodRoot) {
+                    //let podRoot = session.info.webId.replace(/profile\/card#.*$/, 'customQueries/myQueries.json');          
+                   
+                    let podRoot = auth.webId.replace(/profile\/card#.*$/, 'customQueries/myQueries.json');
+                    setDefaultPodRoot(true);
+                    setLoadPodUri(podRoot);
+                    setSavePodUri(podRoot);
+                }
+            } else {
+                if (defaultPodRoot) {
+                    setDefaultPodRoot(false);
+                    setLoadPodUri("");
+                    setSavePodUri("");
+                }
+            }
+        });
+    }, [auth, defaultPodRoot]);
 
     // Prevent double clicking the buttons
     const [isDisabled, setIsDisabled] = useState(false);
@@ -68,7 +78,9 @@ export default function SaveCustomToPod() {
         event.preventDefault();
         preventDoubleClick();
 
-        if (session.info.isLoggedIn) {
+        //if (session.info.isLoggedIn) {
+        let isLoggedIn = await auth.isLoggedIn();
+        if (isLoggedIn) {
             const eventData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(eventData.entries());
             const podUriLoad = jsonData.loadFrom;
@@ -89,7 +101,9 @@ export default function SaveCustomToPod() {
         event.preventDefault();
         preventDoubleClick();
 
-        if (session.info.isLoggedIn) {
+        //if (session.info.isLoggedIn) {
+        let isLoggedIn = await auth.isLoggedIn();
+        if (isLoggedIn) {    
             const eventData = new FormData(event.currentTarget);
             const jsonData = Object.fromEntries(eventData.entries());
             const podUriSave = jsonData.saveTo;
@@ -128,7 +142,7 @@ export default function SaveCustomToPod() {
                 <Typography sx={{ color: 'red', fontWeight: 'bold' }}>{loadErrorMessage}</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                     <Button
-                        disabled={!session.info.isLoggedIn || isDisabled}
+                        disabled={!isUserLoggedIn || isDisabled}
                         variant="outlined"
                         color="warning"
                         type={configManager.localCustomQueriesPresent() ? "button" : "submit"}
@@ -143,13 +157,13 @@ export default function SaveCustomToPod() {
                         {isDisabled ? "Patience..." : "Load All"}
                     </Button>
 
-                    <Typography sx={{ width: '30px', marginRight: '10px', color: `${!session.info.isLoggedIn ? 'lightgray' : 'black'}` }}>
+                    <Typography sx={{ width: '30px', marginRight: '10px', color: `${!isUserLoggedIn ? 'lightgray' : 'black'}` }}>
                         From:
                     </Typography>
 
                     <TextField
                         required
-                        disabled={!session.info.isLoggedIn}
+                        disabled={!isUserLoggedIn}
                         name="loadFrom"
                         placeholder={placeholderString}
                         value={loadPodUri}
@@ -245,7 +259,7 @@ export default function SaveCustomToPod() {
                 <Typography sx={{ color: 'red', fontWeight: 'bold' }}>{saveErrorMessage}</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                     <Button
-                        disabled={!session.info.isLoggedIn || isDisabled}
+                        disabled={!isUserLoggedIn || isDisabled}
                         variant="outlined"
                         color="success"
                         type="submit"
@@ -255,13 +269,13 @@ export default function SaveCustomToPod() {
                         {isDisabled ? "Patience..." : "Save All"}
                     </Button>
 
-                    <Typography sx={{ width: '30px', marginRight: '10px', color: `${!session.info.isLoggedIn ? 'lightgray' : 'black'}` }}>
+                    <Typography sx={{ width: '30px', marginRight: '10px', color: `${!isUserLoggedIn ? 'lightgray' : 'black'}` }}>
                         To:
                     </Typography>
 
                     <TextField
                         required
-                        disabled={!session.info.isLoggedIn}
+                        disabled={!isUserLoggedIn}
                         name="saveTo"
                         placeholder={placeholderString}
                         value={savePodUri}
