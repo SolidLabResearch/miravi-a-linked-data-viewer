@@ -18,6 +18,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthenticationIcon";
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
+import ChainVerificationIcon from "./ChainVerificationIcon/ChainVerificationIcon.jsx";
 
 import configManager from "../../configManager/configManager.js";
 
@@ -52,6 +53,11 @@ function ActionBar() {
   const query = configManager.getQueryWorkingCopyById(resource);
   const context = query.comunicaContext;
   const sources = context?.sources || []; // in early calls, context might be undefined
+
+  // Obtain verification feature configuration variables.
+  // These variables will be used to determine which table columns to show.
+  const onchain = config.features?.verification?.onchain ?? { enabled: false }
+  const vc      = config.features?.verification?.vc ?? { enabled: false }
 
   return (
     <Grid container direction="row" width={"100%"} rowSpacing={1}>
@@ -95,7 +101,8 @@ function ActionBar() {
                   <TableCell>Source</TableCell>
                   <TableCell>Authentication needed</TableCell>
                   <TableCell>Fetch status</TableCell>
-                  <TableCell>Verified</TableCell>
+                  { !!vc.enabled && <TableCell>Verified</TableCell> }
+                  { !!onchain.enabled && <TableCell>Chain Verified</TableCell> }
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -108,9 +115,8 @@ function ActionBar() {
                     <TableCell>
                       <SourceFetchStatusIcon source={source} />
                     </TableCell>
-                    <TableCell>
-                      <SourceVerificationIcon httpProxies={query.httpProxies} source={source} />
-                    </TableCell>
+                    { !!vc.enabled && <TableCell> <SourceVerificationIcon httpProxies={query.httpProxies} source={source} /> </TableCell> }
+                    { !!onchain.enabled &&<TableCell> <ChainVerificationIcon endpoint={onchain.endpoint} source={source} /> </TableCell> }
                   </TableRow>
                 ))}
               </TableBody>
