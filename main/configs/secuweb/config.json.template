@@ -8,7 +8,7 @@
   "textColor": "#1976D2",
   "queryFolder": "queries",
   "showMilliseconds": false,
-  "defaultIDP": "${OD_CSS12_BASE_URL}/",
+  "defaultIDP": "${OD_CSS0_BASE_URL}/",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and select a query from the menu on the left.",
   "features": {
