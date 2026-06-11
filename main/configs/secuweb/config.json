@@ -8,7 +8,7 @@
   "textColor": "#1976D2",
   "queryFolder": "queries",
   "showMilliseconds": false,
-  "defaultIDP": "/",
+  "defaultIDP": "http://localhost:3000/",
   "footer": "<p><a href='https://idlab.technology/'>IDLab</a> - <a href='https://www.imec.be/nl'>imec</a> - <a href='https://www.ugent.be/'>UGent</a></p>",
   "introductionText": "Please log in as the appropriate actor and select a query from the menu on the left.",
   "features": {
@@ -77,6 +77,16 @@
       }
     },
     {
+      "id": "2",
+      "queryLocation": "spo.rq",
+      "name": "Catalog-discovered data",
+      "description": "Queries actor resources discovered dynamically through the consortium catalog.",
+      "sourcesIndex": {
+        "url": "http://localhost:3000/consortium/catalog/index.jsonld",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
       "id": "101",
       "queryGroupId": "farmer",
       "queryLocation": "shipments.rq",
@@ -129,6 +139,17 @@
           "http://localhost:3000/retailer/shipments/in/vc/receipt-shipment3.jsonld"
         ],
         "lenient": true
+      }
+    },
+    {
+      "id": "105",
+      "queryGroupId": "retailer",
+      "queryLocation": "batch-provenance.rq",
+      "name": "Retailer: batch transportation provenance",
+      "description": "Finds both shipment legs and transport events for packaged batch 001.",
+      "sourcesIndex": {
+        "url": "http://localhost:3000/consortium/catalog/index.jsonld",
+        "queryLocation": "sourceQueries/seeAlso.rq"
       }
     }
   ]

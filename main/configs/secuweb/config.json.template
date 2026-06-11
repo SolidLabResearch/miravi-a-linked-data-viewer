@@ -77,6 +77,16 @@
       }
     },
     {
+      "id": "2",
+      "queryLocation": "spo.rq",
+      "name": "Catalog-discovered data",
+      "description": "Queries actor resources discovered dynamically through the consortium catalog.",
+      "sourcesIndex": {
+        "url": "${OD_CSS0_BASE_URL}/consortium/catalog/index.jsonld",
+        "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
       "id": "101",
       "queryGroupId": "farmer",
       "queryLocation": "shipments.rq",
@@ -129,6 +139,17 @@
           "${OD_CSS0_BASE_URL}/retailer/shipments/in/vc/receipt-shipment3.jsonld"
         ],
         "lenient": true
+      }
+    },
+    {
+      "id": "105",
+      "queryGroupId": "retailer",
+      "queryLocation": "batch-provenance.rq",
+      "name": "Retailer: batch transportation provenance",
+      "description": "Finds both shipment legs and transport events for packaged batch 001.",
+      "sourcesIndex": {
+        "url": "${OD_CSS0_BASE_URL}/consortium/catalog/index.jsonld",
+        "queryLocation": "sourceQueries/seeAlso.rq"
       }
     }
   ]

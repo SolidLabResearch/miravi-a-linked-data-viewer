@@ -1,0 +1,39 @@
+PREFIX ex: <http://example.org/terms#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX schema: <http://schema.org/>
+PREFIX vc: <https://www.w3.org/2018/credentials#>
+
+SELECT DISTINCT
+  ?shipment ?shipmentStatus ?event ?eventStatus ?startTime ?endTime
+WHERE {
+  {
+    SELECT DISTINCT ?shipment WHERE {
+      {
+        ?batchVc a vc:VerifiableCredential;
+          vc:credentialSubject <did:secuweb:packager:batch-001>.
+        <did:secuweb:packager:batch-001>
+          (prov:wasDerivedFrom|<prov:wasDerivedFrom>) ?shipmentRef.
+        BIND(IRI(STR(?shipmentRef)) AS ?shipment)
+      }
+      UNION
+      {
+        ?shipmentVc a vc:VerifiableCredential;
+          vc:credentialSubject ?shipment.
+        ?shipment (ex:productID|<ex:productID>) ?batchRef.
+        FILTER (STR(?batchRef) = "did:secuweb:packager:batch-001")
+      }
+    }
+  }
+
+  ?shipment (ex:status|<ex:status>) ?shipmentStatus.
+  ?eventVc a vc:VerifiableCredential;
+    vc:credentialSubject ?event.
+  ?event (ex:shipmentID|<ex:shipmentID>) ?eventShipmentRef;
+    (ex:status|<ex:status>) ?eventStatus;
+    (schema:startTime|<schema:startTime>) ?startTime.
+  FILTER (STR(?eventShipmentRef) = STR(?shipment))
+  OPTIONAL {
+    ?event (schema:endTime|<schema:endTime>) ?endTime.
+  }
+}
+ORDER BY ?shipment ?startTime
