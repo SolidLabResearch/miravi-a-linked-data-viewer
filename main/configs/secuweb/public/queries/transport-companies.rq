@@ -1,0 +1,10 @@
+PREFIX ex: <http://example.org/terms#>
+PREFIX schema: <http://schema.org/>
+
+SELECT DISTINCT ?actor ?name ?endpoint
+WHERE {
+  ?actor a ex:Transporter;
+    schema:name ?name;
+    ex:serviceEndpoint ?endpoint.
+}
+ORDER BY ?name

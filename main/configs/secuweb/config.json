@@ -38,6 +38,11 @@
       "id": "retailer",
       "name": "Retailer",
       "icon": "StorefrontIcon"
+    },
+    {
+      "id": "discovery",
+      "name": "Discovery",
+      "icon": "ListAltIcon"
     }
   ],
   "queries": [
@@ -84,6 +89,32 @@
       "sourcesIndex": {
         "url": "http://localhost:3000/consortium/catalog/index.jsonld",
         "queryLocation": "sourceQueries/seeAlso.rq"
+      }
+    },
+    {
+      "id": "201",
+      "queryGroupId": "discovery",
+      "queryLocation": "transport-companies.rq",
+      "name": "Transport companies",
+      "description": "Discovers transport actors and their service endpoints from the consortium catalog.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:3000/consortium/catalog/index.jsonld"
+        ],
+        "lenient": true
+      }
+    },
+    {
+      "id": "202",
+      "queryGroupId": "discovery",
+      "queryLocation": "catalog-sources.rq",
+      "name": "Catalog sources",
+      "description": "Discovers the distinct resource URLs published by the consortium catalog.",
+      "comunicaContext": {
+        "sources": [
+          "http://localhost:3000/consortium/catalog/index.jsonld"
+        ],
+        "lenient": true
       }
     },
     {
