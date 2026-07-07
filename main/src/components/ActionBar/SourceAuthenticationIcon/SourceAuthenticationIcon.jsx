@@ -5,6 +5,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import PropTypes from "prop-types";
 import { Component } from "react";
+import { getDefaultAuth } from "trustflows-client";
 
 /**
  * 
@@ -60,11 +61,28 @@ SourceAuthenticationIcon.propTypes = {
 async function authenticationRequired(source) {
   try {
     const response = await fetch(source, {
-      method: "HEAD",
+      method: "GET",
+      headers: {
+        Accept: "application/n-quads,application/trig;q=0.9,text/turtle;q=0.8,application/n-triples;q=0.7,*/*;q=0.1",
+      },
     });
     return response.status === 401 || response.status === 403;
   } catch (error) {
-    return undefined;
+    // If plain fetch fails due CORS or network constraints, retry with authenticated fetch
+    // to infer whether authentication might be required for this source.
+    try {
+      const auth = getDefaultAuth();
+      const authFetch = auth.createAuthFetch();
+      const response = await authFetch(source, {
+        method: "GET",
+        headers: {
+          Accept: "application/n-quads,application/trig;q=0.9,text/turtle;q=0.8,application/n-triples;q=0.7,*/*;q=0.1",
+        },
+      });
+      return response.status === 401 || response.status === 403;
+    } catch (fallbackError) {
+      return undefined;
+    }
   }
 }
 
