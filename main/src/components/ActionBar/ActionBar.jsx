@@ -21,6 +21,7 @@ import SourceAuthenticationIcon from "./SourceAuthenticationIcon/SourceAuthentic
 import SourceFetchStatusIcon from "./SourceFetchStatusIcon/SourceFetchStatusIcon";
 import SourceVerificationIcon from "./SourceVerificationIcon/SourceVerificationIcon.jsx";
 import { getDefaultAuth } from "trustflows-client";
+import comunicaEngineWrapper from "../../comunicaEngineWrapper/comunicaEngineWrapper";
 
 import configManager from "../../configManager/configManager.js";
 
@@ -75,13 +76,26 @@ function ActionBar() {
   const context = query.comunicaContext;
   const sources = context?.sources || []; // in early calls, context might be undefined
 
+  const getSourceFetchState = (source) => {
+    const fetchSuccess = comunicaEngineWrapper.getFetchSuccess(source);
+    if (fetchSuccess === undefined) {
+      return "pending";
+    }
+    if (fetchSuccess === true) {
+      return "success";
+    }
+    return "failed";
+  };
+
+  const isSourceRequestable = (source) => getSourceFetchState(source) === "failed";
+
   useEffect(() => {
     const initialSelection = {};
     sources.forEach((source) => {
-      initialSelection[source] = true;
+      initialSelection[source] = isSourceRequestable(source);
     });
     setSelectedSources(initialSelection);
-  }, [resource, sources.join("|")]);
+  }, [resource, sources.join("|"), isLoading]);
 
   const toggleSelectedSource = (source) => {
     setSelectedSources((prev) => ({
@@ -91,9 +105,10 @@ function ActionBar() {
   };
 
   const selectedSourceList = sources.filter((source) => selectedSources[source]);
+  const requestableSelectedSources = selectedSourceList.filter((source) => isSourceRequestable(source));
 
   const requestAccess = async () => {
-    if (!selectedSourceList.length) {
+    if (!requestableSelectedSources.length) {
       return;
     }
 
@@ -107,13 +122,13 @@ function ActionBar() {
       const authFetch = auth.createAuthFetch();
       // Await request dispatch, but do not enforce response status; approval is asynchronous in Loama.
       await Promise.allSettled(
-        selectedSourceList.map(async (source) => {
+        requestableSelectedSources.map(async (source) => {
           const response = await authFetch(source, undefined, { accessRequest: true });
           console.log(`Access request sent for ${source}. Response status: ${response.status}`);
         })
       );
 
-      notify(`Access request sent for ${selectedSourceList.length} source(s). Approval may take some time.`, { type: "info" });
+      notify(`Access request sent for ${requestableSelectedSources.length} source(s). Approval may take some time.`, { type: "info" });
     } catch (error) {
       notify(`Could not send an access request: ${error.message}`, { type: "warning" });
     } finally {
@@ -160,22 +175,26 @@ function ActionBar() {
             <Table size="small" >
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ whiteSpace: "nowrap", width: "1%" }}>Request access</TableCell>
                   <TableCell>Source</TableCell>
                   <TableCell>Authentication needed</TableCell>
                   <TableCell>Fetch status</TableCell>
                   <TableCell>Verified</TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap", width: "1%" }}>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={requestAccess}
+                      disabled={!isLoggedIn || requestingAccess || requestableSelectedSources.length === 0}
+                      title={!isLoggedIn ? "Log in to request access" : ""}
+                    >
+                      {requestingAccess ? "Requesting access..." : "Request access"}
+                    </Button>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {sources.map((source, index) => (
                   <TableRow key={index}>
-                    <TableCell sx={{ whiteSpace: "nowrap", width: "1%" }}>
-                      <Checkbox
-                        checked={!!selectedSources[source]}
-                        onChange={() => toggleSelectedSource(source)}
-                      />
-                    </TableCell>
                     <TableCell>{source}</TableCell>
                     <TableCell>
                       <SourceAuthenticationIcon source={source} />
@@ -186,21 +205,15 @@ function ActionBar() {
                     <TableCell>
                       <SourceVerificationIcon httpProxies={query.httpProxies} source={source} />
                     </TableCell>
+                    <TableCell sx={{ whiteSpace: "nowrap", width: "1%" }}>
+                      <Checkbox
+                        checked={!!selectedSources[source] && isSourceRequestable(source)}
+                        onChange={() => toggleSelectedSource(source)}
+                        disabled={!isSourceRequestable(source)}
+                      />
+                    </TableCell>
                   </TableRow>
                 ))}
-                <TableRow>
-                  <TableCell sx={{ whiteSpace: "nowrap", width: "1%" }}>
-                    <Button
-                      variant="contained"
-                      onClick={requestAccess}
-                      disabled={!isLoggedIn || requestingAccess || selectedSourceList.length === 0}
-                      title={!isLoggedIn ? "Log in to request access" : ""}
-                    >
-                      {requestingAccess ? "Requesting access..." : "Request access"}
-                    </Button>
-                  </TableCell>
-                  <TableCell colSpan={4}></TableCell>
-                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
